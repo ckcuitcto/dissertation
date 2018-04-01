@@ -14,10 +14,10 @@ class CreateTopicsTable extends Migration
     public function up()
     {
         Schema::create('topics', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->text('title');
             $table->integer('max_score');
-            $table->string('parent_id')->nullable();
+            $table->integer('parent_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

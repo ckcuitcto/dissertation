@@ -14,13 +14,13 @@ class CreateEvaluationCriteriasTable extends Migration
     public function up()
     {
         Schema::create('evaluation_criterias', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->text('content');
             $table->text('detail');
-            $table->integer('topic_id');
             $table->integer('mark_range_from');
             $table->integer('mark_range_to');
-            $table->integer('parent_id');
+            $table->integer('topic_id')->unsigned()->nullable();
+            $table->integer('parent_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

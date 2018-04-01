@@ -14,7 +14,7 @@ class CreateStaffTable extends Migration
     public function up()
     {
         Schema::create('staff', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->string('name',200);
             $table->string('email',200)->unique()->nullable();
             $table->string('password');
@@ -23,7 +23,7 @@ class CreateStaffTable extends Migration
             $table->string('phone_number',20)->nullable();
             $table->date('birthday')->nullable();
             $table->string('avatar',200);
-            $table->integer('role_id')->default('2')->nullable();
+            $table->integer('role_id')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

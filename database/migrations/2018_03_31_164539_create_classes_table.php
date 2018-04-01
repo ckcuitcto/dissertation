@@ -14,10 +14,10 @@ class CreateClassesTable extends Migration
     public function up()
     {
         Schema::create('classes', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->string('name',200);
-            $table->integer('faculty_id')->nullable();
-            $table->integer('education_adviser_id')->nullable();
+            $table->integer('faculty_id')->unsigned()->nullable();
+            $table->integer('education_adviser_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

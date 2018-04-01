@@ -14,10 +14,10 @@ class CreateProofsTable extends Migration
     public function up()
     {
         Schema::create('proofs', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->string('name',255);
-            $table->integer('student_id');
-            $table->integer('semester_id');
+            $table->integer('created_by')->unsigned()->nullable();
+            $table->integer('semester_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

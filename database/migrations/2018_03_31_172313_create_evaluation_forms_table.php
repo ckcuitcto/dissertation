@@ -14,10 +14,10 @@ class CreateEvaluationFormsTable extends Migration
     public function up()
     {
         Schema::create('evaluation_forms', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->integer('total');
-            $table->integer('semester_id');
-            $table->integer('student_id');
+            $table->integer('semester_id')->unsigned()->nullable();
+            $table->integer('student_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

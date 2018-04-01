@@ -14,11 +14,12 @@ class CreateEvaluationResultsTable extends Migration
     public function up()
     {
         Schema::create('evaluation_results', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->integer('score');
-            $table->integer('evaluation_criteria_id');
-            $table->integer('marker_id');
-            $table->integer('evaluation_form_id');
+            $table->integer('evaluation_criteria_id')->unsigned()->nullable();
+            $table->integer('student_id')->unsigned()->nullable();
+            $table->integer('staff_id')->unsigned()->nullable();
+            $table->integer('evaluation_form_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

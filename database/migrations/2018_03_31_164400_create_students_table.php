@@ -14,7 +14,7 @@ class CreateStudentsTable extends Migration
     public function up()
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->string('name',200);
             $table->string('email',200)->unique();
             $table->string('password');
@@ -23,8 +23,8 @@ class CreateStudentsTable extends Migration
             $table->string('phone_number',20)->nullable();
             $table->date('birthday')->nullable();
             $table->string('avatar',200);
-            $table->integer('role_id')->default('0')->nullable();
-            $table->integer('class_id')->default('0')->nullable();
+            $table->integer('role_id')->unsigned()->nullable();
+            $table->integer('class_id')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
