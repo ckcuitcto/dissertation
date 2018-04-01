@@ -4,9 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class Staff extends Authenticatable
 {
+    use Notifiable;
     protected $table = 'staff';
 
     protected $fillable = ['name','email','gender','address','phone_number','birthday','avatar','role_id'];
