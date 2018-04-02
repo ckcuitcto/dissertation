@@ -23,6 +23,12 @@ class StaffSeeder extends Seeder
                 'name' => 'Giao vien 2 1',
                 'email' => 'GV123123@gmail1.com',
                 'password' => bcrypt('GV124124'),
+            ],
+            [
+                'id' => '124125',
+                'name' => 'Giao vien han',
+                'email' => 'GV124125@gmail1.com',
+                'password' => bcrypt('GV124125'),
             ]
         ]);
     }
