@@ -14,3 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::prefix('staff')->group(function() {
+    Route::get('/login', 'Auth\StaffLoginController@showLoginForm')->name('staff.login');
+    Route::post('/login', 'Auth\StaffLoginController@login')->name('staff.login.submit');
+    Route::get('/', 'StaffController@index')->name('staff.dashboard');
+});

@@ -14,7 +14,7 @@ class CreateSemestersTable extends Migration
     public function up()
     {
         Schema::create('semesters', function (Blueprint $table) {
-            $table->increments('id');;
+            $table->increments('id')->unsigned();
             $table->integer('year');
             $table->integer('term');
             $table->timestamps();
