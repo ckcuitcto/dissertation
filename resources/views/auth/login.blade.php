@@ -11,22 +11,22 @@
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+                        <div class="form-group{{ $errors->has('id') ? ' has-error' : '' }}">
+                            <label for="id" class="col-md-4 control-label">MSSV</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
+                                <input id="id" type="text" class="form-control" name="id" value="{{ old('id') }}" required autofocus>
 
-                                @if ($errors->has('email'))
+                                @if ($errors->has('id'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>{{ $errors->first('id') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
+                            <label for="password" class="col-md-4 control-label">Mật khẩu</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control" name="password" required>
@@ -52,11 +52,11 @@
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Login
+                                    Đăng nhập
                                 </button>
 
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    Forgot Your Password?
+                                    Quên mật khẩu
                                 </a>
                             </div>
                         </div>
