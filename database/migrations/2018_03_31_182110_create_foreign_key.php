@@ -62,8 +62,11 @@ class CreateForeignKey extends Migration
         Schema::table('evaluation_results', function (Blueprint $table) {
             $table->foreign('evaluation_criteria_id')->references('id')->on('evaluation_criterias');
             $table->foreign('evaluation_form_id')->references('id')->on('evaluation_forms')->onDelete('no action')->onUpdate('no action');
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('staff_id')->references('id')->on('staff')->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('monitor_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('education_adviser_id')->references('id')->on('staff')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('faculty_id')->references('id')->on('staff')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('custom_id')->references('id')->on('staff')->onDelete('cascade')->onUpdate('cascade');
         });
 
     }

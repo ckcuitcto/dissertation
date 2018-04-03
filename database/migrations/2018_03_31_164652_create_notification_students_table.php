@@ -15,7 +15,7 @@ class CreateNotificationStudentsTable extends Migration
     {
         Schema::create('notification_students', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->integer('student_id')->unsigned()->nullable();
+            $table->string('student_id',10)->nullable();
             $table->integer('notification_id')->unsigned()->nullable();
             $table->timestamps();
         });
