@@ -13124,6 +13124,10 @@ be a descendant of the grid when it is being dragged.
   border-bottom: 1px solid #ddd;
 }
 
+/* .user-settings .component-text-info span {
+  display: grid !important;
+} */
+
 /*----- Componant: Top Navigation Bar ----- */
 .app-header {
   position: fixed;
