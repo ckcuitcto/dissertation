@@ -17,7 +17,7 @@ class CreateEvaluationFormsTable extends Migration
             $table->increments('id')->unsigned();
             $table->integer('total');
             $table->integer('semester_id')->unsigned()->nullable();
-            $table->integer('student_id')->unsigned()->nullable();
+            $table->string('student_id',10)->nullable();
             $table->timestamps();
         });
     }
