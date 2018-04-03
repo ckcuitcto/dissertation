@@ -184,20 +184,20 @@
                             </div>
                             <div class="inputGroup inputGroup1">
                                 <label for="loginEmail" id="loginEmailLabel">MSSV</label>
-                                <input type="text" id="loginEmail" maxlength="254"/>
-                                @if ($errors->has('loginEmail'))
+                                <input type="text" id="loginEmail" maxlength="254" name="id"/>
+                                @if ($errors->has('id'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('loginEmail') }}</strong>
+                                        <strong>{{ $errors->first('id') }}</strong>
                                     </span>
                                 @endif
                                 <p class="helper helper1">DH51400xxx</p>
                             </div>
                             <div class="inputGroup inputGroup2">
                                 <label for="loginPassword" id="loginPasswordLabel">Password</label>
-                                <input type="password" id="loginPassword"/>
-                                @if ($errors->has('loginPassword'))
+                                <input type="password" id="loginPassword" name="password"/>
+                                @if ($errors->has('password'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('loginPassword') }}</strong>
+                                        <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
                                 <label id="showPasswordToggle" for="showPasswordCheck">Show
@@ -206,7 +206,7 @@
                                 </label>
                             </div>
                             <div class="inputGroup inputGroup3">
-                                <button id="login" > Đăng nhập</button>
+                                <button id="login" type="submit"> Đăng nhập</button>
                             </div>
                             <a class="btn btn-link" href="{{ route('password.request') }}">
                             Quên mật khẩu ?
