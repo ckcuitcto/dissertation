@@ -134,40 +134,46 @@
     <main class="app-content">
       <div class="app-title">
         <div>
-          <h1><i class="fa fa-edit"></i> Form Components</h1>
-          <p>Bootstrap default form components</p>
+          <h1><i class="fa fa-edit"></i> Đóng góp ý kiến đến ban quản lý nhà trường</h1>
+          <p>Trường Đại học Công nghệ Sài Gòn</p>
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item">Forms</li>
-          <li class="breadcrumb-item"><a href="#">Form Components</a></li>
+          <li class="breadcrumb-item">Trang chủ</li>
+          <li class="breadcrumb-item"><a href="#">Trang góp ý</a></li>
         </ul>
       </div>
       <div class="row">
         <div class="col-md-12">
           <div class="tile">
             <div class="row">
-              <div class="col-lg-6">
+              <div class="col-lg-12">
                 <form>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input class="form-control" id="exampleInputEmail1" type="email" aria-describedby="emailHelp" placeholder="Enter email"><small class="form-text text-muted" id="emailHelp">We'll never share your email with anyone else.</small>
+                  <div class="form-group row">
+                    <div class="col-md-3">
+                        <label for="exampleText">Chủ đề ý kiến</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control" id="exampleText" type="text" placeholder="Nhập vào chủ đề"><small class="form-text text-muted" id="emailHelp"></small>
+                    </div>
                   </div>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
                     <input class="form-control" id="exampleInputPassword1" type="password" placeholder="Password">
+                  </div> -->
+                  <div class="form-group row">
+                    <div class="col-md-3">
+                        <label for="exampleSelect1">Phân loại ý kiến</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" id="exampleSelect1">
+                            <option value=""></option>
+                            <option>Cán bộ nhân viên / Giảng viên</option>
+                            <option>Sinh viên</option>
+                          </select>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label for="exampleSelect1">Example select</label>
-                    <select class="form-control" id="exampleSelect1">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label for="exampleSelect2">Example multiple select</label>
                     <select class="form-control" id="exampleSelect2" multiple="">
                       <option>1</option>
@@ -176,16 +182,21 @@
                       <option>4</option>
                       <option>5</option>
                     </select>
+                  </div> -->
+                  <div class="form-group row">
+                    <div class="col-md-3">
+                        <label for="exampleTextarea">Nội dung</label>
+                    </div>
+                    <div class="col-md-8">
+                        <textarea class="form-control" id="exampleTextarea" rows="5"></textarea>
+                    </div>
                   </div>
                   <div class="form-group">
-                    <label for="exampleTextarea">Example textarea</label>
-                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                      <!-- <label for="exampleInputFile">File input</label> -->
+                        <input class="form-control-file" id="exampleInputFile" type="file" aria-describedby="fileHelp">
+                        <small class="form-text text-muted" id="fileHelp">Đính kèm tệp hoặc văn bản để góp ý.</small>
                   </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <input class="form-control-file" id="exampleInputFile" type="file" aria-describedby="fileHelp"><small class="form-text text-muted" id="fileHelp">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
-                  </div>
-                  <fieldset class="form-group">
+                  <!-- <fieldset class="form-group">
                     <legend>Radio buttons</legend>
                     <div class="form-check">
                       <label class="form-check-label">
@@ -202,28 +213,16 @@
                         <input class="form-check-input" id="optionsRadios3" type="radio" name="optionsRadios" value="option3" disabled="">Option three is disabled
                       </label>
                     </div>
-                  </fieldset>
-                  <div class="form-check">
+                  </fieldset> -->
+                  <!-- <div class="form-check">
                     <label class="form-check-label">
                       <input class="form-check-input" type="checkbox">Check me out
                     </label>
-                  </div>
+                  </div> -->
                 </form>
               </div>
-              <div class="col-lg-4 offset-lg-1">
-                <form>
-                  <div class="form-group">
-                    <fieldset disabled="">
-                      <label class="control-label" for="disabledInput">Disabled input</label>
-                      <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
-                    </fieldset>
-                  </div>
-                  <div class="form-group">
-                    <fieldset>
-                      <label class="control-label" for="readOnlyInput">Readonly input</label>
-                      <input class="form-control" id="readOnlyInput" type="text" placeholder="Readonly input here…" readonly="">
-                    </fieldset>
-                  </div>
+              <!-- <div class="col-lg-4 offset-lg-1">
+                <form>                  
                   <div class="form-group has-success">
                     <label class="form-control-label" for="inputSuccess1">Valid input</label>
                     <input class="form-control is-valid" id="inputValid" type="text">
@@ -233,35 +232,13 @@
                     <label class="form-control-label" for="inputDanger1">Invalid input</label>
                     <input class="form-control is-invalid" id="inputInvalid" type="text">
                     <div class="form-control-feedback">Sorry, that username's taken. Try another?</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label col-form-label-lg" for="inputLarge">Large input</label>
-                    <input class="form-control form-control-lg" id="inputLarge" type="text">
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="inputDefault">Default input</label>
-                    <input class="form-control" id="inputDefault" type="text">
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label col-form-label-sm" for="inputSmall">Small input</label>
-                    <input class="form-control form-control-sm" id="inputSmall" type="text">
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label">Input addons</label>
-                    <div class="form-group">
-                      <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                        <input class="form-control" id="exampleInputAmount" type="text" placeholder="Amount">
-                        <div class="input-group-append"><span class="input-group-text">.00</span></div>
-                      </div>
-                    </div>
-                  </div>
+                  </div>              
                 </form>
-              </div>
+              </div> -->
             </div>
             <div class="tile-footer">
-              <button class="btn btn-primary" type="submit">Submit</button>
+              <button class="btn btn-primary" type="submit">Gửi</button>
+              <button class="btn btn-danger" type="cancel">Hủy</button>
             </div>
           </div>
         </div>
