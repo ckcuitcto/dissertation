@@ -14,7 +14,7 @@ class StaffLoginController extends Controller
     }
     public function showLoginForm()
     {
-        return view('auth.staff-login');
+        return view('auth.login-animated');
     }
     public function login(Request $request)
     {
@@ -24,7 +24,7 @@ class StaffLoginController extends Controller
             'password' => 'required|min:6'
         ]);
         // Attempt to log the user in
-        if (Auth::guard('staff')->attempt(['id' => $request->id, 'password' => $request->password], $request->remember)) {
+            if (Auth::guard('staff')->attempt(['id' => $request->id, 'password' => $request->password], $request->remember)) {
             // if successful, then redirect to their intended location
             return redirect()->intended(route('staff.dashboard'));
         }

@@ -25,4 +25,9 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function showLoginAnimatedForm()
+    {
+        return view('auth.login-animated');
+    }
 }

@@ -21,11 +21,26 @@ class EvaluationResult extends Model
 
     public function Student()
     {
-        return $this->belongsTo('App\Student','student_id','id');
+        return $this->belongsTo('App\Student','monitor_id','id');
     }
 
-    public function Staff()
+    public function MarkerStaff()
     {
         return $this->belongsTo('App\Staff','student_id','id');
+    }
+
+    public function MarkerEducationAdviser()
+    {
+        return $this->belongsTo('App\Staff','education_adviser_id','id');
+    }
+
+    public function MarkerFaculty()
+    {
+        return $this->belongsTo('App\Staff','faculty_id','id');
+    }
+
+    public function MarkerCustom()
+    {
+        return $this->belongsTo('App\Staff','custom_id','id');
     }
 }
