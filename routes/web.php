@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 //Auth::routes();
@@ -26,9 +26,9 @@ $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'Home\HomeController@index')->name('home');
 
-Route::get('/login-animated', 'HomeController@showLoginAnimatedForm')->name('loginAnimated');
+Route::get('/login-animated', 'Home\HomeController@showLoginAnimatedForm')->name('loginAnimated');
 
 Route::prefix('staff')->group(function() {
 Route::get('/login', 'Auth\StaffLoginController@showLoginForm')->name('staff.login');
