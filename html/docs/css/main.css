@@ -5926,6 +5926,7 @@ button.close {
   overflow: hidden;
 }
 
+
 .carousel-item {
   position: relative;
   display: none;
@@ -13123,6 +13124,10 @@ be a descendant of the grid when it is being dragged.
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
+
+/* .user-settings .component-text-info span {
+  display: grid !important;
+} */
 
 /*----- Componant: Top Navigation Bar ----- */
 .app-header {

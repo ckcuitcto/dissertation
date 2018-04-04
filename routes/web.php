@@ -27,6 +27,9 @@ $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/login-animated', 'HomeController@showLoginAnimatedForm')->name('loginAnimated');
+
 Route::prefix('staff')->group(function() {
 Route::get('/login', 'Auth\StaffLoginController@showLoginForm')->name('staff.login');
 Route::post('/login', 'Auth\StaffLoginController@login')->name('staff.login.submit');
