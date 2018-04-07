@@ -14095,7 +14095,7 @@ be a descendant of the grid when it is being dragged.
 
 .material-half-bg {
   height: 100vh;
-  background-color: #e7e7e7;
+  background-color: #6d2323;
   position: fixed;
   top: 0;
   left: 0;
@@ -14105,7 +14105,8 @@ be a descendant of the grid when it is being dragged.
 }
 
 .material-half-bg .cover {
-  background-color: #009688;
+  /* background-color: #009688; */
+  background: url(http://placeimg.com/1200/300/nature);
   height: 50vh;
 }
 
