@@ -24,3 +24,13 @@ Route::get('/login', 'Auth\StaffLoginController@showLoginForm')->name('staff.log
 Route::post('/login', 'Auth\StaffLoginController@login')->name('staff.login.submit');
 Route::get('/', 'StaffController@index')->name('staff.dashboard');
 });
+
+Route::get('index',[
+    'as'=>'trang-chu',
+    'uses'=>'PageController@getIndex'
+]);
+
+Route::get('thong-tin-sinh-vien',[
+    'as'=>'thongtinsinhvien',
+    'uses'=>'PageController@getStudentInformation'
+]);
