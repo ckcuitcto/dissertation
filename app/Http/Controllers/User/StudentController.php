@@ -14,7 +14,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return view('user.personal-information');
+        // return view('user.personal-information');
     }
 
     /**
