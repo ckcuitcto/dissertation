@@ -13,7 +13,7 @@
     <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
     <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
     <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <title>Calendar - Vali Admin</title>
+    <title>Charts - Vali Admin</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -102,7 +102,7 @@
             <li><a class="treeview-item" href="widgets.html"><i class="icon fa fa-circle-o"></i> Widgets</a></li>
           </ul>
         </li>
-        <li><a class="app-menu__item" href="charts.html"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Charts</span></a></li>
+        <li><a class="app-menu__item active" href="charts.html"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Charts</span></a></li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Forms</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="form-components.html"><i class="icon fa fa-circle-o"></i> Form Components</a></li>
@@ -117,14 +117,14 @@
             <li><a class="treeview-item" href="table-data-table.html"><i class="icon fa fa-circle-o"></i> Data Tables</a></li>
           </ul>
         </li>
-        <li class="treeview is-expanded"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Pages</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Pages</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="blank-page.html"><i class="icon fa fa-circle-o"></i> Blank Page</a></li>
             <li><a class="treeview-item" href="page-login.html"><i class="icon fa fa-circle-o"></i> Login Page</a></li>
             <li><a class="treeview-item" href="page-lockscreen.html"><i class="icon fa fa-circle-o"></i> Lockscreen Page</a></li>
             <li><a class="treeview-item" href="page-user.html"><i class="icon fa fa-circle-o"></i> User Page</a></li>
             <li><a class="treeview-item" href="page-invoice.html"><i class="icon fa fa-circle-o"></i> Invoice Page</a></li>
-            <li><a class="treeview-item active" href="page-calendar.html"><i class="icon fa fa-circle-o"></i> Calendar Page</a></li>
+            <li><a class="treeview-item" href="page-calendar.html"><i class="icon fa fa-circle-o"></i> Calendar Page</a></li>
             <li><a class="treeview-item" href="page-mailbox.html"><i class="icon fa fa-circle-o"></i> Mailbox</a></li>
             <li><a class="treeview-item" href="page-error.html"><i class="icon fa fa-circle-o"></i> Error Page</a></li>
           </ul>
@@ -134,33 +134,21 @@
     <main class="app-content">
       <div class="app-title">
         <div>
-          <h1><i class="fa fa-calendar"></i> Phòng Công Tác Sinh Viên</h1>
-          <p>Trường Đại học Công nghệ Sài Gòn</p>
+          <h1><i class="fa fa-pie-chart"></i> Charts</h1>
+          <p>Various type of charts for your project</p>
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="#">Calendar</a></li>
+          <li class="breadcrumb-item"><a href="#">charts</a></li>
         </ul>
       </div>
       <div class="row">
-        <div class="col-md-12">
-          <div class="tile row">
-            <div class="col-md-3">
-              <div id="external-events">
-                <h4 class="mb-4">Draggable Events</h4>
-                <div class="fc-event">My Event 1</div>
-                <div class="fc-event">My Event 2</div>
-                <div class="fc-event">My Event 3</div>
-                <div class="fc-event">My Event 4</div>
-                <div class="fc-event">My Event 5</div>
-                <p class="animated-checkbox mt-20">
-                  <label>
-                    <input id="drop-remove" type="checkbox"><span class="label-text">Remove after drop</span>
-                  </label>
-                </p>
-              </div>
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Pie Chart</h3>
+            <div class="embed-responsive embed-responsive-16by9">
+              <canvas class="embed-responsive-item" id="pieChartDemo"></canvas>
             </div>
-           
           </div>
         </div>
       </div>
@@ -173,10 +161,56 @@
     <!-- The javascript plugin to display page loading on top-->
     <script src="js/plugins/pace.min.js"></script>
     <!-- Page specific javascripts-->
-    <script type="text/javascript" src="js/plugins/moment.min.js"></script>
-    <script type="text/javascript" src="js/plugins/jquery-ui.custom.min.js"></script>
-    <script type="text/javascript" src="js/plugins/fullcalendar.min.js"></script>
-    
+    <script type="text/javascript" src="js/plugins/chart.js"></script>
+    <script type="text/javascript">
+      var data = {
+      	labels: ["January", "February", "March", "April", "May"],
+      	datasets: [
+      		{
+      			label: "My First dataset",
+      			fillColor: "rgba(220,220,220,0.2)",
+      			strokeColor: "rgba(220,220,220,1)",
+      			pointColor: "rgba(220,220,220,1)",
+      			pointStrokeColor: "#fff",
+      			pointHighlightFill: "#fff",
+      			pointHighlightStroke: "rgba(220,220,220,1)",
+      			data: [65, 59, 80, 81, 56]
+      		},
+      		{
+      			label: "My Second dataset",
+      			fillColor: "rgba(151,187,205,0.2)",
+      			strokeColor: "rgba(151,187,205,1)",
+      			pointColor: "rgba(151,187,205,1)",
+      			pointStrokeColor: "#fff",
+      			pointHighlightFill: "#fff",
+      			pointHighlightStroke: "rgba(151,187,205,1)",
+      			data: [28, 48, 40, 19, 86]
+      		}
+      	]
+      };
+      var pdata = [
+      	{
+      		value: 300,
+      		color:"#F7464A",
+      		highlight: "#FF5A5E",
+      		label: "Red"
+      	},
+      	{
+      		value: 50,
+      		color: "#46BFBD",
+      		highlight: "#5AD3D1",
+      		label: "Green"
+      	},
+      	{
+      		value: 100,
+      		color: "#FDB45C",
+      		highlight: "#FFC870",
+      		label: "Yellow"
+      	}
+      ]      
+      var ctxp = $("#pieChartDemo").get(0).getContext("2d");
+      var pieChart = new Chart(ctxp).Pie(pdata);
+    </script>
     <!-- Google analytics script-->
     <script type="text/javascript">
       if(document.location.hostname == 'pratikborsadiya.in') {

@@ -1,16 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('auth.login');
 });
@@ -45,3 +34,46 @@ Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'Use
 Route::get('/y-kien', ['as' => 'comment', 'uses' => 'Home\HomeController@comment']);
 Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);
 
+<<<<<<< HEAD
+=======
+Route::prefix('staff')->group(function() {
+Route::get('/login', 'Auth\StaffLoginController@showLoginForm')->name('staff.login');
+Route::post('/login', 'Auth\StaffLoginController@login')->name('staff.login.submit');
+Route::get('/', 'StaffController@index')->name('staff.dashboard');
+});
+
+Route::get('index',[
+    'as'=>'trang-chu',
+    'uses'=>'PageController@getIndex'
+]);
+
+Route::get('thong-tin-sinh-vien',[
+    'as'=>'thongtinsinhvien',
+    'uses'=>'PageController@getStudentInformation'
+]);
+
+Route::get('phieu-danh-gia',[
+    'as'=>'phieudanhgia',
+    'uses'=>'PageController@getFormEvaluation'
+]);
+
+Route::get('thong-bao',[
+    'as'=>'thongbao',
+    'uses'=>'PageController@getNotification'
+]);
+
+Route::get('gop-y',[
+    'as'=>'gopy',
+    'uses'=>'PageController@getOpinion'
+]);
+
+Route::get('thoi-khoa-bieu',[
+    'as'=>'thoikhoabieu',
+    'uses'=>'PageController@getTimetable'
+]);
+
+Route::get('hoc-phi',[
+    'as'=>'hocphi',
+    'uses'=>'PageController@getTuition'
+]);
+>>>>>>> 55a8a76998a4a28fcb2d48782da8c2576497a34c
