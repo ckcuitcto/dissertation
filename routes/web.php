@@ -34,3 +34,28 @@ Route::get('thong-tin-sinh-vien',[
     'as'=>'thongtinsinhvien',
     'uses'=>'PageController@getStudentInformation'
 ]);
+
+Route::get('phieu-danh-gia',[
+    'as'=>'phieudanhgia',
+    'uses'=>'PageController@getFormEvaluation'
+]);
+
+Route::get('thong-bao',[
+    'as'=>'thongbao',
+    'uses'=>'PageController@getNotification'
+]);
+
+Route::get('gop-y',[
+    'as'=>'gopy',
+    'uses'=>'PageController@getOpinion'
+]);
+
+Route::get('thoi-khoa-bieu',[
+    'as'=>'thoikhoabieu',
+    'uses'=>'PageController@getTimetable'
+]);
+
+Route::get('hoc-phi',[
+    'as'=>'hocphi',
+    'uses'=>'PageController@getTuition'
+]);
