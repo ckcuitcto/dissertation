@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\EvaluationCriteria;
+use App\Topic;
 use Illuminate\Http\Request;
 
 class EvaluationFormController extends Controller
@@ -13,8 +15,9 @@ class EvaluationFormController extends Controller
      */
     public function index()
     {
-
-        return view('evaluation-form.index');
+        $topics = Topic::all();
+//        dd($topics);
+        return view('evaluation-form.index',compact('topics'));
     }
 
     /**
@@ -82,4 +85,25 @@ class EvaluationFormController extends Controller
     {
         //
     }
+
+    public static function getEvaluationCriteriaByTopicId($id){
+        $evaluationCriteriaList = EvaluationCriteria::where('topic_id',$id)->get();
+        return $evaluationCriteriaList;
+    }
+
+    public static function handleDetail($str){
+        $arrStr = explode(';',$str);
+        $value = $title = "<tr>";
+
+        foreach($arrStr as  $item){
+            $arrValue = explode(':',$item);
+            $title .= "<th>" . $arrValue[0] . "</th>";
+            $value .= "<td>" . $arrValue[1] . "</td>";
+        }
+        $html = "<table border='0' style='width:-webkit-fill-available '> ". $title."</tr>" .$value ."</tr> </table>";
+        return $html;
+    }
+
+
+
 }

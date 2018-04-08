@@ -11,8 +11,8 @@ class Topic extends Model
     protected $fillable = ['title','max_score','parent_id'];
 
 
-    public function TopicParent(){
-        return $this->belongsTo('App\Topic','parent_id','id');
+    public function TopicChild(){
+        return $this->hasMany('App\Topic','parent_id','id');
     }
 
     public function EvaluationCriterias(){

@@ -45,154 +45,99 @@
                             <!-- <table class="table table-hover table-bordered" id="sampleTable"> -->
                             <thead>
                             <tr>
-                                <th>Nội dung đánh giá</th>
-                                <th>Thang điểm</th>
-                                <th>Sinh viên tự đánh giá</th>
-                                <th>Tập thể lớp đánh giá</th>
-                                <th>CVHT/GVCN kết luận điểm</th>
+                                <th style="width: 71%;">Nội dung đánh giá</th>
+                                <th style="width: 5%;">Thang điểm</th>
+                                <th style="width: 8%;">Sinh viên tự đánh giá</th>
+                                <th style="width: 8%;">Tập thể lớp đánh giá</th>
+                                <th style="width: 8%;">CVHT/GVCN kết luận điểm</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>Tiger Nixon</td>
-                                <td>System Architect</td>
-                                <td>Edinburgh</td>
-                                <td>61</td>
-                                <td>2011/04/25</td>
-                            </tr>
-                            <tr>
-                                <td>Garrett Winters</td>
-                                <td>Accountant</td>
-                                <td>Tokyo</td>
-                                <td>63</td>
-                                <td>2011/07/25</td>
-                            </tr>
-                            <tr>
-                                <td>Ashton Cox</td>
-                                <td>Junior Technical Author</td>
-                                <td>San Francisco</td>
-                                <td>66</td>
-                                <td>2009/01/12</td>
-                            </tr>
-                            <tr>
-                                <td>Cedric Kelly</td>
-                                <td>Senior Javascript Developer</td>
-                                <td>Edinburgh</td>
-                                <td>22</td>
-                                <td>2012/03/29</td>
-                            </tr>
-                            <tr>
-                                <td>Airi Satou</td>
-                                <td>Accountant</td>
-                                <td>Tokyo</td>
-                                <td>33</td>
-                                <td>2008/11/28</td>
+                            {{-- lấy ra tất  cả topic--}}
+                            @foreach($topics as $key => $value)
+                                {{-- chỉ hiện ra các topic to nhất để tránh trùng lặp--}}
+                                @if (!$value->parent_id)
+                                    <tr>
+                                        {{--nếu topic k có paren thì colspan cho giống--}}
+                                        @if(!$value->parent_id)
+                                            <td colspan="5"><b> {{ $value->title }}</b></td>
+                                        @else
+                                            <td> {{ $value->title }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        @endif
+                                    </tr>
+                                    {{-- nếu topic có topic con thì hiện ra--}}
+                                    @isset($value->TopicChild)
+                                        @foreach($value->TopicChild as $childValue)
+                                            <tr>
+                                                <td><b>{{ $childValue->title }}</b></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            {{-- hiện ra các tiêu chuẩn của các topic --}}
+                                            @isset($childValue->EvaluationCriterias)
+                                                @foreach($childValue->EvaluationCriterias as $evaluationCriteria)
+                                                    <tr>
+                                                        <td> {{ $evaluationCriteria->content }}
+                                                            {{-- nếu có chi tiết thì hiện ra--}}
+                                                            @isset($evaluationCriteria->detail)
+                                                                {!!  \App\Http\Controllers\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
+                                                            @endisset
+                                                        </td>
+                                                        @if($evaluationCriteria->mark_range_to)
+                                                            <td> {{ $evaluationCriteria->mark_range_from ."-".$evaluationCriteria->mark_range_to ." điểm". $evaluationCriteria->unit }} </td>
+                                                        @else
+                                                            <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
+                                                        @endif
+                                                        <td><input type="number" style="width: 50px"></td>
+                                                        <td><input type="number" style="width: 50px"></td>
+                                                        <td><input type="number" style="width: 50px"></td>
 
+                                                    </tr>
+                                                @endforeach
+                                            @endisset
+                                        @endforeach
+                                    @endisset
+                                    {{-- hiện ra các  tiêu chuẩn của topic cha--}}
+                                    @isset($value->EvaluationCriterias)
+                                        @foreach($value->EvaluationCriterias as $evaluationCriteria)
+                                            <tr>
+                                                <td> {{ $evaluationCriteria->content }}
+                                                    @isset($evaluationCriteria->detail)
+                                                        {!!  \App\Http\Controllers\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
+                                                    @endisset
+                                                </td>
+                                                @if($evaluationCriteria->mark_range_to)
+                                                    <td> {{ $evaluationCriteria->mark_range_from ."-".$evaluationCriteria->mark_range_to ." điểm". $evaluationCriteria->unit }} </td>
+                                                @else
+                                                    <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
+                                                @endif
+                                                <td><input type="number" style="width: 50px"></td>
+                                                <td><input type="number" style="width: 50px"></td>
+                                                <td><input type="number" style="width: 50px"></td>
+
+                                            </tr>
+                                        @endforeach
+                                    @endisset
+                                @endif
+                            @endforeach
+
+                            <tr>
+                                <th colspan="2"> Tổng V. (Tối đa 10 điểm)</th>
+                                <th></th> <th></th> <th></th>
                             </tr>
                             <tr>
-                                <td>Brielle Williamson</td>
-                                <td>Integration Specialist</td>
-                                <td>New York</td>
-                                <td>61</td>
-                                <td>2012/12/02</td>
+                                <th> Tổng cộng</th>
+                                <th> 0 - 100</th> <th></th> <th></th> <th></th><th></th>
                             </tr>
                             <tr>
-                                <td>Herrod Chandler</td>
-                                <td>Sales Assistant</td>
-                                <td>San Francisco</td>
-                                <td>59</td>
-                                <td>2012/08/06</td>
-                            </tr>
-                            <tr>
-                                <td>Rhona Davidson</td>
-                                <td>Integration Specialist</td>
-                                <td>Tokyo</td>
-                                <td>55</td>
-                                <td>2010/10/14</td>
-                            </tr>
-                            <tr>
-                                <td>Colleen Hurst</td>
-                                <td>Javascript Developer</td>
-                                <td>San Francisco</td>
-                                <td>39</td>
-                                <td>2009/09/15</td>
-                            </tr>
-                            <tr>
-                                <td>Sonya Frost</td>
-                                <td>Software Engineer</td>
-                                <td>Edinburgh</td>
-                                <td>23</td>
-                                <td>2008/12/13</td>
-                            </tr>
-                            <tr>
-                                <td>Jena Gaines</td>
-                                <td>Office Manager</td>
-                                <td>London</td>
-                                <td>30</td>
-                                <td>2008/12/19</td>
-                            </tr>
-                            <tr>
-                                <td>Quinn Flynn</td>
-                                <td>Support Lead</td>
-                                <td>Edinburgh</td>
-                                <td>22</td>
-                                <td>2013/03/03</td>
-                            </tr>
-                            <tr>
-                                <td>Charde Marshall</td>
-                                <td>Regional Director</td>
-                                <td>San Francisco</td>
-                                <td>36</td>
-                                <td>2008/10/16</td>
-                            </tr>
-                            <tr>
-                                <td>Haley Kennedy</td>
-                                <td>Senior Marketing Designer</td>
-                                <td>London</td>
-                                <td>43</td>
-                                <td>2012/12/18</td>
-                            </tr>
-                            <tr>
-                                <td>Tatyana Fitzpatrick</td>
-                                <td>Regional Director</td>
-                                <td>London</td>
-                                <td>19</td>
-                                <td>2010/03/17</td>
-                            </tr>
-                            <tr>
-                                <td>Michael Silva</td>
-                                <td>Marketing Designer</td>
-                                <td>London</td>
-                                <td>66</td>
-                                <td>2012/11/27</td>
-                            </tr>
-                            <tr>
-                                <td>Paul Byrd</td>
-                                <td>Chief Financial Officer (CFO)</td>
-                                <td>New York</td>
-                                <td>64</td>
-                                <td>2010/06/09</td>
-                            </tr>
-                            <tr>
-                                <td>Gloria Little</td>
-                                <td>Systems Administrator</td>
-                                <td>New York</td>
-                                <td>59</td>
-                                <td>2009/04/10</td>
-                            </tr>
-                            <tr>
-                                <td>Bradley Greer</td>
-                                <td>Software Engineer</td>
-                                <td>London</td>
-                                <td>41</td>
-                                <td>2012/10/13</td>
-                            </tr>
-                            <tr>
-                                <td>Dai Rios</td>
-                                <td>Personnel Lead</td>
-                                <td>Edinburgh</td>
-                                <td>35</td>
-                                <td>2012/09/26</td>
+                                <th> Xếp loại</th>
+                                <th colspan="3"></th><th></th>
                             </tr>
                             </tbody>
                         </table>
@@ -206,27 +151,11 @@
 
 @section('sub-javascript')
 
-    <!-- Page specific javascripts-->
-    <!-- Data table plugin-->
-{{--    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>--}}
-{{--    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>--}}
+    {{--<!-- Page specific javascripts-->--}}
+    {{--<!-- Data table plugin-->--}}
+    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-    <!-- Google analytics script-->
-    <script type="text/javascript">
-//        if (document.location.hostname == 'pratikborsadiya.in') {
-//            (function (i, s, o, g, r, a, m) {
-//                i['GoogleAnalyticsObject'] = r;
-//                i[r] = i[r] || function () {
-//                        (i[r].q = i[r].q || []).push(arguments)
-//                    }, i[r].l = 1 * new Date();
-//                a = s.createElement(o),
-//                    m = s.getElementsByTagName(o)[0];
-//                a.async = 1;
-//                a.src = g;
-//                m.parentNode.insertBefore(a, m)
-//            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-//            ga('create', 'UA-72504830-1', 'auto');
-//            ga('send', 'pageview');
-//        }
-    </script>
+    {{--<!-- Google analytics script-->--}}
+
 @endsection
