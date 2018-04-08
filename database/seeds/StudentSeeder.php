@@ -19,7 +19,7 @@ class StudentSeeder extends Seeder
                 'password' => bcrypt('DH51400250'),
             ],
             [
-                'id' => '51400251',
+                'id' => 'DH51400251',
                 'name' => 'Thai Duc 1',
                 'email' => 'thducit1@gmail.com',
                 'password' => bcrypt('DH51400251'),

@@ -37,8 +37,10 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    // set column default login
     public function username()
     {
         return 'id';
     }
+
 }

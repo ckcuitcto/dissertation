@@ -19,17 +19,9 @@ class CreateEvaluationResultsTable extends Migration
             $table->integer('evaluation_criteria_id')->unsigned()->nullable();
             $table->integer('evaluation_form_id')->unsigned()->nullable();
 
-            $table->string('monitor_id',10)->nullable();
-            $table->integer('motinor_score')->nullable();
+            $table->string('marker_id',10)->nullable();
+            $table->integer('marker_score')->nullable();
 
-            $table->string('education_adviser_id',10)->nullable();
-            $table->integer('education_adviser_score')->nullable();
-
-            $table->string('faculty_id',10)->nullable();
-            $table->integer('faculty_score')->nullable();
-
-            $table->string('custom_id',10)->nullable();
-            $table->integer('custom_score')->nullable();
 
             $table->timestamps();
         });
