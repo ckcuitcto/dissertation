@@ -13,7 +13,7 @@ class StudentSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'id' => '51400250',
+                'id' => 'DH51400250',
                 'name' => 'Thai Duc',
                 'email' => 'thducit@gmail.com',
                 'password' => bcrypt('DH51400250'),

@@ -173,7 +173,6 @@
 @endsection
 
 @section('sub-javascript')
-    <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
     <!-- Page specific javascripts-->
     <script type="text/javascript" src="{{ URL::asset('template/js/plugins/chart.js') }}"></script>
     <script type="text/javascript">

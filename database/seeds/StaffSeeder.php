@@ -13,7 +13,7 @@ class StaffSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'id' => '123123',
+                'id' => 'GV123123',
                 'name' => 'Giao vien 1',
                 'email' => 'GV123123@gmail.com',
                 'password' => bcrypt('GV123123'),
@@ -25,7 +25,7 @@ class StaffSeeder extends Seeder
                 'password' => bcrypt('GV124124'),
             ],
             [
-                'id' => '124125',
+                'id' => 'GV124125',
                 'name' => 'Giao vien han',
                 'email' => 'GV124125@gmail1.com',
                 'password' => bcrypt('GV124125'),

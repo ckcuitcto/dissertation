@@ -24,6 +24,7 @@
 @yield('content')
 
 @section('javascript')
+
 @show
 
 @section('sub-javascript')
