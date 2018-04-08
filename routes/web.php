@@ -34,13 +34,6 @@ Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'Use
 Route::get('/y-kien', ['as' => 'comment', 'uses' => 'Home\HomeController@comment']);
 Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);
 
-<<<<<<< HEAD
-=======
-Route::prefix('staff')->group(function() {
-Route::get('/login', 'Auth\StaffLoginController@showLoginForm')->name('staff.login');
-Route::post('/login', 'Auth\StaffLoginController@login')->name('staff.login.submit');
-Route::get('/', 'StaffController@index')->name('staff.dashboard');
-});
 
 Route::get('index',[
     'as'=>'trang-chu',
@@ -76,4 +69,3 @@ Route::get('hoc-phi',[
     'as'=>'hocphi',
     'uses'=>'PageController@getTuition'
 ]);
->>>>>>> 55a8a76998a4a28fcb2d48782da8c2576497a34c
