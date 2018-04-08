@@ -59,3 +59,8 @@ Route::get('hoc-phi',[
     'as'=>'hocphi',
     'uses'=>'PageController@getTuition'
 ]);
+
+Route::get('phong-dao-tao',[
+    'as'=>'phongdaotao',
+    'uses'=>'PageController@getOfficeAcademic'
+]);

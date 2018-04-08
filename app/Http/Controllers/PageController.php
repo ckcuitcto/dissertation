@@ -33,4 +33,8 @@ class PageController extends Controller
     public function getTuition() {
         return view('page.hoc_phi');
     }
+
+    public function getOfficeAcademic() {
+        return view('page.phong_dao_tao');
+    }
 }
