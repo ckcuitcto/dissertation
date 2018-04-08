@@ -1,7 +1,5 @@
 <?php
-
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -12,12 +10,10 @@ return [
     | as required, but they're a perfect start for most applications.
     |
     */
-
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'students',
+        'passwords' => 'users',
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -34,28 +30,16 @@ return [
     | Supported: "session", "token"
     |
     */
-
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'students',
+            'provider' => 'users',
         ],
-
         'api' => [
             'driver' => 'token',
-            'provider' => 'students',
-        ],
-
-        'staff' => [
-            'driver' => 'session',
-            'provider' => 'staff',
-        ],
-        'staff-api' => [
-            'driver' => 'token',
-            'provider' => 'staff',
+            'provider' => 'users',
         ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -72,24 +56,16 @@ return [
     | Supported: "database", "eloquent"
     |
     */
-
     'providers' => [
-        'students' => [
+        'users' => [
             'driver' => 'eloquent',
-            'model' => App\Student::class,
+            'model' => App\User::class,
         ],
-
-         'staff' => [
-             'driver' => 'eloquent',
-             'model' => App\Staff::class,
-         ],
-
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
@@ -104,18 +80,11 @@ return [
     | they have less time to be guessed. You may change this as needed.
     |
     */
-
     'passwords' => [
-        'students' => [
-            'provider' => 'students',
+        'users' => [
+            'provider' => 'users',
             'table' => 'password_resets',
             'expire' => 60,
         ],
-        'staff' => [
-            'provider' => 'staff',
-            'table' => 'password_resets',
-            'expire' => 30,
-        ],
     ],
-
 ];

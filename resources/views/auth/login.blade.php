@@ -1,4 +1,8 @@
-@extends('layouts.master')
+@extends('layouts.default')
+@section('header')
+@endsection
+@section('menuLeft')
+@endsection
 @section('content')
     <section class="material-half-bg">
         <div class="cover"></div>
@@ -69,7 +73,6 @@
 @endsection
 
 @section('sub-javascript')
-    <script src="{{URL::asset('template/js/plugins/pace.min.js')}}"></script>
     <script type="text/javascript">
         // Login Page Flipbox control
         $('.login-content [data-toggle="flip"]').click(function () {
