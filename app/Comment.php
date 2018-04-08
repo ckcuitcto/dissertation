@@ -11,7 +11,7 @@ class Comment extends Model
     protected $fillable = ['title','content','created_by'];
 
     public function Student(){
-        return $this->belongsTo('App\Student','created_by','id');
+        return $this->belongsTo('App\Student','created_by','user_id');
     }
 
 

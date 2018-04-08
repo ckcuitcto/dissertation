@@ -17,7 +17,7 @@ class EvaluationForm extends Model
 
     public function Student()
     {
-        return $this->belongsTo('App\Student', 'student_id', 'id');
+        return $this->belongsTo('App\Student', 'student_id', 'user_id');
     }
 
     public function EvaluationResults(){

@@ -11,7 +11,7 @@ class Proof extends Model
     protected $fillable = ['name','semester_id','created_by'];
 
     public function Student(){
-        return $this->belongsTo('App\Student','created_by','id');
+        return $this->belongsTo('App\Student','created_by','user_id');
     }
 
     public function Semester(){

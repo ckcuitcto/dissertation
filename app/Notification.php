@@ -11,7 +11,7 @@ class Notification extends Model
     protected $fillable = ['title','content','created_by'];
 
     public function Staff(){
-        return $this->belongsTo('App\Staff','created_by','id');
+        return $this->belongsTo('App\Staff','created_by','user_id');
     }
 
     public function NotificationStudents(){
