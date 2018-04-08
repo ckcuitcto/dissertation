@@ -11,7 +11,7 @@ class StudentSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('students')->insert([
+        DB::table('users')->insert([
             [
                 'id' => '51400250',
                 'name' => 'Thai Duc',
@@ -19,7 +19,7 @@ class StudentSeeder extends Seeder
                 'password' => bcrypt('DH51400250'),
             ],
             [
-                'id' => '51400251',
+                'id' => 'DH51400251',
                 'name' => 'Thai Duc 1',
                 'email' => 'thducit1@gmail.com',
                 'password' => bcrypt('DH51400251'),

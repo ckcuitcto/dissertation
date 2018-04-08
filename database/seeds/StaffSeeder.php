@@ -11,7 +11,7 @@ class StaffSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('staff')->insert([
+        DB::table('users')->insert([
             [
                 'id' => '123123',
                 'name' => 'Giao vien 1',
