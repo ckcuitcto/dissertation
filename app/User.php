@@ -17,7 +17,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['user_id','class_id'];
+    protected $fillable = ['name','email','gender','address','phone_number','birthday','avatar','role_id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -28,31 +28,19 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function Comments(){
-        return $this->hasMany('App\Comment','created_by','id');
-    }
-
-    public function Proofs(){
-        return $this->hasMany('App\Proof','created_by','id');
-    }
-
-    public function NotificationStudents(){
-        return $this->hasMany('App\NotificationStudent','student_id','id');
-    }
-
-    public function EvaluationForms(){
-        return $this->hasMany('App\EvaluationForm','student_id','id');
-    }
-
     public function EvaluationResults(){
-        return $this->hasMany('App\EvaluationResult','student_id','id');
+        return $this->hasMany('App\EvaluationResult','marker_id','id');
     }
 
     public function Role(){
         return $this->belongsTo('App\Role','role_id','id');
     }
 
-    public function Classes(){
-        return $this->belongsTo('App\Classes','class_id','id');
+    public function Student(){
+        return $this->hasOne('App\Student','user_id','id');
+    }
+
+    public function Staff(){
+        return $this->hasOne('App\Staff','user_id','id');
     }
 }

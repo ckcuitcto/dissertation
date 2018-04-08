@@ -14,7 +14,7 @@ class CreateStaffTable extends Migration
     public function up()
     {
         Schema::create('staff', function (Blueprint $table) {
-            $table->string('id',10)->unique();
+            $table->increments('id')->unsigned();
             $table->string('user_id',10)->unique();
 
 

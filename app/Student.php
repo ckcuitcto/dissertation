@@ -19,22 +19,26 @@ class Student extends Model
     protected $fillable = ['user_id','class_id'];
 
     public function Comments(){
-        return $this->hasMany('App\Comment','created_by','user_id');
+        return $this->hasMany('App\Comment','created_by','id');
     }
 
     public function Proofs(){
-        return $this->hasMany('App\Proof','created_by','user_id');
+        return $this->hasMany('App\Proof','created_by','id');
     }
 
     public function NotificationStudents(){
-        return $this->hasMany('App\NotificationStudent','student_id','user_id');
+        return $this->hasMany('App\NotificationStudent','student_id','id');
     }
 
     public function EvaluationForms(){
-        return $this->hasMany('App\EvaluationForm','student_id','user_id');
+        return $this->hasMany('App\EvaluationForm','student_id','id');
     }
 
     public function Classes(){
         return $this->belongsTo('App\Classes','class_id','id');
+    }
+
+    public function User(){
+        return $this->belongsTo('App\User','user_id','id');
     }
 }

@@ -14,11 +14,11 @@ class Staff extends Model
     protected $fillable = ['user_id'];
 
     public function Classes(){
-        return $this->hasMany('App\Classes','staff_id','user_id');
+        return $this->hasMany('App\Classes','staff_id','id');
     }
 
     public function Notifications(){
-        return $this->hasMany('App\Notifications','created_by','user_id');
+        return $this->hasMany('App\Notifications','created_by','id');
     }
 
     public function User(){

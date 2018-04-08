@@ -19,16 +19,16 @@ class CreateForeignKey extends Migration
         });
 
         Schema::table('notifications', function (Blueprint $table) {
-            $table->foreign('created_by')->references('user_id')->on('staff')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('created_by')->references('id')->on('staff')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::table('notification_students', function (Blueprint $table) {
-            $table->foreign('student_id')->references('user_id')->on('students')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('notification_id')->references('id')->on('notifications')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::table('comments', function (Blueprint $table) {
-            $table->foreign('created_by')->references('user_id')->on('students')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('created_by')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::table('students', function (Blueprint $table) {
@@ -36,13 +36,13 @@ class CreateForeignKey extends Migration
         });
 
         Schema::table('proofs', function (Blueprint $table) {
-            $table->foreign('created_by')->references('user_id')->on('students')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('created_by')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('semester_id')->references('id')->on('semesters');
         });
 
         Schema::table('evaluation_forms', function (Blueprint $table) {
             $table->foreign('semester_id')->references('id')->on('semesters');
-            $table->foreign('student_id')->references('user_id')->on('students')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::table('evaluation_criterias', function (Blueprint $table) {
