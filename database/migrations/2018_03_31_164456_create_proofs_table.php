@@ -16,7 +16,7 @@ class CreateProofsTable extends Migration
         Schema::create('proofs', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name',255);
-            $table->string('created_by',10)->nullable();
+            $table->integer('created_by')->unsigned();;
             $table->integer('semester_id')->unsigned()->nullable();
             $table->timestamps();
         });
