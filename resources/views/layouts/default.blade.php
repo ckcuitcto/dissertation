@@ -1,5 +1,15 @@
 @extends('layouts.master')
 
+@section('title')
+STU
+<?php
+$urls = explode('/', url()->current());
+$title = str_replace('-', ' ', end($urls));
+echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($title));
+?>
+@endsection
+
+
 @section('header')
     <header class="app-header"><a class="app-header__logo" href="http://www.stu.edu.vn/">STU</a>
         <!-- Sidebar toggle button-->
@@ -82,19 +92,22 @@
             </div>
         </div>
         <ul class="app-menu">
+
             <li><a class="app-menu__item active" href="index.html"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Trang chủ</span></a></li>
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Đánh giá rèn luyện</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="table-data-table.html"><i class="icon fa fa-circle-o"></i> Phiếu Đánh Giá</a></li>
-                    <li><a class="treeview-item" href="page-scores.html"><i class="icon fa fa-circle-o"></i> Tổng Điểm Cá Nhân</a></li>
+                    <li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i class="icon fa fa-circle-o"></i> Phiếu Đánh Giá</a></li>
+                    <li><a class="treeview-item" href="{{route('transcript')}}"><i class="icon fa fa-circle-o"></i> Tổng Điểm Cá Nhân</a></li>
                     <li><a class="treeview-item" href="ui-cards.html"><i class="icon fa fa-circle-o"></i> Cards</a></li>
                     <li><a class="treeview-item" href="widgets.html"><i class="icon fa fa-circle-o"></i> Widgets</a></li>
                 </ul>
             </li>
-            <li><a class="app-menu__item" href="page-user.html"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Thông tin sinh viên</span></a></li>
+            <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Thông tin sinh viên</span></a></li>
+            <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Quản lí minh chứng</span></a></li>
+
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Tin tức</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="form-components.html"><i class="icon fa fa-circle-o"></i> Thông Báo</a></li>
+                    <li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i class="icon fa fa-circle-o"></i> Thông Báo</a></li>
                     <li><a class="treeview-item" href="form-custom.html"><i class="icon fa fa-circle-o"></i> Tin Tức, Sự Kiện</a></li>
                     <li><a class="treeview-item" href="form-samples.html"><i class="icon fa fa-circle-o"></i> Văn Bản Hành Chính</a></li>
                     <li><a class="treeview-item" href="form-notifications.html"><i class="icon fa fa-circle-o"></i> Form Notifications</a></li>
@@ -102,13 +115,13 @@
             </li>
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Góp ý</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="form-components.html"><i class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
+                    <li><a class="treeview-item" href="{{ route('comment') }}"><i class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
                     <li><a class="treeview-item" href="table-data-table.html"><i class="icon fa fa-circle-o"></i> Data Tables</a></li>
                 </ul>
             </li>
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="blank-page.html"><i class="icon fa fa-circle-o"></i> Thời Khóa Biểu</a></li>
+                    <li><a class="treeview-item" href="{{ route('schedule') }}"><i class="icon fa fa-circle-o"></i> Thời Khóa Biểu</a></li>
                     <li><a class="treeview-item" href="page-login.html"><i class="icon fa fa-circle-o"></i> Điểm Học Kỳ</a></li>
                     <li><a class="treeview-item" href="page-test-schedule.html"><i class="icon fa fa-circle-o"></i> Lịch Thi Học Kỳ</a></li>
                     <li><a class="treeview-item" href="page-invoice.html"><i class="icon fa fa-circle-o"></i> Học Phí</a></li>
@@ -131,10 +144,10 @@
     <script src="{{ URL::asset('template/js/popper.min.js') }}"></script>
     <script src="{{ URL::asset('template/js/bootstrap.min.js') }}"></script>
     <script src="{{ URL::asset('template/js/main.js') }}"></script>
+    <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
 @stop
 
 @section('sub-javascript')
-    <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
     <!-- Page specific javascripts-->
     <script type="text/javascript" src="{{ URL::asset('template/js/plugins/chart.js') }}"></script>
     <script type="text/javascript">
