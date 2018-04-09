@@ -16,7 +16,7 @@ class CreateTopicsTable extends Migration
         Schema::create('topics', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->text('title');
-            $table->integer('max_score');
+            $table->integer('max_score')->nullable();
             $table->integer('parent_id')->unsigned()->nullable();
             $table->timestamps();
         });
