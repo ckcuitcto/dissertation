@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StaffSeeder::class);
         $this->call(Topic::class);
         $this->call(TopicChild::class);
-
         $this->call(EvaluationCriteria::class);
     }
 }

@@ -1,12 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 06-Apr-18
- * Time: 8:02 PM
- */
-?>
-
 @extends('layouts.default')
 
 @section('content')
@@ -17,8 +8,7 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
+                <li class="breadcrumb-item"><a href="#"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item active"><a href="#">Phiếu đánh giá điểm rèn luyện</a></li>
             </ul>
         </div>
@@ -26,7 +16,6 @@
             <div class="col-md-12">
                 <div class="tile">
                     <div class="tile-body">
-
                         <div class="tile user-settings">
                             <h4 class="line-head">Thông tin sinh viên</h4>
                             <div class="row">
@@ -41,104 +30,116 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-hover table-bordered">
-                            <!-- <table class="table table-hover table-bordered" id="sampleTable"> -->
-                            <thead>
-                            <tr>
-                                <th style="width: 71%;">Nội dung đánh giá</th>
-                                <th style="width: 5%;">Thang điểm</th>
-                                <th style="width: 8%;">Sinh viên tự đánh giá</th>
-                                <th style="width: 8%;">Tập thể lớp đánh giá</th>
-                                <th style="width: 8%;">CVHT/GVCN kết luận điểm</th>
-                            </tr>
-                            </thead>
+
+
+                        <table class="table table-hover table-bordered" id="sampleTable">
                             <tbody>
+                              <tr>
+                                <td colspan="7"><strong>Nội dung đánh giá</strong></td>
+                                <td><strong>Thang điểm</strong></td>
+                                <td><strong>Sinh viên tự đánh giá</strong></td>
+                                <td><b>Tập thể lớp đánh giá</b></td>
+                                <td><b>CVHT/GVCN kết luận điểm</b></td>
+                              </tr>
+                              <tr>
+                                <td colspan="7">(1)</td>
+                                <td>(2)</td>
+                                <td>(3)</td>
+                                <td>(4)</td>
+                                <td>(5)</td>
+                              </tr>
+
                             {{-- lấy ra tất  cả topic--}}
                             @foreach($topics as $key => $value)
-                                {{-- chỉ hiện ra các topic to nhất để tránh trùng lặp--}}
-                                @if (!$value->parent_id)
-                                    <tr>
-                                        {{--nếu topic k có paren thì colspan cho giống--}}
-                                        @if(!$value->parent_id)
-                                            <td colspan="5"><b> {{ $value->title }}</b></td>
-                                        @else
-                                            <td> {{ $value->title }}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        @endif
-                                    </tr>
-                                    {{-- nếu topic có topic con thì hiện ra--}}
-                                    @isset($value->TopicChild)
-                                        @foreach($value->TopicChild as $childValue)
-                                            <tr>
-                                                <td><b>{{ $childValue->title }}</b></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            {{-- hiện ra các tiêu chuẩn của các topic --}}
-                                            @isset($childValue->EvaluationCriterias)
-                                                @foreach($childValue->EvaluationCriterias as $evaluationCriteria)
-                                                    <tr>
-                                                        <td> {{ $evaluationCriteria->content }}
-                                                            {{-- nếu có chi tiết thì hiện ra--}}
-                                                            @isset($evaluationCriteria->detail)
-                                                                {!!  \App\Http\Controllers\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
-                                                            @endisset
-                                                        </td>
-                                                        @if($evaluationCriteria->mark_range_to)
-                                                            <td> {{ $evaluationCriteria->mark_range_from ."-".$evaluationCriteria->mark_range_to ." điểm". $evaluationCriteria->unit }} </td>
-                                                        @else
-                                                            <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
-                                                        @endif
-                                                        <td><input type="number" style="width: 50px"></td>
-                                                        <td><input type="number" style="width: 50px"></td>
-                                                        <td><input type="number" style="width: 50px"></td>
+                            {{-- chỉ hiện ra các topic to nhất để tránh trùng lặp--}}
+                            @if (!$value->parent_id)
 
-                                                    </tr>
-                                                @endforeach
-                                            @endisset
-                                        @endforeach
-                                    @endisset
-                                    {{-- hiện ra các  tiêu chuẩn của topic cha--}}
-                                    @isset($value->EvaluationCriterias)
-                                        @foreach($value->EvaluationCriterias as $evaluationCriteria)
-                                            <tr>
-                                                <td> {{ $evaluationCriteria->content }}
+                              <tr>
+                                  {{--nếu topic k có paren thì colspan cho giống--}}
+                                  @if(!$value->parent_id)
+                                  <td colspan="12"><b> {{ $value->title }}</b></td>
+                                  @else
+                                  <td> {{ $value->title }}</td>
+                                  @endif
+                              </tr>
+
+                              {{-- nếu topic có topic con thì hiện ra--}}
+                              @isset($value->TopicChild)
+                              @foreach($value->TopicChild as $childValue)
+
+                              <tr>
+                                <td colspan="7"><b>{{ $childValue->title }}</b></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              </tr>
+
+                              {{-- hiện ra các tiêu chuẩn của các topic --}}
+                              @isset($childValue->EvaluationCriterias)
+                              @foreach($childValue->EvaluationCriterias as $evaluationCriteria)
+
+                              <tr>
+                                <td colspan="7"> {{ $evaluationCriteria->content }}
+                                        {{-- nếu có chi tiết thì hiện ra--}}
+                                        @isset($evaluationCriteria->detail)
+                                            {!!  \App\Http\Controllers\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
+                                        @endisset
+                                    </td>
+                                    @if($evaluationCriteria->mark_range_to)
+                                        <td> {{ $evaluationCriteria->mark_range_from ."-".$evaluationCriteria->mark_range_to ." điểm". $evaluationCriteria->unit }} </td>
+                                    @else
+                                        <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
+                                    @endif
+                                <td><input type="text" class="col-3"></td>
+                                <td><input type="text" class="col-3"></td>
+                                <td><input type="text" class="col-3"></td>
+                              </tr>
+
+                            @endforeach
+                            @endisset
+                            @endforeach
+                            @endisset
+                            {{-- hiện ra các  tiêu chuẩn của topic cha--}}
+                            @isset($value->EvaluationCriterias)
+                            @foreach($value->EvaluationCriterias as $evaluationCriteria)
+                              <tr>
+                                <td colspan="7"> {{ $evaluationCriteria->content }}
                                                     @isset($evaluationCriteria->detail)
                                                         {!!  \App\Http\Controllers\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
                                                     @endisset
                                                 </td>
                                                 @if($evaluationCriteria->mark_range_to)
-                                                    <td> {{ $evaluationCriteria->mark_range_from ."-".$evaluationCriteria->mark_range_to ." điểm". $evaluationCriteria->unit }} </td>
+                                <td> {{ $evaluationCriteria->mark_range_from ."-".$evaluationCriteria->mark_range_to ." điểm". $evaluationCriteria->unit }} </td>
                                                 @else
-                                                    <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
+                                <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
                                                 @endif
-                                                <td><input type="number" style="width: 50px"></td>
-                                                <td><input type="number" style="width: 50px"></td>
-                                                <td><input type="number" style="width: 50px"></td>
-
-                                            </tr>
-                                        @endforeach
-                                    @endisset
-                                @endif
-                            @endforeach
-
-                            <tr>
-                                <th colspan="2"> Tổng V. (Tối đa 10 điểm)</th>
-                                <th></th> <th></th> <th></th>
-                            </tr>
-                            <tr>
-                                <th> Tổng cộng</th>
-                                <th> 0 - 100</th> <th></th> <th></th> <th></th><th></th>
-                            </tr>
-                            <tr>
-                                <th> Xếp loại</th>
-                                <th colspan="3"></th><th></th>
-                            </tr>
+                                <td><input type="text" class="col-3"></td>
+                                <td><input type="text" class="col-3"></td>
+                                <td><input type="text" class="col-3"></td>
+                              </tr>
+                              @endforeach
+                              @endisset
+                          @endif
+                      @endforeach
+                              <tr>
+                                  <td colspan="8">Tổng V. (Tối đa 10 điểm)</td>
+                                  <td><input type="text" class="col-3"></td>
+                                  <td><input type="text" class="col-3"></td>
+                                  <td><input type="text" class="col-3"></td>
+                              </tr>
+                              <tr>
+                                  <td colspan="7">Tổng cộng</td>
+                                  <td>0 - 100</td>
+                                  <td><input type="text" class="col-3"></td>
+                                  <td><input type="text" class="col-3"></td>
+                                  <td><input type="text" class="col-3"></td>
+                              </tr>
+                              <tr>
+                                  <td colspan="7">Xếp loại</td>
+                                  <td colspan="3" style="background-color:gray"></td>
+                                  <td></td>
+                              </tr>
                             </tbody>
                         </table>
                     </div>
