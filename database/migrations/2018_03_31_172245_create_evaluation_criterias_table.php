@@ -16,10 +16,10 @@ class CreateEvaluationCriteriasTable extends Migration
         Schema::create('evaluation_criterias', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->text('content')->nullable();
+            $table->string('mark_range_display')->nullable();
             $table->text('detail')->nullable();
             $table->integer('mark_range_from');
             $table->integer('mark_range_to')->nullable();
-            $table->integer('mark_range_display')->nullable();
             $table->integer('topic_id')->unsigned()->nullable();
             $table->timestamps();
         });
