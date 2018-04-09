@@ -151,12 +151,6 @@
 @endsection
 
 @section('sub-javascript')
-
-    {{--<!-- Page specific javascripts-->--}}
-    {{--<!-- Data table plugin-->--}}
     <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-    {{--<!-- Google analytics script-->--}}
-
 @endsection
