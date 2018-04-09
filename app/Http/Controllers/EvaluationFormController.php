@@ -86,11 +86,6 @@ class EvaluationFormController extends Controller
         //
     }
 
-    public static function getEvaluationCriteriaByTopicId($id){
-        $evaluationCriteriaList = EvaluationCriteria::where('topic_id',$id)->get();
-        return $evaluationCriteriaList;
-    }
-
     public static function handleDetail($str){
         $arrStr = explode(';',$str);
         $value = $title = "<tr>";

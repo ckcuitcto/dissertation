@@ -13,140 +13,140 @@ class EvaluationCriteria extends Seeder
     {
         DB::table("evaluation_criterias")->insert([
 
-            //I. Ý thức tham gia học tập (0 – 20 điểm)  id = 1
+//            I. Ý thức tham gia học tập (0 – 20 điểm)  id = 1
 
-            //a.	Ý thức học tập id = 6
-//            [
-//                "content" => "- Đi học đầy đủ, đúng giờ, nghiêm túc, không bỏ tiết…",
-//                "mark_range_display" => "0 - 5 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 0, "mark_range_to" => 5, "topic_id" => 6
-//            ],
-//            [
-//                "content" => "- Không vi phạm quy chế về thi, kiểm tra",
-//                "mark_range_display" => "5 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 5, "mark_range_to" => null, "topic_id" => 6
-//            ],
-//            [
-//                "content" => "- Bị cấm thi kết thúc học phần",
-//                "mark_range_display" => "-5 điểm",
-//                "detail" => null,
-//                "mark_range_from" => "-5", "mark_range_to" => null, "topic_id" => 6
-//            ],
-//            [
-//                "content" => "- Vi phạm qui chế thi bị lập biên bản",
-//                "mark_range_display" => "-2 điểm",
-//                "detail" => null,
-//                "mark_range_from" => "-2", "mark_range_to" => null, "topic_id" => 6
-//            ],
+//            a.	Ý thức học tập id = 6
+            [
+                "content" => "- Đi học đầy đủ, đúng giờ, nghiêm túc, không bỏ tiết…",
+                "mark_range_display" => "0 - 5 điểm",
+                "detail" => null,
+                "mark_range_from" => 0, "mark_range_to" => 5, "topic_id" => 6
+            ],
+            [
+                "content" => "- Không vi phạm quy chế về thi, kiểm tra",
+                "mark_range_display" => "5 điểm",
+                "detail" => null,
+                "mark_range_from" => 5, "mark_range_to" => null, "topic_id" => 6
+            ],
+            [
+                "content" => "- Bị cấm thi kết thúc học phần",
+                "mark_range_display" => "-5 điểm",
+                "detail" => null,
+                "mark_range_from" => "-5", "mark_range_to" => null, "topic_id" => 6
+            ],
+            [
+                "content" => "- Vi phạm qui chế thi bị lập biên bản",
+                "mark_range_display" => "-2 điểm",
+                "detail" => null,
+                "mark_range_from" => "-2", "mark_range_to" => null, "topic_id" => 6
+            ],
 
 
-//            //b.	Kết quả học tập id = 7
-//            [
-//                "content" => null,
-//                "mark_range_display" => "0 – 10 điểm",
-//                "detail" => "Yếu, kém:0 điểm ; Trung bình: 2 điểm ; Trung bình khá: 4 điểm ; Khá: 6 điểm ; Giỏi: 8 điểm ; Xuất sắc: 10 điểm",
-//                "mark_range_from" => 0, "mark_range_to" => 10, "topic_id" => 7
-//            ],
-//
-//            //c.	Nghiên cứu khoa học, tham gia các hoạt động học thuật id =8
-//            [
-//                "content" => "- Tham gia các buổi hội thảo học thuật/ Tham gia các hội thi học thuật do Đoàn – Hội, Khoa, Trường tổ chức",
-//                "mark_range_display" => "1 điểm/lần",
-//                "detail" => null,
-//                "mark_range_from" => 0, "mark_range_to" => 20, "topic_id" => 8
-//            ],
-//
-//            [
-//                "content" => "- Tham gia nghiên cứu khoa học (đạt yêu cầu, được giảng viên hướng dẫn xác nhận; không tính các bài tập, tiểu luận, đồ án môn học, luận văn)/ Có bằng khen, giấy khen về nghiên cứu khoa học/ Có bài nghiên cứu khoa học được đăng trên tạp chí, nội san (Nộp minh chứng)",
-//                "mark_range_display" => "2 – 6 điểm/lần",
-//                "detail" => "Cấp Khoa: 2 điểm/lần ; Cấp Trường: 4 điểm/lần ; Trung bình khá: 6 điểm/lần",
-//                "mark_range_from" => 0, "mark_range_to" => 20, "topic_id" => 8
-//            ],
-//
-//            [
-//                "content" => "- Có hành vi gây ảnh hưởng xấu đến công tác tổ chức các hoạt động",
-//                "mark_range_display" => "-3 điểm/lần",
-//                "detail" => null,
-//                "mark_range_from" => -3, "mark_range_to" => null, "topic_id" => 8
-//            ],
+            //b.	Kết quả học tập id = 7
+            [
+                "content" => null,
+                "mark_range_display" => "0 – 10 điểm",
+                "detail" => "Yếu, kém:0 điểm ; Trung bình: 2 điểm ; Trung bình khá: 4 điểm ; Khá: 6 điểm ; Giỏi: 8 điểm ; Xuất sắc: 10 điểm",
+                "mark_range_from" => 0, "mark_range_to" => 10, "topic_id" => 7
+            ],
+
+            //c.	Nghiên cứu khoa học, tham gia các hoạt động học thuật id =8
+            [
+                "content" => "- Tham gia các buổi hội thảo học thuật/ Tham gia các hội thi học thuật do Đoàn – Hội, Khoa, Trường tổ chức",
+                "mark_range_display" => "1 điểm/lần",
+                "detail" => null,
+                "mark_range_from" => 0, "mark_range_to" => 20, "topic_id" => 8
+            ],
+
+            [
+                "content" => "- Tham gia nghiên cứu khoa học (đạt yêu cầu, được giảng viên hướng dẫn xác nhận; không tính các bài tập, tiểu luận, đồ án môn học, luận văn)/ Có bằng khen, giấy khen về nghiên cứu khoa học/ Có bài nghiên cứu khoa học được đăng trên tạp chí, nội san (Nộp minh chứng)",
+                "mark_range_display" => "2 – 6 điểm/lần",
+                "detail" => "Cấp Khoa: 2 điểm/lần ; Cấp Trường: 4 điểm/lần ; Trung bình khá: 6 điểm/lần",
+                "mark_range_from" => 0, "mark_range_to" => 20, "topic_id" => 8
+            ],
+
+            [
+                "content" => "- Có hành vi gây ảnh hưởng xấu đến công tác tổ chức các hoạt động",
+                "mark_range_display" => "-3 điểm/lần",
+                "detail" => null,
+                "mark_range_from" => -3, "mark_range_to" => null, "topic_id" => 8
+            ],
 
 
 //            II. Ý thức chấp hành nội quy, quy chế, quy định trong nhà trường (0 – 25 điểm) id = 2
-//            [
-//                "content" => "- Tham gia học tập Tuần sinh hoạt công dân hàng năm:",
-//                "mark_range_display" => "0 – 5 điểm",
-//                "detail" => "Không tham gia: 0 điểm ; Không đầy đủ: 2 điểm ; Đầy đủ: 5 điểm ",
-//                "mark_range_from" => 0, "mark_range_to" => 5, "topic_id" => 2
-//            ],
-//
-//            [
-//                "content" => "- Không vi phạm các nội quy, quy chế, quy định trong Nhà Trường",
-//                "mark_range_display" => "12 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 0, "mark_range_to" => 12, "topic_id" => 2
-//            ],
-//
-//            [
-//                "content" => "- Tuyên truyền và tham gia các hoạt động nâng cao ý thức của sinh viên trong việc chấp hành nội quy, quy chế, quy định trong Nhà Trường, các hoạt động giữ gìn môi trường, bảo vệ tài sản, thực hành tiết kiệm, bảo vệ an ninh trật tự…",
-//                "mark_range_display" => "0 - 8 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 0, "mark_range_to" => 8, "topic_id" => 2
-//            ],
-//
-//            ///	Bị xử lý kỷ luật về công tác sinh viên: id = 9
-//            [
-//                "content" => "+ Mức khiển trách",
-//                "mark_range_display" => "-5 điểm",
-//                "detail" => null,
-//                "mark_range_from" => "-5", "mark_range_to" => null, "topic_id" => 9
-//            ],
-//
-//            [
-//                "content" => "+ Mức cảnh cáo",
-//                "mark_range_display" => "-10 điểm",
-//                "detail" => null,
-//                "mark_range_from" => "-10", "mark_range_to" => null, "topic_id" => 9
-//            ],
+            [
+                "content" => "- Tham gia học tập Tuần sinh hoạt công dân hàng năm:",
+                "mark_range_display" => "0 – 5 điểm",
+                "detail" => "Không tham gia: 0 điểm ; Không đầy đủ: 2 điểm ; Đầy đủ: 5 điểm ",
+                "mark_range_from" => 0, "mark_range_to" => 5, "topic_id" => 2
+            ],
 
-//            //III. Ý thức tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội (0 – 20 điểm)
-//            //id = 3
-//            [
-//                "content" => "- Tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống tệ nạn xã hội do Lớp, Khoa, Trường tổ chức",
-//                "mark_range_display" => "0 -10 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 0, "mark_range_to" => 10, "topic_id" => 3
-//            ],
-//
-//            //	Thành viên tích cực các đội hình văn nghệ, thể thao, công tác xã hội…: id = 10
-//            [
-//                "content" => "+ Cấp Khoa (Đội trưởng xác nhận)",
-//                "mark_range_display" => "2 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 2, "mark_range_to" => null, "topic_id" => 10
-//            ],
+            [
+                "content" => "- Không vi phạm các nội quy, quy chế, quy định trong Nhà Trường",
+                "mark_range_display" => "12 điểm",
+                "detail" => null,
+                "mark_range_from" => 0, "mark_range_to" => 12, "topic_id" => 2
+            ],
 
-//            [
-//                "content" => "+ Cấp Trường (Phòng CTSV xác nhận)",
-//                "mark_range_display" => "5 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 5, "mark_range_to" => null, "topic_id" => 10
-//            ],
-//
-//            [
-//                "content" => "- Tham gia chiến dịch Mùa hè xanh, Xuân tình nguyện, tiếp sức mùa thi… do Trường, Đoàn – Hội tổ chức",
-//                "mark_range_display" => "5 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 5, "mark_range_to" => null, "topic_id" => 3
-//            ],
-//
-//            [
-//                "content" => "-	Được kết nạp Đảng Cộng sản Việt Nam",
-//                "mark_range_display" => "15 điểm",
-//                "detail" => null,
-//                "mark_range_from" => 15, "mark_range_to" => null, "topic_id" => 3
-//            ],
+            [
+                "content" => "- Tuyên truyền và tham gia các hoạt động nâng cao ý thức của sinh viên trong việc chấp hành nội quy, quy chế, quy định trong Nhà Trường, các hoạt động giữ gìn môi trường, bảo vệ tài sản, thực hành tiết kiệm, bảo vệ an ninh trật tự…",
+                "mark_range_display" => "0 - 8 điểm",
+                "detail" => null,
+                "mark_range_from" => 0, "mark_range_to" => 8, "topic_id" => 2
+            ],
+
+            ///	Bị xử lý kỷ luật về công tác sinh viên: id = 9
+            [
+                "content" => "+ Mức khiển trách",
+                "mark_range_display" => "-5 điểm",
+                "detail" => null,
+                "mark_range_from" => "-5", "mark_range_to" => null, "topic_id" => 9
+            ],
+
+            [
+                "content" => "+ Mức cảnh cáo",
+                "mark_range_display" => "-10 điểm",
+                "detail" => null,
+                "mark_range_from" => "-10", "mark_range_to" => null, "topic_id" => 9
+            ],
+
+            //III. Ý thức tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội (0 – 20 điểm)
+            //id = 3
+            [
+                "content" => "- Tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống tệ nạn xã hội do Lớp, Khoa, Trường tổ chức",
+                "mark_range_display" => "0 -10 điểm",
+                "detail" => null,
+                "mark_range_from" => 0, "mark_range_to" => 10, "topic_id" => 3
+            ],
+
+            //	Thành viên tích cực các đội hình văn nghệ, thể thao, công tác xã hội…: id = 10
+            [
+                "content" => "+ Cấp Khoa (Đội trưởng xác nhận)",
+                "mark_range_display" => "2 điểm",
+                "detail" => null,
+                "mark_range_from" => 2, "mark_range_to" => null, "topic_id" => 10
+            ],
+
+            [
+                "content" => "+ Cấp Trường (Phòng CTSV xác nhận)",
+                "mark_range_display" => "5 điểm",
+                "detail" => null,
+                "mark_range_from" => 5, "mark_range_to" => null, "topic_id" => 10
+            ],
+
+            [
+                "content" => "- Tham gia chiến dịch Mùa hè xanh, Xuân tình nguyện, tiếp sức mùa thi… do Trường, Đoàn – Hội tổ chức",
+                "mark_range_display" => "5 điểm",
+                "detail" => null,
+                "mark_range_from" => 5, "mark_range_to" => null, "topic_id" => 3
+            ],
+
+            [
+                "content" => "-	Được kết nạp Đảng Cộng sản Việt Nam",
+                "mark_range_display" => "15 điểm",
+                "detail" => null,
+                "mark_range_from" => 15, "mark_range_to" => null, "topic_id" => 3
+            ],
 
             [
                 "content" => "-	Tham gia các hoạt động rèn luyện về chính trị, xã hội, văn nghệ, thể thao và đạt giải thưởng:",
