@@ -91,9 +91,9 @@
                                     @else
                                         <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
                                     @endif
-                                <td><input type="text" class="col-3"></td>
-                                <td><input type="text" class="col-3"></td>
-                                <td><input type="text" class="col-3"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
                               </tr>
 
                             @endforeach
@@ -114,9 +114,9 @@
                                                 @else
                                 <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
                                                 @endif
-                                <td><input type="text" class="col-3"></td>
-                                <td><input type="text" class="col-3"></td>
-                                <td><input type="text" class="col-3"></td>
+                                <td><input type="text"class="form-control"></td>
+                                <td><input type="text"class="form-control"></td>
+                                <td><input type="text"class="form-control"></td>
                               </tr>
                               @endforeach
                               @endisset
@@ -124,16 +124,16 @@
                       @endforeach
                               <tr>
                                   <td colspan="8">Tổng V. (Tối đa 10 điểm)</td>
-                                  <td><input type="text" class="col-3"></td>
-                                  <td><input type="text" class="col-3"></td>
-                                  <td><input type="text" class="col-3"></td>
+                                  <td><input type="text"class="form-control"></td>
+                                  <td><input type="text"class="form-control"></td>
+                                  <td><input type="text"class="form-control"></td>
                               </tr>
                               <tr>
                                   <td colspan="7">Tổng cộng</td>
                                   <td>0 - 100</td>
-                                  <td><input type="text" class="col-3"></td>
-                                  <td><input type="text" class="col-3"></td>
-                                  <td><input type="text" class="col-3"></td>
+                                  <td><input type="text"class="form-control"></td>
+                                  <td><input type="text"class="form-control"></td>
+                                  <td><input type="text"class="form-control"></td>
                               </tr>
                               <tr>
                                   <td colspan="7">Xếp loại</td>
