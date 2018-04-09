@@ -86,11 +86,11 @@
                                             {!!  \App\Http\Controllers\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
                                         @endisset
                                     </td>
-                                    @if($evaluationCriteria->mark_range_to)
-                                        <td> {{ $evaluationCriteria->mark_range_from ."-".$evaluationCriteria->mark_range_to ." điểm". $evaluationCriteria->unit }} </td>
-                                    @else
-                                        <td> {{ $evaluationCriteria->mark_range_from ." điểm". $evaluationCriteria->unit }} </td>
-                                    @endif
+                                    {{--@if($evaluationCriteria->mark_range_to)--}}
+{{--                                        <td> {{ $evaluationCriteria->mark_range_from ."-".$evaluationCriteria->mark_range_to ." điểm". $evaluationCriteria->unit }} </td>--}}
+                                    {{--@else--}}
+                                        <td> {{ $evaluationCriteria->mark_range_display }} </td>
+                                    {{--@endif--}}
                                 <td><input type="text" class="col-3"></td>
                                 <td><input type="text" class="col-3"></td>
                                 <td><input type="text" class="col-3"></td>
