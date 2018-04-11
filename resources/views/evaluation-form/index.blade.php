@@ -30,9 +30,9 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        {{--<table class="table table-hover table-bordered">--}}
+                       {{--<table class="table table-hover table-bordered" id="sampleTable">--}}
+                        <table class="table table-hover table-bordered">
                             <tbody>
                               <tr>
                                 <td colspan="7"><strong>Nội dung đánh giá</strong></td>
@@ -153,4 +153,5 @@
 @section('sub-javascript')
     <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
+
 @endsection

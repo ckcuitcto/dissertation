@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Department;
 
-use App\EvaluationCriteria;
-use App\Topic;
+use App\Classes;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class EvaluationFormController extends Controller
+class ClassController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,7 @@ class EvaluationFormController extends Controller
      */
     public function index()
     {
-        $topics = Topic::all();
-//        dd($topics);
-        return view('evaluation-form.index',compact('topics'));
+
     }
 
     /**
@@ -49,7 +47,9 @@ class EvaluationFormController extends Controller
      */
     public function show($id)
     {
-        //
+        $class = Classes::find($id);
+
+        return view('department.class.class-detail',compact('class'));
     }
 
     /**
@@ -85,20 +85,4 @@ class EvaluationFormController extends Controller
     {
         //
     }
-
-    public static function handleDetail($str){
-        $arrStr = explode(';',$str);
-        $value = $title = "<tr>";
-
-        foreach($arrStr as  $item){
-            $arrValue = explode(':',$item);
-            $title .= "<th>" . $arrValue[0] . "</th>";
-            $value .= "<td>" . $arrValue[1] . "</td>";
-        }
-        $html = "<table border='0' style='width:-webkit-fill-available '> ". $title."</tr>" .$value ."</tr> </table>";
-        return $html;
-    }
-
-
-
 }

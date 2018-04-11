@@ -93,7 +93,7 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
         </div>
         <ul class="app-menu">
 
-            <li><a class="app-menu__item active" href="index.html"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Trang chủ</span></a></li>
+            <li><a class="app-menu__item active" href="{{ route('home') }}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Trang chủ</span></a></li>
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Đánh giá rèn luyện</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i class="icon fa fa-circle-o"></i> Phiếu Đánh Giá</a></li>
@@ -113,6 +113,14 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
                     <li><a class="treeview-item" href="form-notifications.html"><i class="icon fa fa-circle-o"></i> Form Notifications</a></li>
                 </ul>
             </li>
+
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Quản lí Khoa,Phòng ban...</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a></li>
+                    <li><a class="treeview-item" href="form-custom.html"><i class="icon fa fa-circle-o"></i> Phòng ban</a></li>
+                </ul>
+            </li>
+
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Góp ý</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('comment') }}"><i class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
