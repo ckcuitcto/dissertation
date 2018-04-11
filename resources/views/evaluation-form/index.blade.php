@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <table class="table table-hover table-bordered">
-                            <!-- <table class="table table-hover table-bordered" id="sampleTable"> -->
+                       {{--<table class="table table-hover table-bordered" id="sampleTable">--}}
                             <thead>
                             <tr>
                                 <th style="width: 71%;">Nội dung đánh giá</th>
@@ -155,7 +155,7 @@
     {{--<!-- Data table plugin-->--}}
     <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
+    <script type="text/javascript">$('#sampleTable').DataTable();</script>
     {{--<!-- Google analytics script-->--}}
 
 @endsection

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Department;
 
+use App\Classes;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class StudentController extends Controller
+class ClassController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-         return view('user.personal-information');
+
     }
 
     /**
@@ -46,7 +47,9 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $class = Classes::find($id);
+
+        return view('department.class.class-detail',compact('class'));
     }
 
     /**
