@@ -24,34 +24,34 @@
                   <div class="tile user-settings">
                     
                     <form>       
-                        <h4 class="line-head">Tổng quan</h4>               
+                      <h4 class="line-head">Tổng quan</h4>               
                       <div class="row mb-4">
                         <div class="col-md-2">
-                            <label class="control-label" for="readOnlyInput">Họ và tên</label>
-                          </div>
-                          <div class="col-md-4">
-                            <input class="form-control" id="readOnlyInput" type="text" placeholder="Trần Ngọc Gia Hân" readonly="">
+                          <label class="control-label" for="readOnlyInput">Họ và tên</label>
+                        </div>
+                        <div class="col-md-4">
+                          <input class="form-control" id="readOnlyInput" type="text" placeholder="Trần Ngọc Gia Hân" readonly="">
                         </div>
                         <div class="col-md-2">
-                            <label class="control-label" for="readOnlyInput">Ngày sinh</label>
-                          </div>
-                          <div class="col-md-4">
-                              <input class="form-control" id="readOnlyInput" type="text" placeholder="26-03-1996" readonly="">
+                          <label class="control-label" for="readOnlyInput">Ngày sinh</label>
+                        </div>
+                        <div class="col-md-4">
+                          <input class="form-control" id="readOnlyInput" type="text" placeholder="26-03-1996" readonly="">
                         </div>
                       </div>
                       
                       <div class="row mb-4">
                         <div class="col-md-2">
                           <label>Lớp</label>
-                          </div>
-                          <div class="col-md-4">
-                              <input class="form-control" id="readOnlyInput" type="text" placeholder="D14-TH02" readonly="">
+                        </div>
+                        <div class="col-md-4">
+                          <input class="form-control" id="readOnlyInput" type="text" placeholder="D14-TH02" readonly="">
                         </div>
                         <div class="col-md-2">
                           <label>Chuyên ngành</label>
-                          </div>
-                          <div class="col-md-4">
-                              <input class="form-control" id="readOnlyInput" type="text" placeholder="Full stack deverloper" readonly="">
+                        </div>
+                        <div class="col-md-4">
+                          <input class="form-control" id="readOnlyInput" type="text" placeholder="Full stack deverloper" readonly="">
                         </div>
                       </div>
 
@@ -120,9 +120,7 @@
                       </div>
 
                       <div class="row mb-4">
-                        <div class="col-md-2">
-                          <labe>Số CMND</label>
-                          </div>
+                        <div class="col-md-2"><label>Số CMND</label></div>
                           <div class="col-md-3">
                           <input class="form-control" type="text">
                         </div>

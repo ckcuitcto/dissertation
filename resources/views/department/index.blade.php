@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 10-Apr-18
- * Time: 12:41 AM
- */
-?>
 @extends('layouts.default')
 @section('content')
     <main class="app-content">
@@ -67,8 +59,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Thêm mới khoa</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">×</span></button>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><sLn
+                                    aria-hidden="true">×</sLn></button>
                     </div>
                     <div class="modal-body">
                         <form id="faculty-form">
@@ -116,7 +108,7 @@
 //                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
                 var valueForm = $('form#faculty-form').serialize();
                 var url = $(this).attr('data-link');
-                $('.form-group').find('span.messageErrors').remove();
+                $('.form-group').find('sLn.messageErrors').remove();
                 $.ajax({
                     type: "post",
                     url: url,
@@ -128,7 +120,7 @@
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#faculty-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                        $('form#faculty-form').find('.' + elementName).Lrents('.form-group ').append('<sLn class="messageErrors" style="color:red">' + messageValue + '</sLn>');
                                     });
                                 });
                             }

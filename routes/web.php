@@ -65,7 +65,6 @@ Route::group(['middleware' => 'auth'],function(){
         'uses'=>'PageController@getNotification'
     ]);
 
-
     Route::get('hoc-phi',[
         'as'=>'hocphi',
         'uses'=>'PageController@getTuition'
