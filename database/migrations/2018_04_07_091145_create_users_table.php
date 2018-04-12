@@ -24,6 +24,8 @@ class CreateUsersTable extends Migration
             $table->date('birthday')->nullable();
             $table->string('avatar',200)->nullable();
 
+            $table->integer('faculty_id')->unsigned()->nullable();
+
             $table->integer('role_id')->unsigned()->nullable();
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
             $table->rememberToken();

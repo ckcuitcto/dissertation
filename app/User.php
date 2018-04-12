@@ -17,7 +17,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['name','email','gender','address','phone_number','birthday','avatar','role_id'];
+    protected $fillable = ['name','email','gender','address','phone_number','birthday','avatar','role_id','faculty_id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -42,5 +42,9 @@ class User extends Authenticatable
 
     public function Staff(){
         return $this->hasOne('App\Staff','user_id','id');
+    }
+
+    public function Faculty(){
+        return $this->belongsTo('App\User','faculty_id','id');
     }
 }

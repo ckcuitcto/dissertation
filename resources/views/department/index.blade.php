@@ -30,7 +30,7 @@
                             <tr>
                                 <th>Khoa</th>
                                 <th>Số lượng lớp</th>
-                                <th>Xóa</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -40,11 +40,12 @@
                                     </td>
                                     <td>{{ count($faculty->classes) }}</td>
                                     <td>
-                                    @if(!count($faculty->classes)>0)
-                                        <button data-id="{{$faculty->id}}" id="destroy-faculty"  data-link="{{route('faculty-destroy',$faculty->id)}}">
-                                            <i class="fa fa-trash-o" aria-hidden="true"> </i>
-                                        </button>
-                                    @endif
+                                        @if(!count($faculty->classes)>0)
+                                            <a data-faculty-id="{{$faculty->id}}" id="destroy-faculty"
+                                               data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
+                                                <i class="fa fa-trash-o" aria-hidden="true"> </i>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -86,9 +87,8 @@
                             </div>
                         </form>
                         <div class="modal-footer">
-                            <button
-                                    data-link="{{ route('faculty-store') }}"
-                                    class="btn btn-primary" id="btn-save-faculty" name="btn-save-faculty" type="button">
+                            <button data-link="{{ route('faculty-store') }}" class="btn btn-primary"
+                                    id="btn-save-faculty" name="btn-save-faculty" type="button">
                                 Thêm
                             </button>
                             <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
@@ -123,7 +123,7 @@
                     data: valueForm,
                     dataType: 'json',
                     success: function (result) {
-                        if (result.status == "fail") {
+                        if (result.status === "fail") {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
@@ -132,8 +132,8 @@
                                     });
                                 });
                             }
-                        } else if (result.status == "success") {
-                            $('#myModal').find('.modal-body').html('<h5>Đã thêm khoa thành công</h5>');
+                        } else if (result.status === "success") {
+                            $('#myModal').find('.modal-body').html('<p>Đã thêm khoa thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#myModal').on('hidden.bs.modal', function (e) {
                                 location.reload();
@@ -143,7 +143,9 @@
                 });
             });
 
-            $('#destroy-faculty').click(function () {
+            $('a#destroy-faculty').click(function () {
+                var id = $(this).attr("data-faculty-id");
+                var url = $(this).attr('data-faculty-link');
                 swal({
                     title: "Bạn chắc chưa?",
                     text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
@@ -155,20 +157,18 @@
                     closeOnCancel: false
                 }, function (isConfirm) {
                     if (isConfirm) {
-                        var id = $('#destroy-faculty').attr("data-id");
-                        var url = $('#destroy-faculty').attr('data-link');
                         $.ajax({
                             url: url,
                             type: 'GET',
                             cache: false,
                             data: {"id": id},
                             success: function (data) {
-                                if (data.status == true ) {
-                                    swal("Deleted!", "Đã xóa Khoa "+ data.faculty.name, "success");
+                                if (data.status === true) {
+                                    swal("Deleted!", "Đã xóa Khoa " + data.faculty.name, "success");
                                     $('.sa-confirm-button-container').click(function () {
                                         location.reload();
                                     })
-                                }else{
+                                } else {
                                     swal("Cancelled", "Không tìm thấy Khoa !!! :)", "error");
                                 }
                             }
@@ -179,20 +179,6 @@
                 });
             });
 
-//            $("#destroy-faculty").click(function () {
-//                var id = $(this).attr("data-id");
-//                $.ajax({
-//                    url: $(this).attr('data-link').val(),
-//                    type: 'GET',
-//                    cache: false,
-//                    data: {"id": id},
-//                    success: function (data) {
-//                        if (data = "success") {
-//                            window.location.reload();
-//                        }
-//                    }
-//                });
-//            });
         });
     </script>
-@endsection
+@endsection  

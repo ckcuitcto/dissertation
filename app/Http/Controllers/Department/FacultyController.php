@@ -56,9 +56,6 @@ class FacultyController extends Controller
                 'status' => 'fail',
                 'arrMessages' => $validator->errors()
             ],200);
-//            return redirect('khoa')
-//                ->withErrors($validator)
-//                ->withInput();
         }else{
             $faculty = new Faculty();
             $faculty->name = $request->name;
@@ -90,7 +87,11 @@ class FacultyController extends Controller
      */
     public function edit($id)
     {
-        //
+        $faculty = Faculty::find($id);
+        return response()->json([
+            'faculty' => $faculty,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -114,10 +115,6 @@ class FacultyController extends Controller
         $faculty->name = $request->name;
         $faculty->save();
 
-//        echo "success";
-//        return response()->json([
-//            'status' => 'success'
-//        ],200);
         return redirect()->back()->with(['flash_message' => 'Sửa thành công']);
     }
 
@@ -143,14 +140,6 @@ class FacultyController extends Controller
 
     }
 
-    public function ajaxBindForm($id)
-    {
 
-        $faculty = Faculty::find($id);
-        return response()->json([
-            'faculty' => $faculty,
-            'status' => 'success'
-        ]);
 
-    }
 }

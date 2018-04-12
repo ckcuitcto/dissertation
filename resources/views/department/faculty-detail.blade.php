@@ -65,6 +65,7 @@
                             <tr>
                                 <th>Lớp</th>
                                 <th>Số lượng sinh viên</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -72,6 +73,13 @@
                                 <tr>
                                     <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a> </td>
                                     <td>{{ count($class->Students) }}</td>
+                                    <td>
+                                        @if(!count($class->Students)>0)
+                                            <a data-class-id="{{$class->id}}" id="destroy-class" data-class-link="{{route('class-destroy',$class->id)}}">
+                                                <i class="fa fa-trash-o" aria-hidden="true"> </i>
+                                            </a>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -80,6 +88,8 @@
                 </div>
             </div>
         </div>
+
+
     </main>
 
 @endsection
@@ -104,28 +114,74 @@
                 $("#faculty-edit").fadeOut("slow");
             });
 
-//            $('#form-faculty-edit').submit(function(){
-//                $.ajax({
-//                    type: "POST",
-//                    url: $(this).attr('action').val(),
-//                    data: $(this).serialize(),
-//                    success: function(data) {
-//                        alert(data);
-//                        if(data == 'success') {
-//                            window.location.reload();
-//                            $.notify({
-//                                title: "Update Complete : ",
-//                                message: "Something cool is just updated!",
-//                                icon: 'fa fa-check'
-//                            }, {
-//                                type: "info"
-//                            });
-//                        }
-//                    },error:function () {
-//                        alert(111);
-//                    }
-//                })
-//            });
+            $("#btn-save-class").click(function () {
+//                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
+//                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
+                var valueForm = $('form#faculty-form').serialize();
+                var url = $(this).attr('data-link');
+                $('.form-group').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: valueForm,
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status === "fail") {
+                            //show error list fields
+                            if (result.arrMessages !== undefined) {
+                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                                        $('form#faculty-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                    });
+                                });
+                            }
+                        } else if (result.status === "success") {
+                            $('#myModal').find('.modal-body').html('<p>Đã thêm khoa thành công</p>');
+                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            $('#myModal').on('hidden.bs.modal', function (e) {
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
+            $('a#destroy-class').click(function () {
+                var id = $(this).attr("data-class-id");
+                var url = $(this).attr('data-class-link');
+                swal({
+                    title: "Bạn chắc chưa?",
+                    text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Có, tôi chắc chắn!",
+                    cancelButtonText: "Không, Hủy dùm tôi!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            cache: false,
+                            data: {"id": id},
+                            success: function (data) {
+                                if (data.status === true) {
+                                    swal("Deleted!", "Đã xóa lớp " + data.class.name, "success");
+                                    $('.sa-confirm-button-container').click(function () {
+                                        location.reload();
+                                    })
+                                } else {
+                                    swal("Cancelled", "Không tìm thấy lớp !!! :)", "error");
+                                }
+                            }
+                        });
+                    } else {
+                        swal("Đã hủy", "Đã hủy xóa lớp:)", "error");
+                    }
+                });
+            });
+//
         });
 
     </script>
