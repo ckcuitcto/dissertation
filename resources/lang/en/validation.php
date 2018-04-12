@@ -1,12 +1,6 @@
 <?php
 
 return [
-    /*
-    | The following language lines contain the default error messages used by
-    | the validator class. Some of these rules have multiple versions such
-    | as the size rules. Feel free to tweak each of these messages here.
-    |
-    */
     'accepted'             => 'The :attribute phải được chấp nhận.',
     'active_url'           => 'The :attribute không phải là một URL hợp lệ.',
     'after'                => 'The :attribute phải là một ngày sau: date.',
@@ -82,12 +76,6 @@ return [
     'uploaded'             => 'Không thể tải lên The :attribute.',
     'url'                  => 'Định dạng The :attribute không hợp lệ.',
 
-    /*
-    | Here you may specify custom validation messages for attributes using the
-    | convention "attribute.rule" to name the lines. This makes it quick to
-    | specify a specific custom language line for a given attribute rule.
-    |
-    */
 
     'custom' => [
         'attribute-name' => [
@@ -95,12 +83,6 @@ return [
         ],
     ],
 
-    /*
-    | The following language lines are used to swap attribute place-holders
-    | with something more reader friendly such as E-Mail Address instead
-    | of "email". This simply helps us make messages a little cleaner.
-    |
-    */
 
     'attributes' => [],
 
