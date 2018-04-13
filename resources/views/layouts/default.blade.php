@@ -107,7 +107,7 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
 
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Tin tức</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i class="icon fa fa-circle-o"></i> Thông Báo</a></li>
+                    <li><a class="treeview-item" href="thong_bao.blade.php"><i class="icon fa fa-circle-o"></i> Thông Báo</a></li>
                     <li><a class="treeview-item" href="form-custom.html"><i class="icon fa fa-circle-o"></i> Tin Tức, Sự Kiện</a></li>
                     <li><a class="treeview-item" href="form-samples.html"><i class="icon fa fa-circle-o"></i> Văn Bản Hành Chính</a></li>
                     <li><a class="treeview-item" href="form-notifications.html"><i class="icon fa fa-circle-o"></i> Form Notifications</a></li>

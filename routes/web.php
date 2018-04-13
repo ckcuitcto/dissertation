@@ -32,11 +32,22 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('/destroy/{id}',['as' => 'faculty-destroy', 'uses' => 'Department\FacultyController@destroy']);
 
         Route::post('/update/{id}',['as' => 'faculty-edit', 'uses' => 'Department\FacultyController@update']);
-        Route::get('/ajax-bind-form/{id}',['as' => 'faculty-ajax-bind-form', 'uses' => 'Department\FacultyController@ajaxBindForm']);
+//        Route::get('/ajax-bind-form/{id}',['as' => 'faculty-ajax-bind-form', 'uses' => 'Department\FacultyController@edit']);
     });
 
     Route::group(['prefix' => 'lop'],function() {
         Route::get('/{id}',['as' => 'class-detail', 'uses' => 'Department\ClassController@show']);
+
+        Route::post('/store',['as' => 'class-store', 'uses' => 'Department\ClassController@store']);
+
+        Route::get('/destroy/{id}',['as' => 'class-destroy', 'uses' => 'Department\ClassController@destroy']);
+
+        Route::post('/update/{id}',['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
+        Route::get('/ajax-bind-form/{id}',['as' => 'class-ajax-bind-form', 'uses' => 'Department\ClassController@ajaxBindForm']);
+    });
+
+    Route::group(['prefix' => 'thong-bao'],function(){
+        // Route::get('/',['as' => 'notification-list',])
     });
 
     Route::get('/phieu-danh-gia', ['as' => 'evaluation-form', 'uses' => 'EvaluationFormController@index']);
