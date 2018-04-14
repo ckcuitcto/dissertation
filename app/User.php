@@ -47,4 +47,12 @@ class User extends Authenticatable
     public function Faculty(){
         return $this->belongsTo('App\User','faculty_id','id');
     }
+
+    public function hasPermission(Permission $permission){
+
+        //contains dung để kiểm tra xem nó có chứa permission k
+        // ep kiểu boolean
+        // optional là khi mà trong Role k có Permission thì ucngx k báo lỗi
+        return !! optional(optional($this->Role)->Permissions)->contains($permission);
+    }
 }

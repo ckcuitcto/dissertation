@@ -29,7 +29,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div>Sỉ số : {{ count($class->Students) }}</div>
-                                <div>Cố vấn học tập : {{ $class->Staff->User->name }}</div>
+                                <div>Cố vấn học tập : {{ $class->Staff->User->name or "" }}</div>
                             </div>
                             <div class="col-md-6">
                                 <div>- Khoa: {{ $class->Faculty->name }}</div>
