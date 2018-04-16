@@ -26,9 +26,9 @@
                 <div class="tile">
                     <h3 class="tile-title">Lưu ý</h3>
                     <div class="tile-body">
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i>Điểm cá nhân, Điểm lớp và Điểm khoa là điểm đánh giá chưa tính điểm học tập</div>
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i>Điểm tổng là điểm sau khi P.CTSV kiểm duyệt đã bao gồm điểm học tập</div>
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i>Xếp loại và Điểm tổng nếu có giá trị là "_" thì đang đợi bổ sung điểm học tập</div>
+                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm cá nhân, Điểm lớp và Điểm khoa là điểm đánh giá chưa tính điểm học tập</div>
+                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm tổng là điểm sau khi P.CTSV kiểm duyệt đã bao gồm điểm học tập</div>
+                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Xếp loại và Điểm tổng nếu có giá trị là "_" thì đang đợi bổ sung điểm học tập</div>
                     </div>
                     <div class="title-body" style="text-align:right">
                         <div>Họ và tên: Trần Ngọc Gia Hân</div>

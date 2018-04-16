@@ -88,10 +88,23 @@ Route::group(['middleware' => 'auth'],function(){
         Route::post('/update/{id}',['as' => 'permission-update', 'uses' => 'Permission\PermissionController@update']);
     });
 
+    Route::group(['prefix' => 'hoc-ki'],function(){
+        // danh sach
+        Route::get('/',['as' => 'semester-list','uses' => 'Semester\SemesterController@index']);
+        // vao xem chi tiet role, se co cac danh sach user thuoc role o day
+        Route::get('/{id}',['as' => 'semester-detail','uses' => 'Semester\SemesterController@show']);
+        // them 1
+        Route::post('/store',['as' => 'semester-store', 'uses' => 'Semester\SemesterController@store']);
+        // xoa 1
+        Route::get('/destroy/{id}',['as' => 'semester-destroy', 'uses' => 'Semester\SemesterController@destroy']);
+        // chỉnh sửa
+        Route::post('/update/{id}',['as' => 'semester-update', 'uses' => 'Semester\SemesterController@update']);
+        Route::post('/edit/{id}',['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit']);
+    });
+
     Route::group(['prefix' => 'thong-bao'],function(){
         // Route::get('/',['as' => 'notification-list',])
     });
-
     Route::get('/phieu-danh-gia', ['as' => 'evaluation-form', 'uses' => 'Evaluation\EvaluationFormController@index']);
 
     Route::get('/bang-diem', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
