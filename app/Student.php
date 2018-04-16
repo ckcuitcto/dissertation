@@ -14,7 +14,7 @@ class Student extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id','class_id'];
+    protected $fillable = ['id','user_id','class_id'];
 
     public function Comments(){
         return $this->hasMany('App\Comment','created_by','id');

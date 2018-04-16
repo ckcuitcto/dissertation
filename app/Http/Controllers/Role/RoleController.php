@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Department;
+namespace App\Http\Controllers\Role;
 
-use App\Classes;
-use App\Staff;
+use App\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use Validator;
+use Illuminate\Support\Facades\DB;
 
-class ClassController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +17,8 @@ class ClassController extends Controller
      */
     public function index()
     {
-
+        $roles = Role::all();
+        return view('role.index',compact('roles'));
     }
 
     /**
@@ -40,7 +40,7 @@ class ClassController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:classes,name',
+            'name' => 'required|min:6|unique:roles,name',
         ]);
 
         if ($validator->fails()) {
@@ -49,13 +49,11 @@ class ClassController extends Controller
                 'arrMessages' => $validator->errors()
             ],200);
         }else{
-            $class = new Classes();
-            $class->name = $request->name;
-            $class->faculty_id = $request->faculty_id;
-            $class->staff_id = $request->staff_id;
-            $class->save();
+            $role = new Role();
+            $role->name = $request->name;
+            $role->save();
             return response()->json([
-                'class' => $class,
+                'role' => $role,
                 'status' => 'success'
             ],200);
         }
@@ -69,14 +67,9 @@ class ClassController extends Controller
      */
     public function show($id)
     {
-        $class = Classes::find($id);
-        $staff = DB::table('staff as s')
-            ->leftJoin('users as u','s.user_id','u.id')
-            ->select('u.id', 'u.name')
-            ->where('u.faculty_id',$class->Faculty->id)
-            ->orderBy('u.name')
-            ->get();
-        return view('department.class.class-detail',compact('class','staff'));
+        $role = Role::find($id);
+        $roles = Role::all();
+        return view('role.role-detail', compact('role','roles'));
     }
 
     /**
@@ -87,7 +80,11 @@ class ClassController extends Controller
      */
     public function edit($id)
     {
-        //
+        $role = Role::find($id);
+        return response()->json([
+            'role' => $role,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -99,27 +96,18 @@ class ClassController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:6',
-            'staff_id' => 'required'
-        ]);
+        $this->validate($request,
+            ['name' => 'required|min:6|unique:faculties,name'],
+            [   'name.required' => "Vui lòng nhập tên Khoa",
+                'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
+                'name.unique' => 'Tên khoa đã tồn tại'
+            ]
+        );
+        $role = Role::find($id);
+        $role->name = $request->name;
+        $role->save();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'fail',
-                'arrMessages' => $validator->errors()
-            ],200);
-        }else{
-            $class = Classes::find($id);
-            $class->name = $request->name;
-            $class->faculty_id = $request->faculty_id;
-            $class->staff_id = $request->staff_id;
-            $class->save();
-            return response()->json([
-                'class' => $class,
-                'status' => 'success'
-            ],200);
-        }
+        return redirect()->back()->with(['flash_message' => 'Sửa thành công']);
     }
 
     /**
@@ -130,6 +118,16 @@ class ClassController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::find($id);
+        if(!empty($role)){
+            $role->delete();
+            return response()->json([
+                'role' => $role,
+                'status' => true
+            ]);
+        }
+        return response()->json([
+            'status' => false
+        ]);
     }
 }

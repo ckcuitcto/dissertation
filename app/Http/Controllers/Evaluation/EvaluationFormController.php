@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Evaluation;
 
 use App\EvaluationCriteria;
+use App\Http\Controllers\Controller;
 use App\Topic;
 use Illuminate\Http\Request;
 
