@@ -31,7 +31,10 @@ Route::group(['middleware' => 'auth'],function(){
 
         Route::get('/destroy/{id}',['as' => 'faculty-destroy', 'uses' => 'Department\FacultyController@destroy']);
 
-        Route::post('/update/{id}',['as' => 'faculty-edit', 'uses' => 'Department\FacultyController@update']);
+        // hien thi form
+        Route::get('/edit/{id}',['as' => 'faculty-edit', 'uses' => 'Department\FacultyController@edit']);
+        //update
+        Route::post('/update/{id}',['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update']);
 //        Route::get('/ajax-bind-form/{id}',['as' => 'faculty-ajax-bind-form', 'uses' => 'Department\FacultyController@edit']);
     });
 
@@ -42,15 +45,54 @@ Route::group(['middleware' => 'auth'],function(){
 
         Route::get('/destroy/{id}',['as' => 'class-destroy', 'uses' => 'Department\ClassController@destroy']);
 
+        Route::get('/edit/{id}',['as' => 'class-edit', 'uses' => 'Department\FacultyController@edit']);
+        Route::post('/update/{id}',['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
+
+//        Route::get('/ajax-bind-form/{id}',['as' => 'class-ajax-bind-form', 'uses' => 'Department\ClassController@ajaxBindForm']);
+    });
+
+    Route::group(['prefix' => 'sinh-vien'],function() {
+        Route::get('/{id}',['as' => 'class-detail', 'uses' => 'Department\ClassController@show']);
+
+        Route::post('/store',['as' => 'class-store', 'uses' => 'Department\ClassController@store']);
+
+        Route::get('/destroy/{id}',['as' => 'class-destroy', 'uses' => 'Department\ClassController@destroy']);
+
         Route::post('/update/{id}',['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
         Route::get('/ajax-bind-form/{id}',['as' => 'class-ajax-bind-form', 'uses' => 'Department\ClassController@ajaxBindForm']);
+    });
+
+    Route::group(['prefix' => 'vai-tro'],function(){
+        // danh sach role
+        Route::get('/',['as' => 'role-list','uses' => 'Role\RoleController@index']);
+        // vao xem chi tiet role, se co cac danh sach user thuoc role o day
+        Route::get('/{id}',['as' => 'role-detail','uses' => 'Role\RoleController@show']);
+        // xoa 1 role
+        Route::get('/destroy/{id}',['as' => 'role-destroy', 'uses' => 'Role\RoleController@destroy']);
+        // them 1 role
+        Route::post('/store',['as' => 'role-store', 'uses' => 'Role\RoleController@store']);
+        // chỉnh sửa role
+        Route::post('/update/{id}',['as' => 'role-update', 'uses' => 'Role\RoleController@update']);
+    });
+
+    Route::group(['prefix' => 'quyen'],function(){
+        // danh sach role
+        Route::get('/',['as' => 'permission-list','uses' => 'Permission\PermissionController@index']);
+        // vao xem chi tiet role, se co cac danh sach user thuoc role o day
+        Route::get('/{id}',['as' => 'permission-detail','uses' => 'Permission\PermissionController@show']);
+        // xoa 1 role
+        Route::get('/destroy/{id}',['as' => 'permission-destroy', 'uses' => 'Permission\PermissionController@destroy']);
+        // them 1 role
+        Route::post('/store',['as' => 'permission-store', 'uses' => 'Permission\PermissionController@store']);
+        // chỉnh sửa role
+        Route::post('/update/{id}',['as' => 'permission-update', 'uses' => 'Permission\PermissionController@update']);
     });
 
     Route::group(['prefix' => 'thong-bao'],function(){
         // Route::get('/',['as' => 'notification-list',])
     });
 
-    Route::get('/phieu-danh-gia', ['as' => 'evaluation-form', 'uses' => 'EvaluationFormController@index']);
+    Route::get('/phieu-danh-gia', ['as' => 'evaluation-form', 'uses' => 'Evaluation\EvaluationFormController@index']);
 
     Route::get('/bang-diem', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
 

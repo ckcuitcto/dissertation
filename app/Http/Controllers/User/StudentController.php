@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Student;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -22,6 +23,7 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    //  hiển thị form thêm
     public function create()
     {
         //
@@ -33,6 +35,7 @@ class StudentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // thêm mới
     public function store(Request $request)
     {
         //
@@ -44,6 +47,7 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // hiển thị sinh viên đã có
     public function show($id)
     {
         //
@@ -57,7 +61,11 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $student = Student::find($id);
+        return response()->json([
+            'role' => $student,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -67,6 +75,7 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // sửa thông tin
     public function update(Request $request, $id)
     {
         //
@@ -78,6 +87,7 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // xóa
     public function destroy($id)
     {
         //

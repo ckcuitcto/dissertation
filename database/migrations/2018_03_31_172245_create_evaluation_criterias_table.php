@@ -21,6 +21,7 @@ class CreateEvaluationCriteriasTable extends Migration
             $table->integer('mark_range_from');
             $table->integer('mark_range_to')->nullable();
             $table->integer('topic_id')->unsigned()->nullable();
+            $table->string('proof_type')->unique()->nullable();
             $table->timestamps();
         });
     }

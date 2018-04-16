@@ -14,11 +14,13 @@ class DatabaseSeeder extends Seeder
         $this->call(Role::class);
         $this->call(Semester::class);
 
+        $this->call(StaffSeeder::class);
+
         $this->call(Faculty::class);
         $this->call(Classes::class);
 
         $this->call(StudentSeeder::class);
-        $this->call(StaffSeeder::class);
+
 
         $this->call(Topic::class);
         $this->call(TopicChild::class);

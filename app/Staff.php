@@ -11,7 +11,7 @@ class Staff extends Model
 
     protected $table = 'staff';
 
-    protected $fillable = ['user_id'];
+    protected $fillable = ['id','user_id'];
 
     public function Classes(){
         return $this->hasMany('App\Classes','staff_id','id');
