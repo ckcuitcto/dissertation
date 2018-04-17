@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Department;
 
 use App\Classes;
@@ -68,7 +67,11 @@ class ClassController extends Controller
      */
     public function edit($id)
     {
-        //
+        $classes = Classes::find($id);
+        return response()->json([
+            'classes' => $classes,
+            'status' => 'success'
+        ]);
     }
 
     /**
