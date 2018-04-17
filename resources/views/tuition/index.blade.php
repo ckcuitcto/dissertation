@@ -1,6 +1,8 @@
-@extends('master')
+@extends('layouts.default')
+
 @section('content')
-<div class="app-title">
+<main class="app-content">
+    <div class="app-title">
         <div>
           <h1><i class="fa fa-file-text-o"></i> Học Phí</h1>
           <p>Trường Đại học Công nghệ Sài Gòn</p>
@@ -96,4 +98,5 @@
           </div>
         </div>
       </div>
+</main>
 @endsection

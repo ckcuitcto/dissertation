@@ -93,59 +93,55 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
         </div>
         <ul class="app-menu">
 
-            <li><a class="app-menu__item active" href="{{ route('home') }}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Trang chủ</span></a></li>
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Đánh giá rèn luyện</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <li><a class="app-menu__item active" href="{{ route('home') }}"><i class="app-menu__icon fa fa-home" aria-hidden="true"></i><span class="app-menu__label">Trang chủ</span></a></li>
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-pencil-square-o"></i><span class="app-menu__label">Đánh giá rèn luyện</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i class="icon fa fa-circle-o"></i> Phiếu Đánh Giá</a></li>
                     <li><a class="treeview-item" href="{{route('transcript')}}"><i class="icon fa fa-circle-o"></i> Tổng Điểm Cá Nhân</a></li>
-                    <li><a class="treeview-item" href="ui-cards.html"><i class="icon fa fa-circle-o"></i> Cards</a></li>
-                    <li><a class="treeview-item" href="widgets.html"><i class="icon fa fa-circle-o"></i> Widgets</a></li>
                 </ul>
             </li>
-            <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Thông tin sinh viên</span></a></li>
-            <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Quản lí minh chứng</span></a></li>
+            <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i class="app-menu__icon fa fa-user-circle-o"></i><span class="app-menu__label">Thông tin sinh viên</span></a></li>
+            <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span></a></li>
 
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Tin tức</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Tin tức</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="thong_bao.blade.php"><i class="icon fa fa-circle-o"></i> Thông Báo</a></li>
+                <li><a class="treeview-item" href="{{ route('notification') }}"><i class="icon fa fa-circle-o"></i> Thông Báo</a></li>
                     <li><a class="treeview-item" href="form-custom.html"><i class="icon fa fa-circle-o"></i> Tin Tức, Sự Kiện</a></li>
                     <li><a class="treeview-item" href="form-samples.html"><i class="icon fa fa-circle-o"></i> Văn Bản Hành Chính</a></li>
-                    <li><a class="treeview-item" href="form-notifications.html"><i class="icon fa fa-circle-o"></i> Form Notifications</a></li>
                 </ul>
             </li>
 
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Quản lí Khoa,Phòng ban...</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-cogs"></i><span class="app-menu__label">Quản lí Khoa,Phòng ban...</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a></li>
                     <li><a class="treeview-item" href="form-custom.html"><i class="icon fa fa-circle-o"></i> Phòng ban</a></li>
                 </ul>
             </li>
 
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Góp ý</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('comment') }}"><i class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
-                    <li><a class="treeview-item" href="table-data-table.html"><i class="icon fa fa-circle-o"></i> Data Tables</a></li>
+                    <li><a class="treeview-item" href="{{ route('comment') }}"><i class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>                    
                 </ul>
             </li>
 
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Phân quyền User</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">Phân quyền User</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('role-list') }}"><i class="icon fa fa-circle-o"></i>Danh sách các nhóm vai trò  </a></li>
                     <li><a class="treeview-item" href="{{ route('permission-list') }}"><i class="icon fa fa-circle-o"></i> Danh sách các quyền</a></li>
                 </ul>
             </li>
 
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('schedule') }}"><i class="icon fa fa-circle-o"></i> Thời Khóa Biểu</a></li>
                     <li><a class="treeview-item" href="page-login.html"><i class="icon fa fa-circle-o"></i> Điểm Học Kỳ</a></li>
                     <li><a class="treeview-item" href="page-test-schedule.html"><i class="icon fa fa-circle-o"></i> Lịch Thi Học Kỳ</a></li>
-                    <li><a class="treeview-item" href="page-invoice.html"><i class="icon fa fa-circle-o"></i> Học Phí</a></li>
+                    <li><a class="treeview-item" href="{{ route('tuition') }}"><i class="icon fa fa-circle-o"></i> Học Phí</a></li>
                 </ul>
             </li>
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Các Phòng Ban</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-bed"></i><span class="app-menu__label">Các Phòng Ban</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="page-office-academic.html"><i class="icon fa fa-circle-o"></i> Phòng Đào Tạo</a></li>
+                    <li><a class="treeview-item" href="{{ route('office-academic') }}"><i class="icon fa fa-circle-o"></i> Phòng Đào Tạo</a></li>
                     <li><a class="treeview-item" href="page-calendar.html"><i class="icon fa fa-circle-o"></i> Phòng Công Tác Sinh Viên</a></li>
                     <li><a class="treeview-item" href="page-mailbox.html"><i class="icon fa fa-circle-o"></i> Văn Phòng Khoa</a></li>
                     <li><a class="treeview-item" href="page-error.html"><i class="icon fa fa-circle-o"></i> Error Page</a></li>

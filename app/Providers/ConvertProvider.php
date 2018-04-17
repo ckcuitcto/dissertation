@@ -23,6 +23,6 @@ class ConvertProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . 'Helpers/Convert.php';
+        // require_once app_path() . 'Helpers/Convert.php';
     }
 }
