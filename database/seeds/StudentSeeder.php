@@ -17,7 +17,8 @@ class StudentSeeder extends Seeder
                 'name' => 'Thai Duc',
                 'email' => 'thducit@gmail.com',
                 'password' => bcrypt('DH51400250'),
-                'role_id' => 1
+                'role_id' => 1,
+                'faculty_id' => 1
             ],
             [
                 'id' => 'DH51400251',
@@ -25,13 +26,38 @@ class StudentSeeder extends Seeder
                 'email' => 'thducit1@gmail.com',
                 'password' => bcrypt('DH51400251'),
                 'role_id' => 2,
+                'faculty_id' => 1
             ],
             [
                 'id' => 'CD51402222',
-                'name' => 'Cao dang',
-                'email' => 'thducit3@gmail.com',
+                'name' => 'Sinh vien 1',
+                'email' => 'CD51402222@gmail.com',
                 'password' => bcrypt('CD51402222'),
-                'role_id' => 2,
+                'role_id' => 1,
+                'faculty_id' => 1
+            ],
+            [
+                'id' => 'DH51400999',
+                'name' => 'Sinh vien 2',
+                'email' => 'DH51400999@gmail.com',
+                'password' => bcrypt('DH51400999'),
+                'role_id' => 1,
+                'faculty_id' => 1
+            ],
+            [
+                'id' => 'DH51400888',
+                'name' => 'Sinh vien 3',
+                'email' => 'DH51400888@gmail.com',
+                'password' => bcrypt('CD51402222'),
+                'role_id' => 1,
+                'faculty_id' => 1
+            ],[
+                'id' => 'DH51400777',
+                'name' => 'Sinh vien 4',
+                'email' => 'DH51400777@gmail.com',
+                'password' => bcrypt('CD51402222'),
+                'role_id' => 1,
+                'faculty_id' => 1
             ]
         ]);
     }

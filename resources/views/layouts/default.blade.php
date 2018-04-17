@@ -127,6 +127,14 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
                     <li><a class="treeview-item" href="table-data-table.html"><i class="icon fa fa-circle-o"></i> Data Tables</a></li>
                 </ul>
             </li>
+
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Phân quyền User</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" href="{{ route('role-list') }}"><i class="icon fa fa-circle-o"></i>Danh sách các nhóm vai trò  </a></li>
+                    <li><a class="treeview-item" href="{{ route('permission-list') }}"><i class="icon fa fa-circle-o"></i> Danh sách các quyền</a></li>
+                </ul>
+            </li>
+
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('schedule') }}"><i class="icon fa fa-circle-o"></i> Thời Khóa Biểu</a></li>

@@ -23,9 +23,9 @@
                                     <div class="fo"></div>
                                     <div>Số lớp : {{ count($faculty->Classes) }}</div>
                                 </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-primary" id="btnEditFaculty" type="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Sửa</button>
-                                </div>
+                                {{--<div class="col-md-2">--}}
+                                {{--<button class="btn btn-primary" id="btnEditFaculty" type="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Sửa</button>--}}
+                                {{--</div>--}}
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -33,23 +33,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="faculty-edit" @if (!$errors->any()) style="display: none" @endif>
-                            <form action="{{ route('faculty-edit',$faculty->id ) }}" method="post" id="form-faculty-edit">
-                                {!! csrf_field() !!}
-                                <div class="form-group">
-                                    <label class="control-label">Tên khoa</label>
-                                    <input class="form-control" name="name" value="{{ old('name') }}" id="name" required type="text" placeholder="Nhập tên mới của Khoa">
-                                    @if ($errors->has('name'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Sửa</button>
-                                &nbsp;&nbsp;&nbsp;
-                                <a class="btn btn-secondary" id="btnCancelEdit" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Hủy</a>
-                            </form>
-                        </div>
+                        {{--<div id="faculty-edit" @if (!$errors->any()) style="display: none" @endif>--}}
+                        {{--<form action="{{ route('faculty-edit',$faculty->id ) }}" method="post" id="form-faculty-edit">--}}
+                        {{--{!! csrf_field() !!}--}}
+                        {{--<div class="form-group">--}}
+                        {{--<label class="control-label">Tên khoa</label>--}}
+                        {{--<input class="form-control" name="name" value="{{ old('name') }}" id="name" required type="text" placeholder="Nhập tên mới của Khoa">--}}
+                        {{--@if ($errors->has('name'))--}}
+                        {{--<span class="help-block">--}}
+                        {{--<strong>{{ $errors->first('name') }}</strong>--}}
+                        {{--</span>--}}
+                        {{--@endif--}}
+                        {{--</div>--}}
+                        {{--<button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Sửa</button>--}}
+                        {{--&nbsp;&nbsp;&nbsp;--}}
+                        {{--<a class="btn btn-secondary" id="btnCancelEdit" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Hủy</a>--}}
+                        {{--</form>--}}
+                        {{--</div>--}}
                     </div>
                     <div class="tile-body">
                         <table class="table table-hover table-bordered" id="sampleTable">
@@ -58,17 +58,25 @@
                                 <th>Lớp</th>
                                 <th>Số lượng sinh viên</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($faculty->classes as $class)
                                 <tr>
-                                    <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a> </td>
+                                    <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a></td>
                                     <td>{{ count($class->Students) }}</td>
                                     <td>
+                                        <a data-class-id="{{$class->id}}" id="class-edit"
+                                           data-class-link="{{route('class-edit',$class->id)}}">
+                                            <i class="fa fa-lg fa-edit " aria-hidden="true"> </i>
+                                        </a>
+                                    </td>
+                                    <td>
                                         @if(!count($class->Students)>0)
-                                            <a data-class-id="{{$class->id}}" id="destroy-class" data-class-link="{{route('class-destroy',$class->id)}}">
-                                                <i class="fa fa-trash-o" aria-hidden="true"> </i>
+                                            <a data-class-id="{{$class->id}}" id="class-destroy"
+                                               data-class-link="{{route('class-destroy',$class->id)}}">
+                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                             </a>
                                         @endif
                                     </td>
@@ -76,11 +84,65 @@
                             @endforeach
                             </tbody>
                         </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
+                                        id="btn-add-class" type="button"><i class="fa fa-pencil-square-o"
+                                                                            aria-hidden="true"></i>Thêm
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Thêm mới lớp thuộc khoa {{ $faculty->name }}</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
 
+                        <form id="class-form">
+                            {!! csrf_field() !!}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="name">Tên lớp :</label>
+                                        <input type="hidden" name="id" class="id" id="modal-class-id">
+                                        <input type="hidden" name="faculty_id" class="faculty_id" id="faculty_id"
+                                               value="{{ $faculty->id }}">
+                                        <input class="form-control name" id="name" name="name" type="text" required
+                                               aria-describedby="class">
+                                        <p style="color:red; display: none;" class="name"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="staff_id">Cố vấn học tập :</label>
+                                        <select class="form-control staff_id" id="staff_id" name="staff_id" type="text"
+                                                required aria-describedby="staff">
+                                            @foreach($faculty->Users->where('role_id','>','2') as $value)
+                                                <option value="{{ $value->Staff->id }}"> {{ $value->name . ":".$value->Staff->id }}  </option>
+                                            @endforeach
+                                        </select>
+                                        <p style="color:red; display: none;" class="staff_id"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button data-link="{{ route('class-store') }}" class="btn btn-primary"
+                                    id="btn-save-class" name="btn-save-class" type="button">
+                                Thêm
+                            </button>
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </main>
 
@@ -95,21 +157,12 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
 
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('div.alert-success').delay(2000).slideUp();
-
-            $('#btnEditFaculty').click(function(){
-                $("#faculty-edit").fadeToggle();
-            });
-
-            $('#btnCancelEdit').click(function(){
-                $("#faculty-edit").fadeOut("slow");
-            });
-
             $("#btn-save-class").click(function () {
 //                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
 //                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
-                var valueForm = $('form#faculty-form').serialize();
+                var valueForm = $('form#class-form').serialize();
                 var url = $(this).attr('data-link');
                 $('.form-group').find('span.messageErrors').remove();
                 $.ajax({
@@ -123,12 +176,12 @@
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#faculty-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                        $('form#class-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
                                     });
                                 });
                             }
                         } else if (result.status === "success") {
-                            $('#myModal').find('.modal-body').html('<p>Đã thêm khoa thành công</p>');
+                            $('#myModal').find('.modal-body').html('<p>Đã thêm lớp thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#myModal').on('hidden.bs.modal', function (e) {
                                 location.reload();
@@ -138,7 +191,7 @@
                 });
             });
 
-            $('a#destroy-class').click(function () {
+            $('a#class-destroy').click(function () {
                 var id = $(this).attr("data-class-id");
                 var url = $(this).attr('data-class-link');
                 swal({

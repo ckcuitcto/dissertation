@@ -24,7 +24,7 @@ class FacultyController extends Controller
 //            ->groupBy('f.id')
 //            ->get();
 //dd($faculties);
-        return view('department.index', compact('faculties'));
+        return view('department.faculty.index', compact('faculties'));
     }
 
     /**
@@ -51,17 +51,17 @@ class FacultyController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'fail',
+                'status' => false,
                 'arrMessages' => $validator->errors()
-            ],200);
-        }else{
+            ], 200);
+        } else {
             $faculty = new Faculty();
             $faculty->name = $request->name;
             $faculty->save();
             return response()->json([
                 'faculty' => $faculty,
-                'status' => 'success'
-            ],200);
+                'status' => true
+            ], 200);
         }
     }
 
@@ -74,7 +74,7 @@ class FacultyController extends Controller
     public function show($id)
     {
         $faculty = Faculty::find($id);
-        return view('department.faculty-detail', compact('faculty'));
+        return view('department.faculty.faculty-detail', compact('faculty'));
     }
 
     /**
@@ -88,8 +88,8 @@ class FacultyController extends Controller
         $faculty = Faculty::find($id);
         return response()->json([
             'faculty' => $faculty,
-            'status' => 'success'
-        ]);
+            'status' => true
+        ], 200);
     }
 
     /**
@@ -102,18 +102,26 @@ class FacultyController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,
-            ['name' => 'required|min:6|unique:faculties,name'],
-            [   'name.required' => "Vui lòng nhập tên Khoa",
+            ['name' => 'required|min:6'],
+            ['name.required' => "Vui lòng nhập tên Khoa",
                 'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
                 'name.unique' => 'Tên khoa đã tồn tại'
             ]
         );
 
         $faculty = Faculty::find($id);
-        $faculty->name = $request->name;
-        $faculty->save();
+        if (!empty($faculty)) {
+            $faculty->name = $request->name;
+            $faculty->save();
+            return response()->json([
+                'faculty' => $faculty,
+                'status' => true
+            ], 200);
+        }
+        return response()->json([
+            'status' => false
+        ], 200);
 
-        return redirect()->back()->with(['flash_message' => 'Sửa thành công']);
     }
 
     /**
@@ -125,20 +133,19 @@ class FacultyController extends Controller
     public function destroy($id)
     {
         $faculty = Faculty::find($id);
-        if(!empty($faculty)){
+        if (!empty($faculty)) {
             $faculty->delete();
             return response()->json([
                 'faculty' => $faculty,
                 'status' => true
-            ]);
+            ], 200);
         }
         return response()->json([
             'status' => false
-        ]);
+        ], 200);
 
         
     }
-
 
 
 }

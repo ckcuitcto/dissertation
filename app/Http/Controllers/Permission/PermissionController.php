@@ -1,14 +1,13 @@
 <?php
-namespace App\Http\Controllers\Department;
 
-use App\Classes;
-use App\Staff;
+namespace App\Http\Controllers\Permission;
+
+use App\Permission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use Validator;
 
-class ClassController extends Controller
+class PermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +16,8 @@ class ClassController extends Controller
      */
     public function index()
     {
-
+        $permissions = Permission::all();
+        return view('permission.index',compact('permissions'));
     }
 
     /**
@@ -39,7 +39,8 @@ class ClassController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:classes,name',
+            'name' => 'required|unique:permissions,name',
+            'title' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -48,13 +49,12 @@ class ClassController extends Controller
                 'arrMessages' => $validator->errors()
             ],200);
         }else{
-            $class = new Classes();
-            $class->name = $request->name;
-            $class->faculty_id = $request->faculty_id;
-            $class->staff_id = $request->staff_id;
-            $class->save();
+            $permission = new Permission();
+            $permission->name = $request->name;
+            $permission->title = $request->title;
+            $permission->save();
             return response()->json([
-                'class' => $class,
+                'permission' => $permission,
                 'status' => 'success'
             ],200);
         }
@@ -68,14 +68,7 @@ class ClassController extends Controller
      */
     public function show($id)
     {
-        $class = Classes::find($id);
-        $staff = DB::table('staff as s')
-            ->leftJoin('users as u','s.user_id','u.id')
-            ->select('u.id', 'u.name')
-            ->where('u.faculty_id',$class->Faculty->id)
-            ->orderBy('u.name')
-            ->get();
-        return view('department.class.class-detail',compact('class','staff'));
+        //
     }
 
     /**
@@ -86,9 +79,9 @@ class ClassController extends Controller
      */
     public function edit($id)
     {
-        $classes = Classes::find($id);
+        $permission = Permission::find($id);
         return response()->json([
-            'classes' => $classes,
+            'permission' => $permission,
             'status' => 'success'
         ]);
     }
@@ -102,27 +95,22 @@ class ClassController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:6',
-            'staff_id' => 'required'
-        ]);
+        $this->validate($request,
+            [
+                'name' => 'required|unique:faculties,name',
+                'title' => 'required'
+            ],
+            [   'name.required' => "Vui lòng nhập tên Khoa",
+                'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
+                'name.unique' => 'Tên khoa đã tồn tại',
+                'title' => 'Vui lòng nhập tiêu đề'
+            ]
+        );
+        $permission = Permission::find($id);
+        $permission->name = $request->name;
+        $permission->save();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'fail',
-                'arrMessages' => $validator->errors()
-            ],200);
-        }else{
-            $class = Classes::find($id);
-            $class->name = $request->name;
-            $class->faculty_id = $request->faculty_id;
-            $class->staff_id = $request->staff_id;
-            $class->save();
-            return response()->json([
-                'class' => $class,
-                'status' => 'success'
-            ],200);
-        }
+        return redirect()->back()->with(['flash_message' => 'Sửa thành công']);
     }
 
     /**
@@ -133,6 +121,16 @@ class ClassController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $permission = Permission::find($id);
+        if(!empty($permission)){
+            $permission->delete();
+            return response()->json([
+                'permission' => $permission,
+                'status' => true
+            ]);
+        }
+        return response()->json([
+            'status' => false
+        ]);
     }
 }
