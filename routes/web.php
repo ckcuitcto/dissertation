@@ -45,7 +45,7 @@ Route::group(['middleware' => 'auth'],function(){
 
         Route::get('/destroy/{id}',['as' => 'class-destroy', 'uses' => 'Department\ClassController@destroy']);
 
-        Route::get('/edit/{id}',['as' => 'class-edit', 'uses' => 'Department\FacultyController@edit']);
+        Route::get('/edit/{id}',['as' => 'class-edit', 'uses' => 'Department\ClassController@edit']);
         Route::post('/update/{id}',['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
 
 //        Route::get('/ajax-bind-form/{id}',['as' => 'class-ajax-bind-form', 'uses' => 'Department\ClassController@ajaxBindForm']);

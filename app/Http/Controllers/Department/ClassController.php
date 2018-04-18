@@ -44,7 +44,7 @@ class ClassController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'fail',
+                'status' => false,
                 'arrMessages' => $validator->errors()
             ],200);
         }else{
@@ -55,7 +55,7 @@ class ClassController extends Controller
             $class->save();
             return response()->json([
                 'class' => $class,
-                'status' => 'success'
+                'status' => true
             ],200);
         }
     }
@@ -89,8 +89,8 @@ class ClassController extends Controller
         $classes = Classes::find($id);
         return response()->json([
             'classes' => $classes,
-            'status' => 'success'
-        ]);
+            'status' => true
+        ],200);
     }
 
     /**
@@ -109,7 +109,7 @@ class ClassController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'fail',
+                'status' => false,
                 'arrMessages' => $validator->errors()
             ],200);
         }else{
@@ -120,7 +120,7 @@ class ClassController extends Controller
             $class->save();
             return response()->json([
                 'class' => $class,
-                'status' => 'success'
+                'status' => true
             ],200);
         }
     }
@@ -133,6 +133,16 @@ class ClassController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $class = Classes::find($id);
+        if (!empty($class)) {
+            $class->delete();
+            return response()->json([
+                'faculty' => $class,
+                'status' => true
+            ], 200);
+        }
+        return response()->json([
+            'status' => false
+        ], 200);
     }
 }

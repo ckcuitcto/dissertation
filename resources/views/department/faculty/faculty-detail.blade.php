@@ -67,15 +67,17 @@
                                     <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a></td>
                                     <td>{{ count($class->Students) }}</td>
                                     <td>
-                                        <a data-class-id="{{$class->id}}" id="class-edit"
-                                           data-class-link="{{route('class-edit',$class->id)}}">
+                                        <a data-id="{{$class->id}}" id="class-edit"
+                                           data-edit-link="{{route('class-edit',$class->id)}}"
+                                           data-update-link="{{route('class-update',$class->id)}}">
+
                                             <i class="fa fa-lg fa-edit " aria-hidden="true"> </i>
                                         </a>
                                     </td>
                                     <td>
                                         @if(!count($class->Students)>0)
-                                            <a data-class-id="{{$class->id}}" id="class-destroy"
-                                               data-class-link="{{route('class-destroy',$class->id)}}">
+                                            <a data-id="{{$class->id}}" id="class-destroy"
+                                               data-link="{{route('class-destroy',$class->id)}}">
                                                 <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                             </a>
                                         @endif
@@ -152,13 +154,41 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript">$('#sampleTable').DataTable();</script>
-
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-
     <script type="text/javascript">
         $(document).ready(function () {
             $('div.alert-success').delay(2000).slideUp();
+
+            $("a#class-edit").click(function () {
+                var urlEdit = $(this).attr('data-edit-link');
+                var urlUpdate = $(this).attr('data-update-link');
+                var id = $(this).attr('data-id');
+                $('.form-group').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "get",
+                    url: urlEdit,
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status === true) {
+                            if (result.classes !== undefined) {
+                                $.each(result.classes, function (elementName, value) {
+//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+//                                    alert(elementName + "+ " + value)
+                                    $('.' + elementName).val(value);
+//                                    });
+                                });
+                            }
+                        }
+                    }
+                });
+                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
+                $('#myModal').find(".modal-footer > button[name=btn-save-class]").html('Sửa');
+                $('#myModal').find(".modal-footer > button[name=btn-save-class]").attr('data-link', urlUpdate);
+                $('#myModal').modal('show');
+            });
+
             $("#btn-save-class").click(function () {
 //                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
 //                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
@@ -171,7 +201,7 @@
                     data: valueForm,
                     dataType: 'json',
                     success: function (result) {
-                        if (result.status === "fail") {
+                        if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
@@ -180,7 +210,7 @@
                                     });
                                 });
                             }
-                        } else if (result.status === "success") {
+                        } else if (result.status === true) {
                             $('#myModal').find('.modal-body').html('<p>Đã thêm lớp thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#myModal').on('hidden.bs.modal', function (e) {
@@ -192,8 +222,8 @@
             });
 
             $('a#class-destroy').click(function () {
-                var id = $(this).attr("data-class-id");
-                var url = $(this).attr('data-class-link');
+                var id = $(this).attr("data-id");
+                var url = $(this).attr('data-link');
                 swal({
                     title: "Bạn chắc chưa?",
                     text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",

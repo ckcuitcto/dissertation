@@ -32,20 +32,21 @@
                                     </td>
                                     <td>{{ count($faculty->classes) }}</td>
                                     <td>
+                                        <a data-faculty-id="{{$faculty->id}}" id="faculty-update"
+                                           data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
+                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                        </a>
+                                    </td>
+                                    <td>
                                         @if(!count($faculty->classes)>0)
-                                            <a data-faculty-id="{{$faculty->id}}" id="destroy-faculty"
+                                            <a data-faculty-id="{{$faculty->id}}" id="faculty-destroy"
                                                data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
                                                 <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                             </a>
                                         @endif
                                     </td>
-                                    <td>
-                                        <a data-faculty-id="{{$faculty->id}}" id="update-faculty"
-                                           data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
-                                            data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
-                                        </a>
-                                    </td>
+
                                 </tr>
                             @endforeach
                             </tbody>
@@ -112,7 +113,7 @@
 
     <script>
         $(document).ready(function () {
-            $("a#update-faculty").click(function () {
+            $("a#faculty-update").click(function () {
                 var urlEdit = $(this).attr('data-faculty-edit-link');
                 var urlUpdate = $(this).attr('data-faculty-update-link');
                 var id = $(this).attr('data-faculty-id');
@@ -171,7 +172,7 @@
                 });
             });
 
-            $('a#destroy-faculty').click(function () {
+            $('a#faculty-destroy').click(function () {
                 var id = $(this).attr("data-faculty-id");
                 var url = $(this).attr('data-faculty-link');
                 swal({
