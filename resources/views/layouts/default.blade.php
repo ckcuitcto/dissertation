@@ -131,6 +131,12 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
                 </ul>
             </li>
 
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Học kì</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" href="{{ route('semester-list') }}"><i class="icon fa fa-circle-o"></i>Danh sách học kì </a></li>
+                </ul>
+            </li>
+
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('schedule') }}"><i class="icon fa fa-circle-o"></i> Thời Khóa Biểu</a></li>
@@ -157,6 +163,7 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
     <script src="{{ URL::asset('template/js/bootstrap.min.js') }}"></script>
     <script src="{{ URL::asset('template/js/main.js') }}"></script>
     <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 @stop
 
 @section('sub-javascript')

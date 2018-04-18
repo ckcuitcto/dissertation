@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('template/css/main.css') }}">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" rel="stylesheet"/>
 {{--    <link rel="stylesheet" type="text/css" href="{{ asset('template/css/font-awesome.min.css') }}">--}}
     <title>STU - @yield('title')</title>
 </head>

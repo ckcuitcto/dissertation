@@ -63,7 +63,11 @@
                                     @isset($value->TopicChild)
                                         @foreach($value->TopicChild as $childValue)
                                             <tr>
-                                                <td colspan="7"><b>{{ $childValue->title }}</b></td>
+                                                <td colspan="7"><b>{{ $childValue->title }}</b>
+                                                    @if($childValue->proof_type)
+                                                        <input type="file" id="{{$childValue->proof_type}}">
+                                                    @endif
+                                                </td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -74,7 +78,10 @@
                                                 @foreach($childValue->EvaluationCriterias as $evaluationCriteria)
                                                     <tr>
                                                         <td colspan="7"> {{ $evaluationCriteria->content }}
-                                                                {{-- nếu có chi tiết thì hiện ra--}}
+                                                            {{-- nếu có chi tiết thì hiện ra--}}
+                                                            @if($evaluationCriteria->proof_type)
+                                                                <input type="file" id="{{$childValue->proof_type}}">
+                                                            @endif
                                                             @isset($evaluationCriteria->detail)
                                                                 {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
                                                             @endisset
@@ -94,6 +101,9 @@
                                         @foreach($value->EvaluationCriterias as $evaluationCriteria)
                                             <tr>
                                                 <td colspan="7"> {{ $evaluationCriteria->content }}
+                                                    @if($evaluationCriteria->proof_type)
+                                                        <input type="file" id="{{$childValue->proof_type}}">
+                                                    @endif
                                                     @isset($evaluationCriteria->detail)
                                                         {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
                                                     @endisset
@@ -105,13 +115,14 @@
                                             </tr>
                                         @endforeach
                                     @endisset
-
-                                <tr>
-                                    <td colspan="8" class="text-center"> <b>Tổng {{ \App\Helpers\Convert::numberToRomanRepresentation($key +1) }}. (Tối đa {{ $value->max_score }} điểm) </b></td>
-                                    <td><input type="text" class="form-control"></td>
-                                    <td><input type="text" class="form-control"></td>
-                                    <td><input type="text" class="form-control"></td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <b>Tổng {{ \App\Helpers\Convert::numberToRomanRepresentation($key +1) }}.
+                                                (Tối đa {{ $value->max_score }} điểm) </b></td>
+                                        <td><input type="text" class="form-control"></td>
+                                        <td><input type="text" class="form-control"></td>
+                                        <td><input type="text" class="form-control"></td>
+                                    </tr>
                                 @endif
                             @endforeach
 
@@ -140,5 +151,4 @@
 @section('sub-javascript')
     <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-
 @endsection
