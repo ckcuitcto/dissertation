@@ -45,7 +45,7 @@ Route::group(['middleware' => 'auth'],function(){
 
         Route::get('/destroy/{id}',['as' => 'class-destroy', 'uses' => 'Department\ClassController@destroy']);
 
-        Route::get('/edit/{id}',['as' => 'class-edit', 'uses' => 'Department\FacultyController@edit']);
+        Route::get('/edit/{id}',['as' => 'class-edit', 'uses' => 'Department\ClassController@edit']);
         Route::post('/update/{id}',['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
 
 //        Route::get('/ajax-bind-form/{id}',['as' => 'class-ajax-bind-form', 'uses' => 'Department\ClassController@ajaxBindForm']);
@@ -113,31 +113,8 @@ Route::group(['middleware' => 'auth'],function(){
 
     Route::get('/y-kien', ['as' => 'comment', 'uses' => 'Home\HomeController@comment']);
     Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);
-
-
-    Route::get('index',[
-        'as'=>'trang-chu',
-        'uses'=>'PageController@getIndex'
-    ]);
-
-    Route::get('thong-tin-sinh-vien',[
-        'as'=>'thongtinsinhvien',
-        'uses'=>'PageController@getStudentInformation'
-    ]);
-
-
-    Route::get('thong-bao',[
-        'as'=>'thongbao',
-        'uses'=>'PageController@getNotification'
-    ]);
-
-    Route::get('hoc-phi',[
-        'as'=>'hocphi',
-        'uses'=>'PageController@getTuition'
-    ]);
-
-    Route::get('phong-dao-tao',[
-        'as'=>'phongdaotao',
-        'uses'=>'PageController@getOfficeAcademic'
-    ]);
+    Route::get('/thong-bao',['as' => 'notification', 'uses' => 'Home\HomeController@notification']);
+    Route::get('/hoc-phi', ['as' => 'tuition', 'uses' => 'Home\HomeController@tuition']);
+    Route::get('/phong-dao-tao', ['as' => 'office-academic', 'uses' => 'Home\HomeController@officeAcademic']);
+    Route::get('/quan-ly-minh-chung', ['as' => 'proofs', 'uses' => 'Home\HomeController@proofs']);
 });

@@ -1,5 +1,7 @@
-@extends('master')
+@extends('layouts.default')
+
 @section('content')
+<main class="app-content">
 <div class="app-title">
         <div>
           <h1><i class="fa fa-laptop"></i> Quản lý thông báo</h1>
@@ -80,4 +82,5 @@
             </div>
           </div>
         </div>
+      </main>
 @endsection

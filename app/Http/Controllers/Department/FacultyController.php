@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Department;
-
 use App\Faculty;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -146,6 +144,7 @@ class FacultyController extends Controller
             'status' => false
         ], 200);
 
+        
     }
 
 

@@ -1,106 +1,129 @@
 @extends('layouts.default')
+
 @section('content')
-    <main class="app-content">
-        <div class="app-title">
-            <div>
-                <h1><i class="fa fa-file-text-o"></i> Danh sách các Khoa</h1>
-                <p>Trường Đại học Công nghệ Sài Gòn</p>
-            </div>
-            <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
-                <li class="breadcrumb-item active"><a href="#"> Danh sách Khoa</a></li>
-            </ul>
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-calendar-o"></i> Quản lý minh chứng</h1>
+        <p>Trường Đại học Công nghệ Sài Gòn</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#"> Quản lý minh chứng</a></li>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="tile">
+          <section class="invoice">     
+              <div class="tile-body">
+                <table class="table table-hover table-bordered" id="sampleTable">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th>Tên sinh viên</th>
+                      <th>Lớp</th>
+                      <th>Học kỳ</th>
+                      <th>Năm học</th>
+                      <th>Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>
+                          <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
+                          id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
+                                                              aria-hidden="true"></i>Sửa</button>
+                          <button class="btn btn-danger" id="btnAddFaculty" type="button">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>
+                          <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
+                          id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
+                                                              aria-hidden="true"></i>Sửa</button>
+                          <button class="btn btn-danger" id="btnAddFaculty" type="button">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>
+                          <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
+                          id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
+                                                              aria-hidden="true"></i>Sửa</button>
+                          <button class="btn btn-danger" id="btnAddFaculty" type="button">Xóa</button>
+                      </td>
+                    </tr>                              
+                    <tr>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>hh</td>
+                      <td>
+                          <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
+                          id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
+                                                              aria-hidden="true"></i>Sửa</button>
+                          <button class="btn btn-danger" id="btnAddFaculty" type="button">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          </section>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="tile">
-                    <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
-                            <thead>
-                            <tr>
-                                <th>Khoa</th>
-                                <th>Số lượng lớp</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($faculties as $faculty)
-                                <tr>
-                                    <td><a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>
-                                    </td>
-                                    <td>{{ count($faculty->classes) }}</td>
-                                    <td>
-                                        <a data-faculty-id="{{$faculty->id}}" id="faculty-update"
-                                           data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
-                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        @if(!count($faculty->classes)>0)
-                                            <a data-faculty-id="{{$faculty->id}}" id="faculty-destroy"
-                                               data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
-                                            </a>
-                                        @endif
-                                    </td>
-
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
-                                        id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
-                                                                            aria-hidden="true"></i>Thêm
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+      </div>
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Phiếu đánh giá điểm rèn luyện</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                 </div>
-            </div>
-        </div>
+                <div class="modal-body">
 
-        <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Thêm mới khoa</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-
-                        <form id="faculty-form">
-                            {!! csrf_field() !!}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="name">Tên khoa :</label>
-                                        <input type="hidden" name="id" class="id" id="idFacultyModal">
-                                        <input class="form-control name" id="name" name="name" type="text" required
-                                               aria-describedby="faculty" placeholder="Nhập tên khoa">
-                                        <p style="color:red; display: none;" class="name"></p>
-                                    </div>
+                    <form id="faculty-form">
+                        {!! csrf_field() !!}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="name">Tên khoa :</label>
+                                    <input type="hidden" name="id" class="id" id="idFacultyModal">
+                                    <input class="form-control name" id="name" name="name" type="text" required
+                                           aria-describedby="faculty" placeholder="Nhập tên khoa">
+                                    <p style="color:red; display: none;" class="name"></p>
                                 </div>
                             </div>
-                        </form>
-                        <div class="modal-footer">
-                            <button data-link="{{ route('faculty-store') }}" class="btn btn-primary"
-                                    id="btn-save-faculty" name="btn-save-faculty" type="button">
-                                Thêm
-                            </button>
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
                         </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button data-link="#" class="btn btn-primary"
+                                id="btn-save-faculty" name="btn-save-faculty" type="button">
+                            Sửa
+                        </button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
-
+    </div>
+</main>
 @endsection
 
 @section('sub-javascript')
@@ -113,7 +136,7 @@
 
     <script>
         $(document).ready(function () {
-            $("a#faculty-update").click(function () {
+            $("a#update-faculty").click(function () {
                 var urlEdit = $(this).attr('data-faculty-edit-link');
                 var urlUpdate = $(this).attr('data-faculty-update-link');
                 var id = $(this).attr('data-faculty-id');
@@ -172,7 +195,7 @@
                 });
             });
 
-            $('a#faculty-destroy').click(function () {
+            $('a#destroy-faculty').click(function () {
                 var id = $(this).attr("data-faculty-id");
                 var url = $(this).attr('data-faculty-link');
                 swal({

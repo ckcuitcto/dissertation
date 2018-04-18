@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 10-Apr-18
- * Time: 12:41 AM
- */
-?>
 @extends('layouts.default')
 @section('content')
     <main class="app-content">

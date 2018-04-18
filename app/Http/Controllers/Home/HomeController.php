@@ -39,4 +39,20 @@ class HomeController extends Controller
     public function schedule(){
         return view('schedule.index');
     }
+
+    public function notification() {
+        return view('notification.index');
+    }
+
+    public function tuition() {
+        return view('tuition.index');
+    }
+
+    public function officeAcademic() {
+        return view('office-academic.index');
+    }
+
+    public function proofs() {
+        return view('proofs.index');
+    }
 }
