@@ -51,4 +51,8 @@ class HomeController extends Controller
     public function officeAcademic() {
         return view('office-academic.index');
     }
+
+    public function proofs() {
+        return view('proofs.index');
+    }
 }

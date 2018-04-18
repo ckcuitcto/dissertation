@@ -103,4 +103,5 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('/thong-bao',['as' => 'notification', 'uses' => 'Home\HomeController@notification']);
     Route::get('/hoc-phi', ['as' => 'tuition', 'uses' => 'Home\HomeController@tuition']);
     Route::get('/phong-dao-tao', ['as' => 'office-academic', 'uses' => 'Home\HomeController@officeAcademic']);
+    Route::get('quan-ly-minh-chung', ['as' => 'proofs', 'uses' => 'Home\HomeController@proofs']);
 });

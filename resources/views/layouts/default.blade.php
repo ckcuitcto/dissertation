@@ -101,7 +101,7 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
                 </ul>
             </li>
             <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i class="app-menu__icon fa fa-user-circle-o"></i><span class="app-menu__label">Thông tin sinh viên</span></a></li>
-            <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span></a></li>
+            <li><a class="app-menu__item" href="{{ route('proofs') }}"><i class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span></a></li>
 
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Tin tức</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
