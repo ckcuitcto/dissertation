@@ -37,7 +37,8 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>                    
+                            <td></td>  
+                            <td class="table-primary">Tiết 1</td>                  
                           </tr>
                           <tr>
                             <td class="table-primary">Tiết 2</td>
@@ -48,6 +49,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td class="table-primary">Tiết 2</td>
                           </tr>
                           <tr>
                             <td class="table-primary">Tiết 3</td>                    
@@ -58,6 +60,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td class="table-primary">Tiết 3</td>
                           </tr>
                           <tr>
                               <td class="table-primary">Tiết 4</td>
@@ -68,6 +71,7 @@
                               <td></td>
                               <td></td>
                               <td></td>
+                              <td class="table-primary">Tiết 4</td>
                           </tr>
                           <tr>
                               <td class="table-primary">Tiết 5</td>
@@ -78,16 +82,18 @@
                               <td></td>
                               <td></td>
                               <td></td>
+                              <td class="table-primary">Tiết 5</td>
                           </tr>
                           <tr>
                               <td class="table-primary">Tiết 6</td>
                               <td></td>
                               <td></td>
+                              <td class="table-warning">Xây dựng phần mềm web</td>
                               <td></td>
                               <td></td>
                               <td></td>
                               <td></td>
-                              <td></td>
+                              <td class="table-primary">Tiết 6</td>
                           </tr>
                           <tr>
                               <td class="table-primary">Tiết 7</td>
@@ -98,29 +104,94 @@
                               <td></td>
                               <td></td>
                               <td></td>
+                              <td class="table-primary">Tiết 7</td>
                           </tr>
                           <tr>
+                              <td class="table-primary">Tiết 8</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td class="table-warning">Xây dựng phần mềm web</td>
                               <td class="table-primary">Tiết 8</td>
                           </tr>
                           <tr>
                               <td class="table-primary">Tiết 9</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td class="table-primary">Tiết 9</td>
                           </tr>
                           <tr>
+                              <td class="table-primary">Tiết 10</td>
+                              <td class="table-warning">Xây dựng phần mềm web</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
                               <td class="table-primary">Tiết 10</td>
                           </tr>
                           <tr>
                               <td class="table-primary">Tiết 11</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td class="table-primary">Tiết 11</td>
                           </tr>
                           <tr>
+                              <td class="table-primary">Tiết 12</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
                               <td class="table-primary">Tiết 12</td>
                           </tr>
                           <tr>
                               <td class="table-primary">Tiết 13</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td class="table-primary">Tiết 13</td>
                           </tr>
                           <tr>
                               <td class="table-primary">Tiết 14</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td class="table-primary">Tiết 14</td>
                           </tr>
                           <tr>
+                              <td class="table-primary">Tiết 15</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
                               <td class="table-primary">Tiết 15</td>
                           </tr>
                           <tr>
