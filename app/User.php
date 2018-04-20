@@ -11,7 +11,8 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $table = 'users';
-
+    protected $primaryKey = 'id';
+    public $incrementing = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -45,7 +46,7 @@ class User extends Authenticatable
     }
 
     public function Faculty(){
-        return $this->belongsTo('App\User','faculty_id','id');
+        return $this->belongsTo('App\Faculty','faculty_id','id');
     }
 
     public function hasPermission(Permission $permission){
