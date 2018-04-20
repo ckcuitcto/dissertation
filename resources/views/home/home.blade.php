@@ -34,7 +34,7 @@
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   <span class="sr-only">Next</span>
                 </a>
-              </div>
+            </div>
         </div>
 
         <div class="row">&nbsp;</div>
@@ -44,7 +44,6 @@
                 <div class="widget-small primary coloured-icon"><i class="icon fa fa-calendar-o fa-3x"></i>
                     <div class="info">
                         <h4>Thời Khóa Biểu</h4>
-                        <p><b>5</b></p>
                     </div>
                 </div>
             </div>
@@ -52,7 +51,6 @@
                 <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
                     <div class="info">
                         <h4>Điểm Học Kỳ</h4>
-                        <p><b>25</b></p>
                     </div>
                 </div>
             </div>
@@ -60,7 +58,6 @@
                 <div class="widget-small warning coloured-icon"><i class="icon fa fa-calendar fa-3x"></i>
                     <div class="info">
                         <h4>Lịch Thi Học Kỳ</h4>
-                        <p><b>10</b></p>
                     </div>
                 </div>
             </div>
@@ -68,30 +65,33 @@
                 <div class="widget-small danger coloured-icon"><i class="icon fa fa-money fa-3x"></i>
                     <div class="info">
                         <h4>Học Phí</h4>
-                        <p><b>500</b></p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Thông báo</h3>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
+                    <div class="alert alert-primary" role="alert">
+                        STU tham gia chương trình Tư vấn Hướng nghiệp, xét tuyển ĐH - CĐ năm 2018 tại khu vực Tây Nguyên, Nam Trung Bộ và Tây Nam Bộ.
+                    </div>
+                    <div class="alert alert-primary" role="alert">
+                        STU tham gia chương trình Tư vấn Hướng nghiệp, xét tuyển ĐH - CĐ năm 2018 tại khu vực Tây Nguyên, Nam Trung Bộ và Tây Nam Bộ.
+                    </div>
+                    <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Tin tức & sự kiện</h3>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
+                    <div class="alert alert-success" role="alert">
+                        STU tổ chức Ngày hội tư vấn Hướng nghiệp và Tuyển sinh năm 2018 
+                    </div>
+                    <div class="alert alert-success" role="alert">
+                        STU tổ chức Ngày hội tư vấn Hướng nghiệp và Tuyển sinh năm 2018 
+                    </div>
+                    <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
             </div>
         </div>
@@ -100,21 +100,25 @@
             <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Thông tin tuyển dụng</h3>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
+                    <div class="alert alert-danger" role="alert">
+                        Dấu ấn STU trong ngày hội Tư vấn tuyển sinh - hướng nghiệp tại...
+                    </div>
+                    <div class="alert alert-danger" role="alert">
+                        Dấu ấn STU trong ngày hội Tư vấn tuyển sinh - hướng nghiệp tại...
+                    </div>
+                    <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Chủ đề</h3>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
-                    <div>Hân</div>
+                    <div class="alert alert-warning" role="alert">
+                        Link nhận hình trao bằng tốt nghiệp năm 2017
+                      </div>
+                      <div class="alert alert-info" role="alert">                        
+                        Thông báo về việc đăng ký chủ trì thực hiện đề tài, dự án khoa học công nghệ tỉnh Bến Tre
+                      </div>
+                      <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
             </div>
             <div class="col-md-6">

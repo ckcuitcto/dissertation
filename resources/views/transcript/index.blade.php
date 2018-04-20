@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 06-Apr-18
- * Time: 8:50 PM
- */
-?>
 @extends('layouts.default')
 
 @section('content')
@@ -16,8 +8,7 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
+                <li class="breadcrumb-item"><a href="#"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item"><a href="#">Tổng điểm cá nhân</a></li>
             </ul>
         </div>

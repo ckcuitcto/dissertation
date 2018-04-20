@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Comment;
 
+use App\Http\Controllers\Controller;
+use App\Comment;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -13,7 +15,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        return view('comment.index');
     }
 
     /**
@@ -80,5 +82,12 @@ class CommentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function postComment(Request $req) {
+        $comment = new Comment;
+        $comment->title = $req->title;
+        $comment->content = $req->content;
+        $comment->save();
     }
 }

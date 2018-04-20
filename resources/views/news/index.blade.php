@@ -4,12 +4,12 @@
 <main class="app-content">
 <div class="app-title">
         <div>
-          <h1><i class="fa fa-laptop"></i> Quản lý thông báo</h1>
+          <h1><i class="fa fa-laptop"></i> Quản lý tin tức, sự kiện</h1>
           <p>Trường Đại học Công nghệ Sài Gòn</p>
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><a href="#"><i class="fa fa-home fa-lg"></i></a></li>
-          <li class="breadcrumb-item"><a href="#">Quản lý thông báo</a></li>
+          <li class="breadcrumb-item"><a href="#"> Quản lý tin tức, sự kiện</a></li>
         </ul>
       </div>
         <div class="row">
