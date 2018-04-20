@@ -29,12 +29,13 @@
                         <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm cá nhân, Điểm lớp và Điểm khoa là điểm đánh giá chưa tính điểm học tập</div>
                         <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm tổng là điểm sau khi P.CTSV kiểm duyệt đã bao gồm điểm học tập</div>
                         <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Xếp loại và Điểm tổng nếu có giá trị là "_" thì đang đợi bổ sung điểm học tập</div>
+
                     </div>
-                    <div class="title-body" style="text-align:right">
-                        <div>Họ và tên: Trần Ngọc Gia Hân</div>
-                        <div>Lớp: D14-TH02</div>
-                        <div>MSSV: DH51401681</div>
-                        <div>Khoa: Công nghệ thông tin</div>
+                    <div class="title" style="text-align:right">
+                        <div>Họ và tên: {{ $user->name }}</div>
+                            <div>Lớp: {{ $user->Student->Classes->name OR "" }}</div>
+                        <div>MSSV: {{ $user->id }}</div>
+                        <div>Khoa: {{ $user->Faculty->name OR "" }}</div>
                     </div>
                 </div>
             </div>

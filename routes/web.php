@@ -48,7 +48,6 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('/edit/{id}',['as' => 'class-edit', 'uses' => 'Department\ClassController@edit']);
         Route::post('/update/{id}',['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
 
-//        Route::get('/ajax-bind-form/{id}',['as' => 'class-ajax-bind-form', 'uses' => 'Department\ClassController@ajaxBindForm']);
     });
 
     Route::group(['prefix' => 'sinh-vien'],function() {
@@ -99,15 +98,29 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('/destroy/{id}',['as' => 'semester-destroy', 'uses' => 'Semester\SemesterController@destroy']);
         // chỉnh sửa
         Route::post('/update/{id}',['as' => 'semester-update', 'uses' => 'Semester\SemesterController@update']);
-        Route::post('/edit/{id}',['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit']);
+        Route::get('/edit/{id}',['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit']);
     });
 
     Route::group(['prefix' => 'thong-bao'],function(){
         // Route::get('/',['as' => 'notification-list',])
     });
+
+    Route::group(['prefix' => 'bang-diem'],function() {
+        Route::get('/', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
+
+        Route::get('/{id}',['as' => 'class-detail', 'uses' => 'Transcript\TranscriptController@show']);
+        Route::post('/store',['as' => 'class-store', 'uses' => 'Transcript\TranscriptController@store']);
+
+        Route::get('/destroy/{id}',['as' => 'class-destroy', 'uses' => 'Transcript\TranscriptController@destroy']);
+
+        Route::get('/edit/{id}',['as' => 'class-edit', 'uses' => 'Transcript\TranscriptController@edit']);
+        Route::post('/update/{id}',['as' => 'class-update', 'uses' => 'Transcript\TranscriptController@update']);
+
+    });
+
     Route::get('/phieu-danh-gia', ['as' => 'evaluation-form', 'uses' => 'Evaluation\EvaluationFormController@index']);
 
-    Route::get('/bang-diem', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
+
 
     Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);
 
