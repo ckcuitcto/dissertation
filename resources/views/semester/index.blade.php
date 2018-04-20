@@ -30,7 +30,7 @@
                             <tr>
                                 <th>STT</th>
                                 <th>Học kì</th>
-                                <th>Năm</th>
+                                <th>Năm học</th>
                                 <th>Ngày bắt đầu chấm</th>
                                 <th>Ngày kết thúc chấm</th>
                                 <th></th>
@@ -82,23 +82,24 @@
                                 <div class="col-md-12">
                                     <div class="form-row">
                                         <label for="year">Năm học</label>
-                                        <div class="input-daterange input-group" id="year">
-                                            <input type="text" class="input-sm form-control year_from" name="year_from"/>
+                                        <div class="input-group">
+                                            <input type="text" class="input-sm form-control year_from" id="year_from" name="year_from"/>
                                             <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control year_to" name="year_to"/>
+                                            <input type="text" class="input-sm form-control year_to" name="year_to" id="year_to"/>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <label for="mark_date">Ngày chấm</label>
-                                        <div class="input-daterange input-group" id="mark_date">
-                                            <input type="text" class="input-sm form-control date_start_to_mark" name="date_start_to_mark"/>
+                                        <div class="input-group">
+                                            <input type="text" class="input-sm form-control date_start_to_mark" id="date_start_to_mark" name="date_start_to_mark"/>
                                             <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control date_end_to_mark" name="date_end_to_mark"/>
+                                            <input type="text" class="input-sm form-control date_end_to_mark" id="date_end_to_mark"  name="date_end_to_mark"/>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <label for="term">Học kì</label>
-                                        <input type="number" class="form-control term" id="term" placeholder="Học kì">
+                                        <input type="number" class="form-control term" name="term" id="term"
+                                               placeholder="Học kì">
                                     </div>
                                 </div>
                             </div>
@@ -128,23 +129,18 @@
 
     <script>
 
-        $("#year").datepicker({
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years"
-        });
-        $('#mark_date').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-        });
+
+        $("#year_from").datepicker({format: "yyyy", viewMode: "years", minViewMode: "years", todayBtn: "linked", clearBtn: true, language: "vi",});
+        $("#year_to").datepicker({format: "yyyy", viewMode: "years", minViewMode: "years", todayBtn: "linked", clearBtn: true, language: "vi" });
+        $('#date_start_to_mark').datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,});
+        $('#date_end_to_mark').datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,});
 
         $(document).ready(function () {
             $("a#update-semester").click(function () {
                 var urlEdit = $(this).attr('data-semester-edit-link');
                 var urlUpdate = $(this).attr('data-semester-update-link');
                 var id = $(this).attr('data-semester-id');
-                $('.form-group').find('span.messageErrors').remove();
+                $('.form-row').find('span.messageErrors').remove();
                 $.ajax({
                     type: "get",
                     url: urlEdit,

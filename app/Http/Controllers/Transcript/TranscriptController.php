@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transcript;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TranscriptController extends Controller
 {
@@ -14,8 +15,8 @@ class TranscriptController extends Controller
      */
     public function index()
     {
-
-        return view('transcript.index');
+        $user = Auth::user();
+        return view('transcript.index',compact('user'));
     }
 
     /**
