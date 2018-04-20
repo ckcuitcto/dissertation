@@ -11,24 +11,42 @@ class StaffSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('staff')->insert([
+        DB::table('users')->insert([
             [
-                'id' => '123123',
-                'name' => 'Giao vien 1',
+                'id' => 'GV123123',
+                'name' => 'Cố vấn học tập',
                 'email' => 'GV123123@gmail.com',
                 'password' => bcrypt('GV123123'),
+                'role_id' => 3
             ],
             [
-                'id' => '124124',
-                'name' => 'Giao vien 2 1',
-                'email' => 'GV123123@gmail1.com',
+                'id' => 'GV124124',
+                'name' => 'Ban chủ nhiệm khoa',
+                'email' => 'GV122223@gmail1.com',
                 'password' => bcrypt('GV124124'),
+                'role_id' => 4
             ],
             [
-                'id' => '124125',
+                'id' => 'CT123123',
                 'name' => 'Giao vien han',
-                'email' => 'GV124125@gmail1.com',
+                'email' => 'GV1241325@gmail1.com',
                 'password' => bcrypt('GV124125'),
+                'role_id' => 5
+            ],
+            [
+                'id' => 'GV124125',
+                'name' => 'Cố vấn học tập',
+                'email' => 'GV1241225@gmail1.com',
+                'password' => bcrypt('GV124125'),
+                'role_id' => 3
+            ],
+
+            [
+                'id' => 'AD123122',
+                'name' => 'V . I . P',
+                'email' => 'huynhjduc248@gmail1.com',
+                'password' => bcrypt('admin123'),
+                'role_id' => 6
             ]
         ]);
     }

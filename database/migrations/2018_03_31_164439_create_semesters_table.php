@@ -15,8 +15,11 @@ class CreateSemestersTable extends Migration
     {
         Schema::create('semesters', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->integer('year');
+            $table->integer('year_from');
+            $table->integer('year_to');
             $table->integer('term');
+            $table->date('date_start_to_mark')->nullable();
+            $table->date('date_end_to_mark')->nullable();
             $table->timestamps();
         });
     }

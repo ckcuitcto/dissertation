@@ -14,4 +14,8 @@ class Faculty extends Model
         return $this->hasMany('App\Classes','faculty_id','id');
     }
 
+    public function Users(){
+        return $this->hasMany('App\User','faculty_id','id');
+    }
+
 }

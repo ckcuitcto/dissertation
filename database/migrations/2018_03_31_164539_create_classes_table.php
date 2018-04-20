@@ -17,7 +17,7 @@ class CreateClassesTable extends Migration
             $table->increments('id')->unsigned();
             $table->string('name',200);
             $table->integer('faculty_id')->unsigned()->nullable();
-            $table->string('education_adviser_id',10)->nullable();
+            $table->integer('staff_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

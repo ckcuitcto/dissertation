@@ -10,27 +10,13 @@ class Topic extends Model
 
     protected $fillable = ['title','max_score','parent_id'];
 
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
 
-    public function Comments(){
-        return $this->hasMany('App\Comment','created_by','id');
+    public function TopicChild(){
+        return $this->hasMany('App\Topic','parent_id','id');
     }
 
-    public function Proofs(){
-        return $this->hasMany('App\Proof','created_by','id');
+    public function EvaluationCriterias(){
+        return $this->hasMany('App\EvaluationCriteria','topic_id','id');
     }
 
-    public function NotificationStudents(){
-        return $this->hasMany('App\NotificationStudent','student_id','id');
-    }
-
-    public function EvaluationForms(){
-        return $this->hasMany('App\EvaluationForm','student_id','id');
-    }
-
-    public function Role(){
-        return $this->belongsTo('App\Role','role_id','id');
-    }
 }
