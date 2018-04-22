@@ -61,12 +61,14 @@ Route::group(['middleware' => 'auth'],function(){
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
 //        Route::get('/{id}',['as' => 'role-detail','uses' => 'Role\RoleController@show']);
         // xoa 1 role
-        Route::get('/destroy/{id}',['as' => 'role-destroy', 'uses' => 'Role\RoleController@destroy']);
-        // them 1 role
-        Route::post('/store',['as' => 'role-store', 'uses' => 'Role\RoleController@store']);
-        // chỉnh sửa role
-        Route::post('/update/{id}',['as' => 'role-update', 'uses' => 'Role\RoleController@update']);
-        Route::get('/edit/{id}',['as' => 'role-edit', 'uses' => 'Role\RoleController@edit']);
+//        Route::group(['middleware' => 'role:admin'],function() {
+            Route::get('/destroy/{id}', ['as' => 'role-destroy', 'uses' => 'Role\RoleController@destroy']);
+            // them 1 role
+            Route::post('/store', ['as' => 'role-store', 'uses' => 'Role\RoleController@store']);
+            // chỉnh sửa role
+            Route::post('/update/{id}', ['as' => 'role-update', 'uses' => 'Role\RoleController@update']);
+            Route::get('/edit/{id}', ['as' => 'role-edit', 'uses' => 'Role\RoleController@edit']);
+//        });
     });
 
     Route::group(['prefix' => 'quyen'],function(){

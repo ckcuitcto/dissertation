@@ -53,6 +53,8 @@ class RoleController extends Controller
         }else{
             $role = new Role();
             $role->name = $request->name;
+            $role->display_name = $request->display_name;
+            $role->description = $request->description;
             $role->save();
 //            dd($request->permission);
             $role->Permissions()->attach($request->permission);
@@ -101,7 +103,8 @@ class RoleController extends Controller
         $role = Role::find($id);
         if (!empty($role)) {
             $role->name = $request->name;
-//            dd($request->permission);
+            $role->display_name = $request->display_name;
+            $role->description = $request->description;
             $role->Permissions()->sync($request->permission);
             $role->save();
             return response()->json([

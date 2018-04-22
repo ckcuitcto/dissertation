@@ -22,6 +22,8 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Vai trò</th>
+                                <th>Tên hiển thị</th>
+                                <th>Miêu tả</th>
                                 <th>Số người</th>
                                 <th>Quyền</th>
                                 <th>Sửa</th>
@@ -33,6 +35,8 @@
                                 <tr>
                                     <td>{{ $role->id }} </td>
                                     <td>{{ $role->name }} </td>
+                                    <td>{{ $role->display_name }} </td>
+                                    <td>{{ $role->description }} </td>
                                     <td> {{ count($role->Users) }} </td>
                                     <td>
                                         @foreach($role->Permissions as $key => $permission)
@@ -44,11 +48,13 @@
                                         @endforeach
                                     </td>
                                     <td>
+                                        @role('admin')
                                         <a data-role-id="{{$role->id}}" id="role-update"
                                            data-role-edit-link="{{route('role-edit',$role->id)}}"
                                            data-role-update-link="{{route('role-update',$role->id)}}">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
+                                        @endrole
                                     </td>
                                     <td>
                                         @if(!count($role->Users)>0)
@@ -93,6 +99,18 @@
                                         <input class="form-control name" id="name" name="name" type="text" required
                                                aria-describedby="role">
                                         <p style="color:red; display: none;" class="name"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Tên hiển thị:</label>
+                                        <input class="form-control display_name" id="display_name" name="display_name" type="text" required
+                                               aria-describedby="permission">
+                                        <p style="color:red; display: none;" class="display_name"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Miêu tả :</label>
+                                        <input class="form-control description" id="description" name="description" type="text" required
+                                               aria-describedby="description">
+                                        <p style="color:red; display: none;" class="description"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -161,6 +179,7 @@
                     url: urlEdit,
                     data: {id: id},
                     dataType: 'json',
+                    cache: false,
                     success: function (result) {
                         if (result.status === true) {
                             if (result.role !== undefined) {
@@ -197,6 +216,7 @@
                     url: url,
                     data: valueForm,
                     dataType: 'json',
+                    cache: false,
                     success: function (result) {
                         if (result.status === false) {
                             //show error list fields

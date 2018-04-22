@@ -51,7 +51,8 @@ class PermissionController extends Controller
         }else{
             $permission = new Permission();
             $permission->name = $request->name;
-            $permission->title = $request->title;
+            $permission->display_name = $request->display_name;
+            $permission->description = $request->description;
             $permission->save();
             return response()->json([
                 'permission' => $permission,
@@ -97,10 +98,10 @@ class PermissionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'title' => 'required'
-        ],[   'name.required' => "Vui lòng nhập tên quyền",
-            'name.unique' => 'Tên quyền đã tồn tại',
-            'title.required' => 'Vui lòng nhập tiêu đề'
+            'display_name' => 'required'
+        ],[
+            'name.required' => "Vui lòng nhập tên quyền",
+            'display_name.required' => 'Vui lòng nhập tiêu đề'
         ]);
 
 
@@ -113,7 +114,8 @@ class PermissionController extends Controller
             $permission = Permission::find($id);
             if (!empty($permission)) {
                 $permission->name = $request->name;
-                $permission->title = $request->title;
+                $permission->display_name = $request->display_name;
+                $permission->description = $request->description;
                 $permission->save();
                 return response()->json([
                     'permission' => $permission,
