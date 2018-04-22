@@ -45,7 +45,7 @@ class PermissionController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'fail',
+                'status' => false,
                 'arrMessages' => $validator->errors()
             ],200);
         }else{
@@ -55,7 +55,7 @@ class PermissionController extends Controller
             $permission->save();
             return response()->json([
                 'permission' => $permission,
-                'status' => 'success'
+                'status' => true
             ],200);
         }
     }
@@ -82,7 +82,7 @@ class PermissionController extends Controller
         $permission = Permission::find($id);
         return response()->json([
             'permission' => $permission,
-            'status' => 'success'
+            'status' => true
         ]);
     }
 
@@ -95,22 +95,35 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,
-            [
-                'name' => 'required|unique:faculties,name',
-                'title' => 'required'
-            ],
-            [   'name.required' => "Vui lòng nhập tên Khoa",
-                'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
-                'name.unique' => 'Tên khoa đã tồn tại',
-                'title' => 'Vui lòng nhập tiêu đề'
-            ]
-        );
-        $permission = Permission::find($id);
-        $permission->name = $request->name;
-        $permission->save();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'title' => 'required'
+        ],[   'name.required' => "Vui lòng nhập tên quyền",
+            'name.unique' => 'Tên quyền đã tồn tại',
+            'title.required' => 'Vui lòng nhập tiêu đề'
+        ]);
 
-        return redirect()->back()->with(['flash_message' => 'Sửa thành công']);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ],200);
+        }else{
+            $permission = Permission::find($id);
+            if (!empty($permission)) {
+                $permission->name = $request->name;
+                $permission->title = $request->title;
+                $permission->save();
+                return response()->json([
+                    'permission' => $permission,
+                    'status' => true
+                ], 200);
+            }
+        }
+        return response()->json([
+            'status' => false
+        ], 200);
     }
 
     /**
