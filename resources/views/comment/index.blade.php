@@ -17,13 +17,13 @@
                 <div class="tile">
                     <div class="row">
                         <div class="col-lg-12">
-                        <form action="#">
+                        <form action="comment" method="POST">
                                 <div class="form-group row">
                                     <div class="col-md-3">
                                         <label for="exampleText">Chủ đề ý kiến</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input class="form-control" id="title" type="text" placeholder="Nhập vào chủ đề"><small class="form-text text-muted" id="emailHelp"></small>
+                                    <input class="form-control" id="title" type="text" placeholder="Nhập vào chủ đề" name="_token" value="{{csrf_token()}}"><small class="form-text text-muted" id="emailHelp"></small>
                                     </div>
                                 </div>                  
                                 <div class="form-group row">
