@@ -231,6 +231,11 @@
                 });
             });
 
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $("input[type=text],input[type=number], select").val('');
+                $('.text-red').html('');
+            });
+
         });
     </script>
 @endsection

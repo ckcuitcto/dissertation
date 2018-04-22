@@ -23,9 +23,6 @@
                                     <div class="fo"></div>
                                     <div>Số lớp : {{ count($faculty->Classes) }}</div>
                                 </div>
-                                {{--<div class="col-md-2">--}}
-                                {{--<button class="btn btn-primary" id="btnEditFaculty" type="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Sửa</button>--}}
-                                {{--</div>--}}
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -33,23 +30,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{--<div id="faculty-edit" @if (!$errors->any()) style="display: none" @endif>--}}
-                        {{--<form action="{{ route('faculty-edit',$faculty->id ) }}" method="post" id="form-faculty-edit">--}}
-                        {{--{!! csrf_field() !!}--}}
-                        {{--<div class="form-group">--}}
-                        {{--<label class="control-label">Tên khoa</label>--}}
-                        {{--<input class="form-control" name="name" value="{{ old('name') }}" id="name" required type="text" placeholder="Nhập tên mới của Khoa">--}}
-                        {{--@if ($errors->has('name'))--}}
-                        {{--<span class="help-block">--}}
-                        {{--<strong>{{ $errors->first('name') }}</strong>--}}
-                        {{--</span>--}}
-                        {{--@endif--}}
-                        {{--</div>--}}
-                        {{--<button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Sửa</button>--}}
-                        {{--&nbsp;&nbsp;&nbsp;--}}
-                        {{--<a class="btn btn-secondary" id="btnCancelEdit" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Hủy</a>--}}
-                        {{--</form>--}}
-                        {{--</div>--}}
                     </div>
                     <div class="tile-body">
                         <table class="table table-hover table-bordered" id="sampleTable">
@@ -70,7 +50,6 @@
                                         <a data-id="{{$class->id}}" id="class-edit"
                                            data-edit-link="{{route('class-edit',$class->id)}}"
                                            data-update-link="{{route('class-update',$class->id)}}">
-
                                             <i class="fa fa-lg fa-edit " aria-hidden="true"> </i>
                                         </a>
                                     </td>

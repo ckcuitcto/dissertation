@@ -23,6 +23,7 @@
                                 <th>Id</th>
                                 <th>Vai trò</th>
                                 <th>Số người</th>
+                                <th>Quyền</th>
                                 <th>Sửa</th>
                                 <th>Xóa</th>
                             </tr>
@@ -30,26 +31,36 @@
                             <tbody>
                             @foreach($roles as $role)
                                 <tr>
-                                    <td><a href="{{ route('role-detail',$role->id) }}">{{ $role->id }} </a></td>
-                                    <td><a href="{{ route('role-detail',$role->id) }}">{{ $role->name }} </a></td>
+                                    <td>{{ $role->id }} </td>
+                                    <td>{{ $role->name }} </td>
                                     <td> {{ count($role->Users) }} </td>
                                     <td>
-                                        <a data-role-id="{{$role->id}}" id="update-role"
-                                           data-role-link="{{route('role-update',$role->id)}}">
-                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        @foreach($role->Permissions as $key => $permission)
+                                            @if($key == count($role->Permissions)-1)
+                                                <b>{{ $permission->name  }}</b>
+                                            @else
+                                                <b>{{ $permission->name  }}</b>&nbsp&nbsp {{ " && " }}&nbsp&nbsp
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        <a data-role-id="{{$role->id}}" id="role-update"
+                                           data-role-edit-link="{{route('role-edit',$role->id)}}"
+                                           data-role-update-link="{{route('role-update',$role->id)}}">
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
                                     </td>
                                     <td>
                                         @if(!count($role->Users)>0)
-                                            <a data-role-id="{{$role->id}}" id="destroy-role"
+                                            <a data-role-id="{{$role->id}}" id="role-destroy"
                                                data-role-link="{{route('role-destroy',$role->id)}}">
-                                                <i class="fa fa-trash-o" aria-hidden="true"> </i>
+                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                             </a>
                                         @endif
                                     </td>
                                 </tr>
-                                @endforeach
-                                </tbody>
+                            @endforeach
+                            </tbody>
                         </table>
                         <div class="row">
                             <div class="col-md-6">
@@ -84,6 +95,34 @@
                                         <p style="color:red; display: none;" class="name"></p>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Quyền</th>
+                                            <th scope="col">Miêu tả</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($permissions as $key => $permission)
+                                            <tr>
+                                                <th scope="row">{{ $key+1 }}</th>
+                                                <td>{{ $permission->name }}</td>
+                                                <td>{{ $permission->title }}</td>
+                                                <td>
+                                                    <div class="toggle">
+                                                        <label>
+                                                            <input type="checkbox" name="permission[]" value="{{$permission->id}}" class="permission_{{ $permission->id }}" id="{{$permission->id}}"><span class="button-indecator"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </form>
                         <div class="modal-footer">
@@ -112,9 +151,40 @@
     <script>
         $(document).ready(function () {
 
-            $("#update-role").click(function () {
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
-                $('#myModal').find(".modal-footer > button[name=btn-save-role]").html('Sửa');
+            $("a#role-update").click(function () {
+                var urlEdit = $(this).attr('data-role-edit-link');
+                var urlUpdate = $(this).attr('data-role-update-link');
+                var id = $(this).attr('data-role-id');
+                $('.form-group').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "get",
+                    url: urlEdit,
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status === true) {
+                            if (result.role !== undefined) {
+                                $.each(result.role, function (elementName, value) {
+//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+//                                    alert(elementName + "+ " + value);
+                                    $('.' + elementName).val(value);
+//                                    });
+                                    if(elementName === "permissions"){
+                                        $.each(value, function (permission, valuePermission) {
+//                                            alert(permission + "+ " + valuePermission.id);
+                                            $('.permission_' + valuePermission.id).val(valuePermission.id).prop('checked', true);
+
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+                $('#myModal').find(".modal-title").text('Sửa thông tin vai trò ');
+                $('#myModal').find(".modal-footer > button[name=btn-save-role]").html('Sửa')
+                $('#myModal').find(".modal-footer > button[name=btn-save-role]").attr('data-link', urlUpdate);
+                $('#myModal').modal('show');
             });
             $("#btn-save-role").click(function () {
 //                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
@@ -128,7 +198,7 @@
                     data: valueForm,
                     dataType: 'json',
                     success: function (result) {
-                        if (result.status === "fail") {
+                        if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
@@ -137,8 +207,8 @@
                                     });
                                 });
                             }
-                        } else if (result.status === "success") {
-                            $('#myModal').find('.modal-body').html('<p>Đã thêm vai trò thành công</p>');
+                        } else if (result.status === true) {
+                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#myModal').on('hidden.bs.modal', function (e) {
                                 location.reload();
@@ -148,7 +218,7 @@
                 });
             });
 
-            $('a#destroy-role').click(function () {
+            $('a#role-destroy').click(function () {
                 var id = $(this).attr("data-role-id");
                 var url = $(this).attr('data-role-link');
                 swal({
@@ -182,6 +252,13 @@
                         swal("Đã hủy", "Đã hủy xóa vai trò:)", "error");
                     }
                 });
+            });
+
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $("input[type=text],input[type=number], select").val('');
+                $("input[type=checkbox]").prop('checked', false);
+                $('.text-red').html('');
+                $('.form-group').find('span.messageErrors').remove();
             });
 
         });

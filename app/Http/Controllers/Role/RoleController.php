@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Role;
 
+use App\Permission;
 use App\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,7 +19,8 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
-        return view('role.index',compact('roles'));
+        $permissions = Permission::all();
+        return view('role.index',compact('roles','permissions'));
     }
 
     /**
@@ -26,10 +28,10 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+//    public function create()
+//    {
+//        //
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,21 +42,23 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:6|unique:roles,name',
+            'name' => 'required|unique:roles,name',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'fail',
+                'status' => false,
                 'arrMessages' => $validator->errors()
             ],200);
         }else{
             $role = new Role();
             $role->name = $request->name;
             $role->save();
+//            dd($request->permission);
+            $role->Permissions()->attach($request->permission);
             return response()->json([
                 'role' => $role,
-                'status' => 'success'
+                'status' => true
             ],200);
         }
     }
@@ -65,12 +69,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $role = Role::find($id);
-        $roles = Role::all();
-        return view('role.role-detail', compact('role','roles'));
-    }
+//    public function show($id)
+//    {
+//    }
 
     /**
      * Show the form for editing the specified resource.
@@ -80,10 +81,10 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $role = Role::find($id);
+        $role = Role::with('permissions')->find($id);
         return response()->json([
             'role' => $role,
-            'status' => 'success'
+            'status' => true
         ]);
     }
 
@@ -96,18 +97,21 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,
-            ['name' => 'required|min:6|unique:faculties,name'],
-            [   'name.required' => "Vui lòng nhập tên Khoa",
-                'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
-                'name.unique' => 'Tên khoa đã tồn tại'
-            ]
-        );
-        $role = Role::find($id);
-        $role->name = $request->name;
-        $role->save();
 
-        return redirect()->back()->with(['flash_message' => 'Sửa thành công']);
+        $role = Role::find($id);
+        if (!empty($role)) {
+            $role->name = $request->name;
+//            dd($request->permission);
+            $role->Permissions()->sync($request->permission);
+            $role->save();
+            return response()->json([
+                'role' => $role,
+                'status' => true
+            ], 200);
+        }
+        return response()->json([
+            'status' => false
+        ], 200);
     }
 
     /**

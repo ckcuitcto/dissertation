@@ -16,14 +16,6 @@ class FacultyController extends Controller
     public function index()
     {
         $faculties = Faculty::all();
-//        $faculties = DB::table('faculties as f')
-//            ->leftJoin('classes as c','f.id','c.faculty_id')
-//            ->leftJoin('staff as s','s.id','c.staff_id')
-//            ->leftJoin('students as stu','stu.class_id','c.id')
-//            ->select(DB::raw("COUNT(s.id) as totalStaff"), 'f.*',DB::raw("COUNT(stu.id) as totalStudent"))
-//            ->groupBy('f.id')
-//            ->get();
-//dd($faculties);
         return view('department.faculty.index', compact('faculties'));
     }
 

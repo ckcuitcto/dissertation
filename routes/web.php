@@ -18,10 +18,6 @@ $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::group(['middleware' => 'auth'],function(){
     Route::get('/home', 'Home\HomeController@index')->name('home');
 
-    Route::prefix('staff')->group(function () {
-        Route::get('/', 'StaffController@index')->name('staff.dashboard');
-    });
-
     Route::get('/khoa',['as' => 'faculty', 'uses' => 'Department\FacultyController@index']);
     Route::group(['prefix' => 'khoa'],function(){
         Route::get('/{id}',['as' => 'faculty-detail', 'uses' => 'Department\FacultyController@show']);
@@ -34,7 +30,6 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('/edit/{id}',['as' => 'faculty-edit', 'uses' => 'Department\FacultyController@edit']);
         //update
         Route::post('/update/{id}',['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update']);
-//        Route::get('/ajax-bind-form/{id}',['as' => 'faculty-ajax-bind-form', 'uses' => 'Department\FacultyController@edit']);
     });
 
     Route::group(['prefix' => 'lop'],function() {
@@ -57,20 +52,21 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('/destroy/{id}',['as' => 'class-destroy', 'uses' => 'Department\ClassController@destroy']);
 
         Route::post('/update/{id}',['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
-        Route::get('/ajax-bind-form/{id}',['as' => 'class-ajax-bind-form', 'uses' => 'Department\ClassController@ajaxBindForm']);
+//        Route::get('/ajax-bind-form/{id}',['as' => 'class-ajax-bind-form', 'uses' => 'Department\ClassController@ajaxBindForm']);
     });
 
     Route::group(['prefix' => 'vai-tro'],function(){
         // danh sach role
         Route::get('/',['as' => 'role-list','uses' => 'Role\RoleController@index']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
-        Route::get('/{id}',['as' => 'role-detail','uses' => 'Role\RoleController@show']);
+//        Route::get('/{id}',['as' => 'role-detail','uses' => 'Role\RoleController@show']);
         // xoa 1 role
         Route::get('/destroy/{id}',['as' => 'role-destroy', 'uses' => 'Role\RoleController@destroy']);
         // them 1 role
         Route::post('/store',['as' => 'role-store', 'uses' => 'Role\RoleController@store']);
         // chỉnh sửa role
         Route::post('/update/{id}',['as' => 'role-update', 'uses' => 'Role\RoleController@update']);
+        Route::get('/edit/{id}',['as' => 'role-edit', 'uses' => 'Role\RoleController@edit']);
     });
 
     Route::group(['prefix' => 'quyen'],function(){
@@ -84,6 +80,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::post('/store',['as' => 'permission-store', 'uses' => 'Permission\PermissionController@store']);
         // chỉnh sửa role
         Route::post('/update/{id}',['as' => 'permission-update', 'uses' => 'Permission\PermissionController@update']);
+        Route::get('/edit/{id}',['as' => 'permission-edit', 'uses' => 'Permission\PermissionController@edit']);
     });
 
     Route::group(['prefix' => 'hoc-ki'],function(){
