@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Comment;
 use Illuminate\Http\Request;
 
+
+use Illuminate\Support\Facades\Auth;
+
 class CommentController extends Controller
 {
     /**
@@ -86,6 +89,7 @@ class CommentController extends Controller
 
     public function postComment(Request $req) {
         $comment = new Comment;
+        $comment->idUsers = Auth::users()->id;
         $comment->title = $req->title;
         $comment->content = $req->content;
         $comment->save();
