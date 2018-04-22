@@ -18,7 +18,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <form method="post" action="{{ route('') }}">
+            <form method="post" action="{{ route('comment-store') }}">
                 <div class="tile">
                     <div class="row">
                         <div class="col-lg-12">
@@ -28,7 +28,13 @@
                                     <label for="exampleText">Tiêu đề</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-control" id="title" type="text" placeholder="Nhập vào chủ đề"><small class="form-text text-muted" id="emailHelp"></small>
+                                    <input class="form-control" id="title" name="title" type="text" placeholder="Nhập vào chủ đề">
+                                    <small class="form-text text-muted" id="emailHelp"></small>
+                                    @if ($errors->has('title'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('title') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>                  
                             <div class="form-group row">
@@ -36,14 +42,19 @@
                                     <label for="exampleTextarea">Nội dung</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <textarea class="form-control" id="content" rows="5"></textarea>
+                                    <textarea class="form-control" id="content" name="content" rows="5"></textarea>
+                                    @if ($errors->has('content'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('content') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>                                                
 
                         </div>           
                     </div>
                     <div class="tile-footer">
-                        <button class="btn btn-primary" type="submit" id="btn-save-comment" name="btn-save-comment" data-link="{{ route('comment') }}">Gửi</button>
+                        <button class="btn btn-primary" type="submit" id="btn-save-comment" name="btn-save-comment">Gửi</button>
                         <button class="btn btn-danger" type="cancel">Hủy</button>
                     </div>
                 </div>

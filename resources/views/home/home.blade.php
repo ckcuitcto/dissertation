@@ -41,32 +41,40 @@
 
         <div class="row">
             <div class="col-md-12 col-lg-6">
-                <div class="widget-small primary coloured-icon"><i class="icon fa fa-calendar-o fa-3x"></i>
-                    <div class="info">
-                        <h4>Thời Khóa Biểu</h4>
+            <a href="{{route('schedule')}}" style="text-decoration: none;">
+                    <div class="widget-small primary coloured-icon"><i class="icon fa fa-calendar-o fa-3x"></i>
+                        <div class="info">
+                            <h4>Thời Khóa Biểu</h4>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-12 col-lg-6">
-                <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
-                    <div class="info">
-                        <h4>Điểm Học Kỳ</h4>
+                <a href="" style="text-decoration: none;">
+                    <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
+                        <div class="info">
+                            <h4>Điểm Học Kỳ</h4>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-12 col-lg-6">
-                <div class="widget-small warning coloured-icon"><i class="icon fa fa-calendar fa-3x"></i>
-                    <div class="info">
-                        <h4>Lịch Thi Học Kỳ</h4>
+                <a href="#" style="text-decoration: none;">
+                    <div class="widget-small warning coloured-icon"><i class="icon fa fa-calendar fa-3x"></i>
+                        <div class="info">
+                            <h4>Lịch Thi Học Kỳ</h4>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-12 col-lg-6">
-                <div class="widget-small danger coloured-icon"><i class="icon fa fa-money fa-3x"></i>
-                    <div class="info">
-                        <h4>Học Phí</h4>
+                <a href="{{ route('tuition') }}" style="text-decoration: none;">
+                    <div class="widget-small danger coloured-icon"><i class="icon fa fa-money fa-3x"></i>
+                        <div class="info">
+                            <h4>Học Phí</h4>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         <div class="row mb-4">
