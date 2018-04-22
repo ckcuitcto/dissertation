@@ -13,18 +13,14 @@ class Semester extends Seeder
     {
         DB::table('semesters')->insert([
             [
-                'year' => '2017',
+                'year_from' => '2017',
+                'year_to' => '2018',
                 'term' => '1',
             ],[
-                'year' => '2017',
+                'year_from' => '2017',
+                'year_to' => '2018',
                 'term' => '2',
-            ],[
-                'year' => '2018',
-                'term' => '1',
-            ],[
-                'year' => '2018',
-                'term' => '2',
-            ],
+            ]
         ]);
     }
 }
