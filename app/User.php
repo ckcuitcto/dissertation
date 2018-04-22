@@ -50,7 +50,6 @@ class User extends Authenticatable
     }
 
     public function hasPermission(Permission $permission){
-
         //contains dung để kiểm tra xem nó có chứa permission k
         // ep kiểu boolean
         // optional là khi mà trong Role k có Permission thì ucngx k báo lỗi

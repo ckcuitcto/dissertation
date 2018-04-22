@@ -40,7 +40,11 @@ class PermissionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:permissions,name',
-            'title' => 'required'
+            'display_name' => 'required'
+        ],[
+            'name.required' => "Vui lòng nhập tên quyền",
+            'name.unique' => "Tên đã bị trùng",
+            'display_name.required' => 'Vui lòng nhập tên hiển thị'
         ]);
 
         if ($validator->fails()) {

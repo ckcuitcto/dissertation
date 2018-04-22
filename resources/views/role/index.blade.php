@@ -48,13 +48,11 @@
                                         @endforeach
                                     </td>
                                     <td>
-                                        @role('admin')
                                         <a data-role-id="{{$role->id}}" id="role-update"
                                            data-role-edit-link="{{route('role-edit',$role->id)}}"
                                            data-role-update-link="{{route('role-update',$role->id)}}">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
-                                        @endrole
                                     </td>
                                     <td>
                                         @if(!count($role->Users)>0)
