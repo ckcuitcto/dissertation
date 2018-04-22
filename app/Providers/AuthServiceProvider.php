@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::before(function ($user) {
-            if ($user->isSuperAdmin()) {
+            if ($user->Role->id == 6) {
                 return true;
             }
         });

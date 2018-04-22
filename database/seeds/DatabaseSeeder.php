@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(PermissionTableSeeder::class);
         $this->call(Role::class);
         $this->call(Semester::class);
 
@@ -25,5 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(Topic::class);
         $this->call(TopicChild::class);
         $this->call(EvaluationCriteria::class);
+
+
     }
 }

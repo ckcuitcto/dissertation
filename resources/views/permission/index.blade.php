@@ -30,6 +30,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Tên</th>
+                                <th>Tên hiển thị</th>
                                 <th>Miêu tả</th>
                                 <th>Sửa</th>
                                 <th>Xóa</th>
@@ -40,7 +41,8 @@
                                 <tr>
                                     <td>{{ $permission->id }} </td>
                                     <td>{{ $permission->name }} </td>
-                                    <td> {{ $permission->title }} </td>
+                                    <td>{{ $permission->display_name }} </td>
+                                    <td>{{ $permission->description }} </td>
                                     <td>
                                         <a data-permission-id="{{$permission->id}}" id="permission-update"
                                            data-permission-edit-link="{{route('permission-edit',$permission->id)}}"
@@ -86,17 +88,23 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="name">Tên quyền :</label>
+                                        <label for="name">Quyền :</label>
                                         <input type="hidden" name="id" class="id" id="idpermissionModal">
                                         <input class="form-control name" id="name" name="name" type="text" required
                                                aria-describedby="permission">
                                         <p style="color:red; display: none;" class="name"></p>
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">Miêu tả :</label>
-                                        <input class="form-control title" id="title" name="title" type="text" required
+                                        <label for="name">Tên hiển thị:</label>
+                                        <input class="form-control display_name" id="display_name" name="display_name" type="text" required
                                                aria-describedby="permission">
-                                        <p style="color:red; display: none;" class="title"></p>
+                                        <p style="color:red; display: none;" class="display_name"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Miêu tả :</label>
+                                        <input class="form-control description" id="description" name="description" type="text" required
+                                               aria-describedby="description">
+                                        <p style="color:red; display: none;" class="description"></p>
                                     </div>
                                 </div>
                             </div>
