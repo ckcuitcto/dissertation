@@ -121,6 +121,9 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('comment-create') }}"><i class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>                    
                 </ul>
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" href="{{ route('comment-show') }}"><i class="icon fa fa-circle-o"></i> Danh sách ý kiến đóng góp</a></li>                    
+                </ul>
             </li>
 
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">Phân quyền User</span><i class="treeview-indicator fa fa-angle-right"></i></a>

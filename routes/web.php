@@ -127,6 +127,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/create', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create']);
         Route::post('/store', ['as' => 'comment-store', 'uses' => 'Comment\CommentController@store']);
 
+        Route::get('danh-sach-y-kien', ['as' => 'comment-show', 'uses' => 'Comment\CommentController@index']);
+
     });
 
     Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);
