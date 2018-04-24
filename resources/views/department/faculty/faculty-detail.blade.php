@@ -104,9 +104,15 @@
                                         <label for="staff_id">Cố vấn học tập :</label>
                                         <select class="form-control staff_id" id="staff_id" name="staff_id" type="text"
                                                 required aria-describedby="staff">
-                                            @foreach($faculty->Users->where('role_id','>','2') as $value)
-                                                <option value="{{ $value->Staff->id }}"> {{ $value->name . ":".$value->Staff->id }}  </option>
-                                            @endforeach
+                                            @if($faculty->Users->where('role_id','>','2'))
+                                                @foreach($faculty->Users->where('role_id','>','2') as $value)
+                                                    @php var_dump($value->Staff); @endphp
+{{--                                                    <option value="{{ $value->Staff->id }}"> {{ $value->name . ":".$value->Staff->id }}  </option>--}}
+                                                @endforeach
+                                            @else
+                                                <option> Không có giảng viên nào !</option>
+                                            @endif
+
                                         </select>
                                         <p style="color:red; display: none;" class="staff_id"></p>
                                     </div>
@@ -132,7 +138,7 @@
 @section('sub-javascript')
     <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript">

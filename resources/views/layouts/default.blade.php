@@ -113,6 +113,7 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-cogs"></i><span class="app-menu__label">Quản lí Khoa,Phòng ban</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a></li>
+                    <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> Sinh viên</a></li>
                     <li><a class="treeview-item" href="{{ route('departmentlist') }}"><i class="icon fa fa-circle-o"></i> Phòng ban</a></li>
                 </ul>
             </li>
@@ -165,7 +166,21 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
     <script src="{{ URL::asset('template/js/bootstrap.min.js') }}"></script>
     <script src="{{ URL::asset('template/js/main.js') }}"></script>
     <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+    <script src="{{ URL::asset('template/js/bootstrap-datepicker.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#sampleTable').DataTable( {
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    "zeroRecords": "Không có bản ghi nào!",
+                    "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                },
+                "pageLength": 25
+            } );
+        } );
+    </script>
 @stop
 
 @section('sub-javascript')

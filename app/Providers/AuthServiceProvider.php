@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Permission;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
@@ -26,8 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::before(function ($user) {
-            if ($user->Role->id == 6) {
+        Gate::before(function () {
+            if (Auth::user()->Role->id == 6) {
                 return true;
             }
         });
