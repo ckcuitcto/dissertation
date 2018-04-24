@@ -13,14 +13,14 @@ class PermissionTableSeeder extends Seeder
     {
         DB::table('permissions')->insert([
             [
-                'name' => 'role-list',
-                'display_name' => 'Danh sách vai trò',
-                'description' => 'Chỉ xem danh sách vai trò'
+                'name' => 'manager-role',
+                'display_name' => 'Quản lí Vai trò',
+                'description' => 'Thêm, Sửa, Xóa, Xem danh sách '
             ],
             [
-                'name' => 'role-change',
-                'display_name' => 'Thay đổi vai trò',
-                'description' => 'Thêm sửa xóa vai trò'
+                'name' => 'permission-role',
+                'display_name' => 'Quản lí Quyền',
+                'description' => 'Thêm, Sửa, Xóa, Xem danh sách'
             ],
             [
                 'name' => 'faculty-list',

@@ -17,7 +17,8 @@ class CreateStudentsTable extends Migration
             $table->increments('id')->unsigned();
             $table->string('user_id',10)->unique();
             $table->integer('class_id')->unsigned()->nullable();
-
+            $table->integer('academic_year_from')->unsigned();
+            $table->integer('academic_year_to')->unsigned();
             $table->timestamps();
         });
     }

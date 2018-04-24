@@ -51,6 +51,7 @@
                             <td>Khoa</td>
                             <td>Tổng</td>
                         </tr>
+                        @foreach($user->Student as $value)
                         <tr>
                             <td>1</td>
                             <td>1</td>
@@ -66,6 +67,7 @@
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </td>
                         </tr>
+                        @endforeach
                         <tr>
                             <td>2</td>
                             <td>2</td>
