@@ -123,13 +123,14 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::get('/phieu-danh-gia', ['as' => 'evaluation-form', 'uses' => 'Evaluation\EvaluationFormController@index']);
-
-
     Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);
 
-    Route::group(['prefix' => 'y-kien'], function () {
-        Route::get('/', ['as' => 'comment', 'uses' => 'Comment\CommentController@index']);
-        Route::post('/', ['as' => 'comment', 'uses' => 'Comment\CommentController@postComment']);
+    Route::group(['prefix' => 'y-kien'],function(){
+        Route::get('/create', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create']);
+        Route::post('/store', ['as' => 'comment-store', 'uses' => 'Comment\CommentController@store']);
+
+        Route::get('danh-sach-y-kien', ['as' => 'comment-show', 'uses' => 'Comment\CommentController@index']);
+
     });
 
     Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);

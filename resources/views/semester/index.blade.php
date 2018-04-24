@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 10-Apr-18
- * Time: 12:41 AM
- */
-?>
 @extends('layouts.default')
 @section('content')
     <main class="app-content">
@@ -15,8 +7,7 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
+            <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></li></a>
                 <li class="breadcrumb-item active"><a href="#"> Danh sách Khoa</a></li>
             </ul>
         </div>
@@ -39,7 +30,7 @@
                             <tbody>
                             @foreach($semesters as $key => $semester)
                                 <tr>
-                                    <td> {{ $key +1 }}</td>
+                                    <td>{{ $key +1 }}</td>
                                     <td>{{ $semester->term }} </td>
                                     <td>{{ $semester->year_from . "-" . $semester->year_to }}</td>
                                     <td>{{ $semester->date_start_to_mark }}</td>
