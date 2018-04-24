@@ -8,8 +8,8 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><a href="#"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item active"><a href="#">Phiếu đánh giá điểm rèn luyện</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
+                <li class="breadcrumb-item">Phiếu đánh giá điểm rèn luyện</li>
             </ul>
         </div>
         <div class="row">
@@ -140,6 +140,10 @@
                             </tr>
                             </tbody>
                         </table>
+                        <div align="right">
+                            <button class="btn btn-primary" type="submit">Lưu</button>
+                            <button class="btn btn-secondary" type="cancel">Hủy</button>
+                        </div>
                     </div>
                 </div>
             </div>
