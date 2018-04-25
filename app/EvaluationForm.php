@@ -8,7 +8,7 @@ class EvaluationForm extends Model
 {
     protected $table = "evaluation_forms";
 
-    protected $fillable = ['total', 'semester_id', 'student_id'];
+    protected $fillable = ['id','total', 'semester_id', 'student_id'];
 
     public function Semester()
     {

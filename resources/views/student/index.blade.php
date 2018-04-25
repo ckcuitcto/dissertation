@@ -61,12 +61,44 @@
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
                                         id="btnAddstudent" type="button"><i class="fa fa-pencil-square-o"
-                                                                             aria-hidden="true"></i>Thêm
+                                                                            aria-hidden="true"></i>Thêm
                                 </button>
-                                <input class="btn btn-success"
-                                        id="btnAddstudent" type="button">l
-                                </input>
+                                <button data-toggle="modal" data-target="#importModal" class="btn btn-outline-primary"
+                                        type="button"><i class="fa fa-pencil-square-o"
+                                                         aria-hidden="true"></i>Import dữ liệu
+                                </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="importModal" role="dialog">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chọn file excel muốn nhập danh sách</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="import-student-form">
+                            {!! csrf_field() !!}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-row">
+                                        <label for="fileImport">Chọn file</label>
+                                        <input type="file" multiple class="form-control fileImport" name="fileImport[]" id="fileImport">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button data-link="{{ route('student-import') }}" class="btn btn-primary"
+                                    id="btn-import-student" name="btn-import-student" type="button">
+                                Thêm
+                            </button>
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
                         </div>
                     </div>
                 </div>
@@ -88,17 +120,21 @@
                                     <div class="form-row">
                                         <label for="year">Năm học</label>
                                         <div class="input-group">
-                                            <input type="text" class="input-sm form-control year_from" id="year_from" name="year_from"/>
+                                            <input type="text" class="input-sm form-control year_from" id="year_from"
+                                                   name="year_from"/>
                                             <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control year_to" name="year_to" id="year_to"/>
+                                            <input type="text" class="input-sm form-control year_to" name="year_to"
+                                                   id="year_to"/>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <label for="mark_date">Ngày chấm</label>
                                         <div class="input-group">
-                                            <input type="text" class="input-sm form-control date_start_to_mark" id="date_start_to_mark" name="date_start_to_mark"/>
+                                            <input type="text" class="input-sm form-control date_start_to_mark"
+                                                   id="date_start_to_mark" name="date_start_to_mark"/>
                                             <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control date_end_to_mark" id="date_end_to_mark"  name="date_end_to_mark"/>
+                                            <input type="text" class="input-sm form-control date_end_to_mark"
+                                                   id="date_end_to_mark" name="date_end_to_mark"/>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -133,13 +169,6 @@
 
 
     <script>
-
-
-        $("#year_from").datepicker({format: "yyyy", viewMode: "years", minViewMode: "years", todayBtn: "linked", clearBtn: true, language: "vi",});
-        $("#year_to").datepicker({format: "yyyy", viewMode: "years", minViewMode: "years", todayBtn: "linked", clearBtn: true, language: "vi" });
-        $('#date_start_to_mark').datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,});
-        $('#date_end_to_mark').datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,});
-
         $(document).ready(function () {
             $("a#update-student").click(function () {
                 var urlEdit = $(this).attr('data-student-edit-link');
@@ -169,7 +198,7 @@
                 $('#myModal').find(".modal-footer > button[name=btn-save-student]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');
             });
-
+            // lưu
             $("#btn-save-student").click(function () {
                 var valueForm = $('form#student-form').serialize();
                 var url = $(this).attr('data-link');
@@ -199,7 +228,7 @@
                     }
                 });
             });
-
+            //delete
             $('a#destroy-student').click(function () {
                 var id = $(this).attr("data-student-id");
                 var url = $(this).attr('data-student-link');
@@ -232,6 +261,52 @@
                         });
                     } else {
                         swal("Đã hủy", "Đã hủy xóa học kì:)", "error");
+                    }
+                });
+            });
+//            import
+            $("#btn-import-student").click(function (e) {
+                e.preventDefault();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                var formData = new FormData();
+                var fileImport = document.getElementById('fileImport');
+                var inss = fileImport.files.length;
+                for (var x = 0; x < inss; x++) {
+                    file = fileImport.files[x];
+                    formData.append("fileImport[]",file);
+                }
+                var url = $(this).attr('data-link');
+                $('.form-row').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+//                    enctype: 'multipart/form-data',
+                    processData: false,
+                    success: function (result) {
+                        if (result.status === false) {
+                            //show error list fields
+                            if (result.arrMessages !== undefined) {
+                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                                        $('form#import-student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                    });
+                                });
+                            }
+                        } else if (result.status === true) {
+                            $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
+                            $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            $('#importModal').on('hidden.bs.modal', function (e) {
+                                location.reload();
+                            });
+                        }
                     }
                 });
             });

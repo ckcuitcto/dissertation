@@ -17,14 +17,20 @@
                 <div class="tile">
                     <h3 class="tile-title">Lưu ý</h3>
                     <div class="tile-body">
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm cá nhân, Điểm lớp và Điểm khoa là điểm đánh giá chưa tính điểm học tập</div>
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm tổng là điểm sau khi P.CTSV kiểm duyệt đã bao gồm điểm học tập</div>
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Xếp loại và Điểm tổng nếu có giá trị là "_" thì đang đợi bổ sung điểm học tập</div>
+                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm cá nhân, Điểm lớp và Điểm khoa là
+                            điểm đánh giá chưa tính điểm học tập
+                        </div>
+                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm tổng là điểm sau khi P.CTSV kiểm
+                            duyệt đã bao gồm điểm học tập
+                        </div>
+                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Xếp loại và Điểm tổng nếu có giá trị
+                            là "_" thì đang đợi bổ sung điểm học tập
+                        </div>
 
                     </div>
                     <div class="title" style="text-align:right">
                         <div>Họ và tên: {{ $user->name }}</div>
-                            <div>Lớp: {{ $user->Student->Classes->name OR "" }}</div>
+                        <div>Lớp: {{ $user->Student->Classes->name OR "" }}</div>
                         <div>MSSV: {{ $user->id }}</div>
                         <div>Khoa: {{ $user->Faculty->name OR "" }}</div>
                     </div>
@@ -51,38 +57,28 @@
                             <td>Khoa</td>
                             <td>Tổng</td>
                         </tr>
-                        @foreach($user->Student as $value)
-                        <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>2017-2017</td>
-                            <td>60</td>
-                            <td>65</td>
-                            <td>61</td>
-                            <td>70</td>
-                            <td>Trung Bình</td>
-                            <td>Hoàn Thành</td>
-                            <td>
-                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </td>
-                        </tr>
+                        @foreach($semesters as $key => $semester)
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $semester->term }}</td>
+                                <td>{{ $semester->year_from . " - " . $semester->year_to }}</td>
+                                <td>x</td>
+                                <td>x</td>
+                                <td>x</td>
+                                <td>x</td>
+                                <td>Trung Bình</td>
+                                <td>Hoàn Thành</td>
+                                <td>
+                                    {{--@php dd($semester->EvaluationForm->where('student_id',$user->id)); @endphp--}}
+                                    <a
+                                        href="{{ route('evaluation-form-create',$semester->id) }}"
+                                    >
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </a>
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </td>
+                            </tr>
                         @endforeach
-                        <tr>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>2017-2018</td>
-                            <td>60</td>
-                            <td>65</td>
-                            <td>61</td>
-                            <td>70</td>
-                            <td>Trung Bình</td>
-                            <td>Hoàn Thành</td>
-                            <td>
-                                <span><i class="fa fa-eye" aria-hidden="true"></i></span>
-                                <span><i class="fa fa-pencil" aria-hidden="true"></i></span>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Evaluation;
 
 use App\EvaluationCriteria;
+use App\EvaluationForm;
 use App\Http\Controllers\Controller;
 use App\Topic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EvaluationFormController extends Controller
 {
@@ -26,9 +28,15 @@ class EvaluationFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($semesterId)
     {
-        //
+        $user = Auth::user();
+
+        $form = new EvaluationForm();
+        $form->student_id = $user->Student->id;
+        $form->semester_id = $semesterId;
+        $form->save();
+        return view('evaluation-form.index',compact('form','user'));
     }
 
     /**
@@ -39,7 +47,7 @@ class EvaluationFormController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -50,7 +58,9 @@ class EvaluationFormController extends Controller
      */
     public function show($id)
     {
-        //
+        $form = EvaluationForm::firstOrNew(array('id' => $id));
+        $user = Auth::user();
+        return view('evaluation-form.index',compact('form','user'));
     }
 
     /**
