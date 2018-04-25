@@ -8,8 +8,8 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
+                <li class="breadcrumb-item">Trang chủ</li>
             </ul>
         </div>
 
@@ -41,7 +41,7 @@
 
         <div class="row">
             <div class="col-md-12 col-lg-6">
-            <a href="{{route('schedule')}}" style="text-decoration: none;">
+            <a href="http://daotao1.stu.edu.vn/Default.aspx?page=thoikhoabieu" style="text-decoration: none;">
                     <div class="widget-small primary coloured-icon"><i class="icon fa fa-calendar-o fa-3x"></i>
                         <div class="info">
                             <h4>Thời Khóa Biểu</h4>
@@ -50,7 +50,7 @@
                 </a>
             </div>
             <div class="col-md-12 col-lg-6">
-                <a href="" style="text-decoration: none;">
+                <a href="http://daotao1.stu.edu.vn/Default.aspx?page=xemdiemthi" style="text-decoration: none;">
                     <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
                         <div class="info">
                             <h4>Điểm Học Kỳ</h4>
@@ -59,16 +59,16 @@
                 </a>
             </div>
             <div class="col-md-12 col-lg-6">
-                <a href="#" style="text-decoration: none;">
+                <a href="http://daotao1.stu.edu.vn/Default.aspx?page=dkmonhoc" style="text-decoration: none;">
                     <div class="widget-small warning coloured-icon"><i class="icon fa fa-calendar fa-3x"></i>
                         <div class="info">
-                            <h4>Lịch Thi Học Kỳ</h4>
+                            <h4>Đăng ký môn học</h4>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-md-12 col-lg-6">
-                <a href="{{ route('tuition') }}" style="text-decoration: none;">
+                <a href="http://daotao1.stu.edu.vn/Default.aspx?page=xemhocphi" style="text-decoration: none;">
                     <div class="widget-small danger coloured-icon"><i class="icon fa fa-money fa-3x"></i>
                         <div class="info">
                             <h4>Học Phí</h4>

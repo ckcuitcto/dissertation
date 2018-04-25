@@ -8,10 +8,11 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item"><a href="#">Tổng điểm cá nhân</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-home fa-lg"></i></a></li>
+                <li class="breadcrumb-item">Tổng điểm cá nhân</li>
             </ul>
         </div>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
@@ -28,7 +29,7 @@
                         </div>
 
                     </div>
-                    <div class="title" style="text-align:right">
+                    <div class="title-body" align="right">
                         <div>Họ và tên: {{ $user->name }}</div>
                         <div>Lớp: {{ $user->Student->Classes->name OR "" }}</div>
                         <div>MSSV: {{ $user->id }}</div>
