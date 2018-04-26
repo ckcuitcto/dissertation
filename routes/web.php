@@ -3,7 +3,7 @@
 //Route::get('/', function () {return view('auth.login');});
 //Route::get('/login-animated', 'Home\HomeController@showLoginAnimatedForm')->name('loginAnimated');
 
-Route::get('/',['uses' => 'Auth\LoginController@showLoginForm']);
+Route::get('/', ['uses' => 'Auth\LoginController@showLoginForm']);
 //Auth::routes();
 $this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
 $this->post('login', 'Auth\LoginController@login');
@@ -144,11 +144,17 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);
 
-    Route::group(['prefix' => 'y-kien'],function(){
-        Route::get('/create', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create']);
-        Route::post('/store', ['as' => 'comment-store', 'uses' => 'Comment\CommentController@store']);
+    Route::group(['prefix' => 'y-kien'], function () {
+        Route::get('/', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create'])->middleware('can:comment-add');
 
-        Route::get('danh-sach-y-kien', ['as' => 'comment-show', 'uses' => 'Comment\CommentController@index']);
+        Route::post('/store', ['as' => 'comment-store', 'uses' => 'Comment\CommentController@store'])->middleware('can:comment-add');
+
+        Route::post('/reply/{id}', ['as' => 'comment-reply', 'uses' => 'Comment\CommentController@reply']);
+        Route::get('/show/{id}', ['as' => 'comment-show', 'uses' => 'Comment\CommentController@show']);
+
+        Route::get('/destroy/{id}', ['as' => 'comment-destroy', 'uses' => 'Comment\CommentController@destroy'])->middleware('can:comment-delete');
+
+        Route::get('/danh-sach-y-kien', ['as' => 'comment-list', 'uses' => 'Comment\CommentController@index'])->middleware('can:comment-list');
 
     });
 

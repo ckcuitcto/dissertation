@@ -7,7 +7,7 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-home fa-lg"></i></a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item active"><a href="#"> Danh sách ý kiến</a></li>
             </ul>
         </div>
@@ -19,7 +19,7 @@
                             <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Tên sinh viên</th>
+                                {{--<th>Tên sinh viên</th>--}}
                                 <th>Lớp</th>
                                 <th>Tiêu đề</th>
                                 <th>Nội dung ý kiến</th>
@@ -28,22 +28,29 @@
                             </tr>
                             </thead>
                             <tbody>
-                                @foreach($comment as $cmt)
+                            @foreach($comment as $cmt)
                                 <tr>
                                     <td>{{ $cmt->id }}</td>
-                                    <td>Trần Ngọc Gia Hân</td>
-                                    <td>D14-TH02</td>
-                                    <td>{{ $cmt->title }}</td>
-                                    <td>{{ $cmt->content }}</td>
-                                    <td>23/04/2018</td>
+                                    {{--                                    <td> {{ $cmt->userName}}</td>--}}
+                                    <td>{{ $cmt->className }}</td>
+                                    <td>{!! $cmt->title !!} </td>
+                                    <td>{!! $cmt->content !!}</td>
+                                    <td>{{ $cmt->created_at }}</td>
                                     <td>
-                                        <button data-toggle="modal" data-target="#myModal" class="btn btn-primary" id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"                                          aria-hidden="true"></i></button>
-                                        <button class="btn btn-danger" id="demoSwal" type="button">Xóa</button>
-                                    </td>                                   
+                                        <a data-comment-id="{{$cmt->id}}" id="comment-reply"
+                                           data-comment-show-link="{{route('comment-show',$cmt->id)}}"
+                                           data-comment-reply-link="{{route('comment-reply',$cmt->id)}}">
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                        </a>
+                                        <a data-comment-id="{{$cmt->id}}" id="comment-destroy"
+                                           data-comment-link="{{route('comment-destroy',$cmt->id)}}">
+                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                                        </a>
+                                    </td>
                                 </tr>
-                                @endforeach
+                            @endforeach
                             </tbody>
-                        </table>                       
+                        </table>
                     </div>
                 </div>
             </div>
@@ -58,23 +65,30 @@
                                     aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
-
-                        <form id="faculty-form">                           
+                        <form id="reply-form">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="name">Nội dung</label>
-                                        <input type="hidden" name="id" class="id" id="idFacultyModal">
-                                        <input class="form-control name" id="name" name="name" type="text" required
-                                               aria-describedby="faculty" placeholder="Nhập nội dung phản hồi">
+                                        <label for="title">Tiêu đề</label>
+                                        <p><b class="title"></b></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="content">Nội dung</label>
+                                        <p><b class="content"></b></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email_content">Nội dung</label>
+                                        <input type="hidden" name="id" class="id">
+                                        <textarea class="form-control email_content" name="email_content"
+                                                  id="email_content" cols="30" rows="10">
+                                        </textarea>
                                         <p style="color:red; display: none;" class="name"></p>
                                     </div>
                                 </div>
                             </div>
                         </form>
                         <div class="modal-footer">
-                            <button data-link="#" class="btn btn-primary"
-                                    id="btn-save-faculty" name="btn-save-faculty" type="button">
+                            <button data-link="#" class="btn btn-primary" id="btn-reply" name="btn-reply" type="button">
                                 Gửi
                             </button>
                             <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
@@ -97,37 +111,38 @@
 
     <script>
         $(document).ready(function () {
-            $("a#faculty-update").click(function () {
-                var urlEdit = $(this).attr('data-faculty-edit-link');
-                var urlUpdate = $(this).attr('data-faculty-update-link');
+            $("a#comment-reply").click(function () {
+                var urlShow = $(this).attr('data-comment-show-link');
+                var urlReply = $(this).attr('data-comment-reply-link');
                 var id = $(this).attr('data-faculty-id');
                 $('.form-group').find('span.messageErrors').remove();
                 $.ajax({
                     type: "get",
-                    url: urlEdit,
+                    url: urlShow,
                     data: {id: id},
                     dataType: 'json',
                     success: function (result) {
                         if (result.status === true) {
-                            if (result.faculty !== undefined) {
-                                $.each(result.faculty, function (elementName, value) {
+                            if (result.comment !== undefined) {
+                                $.each(result.comment, function (elementName, value) {
 //                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + messageValue)
+//                                    alert(elementName + "+ " + value);
                                     $('.' + elementName).val(value);
+                                    if(elementName === 'title' || elementName === 'content'){
+                                        $('.' + elementName).html(value);
+                                    }
 //                                    });
                                 });
                             }
                         }
                     }
                 });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
-                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Sửa')
-                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").attr('data-link',urlUpdate);
+                $('#myModal').find(".modal-footer > button[name=btn-reply]").attr('data-link', urlReply);
                 $('#myModal').modal('show');
             });
 
-            $("#btn-save-faculty").click(function () {
-                var valueForm = $('form#faculty-form').serialize();
+            $("#btn-reply").click(function () {
+                var valueForm = $('form#reply-form').serialize();
                 var url = $(this).attr('data-link');
                 $('.form-group').find('span.messageErrors').remove();
                 $.ajax({
@@ -141,24 +156,24 @@
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#faculty-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                        $('form#reply-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
                                     });
                                 });
                             }
                         } else if (result.status === true) {
                             $('#myModal').find('.modal-body').html('<p>Thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
-                            });
+//                            $('#myModal').on('hidden.bs.modal', function (e) {
+//                                location.reload();
+//                            });
                         }
                     }
                 });
             });
 
-            $('a#faculty-destroy').click(function () {
-                var id = $(this).attr("data-faculty-id");
-                var url = $(this).attr('data-faculty-link');
+            $('a#comment-destroy').click(function () {
+                var id = $(this).attr("data-comment-id");
+                var url = $(this).attr('data-comment-link');
                 swal({
                     title: "Bạn chắc chưa?",
                     text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
@@ -177,42 +192,24 @@
                             data: {"id": id},
                             success: function (data) {
                                 if (data.status === true) {
-                                    swal("Deleted!", "Đã xóa Khoa " + data.faculty.name, "success");
+                                    swal("Deleted!", "Đã xóa góp ý !", "success");
                                     $('.sa-confirm-button-container').click(function () {
                                         location.reload();
                                     })
                                 } else {
-                                    swal("Cancelled", "Không tìm thấy phòng ban !!! :)", "error");
+                                    swal("Cancelled", "Không tìm thấy góp ý !!! :)", "error");
                                 }
                             }
                         });
                     } else {
-                        swal("Đã hủy", "Đã hủy xóa phòng ban:)", "error");
+                        swal("Đã hủy", "Đã hủy xóa:)", "error");
                     }
                 });
             });
 
+            CKEDITOR.replace('email_content');
         });
+
     </script>
 
-<script type="text/javascript">  
-    $('#demoSwal').click(function(){
-        swal({
-            title: "Bạn có chắc muốn xóa?",
-            text: "Bạn sẽ không khôi phục được hành động này.",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes!",
-            cancelButtonText: "No!",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        }, function(isConfirm) {
-            if (isConfirm) {
-                swal("Deleted!", "Đã xóa sinh viên.", "success");
-            } else {
-                swal("Cancelled", "Mọi thứ an toàn :)", "error");
-            }
-        });
-    });
-  </script>
 @endsection
