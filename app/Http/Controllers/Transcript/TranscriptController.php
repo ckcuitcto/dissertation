@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Transcript;
 
+use App\Semester;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,9 @@ class TranscriptController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return view('transcript.index',compact('user'));
+        $semesters = Semester::where('year_from','>=',$user->Student->academic_year_from)
+                            ->where('year_to','<=', $user->Student->academic_year_to)->get();
+        return view('transcript.index',compact('user','semesters'));
     }
 
     /**

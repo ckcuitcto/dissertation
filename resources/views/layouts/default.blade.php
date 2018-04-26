@@ -166,7 +166,7 @@ echo ' | ' . (URL::to('/') == url()->current() ? 'Home Page' : strtoupper ($titl
     <script src="{{ URL::asset('template/js/bootstrap.min.js') }}"></script>
     <script src="{{ URL::asset('template/js/main.js') }}"></script>
     <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
-    <script src="{{ URL::asset('template/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ URL::asset('js/bootstrap-datepicker.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#sampleTable').DataTable( {
