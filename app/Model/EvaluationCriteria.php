@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,15 +11,15 @@ class EvaluationCriteria extends Model
     protected $fillable = ['content','detail','unit','mark_range_from','mark_range_to','topic_id','parent_id'];
 
     public function Topic(){
-        return $this->belongsTo('App\Topic','topic_id','id');
+        return $this->belongsTo('App\Model\Topic','topic_id','id');
     }
 
     public function Parent(){
-        return $this->hasMany('App\EvaluationCriteria','parent_id','id');
+        return $this->hasMany('App\Model\EvaluationCriteria','parent_id','id');
     }
 
     public function EvaluationResult(){
-        return $this->hasMany('App\EvaluationResult','evaluation_criteria_id','id');
+        return $this->hasMany('App\Model\EvaluationResult','evaluation_criteria_id','id');
     }
 
 }

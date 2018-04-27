@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,11 +11,11 @@ class Faculty extends Model
     protected $fillable = ['name'];
 
     public function Classes(){
-        return $this->hasMany('App\Classes','faculty_id','id');
+        return $this->hasMany('App\Model\Classes','faculty_id','id');
     }
 
     public function Users(){
-        return $this->hasMany('App\User','faculty_id','id');
+        return $this->hasMany('App\Model\User','faculty_id','id');
     }
 
 }

@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers\Department;
 
-use App\Classes;
-use App\Staff;
+use App\Model\Classes;
+use App\Model\Staff;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;

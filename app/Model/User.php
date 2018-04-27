@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -30,23 +30,23 @@ class User extends Authenticatable
     ];
 
     public function EvaluationResults(){
-        return $this->hasMany('App\EvaluationResult','marker_id','id');
+        return $this->hasMany('App\Model\EvaluationResult','marker_id','id');
     }
 
     public function Role(){
-        return $this->belongsTo('App\Role','role_id','id');
+        return $this->belongsTo('App\Model\Role','role_id','id');
     }
 
     public function Student(){
-        return $this->hasOne('App\Student','user_id','id');
+        return $this->hasOne('App\Model\Student','user_id','id');
     }
 
     public function Staff(){
-        return $this->hasOne('App\Staff','user_id','id');
+        return $this->hasOne('App\Model\Staff','user_id','id');
     }
 
     public function Faculty(){
-        return $this->belongsTo('App\Faculty','faculty_id','id');
+        return $this->belongsTo('App\Model\Faculty','faculty_id','id');
     }
 
     public function hasPermission(Permission $permission){

@@ -1,6 +1,6 @@
 <?php
+namespace App\Model;
 
-namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,11 +12,11 @@ class Semester extends Model
     protected $fillable = ['year','term'];
 
     public function Proof(){
-        return $this->hasMany('App\Proof','semester_id','id');
+        return $this->hasMany('App\Model\Proof','semester_id','id');
     }
 
     public function EvaluationForm(){
-        return $this->hasMany('App\EvaluationForm','semester_id','id');
+        return $this->hasMany('App\Model\EvaluationForm','semester_id','id');
     }
 
 }

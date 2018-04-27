@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Semester;
 
-use App\Semester;
+use App\Model\Semester;
 use Carbon\Carbon;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;

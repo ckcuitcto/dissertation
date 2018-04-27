@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,15 +12,15 @@ class EvaluationForm extends Model
 
     public function Semester()
     {
-        return $this->belongsTo('App\Semester', 'semester_id', 'id');
+        return $this->belongsTo('App\Model\Semester', 'semester_id', 'id');
     }
 
     public function Student()
     {
-        return $this->belongsTo('App\Student', 'student_id', 'id');
+        return $this->belongsTo('App\Model\Student', 'student_id', 'id');
     }
 
     public function EvaluationResults(){
-        return $this->hasMany('App\EvaluationResult','evaluation_form_id','id');
+        return $this->hasMany('App\Model\EvaluationResult','evaluation_form_id','id');
     }
 }

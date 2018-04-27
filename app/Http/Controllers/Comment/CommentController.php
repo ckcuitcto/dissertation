@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Comment;
 
 use App\Http\Controllers\Controller;
-use App\Comment;
+use App\Model\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

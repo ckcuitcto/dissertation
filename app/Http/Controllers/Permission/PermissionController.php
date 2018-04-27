@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Permission;
 
-use App\Permission;
+use App\Model\Permission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;

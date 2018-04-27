@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,11 +12,11 @@ class Topic extends Model
 
 
     public function TopicChild(){
-        return $this->hasMany('App\Topic','parent_id','id');
+        return $this->hasMany('App\Model\Topic','parent_id','id');
     }
 
     public function EvaluationCriterias(){
-        return $this->hasMany('App\EvaluationCriteria','topic_id','id');
+        return $this->hasMany('App\Model\EvaluationCriteria','topic_id','id');
     }
 
 }

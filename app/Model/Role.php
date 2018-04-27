@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,10 +11,10 @@ class Role extends Model
     protected $fillable = ['name','display_name','description'];
 
     public function Users(){
-        return $this->hasMany('App\User','role_id','id');
+        return $this->hasMany('App\Model\User','role_id','id');
     }
 
     public function Permissions(){
-        return $this->belongsToMany('App\Permission','role_permissions','role_id','permission_id');
+        return $this->belongsToMany('App\Model\Permission','role_permissions','role_id','permission_id');
     }
 }

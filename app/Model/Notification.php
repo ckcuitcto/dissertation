@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,10 +11,10 @@ class Notification extends Model
     protected $fillable = ['title','content','created_by'];
 
     public function Staff(){
-        return $this->belongsTo('App\Staff','created_by','id');
+        return $this->belongsTo('App\Model\Staff','created_by','id');
     }
 
     public function NotificationStudents(){
-        return $this->hasMany('App\NotificationStudent','notification_id','id');
+        return $this->hasMany('App\Model\NotificationStudent','notification_id','id');
     }
 }
