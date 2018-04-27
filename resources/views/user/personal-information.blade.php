@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <input class="form-control" id="readOnlyInput" type="text"
-                                           placeholder="Trần Ngọc Gia Hân" readonly="">
+                                           placeholder="Trần Ngọc Gia Hân" readonly="" name="name">
                                 </div>
                                 <div class="col-md-2">
                                     <label class="control-label" for="readOnlyInput">Ngày sinh</label>
