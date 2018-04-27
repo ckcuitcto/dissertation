@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers\Department;
-use App\Faculty;
+use App\Model\Faculty;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

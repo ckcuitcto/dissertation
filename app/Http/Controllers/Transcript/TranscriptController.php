@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Transcript;
 
-use App\Semester;
+use App\Model\Semester;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

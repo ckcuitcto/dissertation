@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Evaluation;
 
-use App\EvaluationCriteria;
-use App\EvaluationForm;
+use App\Model\EvaluationCriteria;
+use App\Model\EvaluationForm;
 use App\Http\Controllers\Controller;
-use App\Topic;
+use App\Model\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Comment;
 
 use App\Http\Controllers\Controller;
-use App\Comment;
+use App\Model\Comment;
 use Illuminate\Http\Request;
-
-
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
@@ -18,7 +17,15 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comment = Comment::all();
+        $facultyId = Auth::user()->Faculty->id;
+        $comment = DB::table('comments')
+            ->leftJoin('students', 'students.id', '=', 'comments.created_by')
+            ->leftJoin('users', 'students.user_id', '=', 'users.id')
+            ->leftJoin('classes', 'classes.id', '=', 'students.class_id')
+            ->select('comments.*','users.name as userName','classes.name as className')
+            ->where('users.faculty_id', $facultyId)
+            ->orderBy('comments.id')
+            ->get();
         return view('comment.index',compact('comment'));
     }
 
@@ -74,19 +81,11 @@ class CommentController extends Controller
     // 1 cái đã có sẵn.
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // cái edit này cũng giống show. a chưa phân biệt đc lắm.
-    public function edit($id)
-    {
-        //
+        $comment = Comment::find($id);
+        return response()->json([
+            'comment' => $comment,
+            'status' => true
+        ], 200);
     }
 
     /**
@@ -98,7 +97,7 @@ class CommentController extends Controller
      */
     // hàm này dùng để lưu lại thông tin khi chỉnh sửa. dùm hàm show để show ra rồi thì sửa gì sẽ dùng cá
     // này để lưu lại
-    public function update(Request $request, $id)
+    public function reply(Request $request, $id)
     {
         //
     }
@@ -113,8 +112,17 @@ class CommentController extends Controller
      //xóa. 
     public function destroy($id)
     {
-        //
+        $comment = Comment::find($id);
+        if (!empty($comment)) {
+            $comment->delete();
+            return response()->json([
+                'comment' => $comment,
+                'status' => true
+            ], 200);
+        }
+        return response()->json([
+            'status' => false
+        ], 200);
     }
-
     // mỗi chức năng đều chia ra controllẻ riêng nên chắc đủ hàm r. k cần tạo thêm
 }

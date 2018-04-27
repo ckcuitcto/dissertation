@@ -63,3 +63,9 @@
         </div>
     </main>
 @endsection
+
+@section('sub-javascript')
+    <script>
+        CKEDITOR.replace('content');
+    </script>
+@endsection

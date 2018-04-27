@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Role;
 
-use App\Permission;
-use App\Role;
+use App\Model\Permission;
+use App\Model\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
