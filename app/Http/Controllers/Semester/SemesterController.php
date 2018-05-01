@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Semester;
 
 use App\Model\Semester;
+use App\Model\Student;
 use Carbon\Carbon;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
@@ -62,6 +63,17 @@ class SemesterController extends Controller
             }
             $semester->term = $request->term;
             $semester->save();
+
+            // sau khi tạo mới 1 học kì, sẽ tạo cho mỗi sinh viên 1 form đánh giá
+            $students = Student::all();
+            $arrEvaluationForm = array();
+            foreach($students as $student){
+                $arrEvaluationForm[] = [
+                    'student_id' => $student->id
+                ];
+            }
+            $semester->EvaluationForm()->createMany($arrEvaluationForm);
+
             return response()->json([
                 'semester' => $semester,
                 'status' => true
@@ -154,6 +166,7 @@ class SemesterController extends Controller
         $semester = Semester::find($id);
         if (!empty($semester)) {
             $semester->delete();
+            //sau khi xóa học kì thì cũng xóa form đánh giá
             return response()->json([
                 'semester' => $semester,
                 'status' => true
