@@ -41,7 +41,7 @@ class CreateForeignKey extends Migration
         });
 
         Schema::table('evaluation_forms', function (Blueprint $table) {
-            $table->foreign('semester_id')->references('id')->on('semesters');
+            $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
 
@@ -55,7 +55,7 @@ class CreateForeignKey extends Migration
 
         Schema::table('evaluation_results', function (Blueprint $table) {
             $table->foreign('evaluation_criteria_id')->references('id')->on('evaluation_criterias');
-            $table->foreign('evaluation_form_id')->references('id')->on('evaluation_forms')->onDelete('no action');
+            $table->foreign('evaluation_form_id')->references('id')->on('evaluation_forms')->onDelete('cascade');
 
 //            $table->foreign('marker_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });

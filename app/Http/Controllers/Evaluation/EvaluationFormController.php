@@ -30,12 +30,12 @@ class EvaluationFormController extends Controller
      */
     public function create($semesterId)
     {
-        $user = Auth::user();
-
-        $form = new EvaluationForm();
-        $form->student_id = $user->Student->id;
-        $form->semester_id = $semesterId;
-        $form->save();
+//        $user = Auth::user();
+//
+//        $form = new EvaluationForm();
+//        $form->student_id = $user->Student->id;
+//        $form->semester_id = $semesterId;
+//        $form->save();
         return view('evaluation-form.index',compact('form','user'));
     }
 
@@ -58,9 +58,9 @@ class EvaluationFormController extends Controller
      */
     public function show($id)
     {
-        $form = EvaluationForm::firstOrNew(array('id' => $id));
+        $form = EvaluationForm::find(array('id' => $id));
         $user = Auth::user();
-        return view('evaluation-form.index',compact('form','user'));
+        return view('evaluation-form.show',compact('form','user'));
     }
 
     /**

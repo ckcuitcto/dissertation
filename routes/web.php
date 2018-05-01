@@ -130,16 +130,17 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'evaluation-form', 'uses' => 'Evaluation\EvaluationFormController@index']);
 
         // tao moi form
-        Route::get('/{semesterId}', ['as' => 'evaluation-form-create', 'uses' => 'Evaluation\EvaluationFormController@create']);
+//        Route::get('/{semesterId}', ['as' => 'evaluation-form-create', 'uses' => 'Evaluation\EvaluationFormController@create']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
-        Route::get('/{id}', ['as' => 'evaluation-form-detail', 'uses' => 'Evaluation\EvaluationFormController@show']);
+        Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show']);
         // them 1
-        Route::post('/store', ['as' => 'evaluation-form-store', 'uses' => 'Evaluation\EvaluationFormController@store']);
+//        Route::post('/store', ['as' => 'evaluation-form-store', 'uses' => 'Evaluation\EvaluationFormController@store']);
         // xoa 1
-        Route::get('/destroy/{id}', ['as' => 'evaluation-form-destroy', 'uses' => 'Evaluation\EvaluationFormController@destroy']);
+//        Route::get('/destroy/{id}', ['as' => 'evaluation-form-destroy', 'uses' => 'Evaluation\EvaluationFormController@destroy']);
+
         // chỉnh sửa
-        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
-        Route::get('/edit/{id}', ['as' => 'evaluation-form-edit', 'uses' => 'Evaluation\EvaluationFormController@edit']);
+//        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
+//        Route::get('/edit/{id}', ['as' => 'evaluation-form-edit', 'uses' => 'Evaluation\EvaluationFormController@edit']);
     });
 
     Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);

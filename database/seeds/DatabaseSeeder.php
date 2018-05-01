@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
 //        $this->call(TopicChild::class);
         $this->call(EvaluationCriteria::class);
 
+        $this->call(EvaluationForm::class);
 
     }
 }

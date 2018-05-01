@@ -22,7 +22,7 @@ class EvaluationResult extends Model
 
     public function Markers()
     {
-        return $this->belongsTo('App\Model\User', 'user_id', 'id');
+        return $this->belongsTo('App\Model\User', 'marker_id', 'id');
     }
 
 }
