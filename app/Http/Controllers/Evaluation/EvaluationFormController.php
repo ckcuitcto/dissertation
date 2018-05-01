@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Evaluation;
 use App\Model\EvaluationCriteria;
 use App\Model\EvaluationForm;
 use App\Http\Controllers\Controller;
-use App\Model\Topic;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +18,7 @@ class EvaluationFormController extends Controller
      */
     public function index()
     {
-        $topics = Topic::all();
+        $topics = EvaluationCriteria::all();
 //        dd($topics);
         return view('evaluation-form.index',compact('topics'));
     }

@@ -8,13 +8,13 @@ class EvaluationCriteria extends Model
 {
     protected $table = 'evaluation_criterias';
 
-    protected $fillable = ['content','detail','unit','mark_range_from','mark_range_to','topic_id','parent_id'];
+    protected $fillable = ['content','detail','mark_range_display','mark_range_from','mark_range_to','max_score','parent_id','proof','level'];
 
-    public function Topic(){
-        return $this->belongsTo('App\Model\Topic','topic_id','id');
-    }
+//    public function Topic(){
+//        return $this->belongsTo('App\Model\Topic','topic_id','id');
+//    }
 
-    public function Parent(){
+    public function Child(){
         return $this->hasMany('App\Model\EvaluationCriteria','parent_id','id');
     }
 

@@ -79,7 +79,8 @@
                                     <div class="form-group">
                                         <label for="email_content">Nội dung</label>
                                         <input type="hidden" name="id" class="id">
-                                        <textarea class="form-control email_content" name="email_content" id="email_content" cols="30" rows="10">
+                                        <textarea class="form-control email_content" name="email_content"
+                                                  id="email_content" cols="30" rows="10">
                                         </textarea>
                                         <p style="color:red; display: none;" class="name"></p>
                                     </div>
@@ -126,9 +127,9 @@
                                 $.each(result.comment, function (elementName, value) {
 //                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
 //                                    alert(elementName + "+ " + value);
-                                    if(elementName === 'title' || elementName === 'content'){
+                                    if (elementName === 'title' || elementName === 'content') {
                                         $('.' + elementName).html(value);
-                                    }else{
+                                    } else {
                                         $('.' + elementName).val(value);
                                     }
 //                                    });

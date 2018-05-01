@@ -46,12 +46,12 @@ class CreateForeignKey extends Migration
         });
 
         Schema::table('evaluation_criterias', function (Blueprint $table) {
-            $table->foreign('topic_id')->references('id')->on('topics');
+            $table->foreign('parent_id')->references('id')->on('evaluation_criterias');
         });
 
-        Schema::table('topics', function (Blueprint $table) {
-            $table->foreign('parent_id')->references('id')->on('topics')->onDelete('cascade');
-        });
+//        Schema::table('topics', function (Blueprint $table) {
+//            $table->foreign('parent_id')->references('id')->on('topics')->onDelete('cascade');
+//        });
 
         Schema::table('evaluation_results', function (Blueprint $table) {
             $table->foreign('evaluation_criteria_id')->references('id')->on('evaluation_criterias');
