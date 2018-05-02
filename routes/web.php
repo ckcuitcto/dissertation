@@ -142,7 +142,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'evaluation-form-edit', 'uses' => 'Evaluation\EvaluationFormController@edit']);
     });
 
-    Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);
+
+    Route::group(['prefix' => 'thong-tin-ca-nhan'], function () {
+        Route::get('/', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);
+        Route::get('/{id}', ['as' => 'personal-information-detail', 'uses' => 'User\StudentController@show']);
+        Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'User\StudentController@update']);
+
+    });
 
     Route::group(['prefix' => 'y-kien'], function () {
         Route::get('/', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create'])->middleware('can:comment-add');

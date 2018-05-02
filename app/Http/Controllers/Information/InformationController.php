@@ -1,34 +1,43 @@
 <?php
 
 namespace App\Http\Controllers\Information;
-
+use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class InformationController extends Controller
 {
-    public function show($id){
-        return view();
+    public function index()
+    {
+        $user = User::all();
+        return view('user.personal-information', compact('user'));
+    }
+
+    public function show($id)
+    {
+        $user = User::find($id);
+        return view('user.personal-information', compact('user'));
     }
 
     public function update($id, Request $request){
-        $inform = User::find($id);
-        if (!empty($inform)) {
-            $inform->name = $request->name;
-            $inform->email = $request->email;
-            $inform->gender = $request->gender;
-            $inform->address = $request->address;
-            $inform->phone_number = $request->phone_number;
-            $inform->birthday = $request->birthday;
-            $inform->Permissions()->sync($request->permission);
-            $inform->save();
-            return response()->json([
-                'inform' => $inform,
-                'status' => true
-            ], 200);
-        }
-        return response()->json([
-            'status' => false
-        ], 200);
+        $this->validate($request,
+            [
+                'title' => 'required',
+                'content' => 'required',
+            ],
+            [
+                'title.required' => "Vui lòng nhập tiêu đề",
+                'content.required' => 'Vui lòng nhập nội dung',
+            ]
+        );
+
+
+        $user = User::find($id);
+        if (!empty($user)) {
+            $user->name = $request->name;
+            $user->save();            
+        }       
+    
+        return redirect()->back()->with('success','Lưu thành công!');
     }
 }

@@ -279,8 +279,9 @@
 
                             <div class="row mb-10">
                                 <div class="col-md-12">
-                                    <button class="btn btn-primary" type="button"><i
-                                                class="fa fa-fw fa-lg fa-check-circle"></i> Lưu thông tin
+                                    <button class="btn btn-primary" type="submit" id="btn-save-inform" name="btn-save-inform"> Lưu thông tin
+                                    </button>
+                                    <button class="btn btn-secondary" type="submit" id="btn-update-inform" name="btn-update-inform"> Sửa
                                     </button>
                                 </div>
                             </div>
