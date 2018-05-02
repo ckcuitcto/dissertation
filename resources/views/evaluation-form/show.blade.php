@@ -19,123 +19,96 @@
                         <div class="tile user-settings">
                             <h4 class="line-head">Thông tin sinh viên</h4>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div>- Họ và tên: Trần Ngọc Gia Hân</div>
-                                    <div>- Lớp: D14TH02</div>
-                                    <div>- MSSV: DH51401681</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div>- Khoa: Công nghệ thông tin</div>
-                                    <div>- Niên khóa: 2014 - 2018</div>
-                                </div>
+                                {{--<div class="col-md-6">--}}
+                                    {{--<div>- Họ và tên: {{ $form->Student->User->name }}</div>--}}
+                                    {{--<div>- Lớp: {{$form->Student->Classes->name OR ""}}</div>--}}
+                                    {{--<div>- MSSV: {{ $form->Student->user_id }}</div>--}}
+                                {{--</div>--}}
+                                {{--<div class="col-md-6">--}}
+                                    {{--<div>- Khoa: {{ $form->Student->Classes->Faculty->name }}</div>--}}
+                                    {{--<div>- Niên khóa: {{ $form->Student->academic_year_from . " - " . $form->Student->academic_year_to }}</div>--}}
+                                {{--</div>--}}
                             </div>
                         </div>
                         <table class="table table-hover table-bordered">
                             <tbody>
                             <tr>
-                                <td colspan="7"><strong>Nội dung đánh giá</strong></td>
+                                <td><strong>Nội dung đánh giá</strong></td>
                                 <td><strong>Thang điểm</strong></td>
-                                <td><strong>Sinh viên tự đánh giá</strong></td>
-                                <td><b>Tập thể lớp đánh giá</b></td>
-                                <td><b>CVHT/GVCN kết luận điểm</b></td>
+                                @foreach($listRoleCanMark as $role)
+                                <td><b> {{ $role->display_name }}</b></td>
+                                @endforeach
                             </tr>
-                            <tr class="text-center">
-                                <td colspan="7">(1)</td>
-                                <td>(2)</td>
-                                <td>(3)</td>
-                                <td>(4)</td>
-                                <td>(5)</td>
-                            </tr>
-
-                            {{-- lấy ra tất  cả topic--}}
-                            @foreach($topics as $key => $value)
-                                {{-- chỉ hiện ra các topic to nhất để tránh trùng lặp, cac topic k co parent--}}
-                                @if (!$value->parent_id)
+                            {{--<tr class="text-center">--}}
+                                {{--<td>(1)</td>--}}
+                                {{--<td>(2)</td>--}}
+                                {{--<td>(3)</td>--}}
+                                {{--<td>(4)</td>--}}
+                                {{--<td>(5)</td>--}}
+                            {{--</tr>--}}
+                            @foreach($evaluationCriterias as $key => $valueLevel1)
                                     <tr>
-                                        {{--nếu topic k có parent thì colspan cho giống--}}
-                                        @if(!$value->parent_id)
-                                            <td colspan="12"><b> {{ $value->title }}</b></td>
-                                        @else
-                                            <td> {{ $value->title }}</td>
-                                        @endif
+                                            <td colspan="{{ 2 + count($listRoleCanMark) }}"><b> {{ $valueLevel1->content }}</b></td>
                                     </tr>
-                                    {{-- nếu topic có topic con thì hiện ra--}}
-                                    @isset($value->TopicChild)
-                                        @foreach($value->TopicChild as $childValue)
-                                            <tr>
-                                                <td colspan="7"><b>{{ $childValue->title }}</b>
-                                                    @if($childValue->proof_type)
-                                                        <input type="file" id="{{$childValue->proof_type}}">
-                                                    @endif
+                                    @foreach($valueLevel1->Child as $valueLevel2)
+                                        <tr>
+                                            @if($valueLevel2->detail)
+                                                <td class='detail-evaluation-form' >
+                                                    {{ $valueLevel2->content }}
+                                                    {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($valueLevel2->detail)  !!}
                                                 </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            {{-- hiện ra các tiêu chí của các topic --}}
-                                            @isset($childValue->EvaluationCriterias)
-                                                @foreach($childValue->EvaluationCriterias as $evaluationCriteria)
-                                                    <tr>
-                                                        <td colspan="7"> {{ $evaluationCriteria->content }}
-                                                            {{-- nếu có chi tiết thì hiện ra--}}
-                                                            @if($evaluationCriteria->proof_type)
-                                                                <input type="file" id="{{$childValue->proof_type}}">
-                                                            @endif
-                                                            @isset($evaluationCriteria->detail)
-                                                                {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
-                                                            @endisset
-                                                        </td>
-                                                        <td> {{ $evaluationCriteria->mark_range_display }}</td>
-                                                        <td><input type="text" class="form-control"></td>
-                                                        <td><input type="text" class="form-control"></td>
-                                                        <td><input type="text" class="form-control"></td>
-                                                    </tr>
-
+                                            @else
+                                                <td>
+                                                    {{ $valueLevel2->content }}
+                                                </td>
+                                            @endif
+                                            <td>
+                                                {{ $valueLevel2->mark_range_display OR "" }}
+                                            </td>
+                                                @foreach($listRoleCanMark as $role)
+                                                    <td><input type="text" disabled="true" class="form-control {{ $role->name }}"></td>
                                                 @endforeach
-                                            @endisset
-                                        @endforeach
-                                    @endisset
-                                    {{-- hiện ra các  tiêu chuẩn của topic cha--}}
-                                    @isset($value->EvaluationCriterias)
-                                        @foreach($value->EvaluationCriterias as $evaluationCriteria)
+                                        </tr>
+                                        @foreach($valueLevel2->Child as $valueLevel3)
                                             <tr>
-                                                <td colspan="7"> {{ $evaluationCriteria->content }}
-                                                    @if($evaluationCriteria->proof_type)
-                                                        <input type="file" id="{{$childValue->proof_type}}">
-                                                    @endif
-                                                    @isset($evaluationCriteria->detail)
-                                                        {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($evaluationCriteria->detail)  !!}
-                                                    @endisset
+                                                @if($valueLevel3->detail)
+                                                <td class='detail-evaluation-form' >
+                                                    {{ $valueLevel3->content }}
+                                                    {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($valueLevel3->detail)  !!}
                                                 </td>
-                                                <td> {{ $evaluationCriteria->mark_range_display }}</td>
-                                                <td><input type="text" class="form-control"></td>
-                                                <td><input type="text" class="form-control"></td>
-                                                <td><input type="text" class="form-control"></td>
+                                                @else
+                                                    <td>
+                                                        {{ $valueLevel3->content }}
+                                                    </td>
+                                                @endif
+                                                <td>{{ $valueLevel3->mark_range_display OR "" }}</td>
+                                                @foreach($listRoleCanMark as $role)
+                                                    <td><input type="text" disabled="true" class="form-control  {{ $role->name }}"></td>
+                                                @endforeach
                                             </tr>
                                         @endforeach
-                                    @endisset
+                                    @endforeach
                                     <tr>
-                                        <td colspan="8" class="text-center">
+                                        <td colspan="2" class="text-center">
                                             <b>Tổng {{ \App\Helpers\Convert::numberToRomanRepresentation($key +1) }}.
-                                                (Tối đa {{ $value->max_score }} điểm) </b></td>
-                                        <td><input type="text" class="form-control"></td>
-                                        <td><input type="text" class="form-control"></td>
-                                        <td><input type="text" class="form-control"></td>
+                                                (Tối đa {{ $valueLevel1->max_score }} điểm) </b></td>
+                                        @foreach($listRoleCanMark as $role)
+                                            <td><input type="text" disabled="true" class="form-control {{ $role->name }}"></td>
+                                        @endforeach
                                     </tr>
-                                @endif
+
                             @endforeach
 
                             <tr>
-                                <td colspan="7">Tổng cộng</td>
+                                <td>Tổng cộng</td>
                                 <td>0 - 100</td>
-                                <td><input type="text" class="form-control"></td>
-                                <td><input type="text" class="form-control"></td>
-                                <td><input type="text" class="form-control"></td>
+                                @foreach($listRoleCanMark as $role)
+                                    <td><input type="text" disabled="true" class="form-control {{ $role->name }}"></td>
+                                @endforeach
                             </tr>
                             <tr>
-                                <td colspan="7">Xếp loại</td>
-                                <td colspan="3" style="background-color:gray"></td>
+                                <td>Xếp loại</td>
+                                <td colspan="{{ count($listRoleCanMark) }}" style="background-color:gray"></td>
                                 <td></td>
                             </tr>
                             </tbody>
@@ -155,4 +128,12 @@
 @section('sub-javascript')
     <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var roleLogin = "{{ $user->Role->name }}";-
+            $("input."+roleLogin).removeAttr('disabled');
+        });
+        {{--document.getElementsByClassName(roleLogin).setAttribute("disabled","false");--}}
+    </script>
 @endsection

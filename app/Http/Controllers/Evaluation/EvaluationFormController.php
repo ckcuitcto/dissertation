@@ -6,6 +6,8 @@ use App\Model\EvaluationCriteria;
 use App\Model\EvaluationForm;
 use App\Http\Controllers\Controller;
 
+use App\Model\Role;
+use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +21,6 @@ class EvaluationFormController extends Controller
     public function index()
     {
         $topics = EvaluationCriteria::all();
-//        dd($topics);
         return view('evaluation-form.index',compact('topics'));
     }
 
@@ -59,8 +60,14 @@ class EvaluationFormController extends Controller
     public function show($id)
     {
         $form = EvaluationForm::find(array('id' => $id));
+        $evaluationCriterias = EvaluationCriteria::where('level',1)->get();
         $user = Auth::user();
-        return view('evaluation-form.show',compact('form','user'));
+//dd($form->Student);
+        //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
+        $listRoleCanMark = Role::whereHas('permissions',function($query){
+            $query->where('name', 'like', '%can-mark%');
+        })->get();
+        return view('evaluation-form.show',compact('form','user','evaluationCriterias','listRoleCanMark'));
     }
 
     /**

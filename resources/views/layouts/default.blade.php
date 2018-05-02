@@ -15,7 +15,7 @@
         <!-- Sidebar toggle button-->
         <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
         @if(\Illuminate\Support\Facades\Auth::check())
-            <p>Hello {{ \Illuminate\Support\Facades\Auth::user()->name OR "" }}</p>
+            <p>Hello {{ \Illuminate\Support\Facades\Auth::user()->name }}</p>
         @endif
         <!-- Navbar Right Menu-->
         <ul class="app-nav">
