@@ -133,8 +133,8 @@ Route::group(['middleware' => 'auth'], function () {
 //        Route::get('/{semesterId}', ['as' => 'evaluation-form-create', 'uses' => 'Evaluation\EvaluationFormController@create']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
         Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show']);
-        // them 1
-//        Route::post('/store', ['as' => 'evaluation-form-store', 'uses' => 'Evaluation\EvaluationFormController@store']);
+        // lưu kết quả
+        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
         // xoa 1
 //        Route::get('/destroy/{id}', ['as' => 'evaluation-form-destroy', 'uses' => 'Evaluation\EvaluationFormController@destroy']);
 

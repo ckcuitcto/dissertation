@@ -19,17 +19,19 @@
                         <div class="tile user-settings">
                             <h4 class="line-head">Thông tin sinh viên</h4>
                             <div class="row">
-                                {{--<div class="col-md-6">--}}
-                                    {{--<div>- Họ và tên: {{ $form->Student->User->name }}</div>--}}
-                                    {{--<div>- Lớp: {{$form->Student->Classes->name OR ""}}</div>--}}
-                                    {{--<div>- MSSV: {{ $form->Student->user_id }}</div>--}}
-                                {{--</div>--}}
-                                {{--<div class="col-md-6">--}}
-                                    {{--<div>- Khoa: {{ $form->Student->Classes->Faculty->name }}</div>--}}
-                                    {{--<div>- Niên khóa: {{ $form->Student->academic_year_from . " - " . $form->Student->academic_year_to }}</div>--}}
-                                {{--</div>--}}
+                                <div class="col-md-6">
+                                    <div>- Họ và tên: {{ $evaluationForm->Student->User->name }}</div>
+                                    <div>- Lớp: {{$evaluationForm->Student->Classes->name OR ""}}</div>
+                                    <div>- MSSV: {{ $evaluationForm->Student->user_id OR ""}}</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div>- Khoa: {{ $evaluationForm->Student->Classes->Faculty->name OR ""}}</div>
+                                    <div>- Niên khóa: {{ $evaluationForm->Student->academic_year_from . " - " . $evaluationForm->Student->academic_year_to }}</div>
+                                </div>
                             </div>
                         </div>
+                        <form action="{{ route('evaluation-form-update',$evaluationForm->id) }}" method="post">
+                            @csrf
                         <table class="table table-hover table-bordered">
                             <tbody>
                             <tr>
@@ -39,13 +41,13 @@
                                 <td><b> {{ $role->display_name }}</b></td>
                                 @endforeach
                             </tr>
-                            {{--<tr class="text-center">--}}
-                                {{--<td>(1)</td>--}}
-                                {{--<td>(2)</td>--}}
-                                {{--<td>(3)</td>--}}
-                                {{--<td>(4)</td>--}}
-                                {{--<td>(5)</td>--}}
-                            {{--</tr>--}}
+                            <tr class="text-center">
+                                <td>(1)</td>
+                                <td>(2)</td>
+                                @foreach($listRoleCanMark as $key => $role)
+                                <td>({{ $key +3 }})</td>
+                                @endforeach
+                            </tr>
                             @foreach($evaluationCriterias as $key => $valueLevel1)
                                     <tr>
                                             <td colspan="{{ 2 + count($listRoleCanMark) }}"><b> {{ $valueLevel1->content }}</b></td>
@@ -55,35 +57,55 @@
                                             @if($valueLevel2->detail)
                                                 <td class='detail-evaluation-form' >
                                                     {{ $valueLevel2->content }}
+                                                    @isset($valueLevel2->proof)
+                                                        <input type="file" id="{{$valueLevel2->id}}">
+                                                    @endisset
                                                     {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($valueLevel2->detail)  !!}
                                                 </td>
                                             @else
                                                 <td>
                                                     {{ $valueLevel2->content }}
+                                                    @isset($valueLevel2->proof)
+                                                        <input type="file" id="{{$valueLevel2->id}}">
+                                                    @endisset
                                                 </td>
                                             @endif
                                             <td>
                                                 {{ $valueLevel2->mark_range_display OR "" }}
                                             </td>
+                                            @isset($valueLevel2->mark_range_display)
                                                 @foreach($listRoleCanMark as $role)
-                                                    <td><input type="text" disabled="true" class="form-control {{ $role->name }}"></td>
+                                                    <td><input type="number"
+                                                               min="{{$valueLevel2->mark_range_from}}"
+                                                               max="{{$valueLevel2->mark_range_to}}"
+                                                               disabled="true" class="form-control {{ $role->name }}"></td>
                                                 @endforeach
+                                            @endisset
                                         </tr>
                                         @foreach($valueLevel2->Child as $valueLevel3)
                                             <tr>
                                                 @if($valueLevel3->detail)
                                                 <td class='detail-evaluation-form' >
                                                     {{ $valueLevel3->content }}
+                                                    @isset($valueLevel3->proof)
+                                                        <input type="file" id="{{$valueLevel3->id}}">
+                                                    @endisset
                                                     {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($valueLevel3->detail)  !!}
                                                 </td>
                                                 @else
                                                     <td>
                                                         {{ $valueLevel3->content }}
+                                                        @isset($valueLevel3->proof)
+                                                            <input type="file" id="{{$valueLevel3->id}}">
+                                                        @endisset
                                                     </td>
                                                 @endif
                                                 <td>{{ $valueLevel3->mark_range_display OR "" }}</td>
                                                 @foreach($listRoleCanMark as $role)
-                                                    <td><input type="text" disabled="true" class="form-control  {{ $role->name }}"></td>
+                                                    <td><input type="number"
+                                                               min="{{$valueLevel3->mark_range_from}}"
+                                                               max="{{$valueLevel3->mark_range_to}}"
+                                                               disabled="true" class="form-control  {{ $role->name }}"></td>
                                                 @endforeach
                                             </tr>
                                         @endforeach
@@ -91,9 +113,12 @@
                                     <tr>
                                         <td colspan="2" class="text-center">
                                             <b>Tổng {{ \App\Helpers\Convert::numberToRomanRepresentation($key +1) }}.
-                                                (Tối đa {{ $valueLevel1->max_score }} điểm) </b></td>
+                                                (Tối đa {{ $valueLevel1->mark_range_to }} điểm) </b></td>
                                         @foreach($listRoleCanMark as $role)
-                                            <td><input type="text" disabled="true" class="form-control {{ $role->name }}"></td>
+                                            <td><input type="number"
+                                                       min="{{$valueLevel1->mark_range_from}}"
+                                                       max="{{$valueLevel1->mark_range_to}}"
+                                                       disabled="true" class="form-control {{ $role->name }}"></td>
                                         @endforeach
                                     </tr>
 
@@ -115,8 +140,9 @@
                         </table>
                         <div align="right">
                             <button class="btn btn-primary" type="submit">Lưu</button>
-                            <button class="btn btn-secondary" type="cancel">Hủy</button>
+                            <button class="btn btn-secondary" type="reset">Hủy</button>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>

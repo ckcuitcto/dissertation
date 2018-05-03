@@ -21,7 +21,6 @@ class CreateEvaluationCriteriasTable extends Migration
             $table->string('mark_range_display')->nullable();            
             $table->integer('mark_range_from')->nullable();
             $table->integer('mark_range_to')->nullable();
-            $table->integer('max_score')->nullable();
             $table->integer('parent_id')->unsigned()->nullable();
             $table->string('proof')->nullable();
             $table->integer('level');

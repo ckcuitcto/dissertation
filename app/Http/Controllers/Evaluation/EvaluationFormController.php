@@ -59,15 +59,14 @@ class EvaluationFormController extends Controller
      */
     public function show($id)
     {
-        $form = EvaluationForm::find(array('id' => $id));
+        $evaluationForm = EvaluationForm::find($id);
         $evaluationCriterias = EvaluationCriteria::where('level',1)->get();
         $user = Auth::user();
-//dd($form->Student);
         //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
         $listRoleCanMark = Role::whereHas('permissions',function($query){
             $query->where('name', 'like', '%can-mark%');
         })->get();
-        return view('evaluation-form.show',compact('form','user','evaluationCriterias','listRoleCanMark'));
+        return view('evaluation-form.show',compact('evaluationForm','user','evaluationCriterias','listRoleCanMark'));
     }
 
     /**
@@ -90,7 +89,7 @@ class EvaluationFormController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request->all());
     }
 
     /**
