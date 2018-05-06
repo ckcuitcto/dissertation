@@ -11,7 +11,7 @@ class Semester extends Model
 
     protected $fillable = ['year_from','year_to','term','date_start_to_mark','date_end_to_mark'];
 
-    public function Proof(){
+    public function Proofs(){
         return $this->hasMany('App\Model\Proof','semester_id','id');
     }
 

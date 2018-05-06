@@ -8,7 +8,7 @@ class EvaluationCriteria extends Model
 {
     protected $table = 'evaluation_criterias';
 
-    protected $fillable = ['content','detail','mark_range_display','mark_range_from','mark_range_to','max_score','parent_id','proof','level'];
+    protected $fillable = ['content','detail','mark_range_display','mark_range_from','mark_range_to','max_score','parent_id','proof','level','step_html'];
 //    protected $fillable = ['content','detail','mark_range_display','mark_range_from','mark_range_to','topic_id','parent_id'];
 
 //    public function Topic(){

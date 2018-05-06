@@ -18,12 +18,13 @@ class CreateEvaluationCriteriasTable extends Migration
 //            $table->text('title');
             $table->text('content')->nullable();
             $table->text('detail')->nullable();
-            $table->string('mark_range_display')->nullable();            
+            $table->string('mark_range_display')->nullable();
             $table->integer('mark_range_from')->nullable();
             $table->integer('mark_range_to')->nullable();
             $table->integer('parent_id')->unsigned()->nullable();
             $table->string('proof')->nullable();
             $table->integer('level');
+            $table->integer('step_html')->nullable();;
 //             $table->timestamps();
         });
     }

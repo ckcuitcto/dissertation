@@ -132,7 +132,7 @@ Route::group(['middleware' => 'auth'], function () {
         // tao moi form
 //        Route::get('/{semesterId}', ['as' => 'evaluation-form-create', 'uses' => 'Evaluation\EvaluationFormController@create']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
-        Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show']);
+        Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show'])->middleware('can:can-mark');
         // lưu kết quả
         Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
         // xoa 1
@@ -141,6 +141,9 @@ Route::group(['middleware' => 'auth'], function () {
         // chỉnh sửa
 //        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
 //        Route::get('/edit/{id}', ['as' => 'evaluation-form-edit', 'uses' => 'Evaluation\EvaluationFormController@edit']);
+
+        //kiem tra file upload = ajax
+        Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Evaluation\EvaluationFormController@checkFileUpload']);
     });
 
     Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);
