@@ -8,7 +8,7 @@ class EvaluationResult extends Model
 {
     protected $table = "evaluation_results";
 
-    protected $fillable = ['score', 'evaluation_criteria_id', 'evaluation_form_id', 'user_id'];
+    protected $fillable = ['score', 'evaluation_criteria_id', 'evaluation_form_id', 'marker_id','marker_score'];
 
     public function EvaluationForm()
     {
@@ -22,7 +22,7 @@ class EvaluationResult extends Model
 
     public function Markers()
     {
-        return $this->belongsTo('App\Model\User', 'user_id', 'id');
+        return $this->belongsTo('App\Model\User', 'marker_id', 'id');
     }
 
 }
