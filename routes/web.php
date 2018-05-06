@@ -107,10 +107,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit']);
     });
 
-    Route::group(['prefix' => 'thong-bao'], function () {
-        // Route::get('/',['as' => 'notification-list',])
-    });
-
     Route::group(['prefix' => 'bang-diem'], function () {
         Route::get('/', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
 
@@ -130,19 +126,29 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'evaluation-form', 'uses' => 'Evaluation\EvaluationFormController@index']);
 
         // tao moi form
-        Route::get('/{semesterId}', ['as' => 'evaluation-form-create', 'uses' => 'Evaluation\EvaluationFormController@create']);
+//        Route::get('/{semesterId}', ['as' => 'evaluation-form-create', 'uses' => 'Evaluation\EvaluationFormController@create']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
-        Route::get('/{id}', ['as' => 'evaluation-form-detail', 'uses' => 'Evaluation\EvaluationFormController@show']);
-        // them 1
-        Route::post('/store', ['as' => 'evaluation-form-store', 'uses' => 'Evaluation\EvaluationFormController@store']);
-        // xoa 1
-        Route::get('/destroy/{id}', ['as' => 'evaluation-form-destroy', 'uses' => 'Evaluation\EvaluationFormController@destroy']);
-        // chỉnh sửa
+        Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show'])->middleware('can:can-mark');
+        // lưu kết quả
         Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
-        Route::get('/edit/{id}', ['as' => 'evaluation-form-edit', 'uses' => 'Evaluation\EvaluationFormController@edit']);
+        // xoa 1
+//        Route::get('/destroy/{id}', ['as' => 'evaluation-form-destroy', 'uses' => 'Evaluation\EvaluationFormController@destroy']);
+
+        // chỉnh sửa
+//        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
+//        Route::get('/edit/{id}', ['as' => 'evaluation-form-edit', 'uses' => 'Evaluation\EvaluationFormController@edit']);
+
+        //kiem tra file upload = ajax
+        Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Evaluation\EvaluationFormController@checkFileUpload']);
     });
 
-    Route::get('/thong-tin-ca-nhan', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);
+
+    Route::group(['prefix' => 'thong-tin-ca-nhan'], function () {
+        Route::get('/', ['as' => 'personal-information', 'uses' => 'Information\InformationController@index']);
+        Route::get('/{id}', ['as' => 'personal-information-show', 'uses' => 'Information\InformationController@show']);
+        Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'Information\InformationController@update']);
+
+    });
 
     Route::group(['prefix' => 'y-kien'], function () {
         Route::get('/', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create'])->middleware('can:comment-add');
@@ -158,13 +164,21 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);
-    Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
-    Route::get('/hoc-phi', ['as' => 'tuition', 'uses' => 'Home\HomeController@tuition']);
-    Route::get('/phong-dao-tao', ['as' => 'office-academic', 'uses' => 'Home\HomeController@officeAcademic']);
-    Route::get('/quan-ly-minh-chung', ['as' => 'proofs', 'uses' => 'Home\HomeController@proofs']);
+    Route::group(['prefix' => '/'], function () {
+        Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
 
-    Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@news']);
+        Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@index']);     
+        Route::post('/add', ['as' => 'news-add', 'uses' => 'News\NewsController@add']);
+        Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update']);
+        Route::get('/{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
+        Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit']);
+    });
+
+    Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);    
+    
+    Route::get('/hoc-phi', ['as' => 'tuition', 'uses' => 'Home\HomeController@tuition']);
+
+    Route::get('/quan-ly-minh-chung', ['as' => 'proofs', 'uses' => 'Home\HomeController@proofs']);    
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
 });

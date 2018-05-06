@@ -18,7 +18,7 @@ class CreateProofsTable extends Migration
             $table->string('name',255);
             $table->integer('created_by')->unsigned();;
             $table->integer('semester_id')->unsigned()->nullable();
-            $table->string('proof_type')->unique()->nullable();
+            $table->string('evaluation_criteria_id')->nullable();
             $table->timestamps();
         });
     }

@@ -127,9 +127,10 @@
                                 $.each(result.comment, function (elementName, value) {
 //                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
 //                                    alert(elementName + "+ " + value);
-                                    $('.' + elementName).val(value);
-                                    if(elementName === 'title' || elementName === 'content'){
+                                    if (elementName === 'title' || elementName === 'content') {
                                         $('.' + elementName).html(value);
+                                    } else {
+                                        $('.' + elementName).val(value);
                                     }
 //                                    });
                                 });
@@ -150,6 +151,7 @@
                     url: url,
                     data: valueForm,
                     dataType: 'json',
+                    cache: false,
                     success: function (result) {
                         if (result.status === false) {
                             //show error list fields

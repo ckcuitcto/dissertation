@@ -58,11 +58,11 @@
                             <td>Khoa</td>
                             <td>Tổng</td>
                         </tr>
-                        @foreach($semesters as $key => $semester)
+                        @foreach($evaluationForms as $key => $evaluationForm)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $semester->term }}</td>
-                                <td>{{ $semester->year_from . " - " . $semester->year_to }}</td>
+                                <td>{{ $evaluationForm->Semester->term }}</td>
+                                <td>{{ $evaluationForm->Semester->year_from . " - " . $evaluationForm->Semester->year_to }}</td>
                                 <td>x</td>
                                 <td>x</td>
                                 <td>x</td>
@@ -72,7 +72,7 @@
                                 <td>
                                     {{--@php dd($semester->EvaluationForm->where('student_id',$user->id)); @endphp--}}
                                     <a
-                                        href="{{ route('evaluation-form-create',$semester->id) }}"
+                                        href="{{ route('evaluation-form-show',$evaluationForm->id) }}"
                                     >
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                     </a>

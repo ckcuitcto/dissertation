@@ -16,6 +16,11 @@
     <link rel="shortcut icon" href="{{ url('icon/logoSTU.ico')}}">
 {{--    <link rel="stylesheet" type="text/css" href="{{ asset('template/css/font-awesome.min.css') }}">--}}
     <title>STU - @yield('title')</title>
+    <style>
+        td.detail-evaluation-form {
+            padding: 0px;
+        }
+    </style>
 </head>
 <body class="app sidebar-mini rtl">
 @section('header')

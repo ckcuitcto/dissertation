@@ -14,9 +14,6 @@
     <header class="app-header"><a class="app-header__logo" href="http://www.stu.edu.vn/">STU</a>
         <!-- Sidebar toggle button-->
         <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
-        @if(\Illuminate\Support\Facades\Auth::check())
-            <p>Hello {{ \Illuminate\Support\Facades\Auth::user()->name OR "" }}</p>
-        @endif
         <!-- Navbar Right Menu-->
         <ul class="app-nav">
             <li class="app-search">
@@ -89,9 +86,18 @@
                     <li class="app-notification__footer"><a href="#">See all notifications.</a></li>
                 </ul>
             </li>
+            <li class="nav-item active">
+
+            </li>
             <!-- User Menu-->
-            <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown"
-                                    aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
+
+            <li class="dropdown">
+                <a class="app-nav__item" href="#" data-toggle="dropdown"
+                                    aria-label="Open Profile Menu">
+                    @if(\Illuminate\Support\Facades\Auth::check())
+                        Hello {{ \Illuminate\Support\Facades\Auth::user()->name }}&nbsp;&nbsp;
+                    @endif<i class="fa fa-user fa-lg"></i>
+                </a>
                 <ul class="dropdown-menu settings-menu dropdown-menu-right">
                     <li><a class="dropdown-item" href="{{ route('home') }}"><i class="fa fa-cog fa-lg"></i> Settings</a>
                     </li>
@@ -180,10 +186,11 @@
                     </ul>
                 @endcan
                 @can('comment-list')
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('comment-list') }}"><i class="icon fa fa-circle-o"></i>
-                            Danh sách ý kiến đóng góp</a></li>
-                </ul>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
+                                        class="icon fa fa-circle-o"></i>
+                                Danh sách ý kiến đóng góp</a></li>
+                    </ul>
                 @endcan
             </li>
 
@@ -225,14 +232,14 @@
                             class="app-menu__icon fa fa-bed"></i><span class="app-menu__label">Các Phòng Ban</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('office-academic') }}"><i
+                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html"><i
                                     class="icon fa fa-circle-o"></i> Phòng Đào Tạo</a></li>
-                    <li><a class="treeview-item" href="page-calendar.html"><i class="icon fa fa-circle-o"></i> Phòng
+                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html"><i
+                                    class="icon fa fa-circle-o"></i> Phòng
                             Công Tác Sinh Viên</a></li>
-                    <li><a class="treeview-item" href="page-mailbox.html"><i class="icon fa fa-circle-o"></i> Văn Phòng
+                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html"><i
+                                    class="icon fa fa-circle-o"></i> Văn Phòng
                             Khoa</a></li>
-                    <li><a class="treeview-item" href="page-error.html"><i class="icon fa fa-circle-o"></i> Error
-                            Page</a></li>
                 </ul>
             </li>
         </ul>
@@ -259,7 +266,14 @@
                 },
                 "pageLength": 25
             });
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
         });
+
     </script>
 @stop
 
