@@ -15,14 +15,17 @@ class CreateEvaluationCriteriasTable extends Migration
     {
         Schema::create('evaluation_criterias', function (Blueprint $table) {
             $table->increments('id')->unsigned();
+//            $table->text('title');
             $table->text('content')->nullable();
-            $table->string('mark_range_display')->nullable();
             $table->text('detail')->nullable();
-            $table->integer('mark_range_from');
+            $table->string('mark_range_display')->nullable();
+            $table->integer('mark_range_from')->nullable();
             $table->integer('mark_range_to')->nullable();
-            $table->integer('topic_id')->unsigned()->nullable();
-            $table->string('proof_type')->unique()->nullable();
-            $table->timestamps();
+            $table->integer('parent_id')->unsigned()->nullable();
+            $table->string('proof')->nullable();
+            $table->integer('level');
+            $table->integer('step_html')->nullable();;
+//             $table->timestamps();
         });
     }
 

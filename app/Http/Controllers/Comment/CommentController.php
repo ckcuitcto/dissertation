@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Comment;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ReplyComment;
 use App\Model\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Mail;
+use Validator;
 class CommentController extends Controller
 {
     /**
@@ -99,7 +101,22 @@ class CommentController extends Controller
     // này để lưu lại
     public function reply(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+//            'email_content' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ], 200);
+        } else {
+            $comment = Comment::find($id);
+            Mail::to($comment->Student->User->email)->send(new ReplyComment($comment, $request->email_content));
+            return response()->json([
+                'status' => true
+            ], 200);
+        }
     }
 
     /**

@@ -88,7 +88,7 @@
                                 <div class="col-md-12">
                                     <div class="form-row">
                                         <label for="fileImport">Chọn file</label>
-                                        <input type="file" multiple class="form-control fileImport" name="fileImport[]" id="fileImport">
+                                        <input type="file" multiple class="form-control fileImport" name="fileImport" id="fileImport">
                                     </div>
                                 </div>
                             </div>
@@ -275,6 +275,7 @@
 
                 var formData = new FormData();
                 var fileImport = document.getElementById('fileImport');
+                console.log(fileImport);
                 var inss = fileImport.files.length;
                 for (var x = 0; x < inss; x++) {
                     file = fileImport.files[x];

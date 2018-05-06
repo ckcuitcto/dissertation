@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Model\Comment;
+use App\Model\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -16,9 +18,13 @@ class ReplyComment extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public $content;
+    public $comment;
+
+    public function __construct(Comment $comment ,$content)
     {
-        //
+        $this->comment = $comment;
+        $this->content = $content;
     }
 
     /**
@@ -28,6 +34,6 @@ class ReplyComment extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->markdown('emails.reply-comment')->subject("Phản hồi ý kiến: ". $this->comment->title);;
     }
 }
