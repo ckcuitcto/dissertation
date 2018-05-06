@@ -16,9 +16,11 @@ class CreateNewsTable extends Migration
         Schema::create('news', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('title',255);
-            $table->number('ordinal_display');
-            $table->integer('created_by')->unsigned();;
-            $table->string('proof_type')->unique()->nullable();
+            $table->text('content');
+            $table->integer('created_by')->unsigned();
+            $table->foreign('created_by')->references('id')->on('staff');
+            $table->integer('faculty_id')->unsigned();
+            $table->foreign('faculty_id')->references('id')->on('faculties');
             $table->timestamps();
         });
     }
