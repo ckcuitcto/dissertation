@@ -31,6 +31,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'faculty-change',
                 'display_name' => 'Thay đổi Khoa',
                 'description' => 'Thêm, sửa, xóa khoa'
+            ],[
+                'name' => 'can-mark',
+                'display_name' => 'Có thể chấm điểm',
+                'description' => 'Chấm điểm'
             ],
         ]);
     }
