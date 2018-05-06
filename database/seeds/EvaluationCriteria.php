@@ -19,19 +19,22 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 20, "parent_id" => null, "proof" => null,
-                'level' => '1'
+                'level' => '1',
+                'step_html' => null
             ], [
                 "content" => "II. Ý thức chấp hành nội quy, quy chế, quy định trong nhà trường (0 – 25 điểm)",
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 25, "parent_id" => null, "proof" => null,
-                'level' => '1'
+                'level' => '1',
+                'step_html' => null
             ], [
                 "content" => "III. Ý thức tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội (0 – 20 điểm) ",
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 20, "parent_id" => null, "proof" => null,
-                'level' => '1'
+                'level' => '1',
+                'step_html' => null
             ], [
                 "content" => "IV. Ý thức công dân trong quan hệ cộng đồng (0 – 25 điểm)",
                 "mark_range_display" => null,
@@ -43,7 +46,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => null, "proof" => null,
-                'level' => '1'
+                'level' => '1',
+                'step_html' => null
             ],
 
             [
@@ -51,31 +55,36 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => null, "mark_range_to" => null, "parent_id" => 1, "proof" => null,
-                'level' => '2'
+                'level' => '2',
+                'step_html' => null
             ],[
                 "content" => "b.	Kết quả học tập ",
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => null, "mark_range_to" => null, "parent_id" => 1, "proof" => null,
-                'level' => '2'
+                'level' => '2',
+                'step_html' => null
             ],[
                 "content" => "c.	Nghiên cứu khoa học, tham gia các hoạt động học thuật",
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => null, "mark_range_to" => null, "parent_id" => 1, "proof" => null,
-                'level' => '2'
+                'level' => '2',
+                'step_html' => null
             ],[
                 "content" => "-	Bị xử lý kỷ luật về công tác sinh viên:",
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => null, "mark_range_to" => null, "parent_id" => 2, "proof" => null,
-                'level' => '2'
+                'level' => '2',
+                'step_html' => null
             ],[
                 "content" => "-  Thành viên tích cực các đội hình văn nghệ, thể thao, công tác xã hội…:",
                 "mark_range_display" => null,
                 "detail" => null,
                 "mark_range_from" => null, "mark_range_to" => null, "parent_id" => 3, "proof" => 1,
-                'level' => '2'
+                'level' => '2',
+                'step_html' => null
             ],
 
 
@@ -85,28 +94,32 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "0 - 5 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 5, "parent_id" => 6, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
             [
                 "content" => "- Không vi phạm quy chế về thi, kiểm tra",
                 "mark_range_display" => "5 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 5, "parent_id" => 6, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
             [
                 "content" => "- Bị cấm thi kết thúc học phần",
                 "mark_range_display" => "-5 điểm",
                 "detail" => null,
                 "mark_range_from" => "-5", "mark_range_to" => 0, "parent_id" => 6, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
             [
                 "content" => "- Vi phạm qui chế thi bị lập biên bản",
                 "mark_range_display" => "-2 điểm",
                 "detail" => null,
                 "mark_range_from" => "-2", "mark_range_to" => 0, "parent_id" => 6, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
 
@@ -116,7 +129,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "0 – 10 điểm",
                 "detail" => "Yếu, kém:0 điểm ; Trung bình: 2 điểm ; Trung bình khá: 4 điểm ; Khá: 6 điểm ; Giỏi: 8 điểm ; Xuất sắc: 10 điểm",
                 "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => 7, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => 2
             ],
 
             //c.	Nghiên cứu khoa học, tham gia các hoạt động học thuật id =8
@@ -125,7 +139,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "1 điểm/lần",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 20, "parent_id" => 8, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -133,7 +148,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "2 – 6 điểm/lần",
                 "detail" => "Cấp Khoa: 2 điểm/lần ; Cấp Trường: 4 điểm/lần ; Trung bình khá: 6 điểm/lần",
                 "mark_range_from" => 0, "mark_range_to" => 20, "parent_id" => 8, "proof" => 1,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => 2
             ],
 
             [
@@ -141,7 +157,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "-3 điểm/lần",
                 "detail" => null,
                 "mark_range_from" => -100, "mark_range_to" => 0, "parent_id" => 8, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => 3
             ],
 
 
@@ -151,7 +168,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "0 – 5 điểm",
                 "detail" => "Không tham gia: 0 điểm ; Không đầy đủ: 2 điểm ; Đầy đủ: 5 điểm ",
                 "mark_range_from" => 0, "mark_range_to" => 5, "parent_id" => 2, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -159,7 +177,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "12 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 12, "parent_id" => 2, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -167,7 +186,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "0 - 8 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 8, "parent_id" => 2, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             ///	Bị xử lý kỷ luật về công tác sinh viên: id = 9
@@ -176,7 +196,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "-5 điểm",
                 "detail" => null,
                 "mark_range_from" => "-5", "mark_range_to" => 0, "parent_id" => 9, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -184,7 +205,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "-10 điểm",
                 "detail" => null,
                 "mark_range_from" => "-10", "mark_range_to" => 0, "parent_id" => 9, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             //III. Ý thức tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội (0 – 20 điểm)
@@ -194,7 +216,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "0 -10 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => 3, "proof" => null,
-                'level' =>'3'
+                'level' =>'3',
+                'step_html' => null
             ],
 
             //	Thành viên tích cực các đội hình văn nghệ, thể thao, công tác xã hội…: id = 10
@@ -203,7 +226,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "2 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 2, "parent_id" => 10, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -211,7 +235,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "5 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 5, "parent_id" => 10, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -219,7 +244,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "5 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 5, "parent_id" => 3, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -227,7 +253,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "15 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 15, "parent_id" => 3, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -235,7 +262,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "3 –7 điểm/lần",
                 "detail" => "Cấp Trường: 3 điểm/lần ; Cấp Thành: 5 điểm/lần ; Cấp Bộ: 7 điểm/lần",
                 "mark_range_from" => 0, "mark_range_to" => 20, "parent_id" => 3, "proof" => 1,
-                'level' => '2'
+                'level' => '2',
+                'step_html' => null
             ],
 
             //IV. Ý thức công dân trong quan hệ cộng đồng (0 – 25 điểm) id = 4
@@ -244,7 +272,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "10 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => 4, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -252,7 +281,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "0 – 5 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 5, "parent_id" => 4, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -260,7 +290,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "5 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 5, "parent_id" => 4, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -268,7 +299,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "10 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => 4, "proof" => 1,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -276,7 +308,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "-10 điểm",
                 "detail" => null,
                 "mark_range_from" => "-10", "mark_range_to" => 0, "parent_id" => 4, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -284,7 +317,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "-10 điểm",
                 "detail" => null,
                 "mark_range_from" => "-10", "mark_range_to" => 0, "parent_id" => 4, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             //V. Ý thức và kết quả tham gia công tác cán bộ lớp, các đoàn thể, tổ chức khác trong nhà trường hoặc sinh viên đạt được thành tích đặc biệt trong học tập, rèn luyện (0 – 10 điểm)
@@ -294,7 +328,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "0 – 10 điểm",
                 "detail" => "Không hoàn thành: 0 điểm ; Trung bình: 4 điểm ; Khá: 6 điểm ; Tốt: 8 điểm ; Xuất sắc: 10 điểm ",
                 "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => 5, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => 2
             ],
 
             [
@@ -302,7 +337,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "6 – 10 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => 5, "proof" => 1,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
 
             [
@@ -310,7 +346,8 @@ class EvaluationCriteria extends Seeder
                 "mark_range_display" => "0 – 5 điểm",
                 "detail" => null,
                 "mark_range_from" => 0, "mark_range_to" => 5, "parent_id" => 5, "proof" => null,
-                'level' => '3'
+                'level' => '3',
+                'step_html' => null
             ],
         ]);
     }
