@@ -63,12 +63,22 @@ class EvaluationFormController extends Controller
     {
         $evaluationForm = EvaluationForm::find($id);
         $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
+
+        $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id',1)->get()->toArray();
+        // chuyển sang lấy id tiêu chí làm key. để lấy ra heiẻn thị trên form dễ hơn
+        $evaluationResults = array();
+        foreach($evaluationResultsTmp as $key => &$val){
+            $evaluationResults[$val['evaluation_criteria_id']] = $val;
+            unset($evaluationResultsTmp[$key]);
+        }
+
+//        dd($evaluationResultsTmp);
         $user = Auth::user();
         //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
         $listRoleCanMark = Role::whereHas('permissions', function ($query) {
             $query->where('name', 'like', '%can-mark%');
         })->get();
-        return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listRoleCanMark'));
+        return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listRoleCanMark','evaluationResults'));
     }
 
     /**
@@ -109,7 +119,7 @@ class EvaluationFormController extends Controller
                     $arrEvaluationResult[] = [
                         'evaluation_criteria_id' => $evaluationCriteriaId,
                         'evaluation_form_id' => $evaluationFormId,
-                        'marker_id' => $userLogin->Student->id,
+                        'marker_id' => $userLogin->id,
                         'marker_score' => $value
                     ];
                 } elseif (substr($key, "0", "5") == "proof") {
@@ -117,15 +127,20 @@ class EvaluationFormController extends Controller
                     $arrProof[] = [
                         'name' => $value->getClientOriginalExtension(),
                         'semester_id' => $evaluationForm->semester_id,
-                        'created_by' => $userLogin->id,
+                        'created_by' => $userLogin->Student->id,
                         'evaluation_criteria_id' => $evaluationCriteriaId
                     ];
                 }
             }
         }
         $evaluationForm->EvaluationResults()->createMany($arrEvaluationResult);
-        $semester = Semester::find($evaluationForm->semester_id);
-        $semester->Proofs()->createMany($arrProof);
+        $evaluationForm->total = $request->totalScoreOfForm;
+        $evaluationForm->save();
+
+        if($arrProof) {
+            $semester = Semester::find($evaluationForm->semester_id);
+            $semester->Proofs()->createMany($arrProof);
+        }
 
         return redirect()->back()->with(['flash_message' => 'Chấm điểm thành công']);
 

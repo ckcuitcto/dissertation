@@ -20,8 +20,7 @@ class CreateEvaluationResultsTable extends Migration
             $table->integer('evaluation_form_id')->unsigned()->nullable();
 
             $table->string('marker_id',10)->nullable();
-            $table->integer('marker_score')->unsigned()->nullable();
-
+            $table->integer('marker_score')->nullable();
 
             $table->timestamps();
         });

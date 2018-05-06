@@ -86,12 +86,12 @@
                                                 @foreach($listRoleCanMark as $role)
                                                     @if($role->name == $user->Role->name)
                                                         @php $name= "score".$valueLevel2->id; @endphp
-                                                        <td><input required
-                                                                   type="number"
-                                                                   name={{$name}} value="0"
+                                                        <td><input required type="number" name="{{$name}}"
+                                                                   value="{{ $evaluationResults[$valueLevel2->id]['marker_score'] }}"
                                                                    min="{{$valueLevel2->mark_range_from}}"
                                                                    max="{{$valueLevel2->mark_range_to}}"
                                                                    id="{{ "child_".$valueLevel1->id}}"
+                                                                   {{ ($valueLevel2->step_html) ? "step=$valueLevel2->step_html" : ""  }}
                                                                    class="form-control {{ $role->name }}">
                                                         </td>
                                                     @else
@@ -127,11 +127,12 @@
                                                 @foreach($listRoleCanMark as $role)
                                                     @if($role->name == $user->Role->name)
                                                         @php $name= "score".$valueLevel3->id; @endphp
-                                                        <td><input required type="number" name={{ $name }}
-                                                                    value="0"
+                                                        <td><input required type="number" name="{{ $name }}"
+                                                                   value="{{ $evaluationResults[$valueLevel3->id]['marker_score'] }}"
                                                                    min="{{$valueLevel3->mark_range_from}}"
                                                                    max="{{$valueLevel3->mark_range_to}}"
                                                                    id="{{ "child_".$valueLevel1->id}}"
+                                                                   {{ ($valueLevel3->step_html) ? "step=$valueLevel3->step_html" : ""  }}
                                                                    class="form-control  {{ $role->name }}">
                                                         </td>
                                                     @else
@@ -154,7 +155,7 @@
                                                            name={{ $name }}
                                                                    required
                                                            id="{{ "total_".$valueLevel1->id}}"
-                                                           value="0"
+                                                           value="{{ $evaluationResults[$valueLevel1->id]['marker_score'] }}"
                                                            min="{{$valueLevel1->mark_range_from}}"
                                                            max="{{$valueLevel1->mark_range_to}}"
                                                            topic="totalTopic"
@@ -178,7 +179,7 @@
                                             <td><input type="text"
                                                        class="form-control {{ $role->name }}"
                                                        required
-                                                       value="0"
+                                                       value="{{ $evaluationForm->total }}"
                                                        name="totalScoreOfForm"
                                                        id="totalScoreOfForm"
                                                        readonly
