@@ -107,10 +107,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit']);
     });
 
-    Route::group(['prefix' => 'thong-bao'], function () {
-        // Route::get('/',['as' => 'notification-list',])
-    });
-
     Route::group(['prefix' => 'bang-diem'], function () {
         Route::get('/', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
 
@@ -150,7 +146,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'thong-tin-ca-nhan'], function () {
         Route::get('/', ['as' => 'personal-information', 'uses' => 'Information\InformationController@index']);
         Route::get('/{id}', ['as' => 'personal-information-show', 'uses' => 'Information\InformationController@show']);
-        Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'User\StudentController@update']);
+        Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'Information\InformationController@update']);
 
     });
 
@@ -168,13 +164,21 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);
-    Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
+    Route::group(['prefix' => '/'], function () {
+        Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
+
+        Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@index']);     
+        Route::post('/add', ['as' => 'news-add', 'uses' => 'News\NewsController@add']);
+        Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update']);
+        Route::get('/{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
+        Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit']);
+    });
+
+    Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);    
+    
     Route::get('/hoc-phi', ['as' => 'tuition', 'uses' => 'Home\HomeController@tuition']);
 
-    Route::get('/quan-ly-minh-chung', ['as' => 'proofs', 'uses' => 'Home\HomeController@proofs']);
-
-    Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@news']);
+    Route::get('/quan-ly-minh-chung', ['as' => 'proofs', 'uses' => 'Home\HomeController@proofs']);    
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
 });
