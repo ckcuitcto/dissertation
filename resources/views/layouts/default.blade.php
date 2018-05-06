@@ -229,14 +229,12 @@
                             class="app-menu__icon fa fa-bed"></i><span class="app-menu__label">Các Phòng Ban</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('office-academic') }}"><i
+                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html"><i
                                     class="icon fa fa-circle-o"></i> Phòng Đào Tạo</a></li>
-                    <li><a class="treeview-item" href="page-calendar.html"><i class="icon fa fa-circle-o"></i> Phòng
+                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html"><i class="icon fa fa-circle-o"></i> Phòng
                             Công Tác Sinh Viên</a></li>
-                    <li><a class="treeview-item" href="page-mailbox.html"><i class="icon fa fa-circle-o"></i> Văn Phòng
-                            Khoa</a></li>
-                    <li><a class="treeview-item" href="page-error.html"><i class="icon fa fa-circle-o"></i> Error
-                            Page</a></li>
+                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html"><i class="icon fa fa-circle-o"></i> Văn Phòng
+                            Khoa</a></li>                    
                 </ul>
             </li>
         </ul>

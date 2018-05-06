@@ -144,8 +144,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::group(['prefix' => 'thong-tin-ca-nhan'], function () {
-        Route::get('/', ['as' => 'personal-information', 'uses' => 'User\StudentController@index']);
-        Route::get('/{id}', ['as' => 'personal-information-detail', 'uses' => 'User\StudentController@show']);
+        Route::get('/', ['as' => 'personal-information', 'uses' => 'Information\InformationController@index']);
+        Route::get('/{id}', ['as' => 'personal-information-show', 'uses' => 'Information\InformationController@show']);
         Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'User\StudentController@update']);
 
     });
@@ -167,7 +167,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);
     Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
     Route::get('/hoc-phi', ['as' => 'tuition', 'uses' => 'Home\HomeController@tuition']);
-    Route::get('/phong-dao-tao', ['as' => 'office-academic', 'uses' => 'Home\HomeController@officeAcademic']);
+
     Route::get('/quan-ly-minh-chung', ['as' => 'proofs', 'uses' => 'Home\HomeController@proofs']);
 
     Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@news']);
