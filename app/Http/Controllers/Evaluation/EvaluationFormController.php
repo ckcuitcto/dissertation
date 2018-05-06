@@ -64,7 +64,7 @@ class EvaluationFormController extends Controller
         $evaluationForm = EvaluationForm::find($id);
         $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
 
-        $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id',1)->get()->toArray();
+        $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id',$id)->get()->toArray();
         // chuyển sang lấy id tiêu chí làm key. để lấy ra heiẻn thị trên form dễ hơn
         $evaluationResults = array();
         foreach($evaluationResultsTmp as $key => &$val){

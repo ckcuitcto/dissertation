@@ -87,7 +87,7 @@
                                                     @if($role->name == $user->Role->name)
                                                         @php $name= "score".$valueLevel2->id; @endphp
                                                         <td><input required type="number" name="{{$name}}"
-                                                                   value="{{ $evaluationResults[$valueLevel2->id]['marker_score'] }}"
+                                                                   value="{{ $evaluationResults[$valueLevel2->id]['marker_score'] OR 0 }}"
                                                                    min="{{$valueLevel2->mark_range_from}}"
                                                                    max="{{$valueLevel2->mark_range_to}}"
                                                                    id="{{ "child_".$valueLevel1->id}}"
@@ -128,7 +128,7 @@
                                                     @if($role->name == $user->Role->name)
                                                         @php $name= "score".$valueLevel3->id; @endphp
                                                         <td><input required type="number" name="{{ $name }}"
-                                                                   value="{{ $evaluationResults[$valueLevel3->id]['marker_score'] }}"
+                                                                   value="{{ $evaluationResults[$valueLevel3->id]['marker_score'] OR 0 }}"
                                                                    min="{{$valueLevel3->mark_range_from}}"
                                                                    max="{{$valueLevel3->mark_range_to}}"
                                                                    id="{{ "child_".$valueLevel1->id}}"
@@ -155,7 +155,7 @@
                                                            name={{ $name }}
                                                                    required
                                                            id="{{ "total_".$valueLevel1->id}}"
-                                                           value="{{ $evaluationResults[$valueLevel1->id]['marker_score'] }}"
+                                                           value="{{ $evaluationResults[$valueLevel1->id]['marker_score'] OR 0 }}"
                                                            min="{{$valueLevel1->mark_range_from}}"
                                                            max="{{$valueLevel1->mark_range_to}}"
                                                            topic="totalTopic"
@@ -179,7 +179,7 @@
                                             <td><input type="text"
                                                        class="form-control {{ $role->name }}"
                                                        required
-                                                       value="{{ $evaluationForm->total }}"
+                                                       value="{{ $evaluationForm->total OR "0" }}"
                                                        name="totalScoreOfForm"
                                                        id="totalScoreOfForm"
                                                        readonly
