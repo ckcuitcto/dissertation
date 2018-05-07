@@ -172,6 +172,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update']);
         Route::get('/{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
         Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit']);
+        Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy']);
     });
 
     Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);    

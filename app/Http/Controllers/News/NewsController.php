@@ -31,16 +31,15 @@ class NewsController extends Controller
         return view('news.index', compact('newsList'));
     }
 
-    public function show($id)
-    {
-        $news = News::find($id);
-        return view('news.index', compact('news'));
-    }
+    // public function show($id)
+    // {
+    //     $news = News::find($id);
+    //     return view('news.index', compact('news'));
+    // }
 
     public function edit($id)
     {
         $news = News::find($id);
-
         return response()->json([
             'news' => $news,
             'status' => true
@@ -49,25 +48,18 @@ class NewsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'ordinal_display' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'arrMessages' => $validator->errors()
-            ], 200);
-        }
+        $this->validate($request,
+            ['title' => 'required'],
+            ['content' => 'required'],
+            ['title.required' => "Vui lòng nhập tiêu đề"],
+            ['content.required' => "Vui lòng nhập nội dung"]
+        );
 
         $news = News::find($id);
         if (!empty($news)) {
             $news->title = $request->title;
-            $news->ordinal_display = $request->ordinal_display;
-            
-            $semester->term = $request->term;
-            $semester->save();
+            $news->content = $request->content;
+            $news->save();
             return response()->json([
                 'news' => $news,
                 'status' => true
@@ -76,32 +68,47 @@ class NewsController extends Controller
         return response()->json([
             'status' => false
         ], 200);
+        
     }
 
     public function add(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'ordinal_display' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'title' => 'required',
+        //     'content' => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'arrMessages' => $validator->errors()
-            ], 200);
-        } else {
-            $news = new News();
-            $news->title = $request->title;
-            $news->ordinal_display = $request->ordinal_display;
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'arrMessages' => $validator->errors()
+        //     ], 200);
+        // } else {
+        //     $news = new News();
+        //     $news->title = $request->title;
+        //     $news->content = $request->content;
             
-            $news->term = $request->term;
-            $news->save();           
+        //     $news->save();           
 
+        //     return response()->json([
+        //         'news' => $news,
+        //         'status' => true
+        //     ], 200);
+        // }
+    }
+
+    public function destroy($id)
+    {
+        $news = News::find($id);
+        if (!empty($news)) {
+            $news->delete();
             return response()->json([
                 'news' => $news,
                 'status' => true
             ], 200);
         }
+        return response()->json([
+            'status' => false
+        ], 200);
     }
 }
