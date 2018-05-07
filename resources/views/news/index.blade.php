@@ -20,64 +20,73 @@
                   <tr>
                     <th scope="col">STT</th>
                     <th scope="col">Tiêu đề</th>
-                    <th scope="col">Thứ tự hiển thị</th>
+                    <th scope="col">Nội dung</th>
                     <th scope="col">Ngày tạo</th>
+                    <th scope="col">Ngày cập nhật</th>                    
                     <th>Tác vụ</th>
                   </tr>
                 </thead>
                 <tbody>
+                  @foreach($newsList as $tintuc)
                   <tr>
                     <th scope="row">1</th>
-                    <td>Quy chế về việc đánh giá điểm rèn luyện của sinh viên hệ đại học và cao đẳng</td>
-                    <td>1</td>
-                    <td>20-3-2017</td>
-                    <td>
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                      <i class="fa fa-eye" aria-hidden="true"></i>
+                    <td>{{$tintuc->$title}}</td>
+                    <td>{{$tintuc->$content}}</td>
+                    <td>{{$tintuc->$created_at}}</td>
+                    <td>{{$tintuc->$updated_at}}</td>
+                    <td>                        
+                        <button type="button" class="btn btn-secondary">Sửa</button>          
+                        <button type="button" class="btn btn-danger">Xóa</button>
+                      </td> 
+                  </tr>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>{{$tintuc->$title}}</td>
+                    <td>{{$tintuc->$content}}</td>
+                    <td>{{$tintuc->$created_at}}</td>
+                    <td>{{$tintuc->$updated_at}}</td>                    
+                    <td>                        
+                        <button type="button" class="btn btn-secondary">Sửa</button>          
+                        <button type="button" class="btn btn-danger">Xóa</button>
+                      </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>{{$tintuc->$title}}</td>
+                    <td>{{$tintuc->$content}}</td>
+                    <td>{{$tintuc->$created_at}}</td>
+                    <td>{{$tintuc->$updated_at}}</td>
+                    <td>                        
+                        <button type="button" class="btn btn-secondary">Sửa</button>          
+                        <button type="button" class="btn btn-danger">Xóa</button>
+                      </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>{{$tintuc->$title}}</td>
+                    <td>{{$tintuc->$content}}</td>
+                    <td>{{$tintuc->$created_at}}</td>
+                    <td>{{$tintuc->$updated_at}}</td>
+                    <td>                        
+                        <button type="button" class="btn btn-secondary">Sửa</button>                   
+                        <button type="button" class="btn btn-danger">Xóa</button>
                     </td>
                   </tr>
                   <tr>
                     <th scope="row">1</th>
-                    <td>Quy chế về việc đánh giá điểm rèn luyện của sinh viên hệ đại học và cao đẳng</td>
-                    <td>1</td>
-                    <td>20-3-2017</td>
-                    <td>
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                      <i class="fa fa-eye" aria-hidden="true"></i>
+                    <td>{{$tintuc->$title}}</td>
+                    <td>{{$tintuc->$content}}</td>
+                    <td>{{$tintuc->$created_at}}</td>
+                    <td>{{$tintuc->$updated_at}}</td>
+                    <td>                      
+                      <button type="button" class="btn btn-secondary">Sửa</button>                      
+                      <button type="button" class="btn btn-danger">Xóa</button>
                     </td>
                   </tr>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Quy chế về việc đánh giá điểm rèn luyện của sinh viên hệ đại học và cao đẳng</td>
-                    <td>1</td>
-                    <td>20-3-2017</td>
-                    <td>
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                      <i class="fa fa-eye" aria-hidden="true"></i>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Quy chế về việc đánh giá điểm rèn luyện của sinh viên hệ đại học và cao đẳng</td>
-                    <td>1</td>
-                    <td>20-3-2017</td>
-                    <td>
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                      <i class="fa fa-eye" aria-hidden="true"></i>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Quy chế về việc đánh giá điểm rèn luyện của sinh viên hệ đại học và cao đẳng</td>
-                    <td>1</td>
-                    <td>20-3-2017</td>
-                    <td>
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                      <i class="fa fa-eye" aria-hidden="true"></i>
-                    </td>
-                  </tr>
+                  @endforeach
                 </tbody>
               </table>
+              <button type="button" class="btn btn-primary">Thêm</button>
             </div>
           </div>
         </div>
