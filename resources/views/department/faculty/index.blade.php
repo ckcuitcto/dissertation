@@ -7,9 +7,8 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
-                <li class="breadcrumb-item active"><a href="#"> Danh sách Khoa</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
+                <li class="breadcrumb-item active"> Danh sách Khoa</li>
             </ul>
         </div>
         <div class="row">
@@ -108,7 +107,7 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
 
 
     <script>

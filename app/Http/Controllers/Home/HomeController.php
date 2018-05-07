@@ -32,17 +32,9 @@ class HomeController extends Controller
         return view('auth.login-animated');
     }
 
-    public function comment(){
-        return view('comment.index');
-    }
-
     public function schedule(){
         return view('schedule.index');
-    }
-
-    public function notification() {
-        return view('notification.index');
-    }
+    }    
 
     public function tuition() {
         return view('tuition.index');

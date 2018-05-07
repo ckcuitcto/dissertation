@@ -25,4 +25,14 @@ class Convert
         }
         return $returnValue;
     }
+
+    private function checkExtension($fileExtensions)
+    {
+        $arr = array('jpg', 'png', 'jpeg', 'JPG', 'PNG', 'JPEG');
+        //$fileExtensions = $this->convert_vi_to_en($fileExtensions);
+        if (in_array($fileExtensions, $arr)) {
+            return true;
+        }
+        return false;
+    }
 }

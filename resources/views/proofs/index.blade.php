@@ -8,7 +8,7 @@
         <p>Trường Đại học Công nghệ Sài Gòn</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
-        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#"><i class="fa fa-home fa-lg"></i></a></li>
         <li class="breadcrumb-item"><a href="#"> Quản lý minh chứng</a></li>
       </ul>
     </div>
@@ -39,7 +39,7 @@
                           <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
                           id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
                                                               aria-hidden="true"></i>Sửa</button>
-                          <button class="btn btn-danger" id="btnAddFaculty" type="button">Xóa</button>
+                           <button class="btn btn-danger" id="demoSwal" type="button">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -52,7 +52,7 @@
                           <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
                           id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
                                                               aria-hidden="true"></i>Sửa</button>
-                          <button class="btn btn-danger" id="btnAddFaculty" type="button">Xóa</button>
+                        <button class="btn btn-danger" id="demoSwal" type="button">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -65,7 +65,7 @@
                           <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
                           id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
                                                               aria-hidden="true"></i>Sửa</button>
-                          <button class="btn btn-danger" id="btnAddFaculty" type="button">Xóa</button>
+                            <button class="btn btn-danger" id="demoSwal" type="button">Xóa</button>
                       </td>
                     </tr>                              
                     <tr>
@@ -76,9 +76,9 @@
                       <td>hh</td>
                       <td>
                           <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
-                          id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
-                                                              aria-hidden="true"></i>Sửa</button>
-                          <button class="btn btn-danger" id="btnAddFaculty" type="button">Xóa</button>
+                          id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"  aria-hidden="true"></i>Sửa</button>
+                            
+                          <button class="btn btn-danger" id="demoSwal" type="button">Xóa</button>
                       </td>
                     </tr>
                   </tbody>
@@ -131,7 +131,7 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
 
 
     <script>
@@ -233,4 +233,25 @@
 
         });
     </script>
+
+<script type="text/javascript">  
+  $('#demoSwal').click(function(){
+      swal({
+          title: "Bạn có chắc muốn xóa?",
+          text: "Bạn sẽ không khôi phục được hành động này.",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes!",
+          cancelButtonText: "No!",
+          closeOnConfirm: false,
+          closeOnCancel: false
+      }, function(isConfirm) {
+          if (isConfirm) {
+              swal("Deleted!", "Đã xóa sinh viên.", "success");
+          } else {
+              swal("Cancelled", "Mọi thứ an toàn :)", "error");
+          }
+      });
+  });
+</script>
 @endsection

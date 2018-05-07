@@ -1,23 +1,14 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 10-Apr-18
- * Time: 12:41 AM
- */
-?>
 @extends('layouts.default')
 @section('content')
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="fa fa-file-text-o"></i> Danh sách các Khoa</h1>
+                <h1><i class="fa fa-file-text-o"></i> Danh sách học kỳ </h1>
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
-                <li class="breadcrumb-item active"><a href="#"> Danh sách Khoa</a></li>
+            <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></li></a>
+                <li class="breadcrumb-item active"> Danh sách học kỳ</li>
             </ul>
         </div>
         <div class="row">
@@ -39,7 +30,7 @@
                             <tbody>
                             @foreach($semesters as $key => $semester)
                                 <tr>
-                                    <td> {{ $key +1 }}</td>
+                                    <td>{{ $key +1 }}</td>
                                     <td>{{ $semester->term }} </td>
                                     <td>{{ $semester->year_from . "-" . $semester->year_to }}</td>
                                     <td>{{ $semester->date_start_to_mark }}</td>
@@ -124,7 +115,7 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    <!--<script type="text/javascript">$('#sampleTable').DataTable();</script>-->
 
 
     <script>
@@ -229,6 +220,11 @@
                         swal("Đã hủy", "Đã hủy xóa học kì:)", "error");
                     }
                 });
+            });
+
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $("input[type=text],input[type=number], select").val('');
+                $('.text-red').html('');
             });
 
         });

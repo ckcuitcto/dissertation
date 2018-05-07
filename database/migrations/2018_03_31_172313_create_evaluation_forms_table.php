@@ -15,7 +15,7 @@ class CreateEvaluationFormsTable extends Migration
     {
         Schema::create('evaluation_forms', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->integer('total');
+            $table->integer('total')->nullable();
             $table->integer('semester_id')->unsigned()->nullable();
             $table->integer('student_id')->unsigned();
             $table->timestamps();

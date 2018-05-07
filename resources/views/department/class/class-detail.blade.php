@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 11-Apr-18
- * Time: 12:30 AM
- */
-?>
 @extends('layouts.default')
 @section('content')
     <main class="app-content">
@@ -136,7 +128,7 @@
 @section('sub-javascript')
     <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
 
     <script>
         $(document).ready(function () {

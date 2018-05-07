@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 10-Apr-18
- * Time: 12:41 AM
- */
-?>
 @extends('layouts.default')
 @section('content')
     <main class="app-content">
@@ -30,6 +22,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Tên</th>
+                                <th>Tên hiển thị</th>
                                 <th>Miêu tả</th>
                                 <th>Sửa</th>
                                 <th>Xóa</th>
@@ -40,18 +33,20 @@
                                 <tr>
                                     <td>{{ $permission->id }} </td>
                                     <td>{{ $permission->name }} </td>
-                                    <td> {{ $permission->title }} </td>
+                                    <td>{{ $permission->display_name }} </td>
+                                    <td>{{ $permission->description }} </td>
                                     <td>
-                                        <a data-permission-id="{{$permission->id}}" id="update-permission"
-                                           data-permission-link="{{route('permission-update',$permission->id)}}">
-                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        <a data-permission-id="{{$permission->id}}" id="permission-update"
+                                           data-permission-edit-link="{{route('permission-edit',$permission->id)}}"
+                                           data-permission-update-link="{{route('permission-update',$permission->id)}}">
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
                                     </td>
                                     <td>
-                                        @if(!count($permission->Users)>0)
-                                            <a data-permission-id="{{$permission->id}}" id="destroy-permission"
+                                        @if(!count($permission->Roles)>0)
+                                            <a data-permission-id="{{$permission->id}}" id="permission-destroy"
                                                data-permission-link="{{route('permission-destroy',$permission->id)}}">
-                                                <i class="fa fa-trash-o" aria-hidden="true"> </i>
+                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                             </a>
                                         @endif
                                     </td>
@@ -85,17 +80,23 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="name">Tên quyền :</label>
+                                        <label for="name">Quyền :</label>
                                         <input type="hidden" name="id" class="id" id="idpermissionModal">
                                         <input class="form-control name" id="name" name="name" type="text" required
                                                aria-describedby="permission">
                                         <p style="color:red; display: none;" class="name"></p>
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">Miêu tả :</label>
-                                        <input class="form-control title" id="title" name="title" type="text" required
+                                        <label for="name">Tên hiển thị:</label>
+                                        <input class="form-control display_name" id="display_name" name="display_name" type="text" required
                                                aria-describedby="permission">
-                                        <p style="color:red; display: none;" class="title"></p>
+                                        <p style="color:red; display: none;" class="display_name"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Miêu tả :</label>
+                                        <input class="form-control description" id="description" name="description" type="text" required
+                                               aria-describedby="description">
+                                        <p style="color:red; display: none;" class="description"></p>
                                     </div>
                                 </div>
                             </div>
@@ -120,19 +121,42 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    <!--<script type="text/javascript">$('#sampleTable').DataTable();</script>-->
 
 
     <script>
         $(document).ready(function () {
 
-            $("#update-permission").click(function () {
-                $('#myModal').find(".modal-title").text('Sửa thông tin quyền');
-                $('#myModal').find(".modal-footer > button[name=btn-save-permission]").html('Sửa');
+            $("a#permission-update").click(function () {
+                var urlEdit = $(this).attr('data-permission-edit-link');
+                var urlUpdate = $(this).attr('data-permission-update-link');
+                var id = $(this).attr('data-permission-id');
+                $('.form-row').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "get",
+                    url: urlEdit,
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status === true) {
+                            if (result.permission !== undefined) {
+                                $.each(result.permission, function (elementName, value) {
+//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+//                                    alert(elementName + "+ " + messageValue)
+                                    $('.' + elementName).val(value);
+//                                    });
+                                });
+                            }
+                        }
+                    }
+                });
+                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
+                $('#myModal').find(".modal-footer > button[name=btn-save-permission]").html('Sửa')
+                $('#myModal').find(".modal-footer > button[name=btn-save-permission]").attr('data-link', urlUpdate);
+                $('#myModal').modal('show');
             });
+
             $("#btn-save-permission").click(function () {
-//                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
-//                $('#myModal').find(".modal-footer > button[name=btn-save-permission]").html('Thêm');
                 var valueForm = $('form#permission-form').serialize();
                 var url = $(this).attr('data-link');
                 $('.form-group').find('span.messageErrors').remove();
@@ -142,17 +166,19 @@
                     data: valueForm,
                     dataType: 'json',
                     success: function (result) {
-                        if (result.status === "fail") {
+                        if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+//                                    alert(elementName + "+ " + messageValue)
                                         $('form#permission-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
                                     });
                                 });
                             }
-                        } else if (result.status === "success") {
-                            $('#myModal').find('.modal-body').html('<p>Đã thêm quyền thành công</p>');
+                        } else if (result.status === true) {
+                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#myModal').on('hidden.bs.modal', function (e) {
                                 location.reload();
@@ -162,7 +188,7 @@
                 });
             });
 
-            $('a#destroy-permission').click(function () {
+            $('a#permission-destroy').click(function () {
                 var id = $(this).attr("data-permission-id");
                 var url = $(this).attr('data-permission-link');
                 swal({
@@ -196,6 +222,12 @@
                         swal("Đã hủy", "Đã hủy xóa quyền:)", "error");
                     }
                 });
+            });
+
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $("input[type=text],input[type=number], select").val('');
+                $('.text-red').html('');
+                $('.form-group').find('span.messageErrors').remove();
             });
 
         });
