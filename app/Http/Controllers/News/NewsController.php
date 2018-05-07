@@ -71,8 +71,28 @@ class NewsController extends Controller
         
     }
 
-    public function add(Request $request)
+    public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ], 200);
+        } else {
+            $news = new News();
+            $news->title = $request->title;
+            $news->content = $request->content;
+            $news->save();
+            return response()->json([
+                'news' => $news,
+                'status' => true
+            ], 200);
+        }
         // $validator = Validator::make($request->all(), [
         //     'title' => 'required',
         //     'content' => 'required',

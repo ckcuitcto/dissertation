@@ -51,9 +51,53 @@
                   @endforeach
                 </tbody>
               </table>
-              <button type="button" class="btn btn-primary">Thêm</button>
+              <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
+                                        id="btnAddNews" type="button">Thêm </button>
             </div>
           </div>
+        </div>
+
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Thêm mới tin tức</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form id="news-form">
+                            {!! csrf_field() !!}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="name">Tiêu đề</label>
+                                        <input type="hidden" name="id" class="id" id="idNewsModal">
+                                        <input class="form-control title" id="title" name="title" type="text" required
+                                               aria-describedby="news" placeholder="Nhập tiêu đề">
+                                        <p style="color:red; display: none;" class="title"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Nội dung</label>
+                                        <input type="hidden" name="id" class="id" id="idNewsModal">
+                                        <input class="form-control content" id="content" name="content" type="text" required
+                                               aria-describedby="news" placeholder="Nhập nội dung">
+                                        <p style="color:red; display: none;" class="content"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button data-link="{{ route('news-store') }}" class="btn btn-primary"
+                                    id="btn-save-news" name="btn-save-news" type="button">
+                                Thêm
+                            </button>
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
       </main>
 @endsection
@@ -68,6 +112,36 @@
 
     <script>
         $(document).ready(function () {
+            $("#btn-save-news").click(function () {
+                var valueForm = $('form#news-form').serialize();
+                var url = $(this).attr('data-link');
+                $('.form-group').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: valueForm,
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status === false) {
+                            //show error list fields
+                            if (result.arrMessages !== undefined) {
+                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                                        $('form#news-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                    });
+                                });
+                            }
+                        } else if (result.status === true) {
+                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
+                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            $('#myModal').on('hidden.bs.modal', function (e) {
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
           $("a#news-update").click(function () {
                 var urlEdit = $(this).attr('data-news-edit-link');
                 var urlUpdate = $(this).attr('data-news-update-link');

@@ -168,7 +168,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
 
         Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@index']);     
-        Route::post('/add', ['as' => 'news-add', 'uses' => 'News\NewsController@add']);
+        Route::post('/store', ['as' => 'news-store', 'uses' => 'News\NewsController@store']);
         Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update']);
         Route::get('/{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
         Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit']);
