@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\News;
 
+use App\Model\Faculty;
 use App\Model\News;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Validator;
 class NewsController extends Controller
 {
     /**
@@ -28,7 +29,8 @@ class NewsController extends Controller
     public function index()
     {
         $newsList = News::all();
-        return view('news.index', compact('newsList'));
+        $faculties = Faculty::all();
+        return view('news.index', compact('newsList','faculties'));
     }
 
     // public function show($id)
@@ -48,31 +50,6 @@ class NewsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request,
-            ['title' => 'required'],
-            ['content' => 'required'],
-            ['title.required' => "Vui lòng nhập tiêu đề"],
-            ['content.required' => "Vui lòng nhập nội dung"]
-        );
-
-        $news = News::find($id);
-        if (!empty($news)) {
-            $news->title = $request->title;
-            $news->content = $request->content;
-            $news->save();
-            return response()->json([
-                'news' => $news,
-                'status' => true
-            ], 200);
-        }
-        return response()->json([
-            'status' => false
-        ], 200);
-        
-    }
-
-    public function store(Request $request)
-    {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'content' => 'required',
@@ -84,37 +61,57 @@ class NewsController extends Controller
                 'arrMessages' => $validator->errors()
             ], 200);
         } else {
+            $news = News::find($id);
+            if (!empty($news)) {
+                $news->title = $request->title;
+                $news->content = $request->content;
+                $news->save();
+                return response()->json([
+                    'news' => $news,
+                    'status' => true
+                ], 200);
+            }
+            return response()->json([
+                'status' => false
+            ], 200);
+        }
+        
+    }
+
+    public function store(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), 
+        [
+            'title' => 'required',
+            'content' => 'required',
+        ],
+        [
+            'title.required' => 'Tiêu đề là bắt buộc',
+            'content.required' => 'Nội dung là bắt buộc',
+        ]
+        // tu gio lam them cai nay nua
+    );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ], 200);
+        } else {
+
             $news = new News();
             $news->title = $request->title;
             $news->content = $request->content;
+            $news->faculty_id = $request->faculty_id;
+            $news->created_by = Auth::user()->Staff->id;
+
             $news->save();
             return response()->json([
                 'news' => $news,
                 'status' => true
             ], 200);
         }
-        // $validator = Validator::make($request->all(), [
-        //     'title' => 'required',
-        //     'content' => 'required',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'arrMessages' => $validator->errors()
-        //     ], 200);
-        // } else {
-        //     $news = new News();
-        //     $news->title = $request->title;
-        //     $news->content = $request->content;
-            
-        //     $news->save();           
-
-        //     return response()->json([
-        //         'news' => $news,
-        //         'status' => true
-        //     ], 200);
-        // }
     }
 
     public function destroy($id)

@@ -150,7 +150,7 @@
             <li><a class="app-menu__item" href="{{ route('proofs') }}"><i
                             class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span></a>
             </li>
-
+            @can('can-change-news')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Tin tức</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
@@ -161,6 +161,7 @@
                             Sự Kiện</a></li>
                 </ul>
             </li>
+            @endcan
 
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-cogs"></i><span

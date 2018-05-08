@@ -35,7 +35,12 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'can-mark',
                 'display_name' => 'Có thể chấm điểm',
                 'description' => 'Chấm điểm'
+            ],[
+                'name' => 'can-change-news',
+                'display_name' => 'Thêm xóa sửa tin tức',
+                'description' => 'Chỉ nhân viên mới thêm, xóa, sửa đc tin tức'
             ],
+            // cái này là tạo. để sau này k dùng db khác thì k phải tạo nữa.
         ]);
     }
 }

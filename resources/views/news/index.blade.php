@@ -72,17 +72,26 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="name">Tiêu đề</label>
+                                        <label for="faculty_id">Khoa</label>
+                                            <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
+                                                <option>Tất cả khoa</option>
+                                                @foreach($faculties as $value)
+                                                    <option value="{{ $value->id }}">{{ $value->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        <p style="color:red; display: none;" class="faculty_id"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="title">Tiêu đề</label>
                                         <input type="hidden" name="id" class="id" id="idNewsModal">
                                         <input class="form-control title" id="title" name="title" type="text" required
-                                               aria-describedby="news" placeholder="Nhập tiêu đề">
+                                            aria-describedby="news" placeholder="Nhập tiêu đề">
                                         <p style="color:red; display: none;" class="title"></p>
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">Nội dung</label>
-                                        <input type="hidden" name="id" class="id" id="idNewsModal">
-                                        <input class="form-control content" id="content" name="content" type="text" required
-                                               aria-describedby="news" placeholder="Nhập nội dung">
+                                        <label for="content">Nội dung</label>
+                                        <textarea class="form-control content" id="content" name="content" required aria-describedby="news" >
+                                        </textarea>
                                         <p style="color:red; display: none;" class="content"></p>
                                     </div>
                                 </div>
@@ -111,6 +120,7 @@
 
 
     <script>
+        // CKEDITOR.replace('content');
         $(document).ready(function () {
             $("#btn-save-news").click(function () {
                 var valueForm = $('form#news-form').serialize();
@@ -207,7 +217,6 @@
                 });
             });
 
-            CKEDITOR.replace('email_content');
         });
 
     </script>

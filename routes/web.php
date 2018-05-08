@@ -168,11 +168,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
 
         Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@index']);     
-        Route::post('/store', ['as' => 'news-store', 'uses' => 'News\NewsController@store']);
-        Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update']);
+        Route::post('/store', ['as' => 'news-store', 'uses' => 'News\NewsController@store'])->middleware('can:can-change-news');
+        Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update'])->middleware('can:can-change-news');
         Route::get('/{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
-        Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit']);
-        Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy']);
+        Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit'])->middleware('can:can-change-news');
+        Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy'])->middleware('can:can-change-news');
     });
 
     Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);    
