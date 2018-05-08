@@ -15,8 +15,8 @@ class Classes extends Seeder
             ['name' => 'D14-TH01','faculty_id' => '1', 'staff_id' => '1'],
             ['name' => 'D14-TH02','faculty_id' => '1', 'staff_id' => '1'],
             ['name' => 'D14-TH03','faculty_id' => '1', 'staff_id' => '2'],
-            ['name' => 'D14-QT01','faculty_id' => '2', 'staff_id' => '4'],
-            ['name' => 'D14-QT02','faculty_id' => '2', 'staff_id' => '4'],
+            ['name' => 'D14-QT01','faculty_id' => '2', 'staff_id' => '7'],
+            ['name' => 'D14-QT02','faculty_id' => '2', 'staff_id' => '8'],
         ]);
     }
 }

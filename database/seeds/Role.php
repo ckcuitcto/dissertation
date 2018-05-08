@@ -12,12 +12,30 @@ class Role extends Seeder
     public function run()
     {
         DB::table('roles')->insert([
-            ['name' => 'Sinh viên'],
-            ['name' => 'Ban các sự lớp'],
-            ['name' => 'Cố vấn học tập'],
-            ['name' => 'Ban chủ nhiệm khoa'],
-            ['name' => 'Phòng CTSV'],
-            ['name' => 'ADMIN']
+            ['name' => 'sinhvien',
+                'display_name' => 'Sinh viên',
+                'description' => ''
+            ],
+            ['name' => 'bancansulop',
+                'display_name' => 'Ban các sự lớp',
+                'description' => 'Lớp trưởng'
+            ],
+            ['name' => 'covanhoctap',
+                'display_name' => 'Cố vấn học tập',
+                'description' => ''
+            ],
+            ['name' => 'banchunhiemkhoa',
+                'display_name' => 'Ban chủ nhiệm khoa',
+                'description' => ''
+            ],
+            ['name' => 'phongcongtacsinhvien',
+                'display_name' => 'Phòng CTSV',
+                'description' => ''
+            ],
+            ['name' => 'admin',
+                'display_name' => 'ADMIN',
+                'description' => ''
+            ]
         ]);
     }
 }
