@@ -84,19 +84,22 @@
                                             </td>
                                             @isset($valueLevel2->mark_range_display)
                                                 @foreach($listRoleCanMark as $role)
+                                                    @php
+                                                        $name= "score".$valueLevel2->id;
+                                                        $keyResult = $valueLevel2->id."_".$role->userId;
+                                                    @endphp
                                                     @if($role->name == $user->Role->name)
-                                                        @php $name= "score".$valueLevel2->id; @endphp
                                                         <td><input required type="number" name="{{$name}}"
-                                                                   value="{{ $evaluationResults[$valueLevel2->id]['marker_score'] OR 0 }}"
+                                                                   value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                                    min="{{$valueLevel2->mark_range_from}}"
                                                                    max="{{$valueLevel2->mark_range_to}}"
                                                                    id="{{ "child_".$valueLevel1->id}}"
-                                                                   {{ ($valueLevel2->step_html) ? "step=$valueLevel2->step_html" : ""  }}
                                                                    class="form-control {{ $role->name }}">
                                                         </td>
                                                     @else
-                                                        <td><input type="number" disabled="true"
-                                                                   class="form-control {{ $role->name }}"></td>
+                                                        <td>
+                                                            <input type="number" disabled="true" class="form-control" {{ $role->name }} value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                        </td>
                                                     @endif
                                                 @endforeach
                                             @endisset
@@ -125,19 +128,22 @@
                                                 @endif
                                                 <td>{{ $valueLevel3->mark_range_display OR "" }}</td>
                                                 @foreach($listRoleCanMark as $role)
+                                                    @php
+                                                        $name= "score".$valueLevel3->id;
+                                                        $keyResult = $valueLevel3->id."_".$role->userId;
+                                                    @endphp
                                                     @if($role->name == $user->Role->name)
-                                                        @php $name= "score".$valueLevel3->id; @endphp
                                                         <td><input required type="number" name="{{ $name }}"
-                                                                   value="{{ $evaluationResults[$valueLevel3->id]['marker_score'] OR 0 }}"
+                                                                   value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                                    min="{{$valueLevel3->mark_range_from}}"
                                                                    max="{{$valueLevel3->mark_range_to}}"
                                                                    id="{{ "child_".$valueLevel1->id}}"
-                                                                   {{ ($valueLevel3->step_html) ? "step=$valueLevel3->step_html" : ""  }}
                                                                    class="form-control  {{ $role->name }}">
                                                         </td>
                                                     @else
-                                                        <td><input type="number" disabled="true"
-                                                                   class="form-control {{ $role->name }}"></td>
+                                                        <td>
+                                                            <input type="number" disabled="true" class="form-control {{ $role->name }}" value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                        </td>
                                                     @endif
                                                 @endforeach
                                             </tr>
@@ -148,14 +154,16 @@
                                             <b>Tổng {{ \App\Helpers\Convert::numberToRomanRepresentation($key +1) }}.
                                                 (Tối đa {{ $valueLevel1->mark_range_to }} điểm) </b></td>
                                         @foreach($listRoleCanMark as $role)
+                                            @php
+                                                $name= "score".$valueLevel1->id;
+                                                $keyResult = $valueLevel1->id."_".$role->userId;
+                                            @endphp
                                             @if($role->name == $user->Role->name)
-                                                @php $name= "score".$valueLevel1->id; @endphp
                                                 <td>
                                                     <input type="number"
-                                                           name={{ $name }}
-                                                                   required
+                                                           name="{{ $name }}" required
                                                            id="{{ "total_".$valueLevel1->id}}"
-                                                           value="{{ $evaluationResults[$valueLevel1->id]['marker_score'] OR 0 }}"
+                                                           value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                            min="{{$valueLevel1->mark_range_from}}"
                                                            max="{{$valueLevel1->mark_range_to}}"
                                                            topic="totalTopic"
@@ -163,8 +171,9 @@
                                                            class="form-control {{ $role->name }}">
                                                 </td>
                                             @else
-                                                <td><input type="number" disabled="true"
-                                                           class="form-control {{ $role->name }}"></td>
+                                                <td>
+                                                    <input type="number" disabled="true" class="form-control {{ $role->name }}" value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                </td>
                                             @endif
                                         @endforeach
                                     </tr>
@@ -175,18 +184,22 @@
                                     <td>Tổng cộng</td>
                                     <td>0 - 100</td>
                                     @foreach($listRoleCanMark as $role)
+                                        @php
+                                            $name= "score".$valueLevel1->id;
+                                            $keyResult = $valueLevel1->id."_".$role->userId;
+                                        @endphp
                                         @if($role->name == $user->Role->name)
                                             <td><input type="text"
                                                        class="form-control {{ $role->name }}"
                                                        required
-                                                       value="{{ $evaluationForm->total OR "0" }}"
+                                                       value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                        name="totalScoreOfForm"
                                                        id="totalScoreOfForm"
                                                        readonly
                                                 >
                                             </td>
                                         @else
-                                            <td><input type="number" disabled="true"
+                                            <td><input type="number" disabled="true" value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                        class="form-control {{ $role->name }}"></td>
                                         @endif
                                     @endforeach

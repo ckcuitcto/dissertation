@@ -28,14 +28,14 @@ class Role extends Seeder
                 'display_name' => 'Ban chủ nhiệm khoa',
                 'description' => 'Khoa'
             ],
-            ['name' => 'congtacsinhvien',
+            ['name' => 'phongcongtacsinhvien',
                 'display_name' => 'Phòng CTSV',
                 'description' => 'Nhân viên phòng CTSV'
             ],
             ['name' => 'admin',
                 'display_name' => 'Admin',
                 'description' => 'Cấp cao nhất'
-            ]
+            ],
         ]);
     }
 }

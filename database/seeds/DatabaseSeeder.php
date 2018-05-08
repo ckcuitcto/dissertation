@@ -15,9 +15,10 @@ class DatabaseSeeder extends Seeder
         $this->call(Role::class);
         $this->call(Semester::class);
 
+        $this->call(Faculty::class);
+
         $this->call(StaffSeeder::class);
 
-        $this->call(Faculty::class);
         $this->call(Classes::class);
 
         $this->call(StudentSeeder::class);
@@ -25,7 +26,7 @@ class DatabaseSeeder extends Seeder
 
 //        $this->call(Topic::class);
 //        $this->call(TopicChild::class);
-//        $this->call(EvaluationCriteria::class);
+        $this->call(EvaluationCriteria::class);
 
         $this->call(EvaluationForm::class);
 
