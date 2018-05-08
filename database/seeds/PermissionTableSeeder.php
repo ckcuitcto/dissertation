@@ -35,6 +35,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'can-mark',
                 'display_name' => 'Có thể chấm điểm',
                 'description' => 'Chấm điểm'
+            ],[
+                'name' => 'can-list-student-transcript',
+                'display_name' => 'Xem danh sách sinh viên',
+                'description' => 'Xem danh sách sinh viên để xem bảng điểm'
             ],
         ]);
     }

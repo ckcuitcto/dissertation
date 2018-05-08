@@ -13,6 +13,14 @@ class StudentSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
+                'id' => 'DH99999999',
+                'name' => 'ADMIN',
+                'email' => 'DH99999999@gmail.com',
+                'password' => bcrypt('DH99999999'),
+                'role_id' => 6,
+                'faculty_id' => null
+            ],
+            [
                 'id' => 'DH51400250',
                 'name' => 'SV Khoa IT 1',
                 'email' => 'thducit@gmail.com',
