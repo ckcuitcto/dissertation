@@ -12,7 +12,7 @@ use App\Model\Semester;
 use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 class EvaluationFormController extends Controller
 {
     /**
@@ -68,16 +68,29 @@ class EvaluationFormController extends Controller
         // chuyển sang lấy id tiêu chí làm key. để lấy ra heiẻn thị trên form dễ hơn
         $evaluationResults = array();
         foreach($evaluationResultsTmp as $key => &$val){
-            $evaluationResults[$val['evaluation_criteria_id']] = $val;
+            $keyResult = $val['evaluation_criteria_id']."_".$val['marker_id'];
+            $evaluationResults[$keyResult] = $val;
             unset($evaluationResultsTmp[$key]);
         }
 
-//        dd($evaluationResultsTmp);
         $user = Auth::user();
         //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
-        $listRoleCanMark = Role::whereHas('permissions', function ($query) {
+        $rolesCanMark = Role::whereHas('permissions', function ($query) {
             $query->where('name', 'like', '%can-mark%');
-        })->get();
+        })->select('id')->orderBy('id')->get()->toArray();
+        $rolesCanMark = array_flatten($rolesCanMark);
+
+        // lấy ra danh sách các rolé
+        $listRoleCanMark = DB::table('roles')
+            ->leftJoin('users', 'users.role_id', '=', 'roles.id')
+            ->leftJoin('evaluation_results', 'evaluation_results.marker_id', '=', 'users.id')
+            ->select('users.id as userId', 'roles.*')
+//            ->where('evaluation_results.evaluation_form_id', $id)
+            ->whereIn('roles.id', $rolesCanMark)
+            ->groupBy('roles.id')
+            ->get();
+//        dd($evaluationResults);
+
         return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listRoleCanMark','evaluationResults'));
     }
 

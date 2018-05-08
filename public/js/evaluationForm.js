@@ -82,21 +82,6 @@ $("input#child_5").change(function () {
 });
 
 
-// $("[topic=totalTopic]").change(function () {
-//     alert(1);
-//     var arr = $("[topic=totalTopic]");
-//     var total = 0;
-//     arr.each(function () {
-//         total += parseInt($(this).val());
-//
-//     });
-//
-//     if (total > 100) {
-//         total = 100;
-//     }
-//     $("input#totalScoreOfForm").val(total);
-// });
-
 function updatetotalScoreOfForm() {
     var arr = $("[topic=totalTopic]");
     var total = 0;

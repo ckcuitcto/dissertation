@@ -14,7 +14,7 @@ class StudentSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'id' => 'DH51400250',
-                'name' => 'Thai Duc',
+                'name' => 'SV Khoa IT 1',
                 'email' => 'thducit@gmail.com',
                 'password' => bcrypt('DH51400250'),
                 'role_id' => 1,
@@ -22,42 +22,49 @@ class StudentSeeder extends Seeder
             ],
             [
                 'id' => 'DH51400251',
-                'name' => 'Thai Duc 1',
+                'name' => 'SV Khoa IT 2',
                 'email' => 'thducit1@gmail.com',
                 'password' => bcrypt('DH51400251'),
+                'role_id' => 1,
+                'faculty_id' => 1
+            ], [
+                'id' => 'DH51400252',
+                'name' => 'BCSL Khoa IT 3',
+                'email' => 'thducit2@gmail.com',
+                'password' => bcrypt('DH51400252'),
                 'role_id' => 2,
                 'faculty_id' => 1
             ],
             [
-                'id' => 'CD51402222',
-                'name' => 'Sinh vien 1',
-                'email' => 'CD51402222@gmail.com',
-                'password' => bcrypt('CD51402222'),
+                'id' => 'DH51400243',
+                'name' => 'SV Khoa QTKD 4',
+                'email' => 'DH51400243@gmail.com',
+                'password' => bcrypt('DH51400243'),
                 'role_id' => 1,
                 'faculty_id' => 1
             ],
             [
                 'id' => 'DH51400999',
-                'name' => 'Sinh vien 2',
+                'name' => 'SV Khoa QTKD 5',
                 'email' => 'DH51400999@gmail.com',
                 'password' => bcrypt('DH51400999'),
                 'role_id' => 1,
-                'faculty_id' => 1
+                'faculty_id' => 2
             ],
             [
-                'id' => 'DH51400888',
-                'name' => 'Sinh vien 3',
-                'email' => 'DH51400888@gmail.com',
-                'password' => bcrypt('CD51402222'),
-                'role_id' => 1,
-                'faculty_id' => 1
+                'id' => 'DH51400838',
+                'name' => 'SV Khoa QTKD 6',
+                'email' => 'DH51400838@gmail.com',
+                'password' => bcrypt('DH51400838'),
+                'role_id' => 2,
+                'faculty_id' => 2
             ],[
                 'id' => 'DH51400777',
-                'name' => 'Sinh vien 4',
+                'name' => 'SV Khoa CoKhi 1',
                 'email' => 'DH51400777@gmail.com',
                 'password' => bcrypt('CD51402222'),
-                'role_id' => 1,
-                'faculty_id' => 1
+                'role_id' => 2,
+                'faculty_id' => 6
             ]
         ]);
     }
