@@ -110,14 +110,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'bang-diem'], function () {
         Route::get('/', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
 
-        Route::get('/{id}', ['as' => 'class-detail', 'uses' => 'Transcript\TranscriptController@show']);
+        Route::get('/{id}', ['as' => 'transcript-show', 'uses' => 'Transcript\TranscriptController@show']);
 
-        Route::post('/store', ['as' => 'class-store', 'uses' => 'Transcript\TranscriptController@store']);
+        Route::post('/store', ['as' => 'transcript-store', 'uses' => 'Transcript\TranscriptController@store']);
 
-        Route::get('/destroy/{id}', ['as' => 'class-destroy', 'uses' => 'Transcript\TranscriptController@destroy']);
+        Route::get('/destroy/{id}', ['as' => 'transcript-destroy', 'uses' => 'Transcript\TranscriptController@destroy']);
 
-        Route::get('/edit/{id}', ['as' => 'class-edit', 'uses' => 'Transcript\TranscriptController@edit']);
-        Route::post('/update/{id}', ['as' => 'class-update', 'uses' => 'Transcript\TranscriptController@update']);
+        Route::get('/edit/{id}', ['as' => 'transcript-edit', 'uses' => 'Transcript\TranscriptController@edit']);
+        Route::post('/update/{id}', ['as' => 'transcript-update', 'uses' => 'Transcript\TranscriptController@update']);
 
     });
 
