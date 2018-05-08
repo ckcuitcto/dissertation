@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Transcript;
 
 use App\Model\EvaluationForm;
 use App\Model\Semester;
+use App\Model\Student;
+use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +19,7 @@ class TranscriptController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-//        $semesters = Semester::where('year_from','>=',$user->Student->academic_year_from)
-//                            ->where('year_to','<=', $user->Student->academic_year_to)->get();
-        $evaluationForms = EvaluationForm::where('student_id',$user->Student->id)->get();
-        return view('transcript.index',compact('user','evaluationForms'));
+
     }
 
     /**
@@ -37,7 +35,7 @@ class TranscriptController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -48,18 +46,22 @@ class TranscriptController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        $student = Student::find($id);
+        $user = User::find($student->user_id);
+
+        $evaluationForms = EvaluationForm::where('student_id', $id)->get();
+        return view('transcript.index', compact('user', 'evaluationForms'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -70,8 +72,8 @@ class TranscriptController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -82,7 +84,7 @@ class TranscriptController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

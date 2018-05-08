@@ -11,6 +11,10 @@
 
 
 @section('header')
+    @php
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $authCheck = \Illuminate\Support\Facades\Auth::check();
+    @endphp
     <header class="app-header"><a class="app-header__logo" href="http://www.stu.edu.vn/">STU</a>
         <!-- Sidebar toggle button-->
         <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
@@ -94,8 +98,8 @@
             <li class="dropdown">
                 <a class="app-nav__item" href="#" data-toggle="dropdown"
                                     aria-label="Open Profile Menu">
-                    @if(\Illuminate\Support\Facades\Auth::check())
-                        Hello {{ \Illuminate\Support\Facades\Auth::user()->name }}&nbsp;&nbsp;
+                    @if($authCheck)
+                        Hello {{ $user->name }}&nbsp;&nbsp;
                     @endif<i class="fa fa-user fa-lg"></i>
                 </a>
                 <ul class="dropdown-menu settings-menu dropdown-menu-right">
@@ -138,10 +142,18 @@
                             class="app-menu__icon fa fa-pencil-square-o"></i><span class="app-menu__label">Đánh giá rèn luyện</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i
-                                    class="icon fa fa-circle-o"></i> Phiếu Đánh Giá</a></li>
-                    <li><a class="treeview-item" href="{{route('transcript')}}"><i class="icon fa fa-circle-o"></i> Tổng
-                            Điểm Cá Nhân</a></li>
+                    <li>
+                        <a class="treeview-item" href="{{ route('evaluation-form') }}"><i class="icon fa fa-circle-o"></i> Danh sách </a>
+                    </li>
+                    {{--<li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i--}}
+                                    {{--class="icon fa fa-circle-o"></i> Phiếu Đánh Giá</a></li>--}}
+                    @if($authCheck)
+                        @if($user->Role->id == 1 OR $user->Role->id == 2)
+                        <li><a class="treeview-item" href="{{route('transcript-show',$user->Student->id )}}"><i class="icon fa fa-circle-o"></i> Tổng
+                                Điểm Cá Nhân</a>
+                        </li>
+                        @endif
+                    @endif
                 </ul>
             </li>
             <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i
