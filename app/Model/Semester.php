@@ -19,4 +19,8 @@ class Semester extends Model
         return $this->hasMany('App\Model\EvaluationForm','semester_id','id');
     }
 
+    public function MarkTimes(){
+        return $this->hasMany('App\Model\MarkTime','semester_id','id');
+    }
+
 }

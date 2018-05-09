@@ -232,8 +232,11 @@
         $(document).ready(function () {
             {{--var roleLogin = "{{ $user->Role->name }}";--}}
             {{--$("input." + roleLogin).removeAttr('disabled');--}}
+
+                    //nếu quá hạn thì k thể chấm điểm
             @if( strtotime($evaluationForm->Semester->date_start_to_mark) > strtotime(date('Y-m-d')) OR strtotime($evaluationForm->Semester->date_end_to_mark) < strtotime(date('Y-m-d')))
                 $('input').attr('disabled', true);
+                $('button').attr('disabled', true);
             @endif
             $('.proof').change(function (e) {
                 var urlCheckFile = "{{ route('evaluation-form-upload') }}";
