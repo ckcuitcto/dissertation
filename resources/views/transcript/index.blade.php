@@ -1,89 +1,101 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Thai Duc
+ * Date: 10-Apr-18
+ * Time: 12:41 AM
+ */
+?>
 @extends('layouts.default')
-
 @section('content')
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="fa fa-laptop"></i> Tổng điểm cá nhân</h1>
+                <h1><i class="fa fa-file-text-o"></i> Danh sách sinh viên</h1>
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
-            <ul class="app-breadcrumb breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item">Tổng điểm cá nhân</li>
+            <ul class="app-breadcrumb breadcrumb side">
+                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+                <li class="breadcrumb-item">Trang chủ</li>
+                <li class="breadcrumb-item active"><a href="#"> Danh sách Sinh viên</a></li>
             </ul>
         </div>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
-                    <h3 class="tile-title">Lưu ý</h3>
-                    <div class="tile-body">
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm cá nhân, Điểm lớp và Điểm khoa là
-                            điểm đánh giá chưa tính điểm học tập
-                        </div>
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm tổng là điểm sau khi P.CTSV kiểm
-                            duyệt đã bao gồm điểm học tập
-                        </div>
-                        <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Xếp loại và Điểm tổng nếu có giá trị
-                            là "_" thì đang đợi bổ sung điểm học tập
-                        </div>
 
-                    </div>
-                    <div class="title-body" align="right">
-                        <div>Họ và tên: {{ $user->name }}</div>
-                        <div>Lớp: {{ $user->Student->Classes->name OR "" }}</div>
-                        <div>MSSV: {{ $user->id }}</div>
-                        <div>Khoa: {{ $user->Faculty->name OR "" }}</div>
+                    <div class="tile-body">
+                        <table class="table table-hover table-bordered" id="sampleTable">
+                            <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên</th>
+                                <th>Chức vụ</th>
+                                <th>Lớp</th>
+                                <th>Khoa</th>
+                                <th>Khóa</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($students as $key => $student)
+                                <tr>
+                                    <td> {{ $key +1 }}</td>
+                                    <td>
+                                        <a href="{{route('transcript-show',$student->id )}}"> {{ $student->User->name }} </a>
+                                    </td>
+                                    <td>{{ $student->User->Role->display_name }}</td>
+                                    <td>{{ $student->Classes->name or "" }}</td>
+                                    <td>{{ $student->User->Faculty->name }}</td>
+                                    <td> {{ $student->academic_year_from  ." - ". $student->academic_year_to }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="tile">
-                    <table class="table table-hover table-bordered">
-                        <tbody>
-                        <tr>
-                            <td rowspan="2">STT</td>
-                            <td rowspan="2">Học Kỳ</td>
-                            <td rowspan="2">Năm Học</td>
-                            <td colspan="4">Điểm</td>
-                            <td rowspan="2">Xếp Loại</td>
-                            <td rowspan="2">Tình Trạng</td>
-                            <td rowspan="2">Tác Vụ</td>
-                        </tr>
-                        <tr>
-                            <td>Cá Nhân</td>
-                            <td>Lớp</td>
-                            <td>Khoa</td>
-                            <td>Tổng</td>
-                        </tr>
-                        @foreach($evaluationForms as $key => $evaluationForm)
-                            <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $evaluationForm->Semester->term }}</td>
-                                <td>{{ $evaluationForm->Semester->year_from . " - " . $evaluationForm->Semester->year_to }}</td>
-                                <td>x</td>
-                                <td>x</td>
-                                <td>x</td>
-                                <td>x</td>
-                                <td>Trung Bình</td>
-                                <td>Hoàn Thành</td>
-                                <td>
-                                    {{--@php dd($semester->EvaluationForm->where('student_id',$user->id)); @endphp--}}
-                                    <a
-                                        href="{{ route('evaluation-form-show',$evaluationForm->id) }}"
-                                    >
-                                        <i class="fa fa-eye" aria-hidden="true"></i>
-                                    </a>
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+        <div class="modal fade" id="importModal" role="dialog">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chọn file excel muốn nhập danh sách</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="import-student-form">
+                            {!! csrf_field() !!}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-row">
+                                        <label for="fileImport">Chọn file</label>
+                                        <input type="file" multiple class="form-control fileImport" name="fileImport"
+                                               id="fileImport">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button data-link="{{ route('student-import') }}" class="btn btn-primary"
+                                    id="btn-import-student" name="btn-import-student" type="button">
+                                Thêm
+                            </button>
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+
+@endsection
+
+@section('sub-javascript')
+    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
+    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
+
 @endsection

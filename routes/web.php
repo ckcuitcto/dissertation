@@ -108,7 +108,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'bang-diem'], function () {
-        Route::get('/', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
+        Route::get('/danh-sach', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
 
         Route::get('/{id}', ['as' => 'transcript-show', 'uses' => 'Transcript\TranscriptController@show']);
 

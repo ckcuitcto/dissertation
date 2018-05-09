@@ -86,13 +86,13 @@
                                         <input type="hidden" name="id" class="id" id="idNewsModal">
                                         <input class="form-control title" id="title" name="title" type="text" required
                                             aria-describedby="news" placeholder="Nhập tiêu đề">
-                                        <p style="color:red; display: none;" class="title"></p>
+                                        <p class="title"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="content">Nội dung</label>
                                         <textarea class="form-control content" id="content" name="content" required aria-describedby="news" >
                                         </textarea>
-                                        <p style="color:red; display: none;" class="content"></p>
+                                        <p class="content"></p>
                                     </div>
                                 </div>
                             </div>

@@ -142,9 +142,11 @@
                             class="app-menu__icon fa fa-pencil-square-o"></i><span class="app-menu__label">Đánh giá rèn luyện</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li>
-                        <a class="treeview-item" href="{{ route('evaluation-form') }}"><i class="icon fa fa-circle-o"></i> Danh sách </a>
-                    </li>
+                    @can('can-list-student-transcript')
+                        <li>
+                            <a class="treeview-item" href="{{ route('transcript') }}"><i class="icon fa fa-circle-o"></i> Danh sách </a>
+                        </li>
+                    @endcan
                     {{--<li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i--}}
                                     {{--class="icon fa fa-circle-o"></i> Phiếu Đánh Giá</a></li>--}}
                     @if($authCheck)
@@ -267,6 +269,8 @@
     <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
     <script src="{{ URL::asset('js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
+    <script src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#sampleTable').DataTable({
