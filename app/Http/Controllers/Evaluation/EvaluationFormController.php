@@ -89,7 +89,6 @@ class EvaluationFormController extends Controller
             ->whereIn('roles.id', $rolesCanMark)
             ->groupBy('roles.id')
             ->get();
-//        dd($evaluationResults);
 
         return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listRoleCanMark','evaluationResults'));
     }

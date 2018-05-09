@@ -268,6 +268,8 @@
     <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
     <script src="{{ URL::asset('js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
+    <script src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#sampleTable').DataTable({

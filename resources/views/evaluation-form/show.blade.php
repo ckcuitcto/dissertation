@@ -225,15 +225,16 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
+
     <script type="text/javascript" src="{{ asset('js//evaluationForm.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
             {{--var roleLogin = "{{ $user->Role->name }}";--}}
             {{--$("input." + roleLogin).removeAttr('disabled');--}}
-
+            @if( strtotime($evaluationForm->Semester->date_start_to_mark) > strtotime(date('Y-m-d')) OR strtotime($evaluationForm->Semester->date_end_to_mark) < strtotime(date('Y-m-d')))
+                $('input').attr('disabled', true);
+            @endif
             $('.proof').change(function (e) {
                 var urlCheckFile = "{{ route('evaluation-form-upload') }}";
                 var formData = new FormData();
