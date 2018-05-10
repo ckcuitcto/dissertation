@@ -33,11 +33,11 @@ class NewsController extends Controller
         return view('news.index', compact('newsList','faculties'));
     }
 
-    // public function show($id)
-    // {
-    //     $news = News::find($id);
-    //     return view('news.index', compact('news'));
-    // }
+     public function show($id)
+     {
+//         $news = News::find($id);
+//         return view('news.index', compact('news'));
+     }
 
     public function edit($id)
     {
@@ -105,7 +105,7 @@ class NewsController extends Controller
             $news->content = $request->content;
             $news->faculty_id = $request->faculty_id;
             $news->created_by = Auth::user()->Staff->id;
-
+  
             $news->save();
             return response()->json([
                 'news' => $news,

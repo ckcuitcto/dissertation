@@ -8,7 +8,7 @@
           <p>Trường Đại học Công nghệ Sài Gòn</p>
         </div>
         <ul class="app-breadcrumb breadcrumb">
-          <li class="breadcrumb-item"><a href="#"><i class="fa fa-home fa-lg"></i></a></li>
+          <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
           <li class="breadcrumb-item"><a href="#"> Quản lý tin tức, sự kiện</a></li>
         </ul>
       </div>
@@ -22,7 +22,7 @@
                     <th scope="col">Tiêu đề</th>
                     <th scope="col">Nội dung</th>
                     <th scope="col">Ngày tạo</th>
-                    <th scope="col">Ngày cập nhật</th>                    
+                    <th scope="col">Ngày cập nhật</th>    
                     <th>Tác vụ</th>
                   </tr>
                 </thead>
@@ -122,7 +122,7 @@
     <script>
         // CKEDITOR.replace('content');
         $(document).ready(function () {
-            $("#btn-save-news").click(function () {
+            $("button#btn-save-news").click(function () {
                 var valueForm = $('form#news-form').serialize();
                 var url = $(this).attr('data-link');
                 $('.form-group').find('span.messageErrors').remove();
