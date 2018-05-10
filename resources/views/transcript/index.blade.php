@@ -37,7 +37,7 @@
                                     </td>
                                     <td>{{ $student->User->Role->display_name }}</td>
                                     <td>{{ $student->Classes->name or "" }}</td>
-                                    <td>{{ $student->User->Faculty->name }}</td>
+                                    <td>{{ $student->User->Faculty->name or "" }}</td>
                                     <td> {{ $student->academic_year_from  ." - ". $student->academic_year_to }}</td>
                                 </tr>
                             @endforeach
