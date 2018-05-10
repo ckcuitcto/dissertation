@@ -7,7 +7,8 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-            <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></li></a>
+                <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></li>
+                </a>
                 <li class="breadcrumb-item active"> Danh sách học kỳ</li>
             </ul>
         </div>
@@ -59,7 +60,7 @@
             </div>
         </div>
         <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-md" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Thêm mới học kì</h5>
@@ -70,28 +71,55 @@
                         <form id="semester-form">
                             {!! csrf_field() !!}
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-row">
                                         <label for="year">Năm học</label>
                                         <div class="input-group">
-                                            <input type="text" class="input-sm form-control year_from" id="year_from" name="year_from"/>
+                                            <input type="text" class="input-sm form-control year_from" id="year_from"
+                                                   name="year_from"/>
                                             <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control year_to" name="year_to" id="year_to"/>
+                                            <input type="text" class="input-sm form-control year_to" name="year_to"
+                                                   id="year_to"/>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <label for="mark_date">Ngày chấm</label>
                                         <div class="input-group">
-                                            <input type="text" class="input-sm form-control date_start_to_mark" id="date_start_to_mark" name="date_start_to_mark"/>
+
+                                            <input type="text" class="input-sm form-control date_start_to_mark"
+                                                   id="date_start_to_mark" name="date_start_to_mark"/>
+
                                             <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control date_end_to_mark" id="date_end_to_mark"  name="date_end_to_mark"/>
+
+                                            <input type="text" class="input-sm form-control date_end_to_mark"
+                                                   id="date_end_to_mark" name="date_end_to_mark"/>
+
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <label for="term">Học kì</label>
-                                        <input type="number" class="form-control term" name="term" id="term"
+                                        <input type="number" class="form-control term" name="term" id="term" max="3" min="1"
                                                placeholder="Học kì">
                                     </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    @foreach($rolesCanMark as $key => $role)
+                                        <div class="form-row">
+                                            <label for="mark_date">Thời gian chấm của {{ $role->display_name }}</label>
+                                            <div class="input-group">
+                                                <input type="text"
+                                                       class="input-sm form-control {{ 'date_start_to_mark_'.$role->id }}"
+                                                       id="{{ 'date_start_to_mark_'.$role->id }}"
+                                                       name="{{ 'date_start_to_mark_'.$role->id }}"/>
+                                                <span class="input-group-addon">to</span>
+                                                <input type="text"
+                                                       class="input-sm form-control {{ 'date_end_to_mark_'.$role->id }}"
+                                                       id="{{ 'date_end_to_mark_'.$role->id }}"
+                                                       name="{{ 'date_end_to_mark_'.$role->id }}"/>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </form>
@@ -100,7 +128,7 @@
                                     id="btn-save-semester" name="btn-save-semester" type="button">
                                 Thêm
                             </button>
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                            <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">Đóng</button>
                         </div>
                     </div>
                 </div>
@@ -121,10 +149,45 @@
     <script>
 
 
-        $("#year_from").datepicker({format: "yyyy", viewMode: "years", minViewMode: "years", todayBtn: "linked", clearBtn: true, language: "vi",});
-        $("#year_to").datepicker({format: "yyyy", viewMode: "years", minViewMode: "years", todayBtn: "linked", clearBtn: true, language: "vi" });
-        $('#date_start_to_mark').datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,});
-        $('#date_end_to_mark').datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,});
+        $("input#year_from").datepicker({
+            format: "yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "vi",
+            orientation: "top left"
+        });
+        $("input#year_to").datepicker({
+            format: "yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "vi",
+            orientation: "top left"
+
+        });
+        $('input#date_start_to_mark').datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            orientation: "top left"
+
+        });
+        $('input#date_end_to_mark').datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            orientation: "top left"
+
+        });
+        @foreach($rolesCanMark as $key => $role)
+            $("input#date_start_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "top left"});
+            $("input#date_end_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "top left"});
+        @endforeach
 
         $(document).ready(function () {
             $("a#update-semester").click(function () {
@@ -147,10 +210,26 @@
 //                                    });
                                 });
                             }
+                            if (result.marktime !== undefined) {
+                                $.each(result.marktime, function (elementName, value) {
+                                    var role_id = value.role_id;
+                                   $.each(value, function (messageType, messageValue) {
+                                       if(messageType === 'mark_time_start'){
+                                           $('.date_start_to_mark_' + role_id).val(messageValue);
+                                           // alert(messageType + " --- "+role_id+" ---" + "+ " + messageValue);
+                                       }
+                                       if( messageType === 'mark_time_end'){
+                                           $('.date_end_to_mark_' + role_id).val(messageValue);
+                                           // alert(messageType + " --- "+role_id+" ---" + "+ " + messageValue);
+                                       }
+                                   //
+                                   });
+                                });
+                            }
                         }
                     }
                 });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
+                $('#myModal').find(".modal-title").text('Sửa thông tin học kì');
                 $('#myModal').find(".modal-footer > button[name=btn-save-semester]").html('Sửa')
                 $('#myModal').find(".modal-footer > button[name=btn-save-semester]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');
@@ -225,7 +304,16 @@
             $('#myModal').on('hidden.bs.modal', function (e) {
                 $("input[type=text],input[type=number], select").val('');
                 $('.text-red').html('');
+                $('span.messageErrors').remove();
+                $('#myModal').find(".modal-title").text('Thêm mới học kì');
+                $('#myModal').find(".modal-footer > button[name=btn-save-semester]").html('Thêm');
+                $('#myModal').find(".modal-footer > button[name=btn-save-semester]").attr('data-link', "{{ route('semester-store') }}");
             });
+
+            // $('button#closeForm').click(function(){
+            //     $('#semester-form')[0].reset();
+            //
+            // });
 
         });
     </script>

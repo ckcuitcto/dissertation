@@ -61,36 +61,72 @@ class EvaluationFormController extends Controller
      */
     public function show($id)
     {
+        $user = Auth::user();
+
         $evaluationForm = EvaluationForm::find($id);
         $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
 
         $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id',$id)->get()->toArray();
-        // chuyển sang lấy id tiêu chí làm key. để lấy ra heiẻn thị trên form dễ hơn
+        // chuyển sang lấy id tiêu chí và id người chấm làm key. để lấy ra heiẻn thị trên form dễ hơn
         $evaluationResults = array();
         foreach($evaluationResultsTmp as $key => &$val){
+            // key = id tiêu chí + id người chấm.
             $keyResult = $val['evaluation_criteria_id']."_".$val['marker_id'];
             $evaluationResults[$keyResult] = $val;
             unset($evaluationResultsTmp[$key]);
         }
 
-        $user = Auth::user();
         //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
         $rolesCanMark = Role::whereHas('permissions', function ($query) {
             $query->where('name', 'like', '%can-mark%');
-        })->select('id')->orderBy('id')->get()->toArray();
-        $rolesCanMark = array_flatten($rolesCanMark);
+        })->select('id','name','display_name')->orderBy('id')->get()->toArray();
+//        $rolesCanMark = array_flatten($rolesCanMark);
 
-        // lấy ra danh sách các rolé
-        $listRoleCanMark = DB::table('roles')
+        //lấy danh sách Id role can mark
+        $arrRoleId = array();
+        foreach($rolesCanMark as $key => $value){
+            $arrRoleId[] = $value['id'];
+        }
+
+        // lấy ra danh sách các role và user
+        $listUserMark = DB::table('roles')
             ->leftJoin('users', 'users.role_id', '=', 'roles.id')
             ->leftJoin('evaluation_results', 'evaluation_results.marker_id', '=', 'users.id')
-            ->select('users.id as userId', 'roles.*')
-//            ->where('evaluation_results.evaluation_form_id', $id)
-            ->whereIn('roles.id', $rolesCanMark)
+            ->select('users.id as userId','users.role_id as userRole', 'roles.*')
+            ->where('evaluation_results.evaluation_form_id', $id)
+            ->whereIn('roles.id', $arrRoleId)
             ->groupBy('roles.id')
-            ->get();
+            ->orderBy('roles.id')
+            ->get()->toArray();
 
-        return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listRoleCanMark','evaluationResults'));
+
+        // gộp mảng id và mảng user lại. nếu user nào k có thì cho rỗng. vẫn giữ id để hiển thị fỏm input
+        $listUserMarkTmp = array();
+        if(count($rolesCanMark) != count($listUserMark)){
+            for($i = 0; $i < count($rolesCanMark); $i++){
+//                var_dump($listUserMark[$i]);
+                if(!empty($listUserMark[$i])){
+                    $listUserMarkTmp [] = [
+                        'userId' => $listUserMark[$i]->userId,
+                        'userRole' => $listUserMark[$i]->userRole,
+                        'name' => $listUserMark[$i]->name,
+                        'display_name' => $listUserMark[$i]->display_name
+                    ];
+                }else{
+                    $listUserMarkTmp [] = [
+                        'userId' => null,
+                        'userRole' => $rolesCanMark[$i]['id'],
+                        'name' => $rolesCanMark[$i]['name'],
+                        'display_name' => $rolesCanMark[$i]['display_name']
+                    ];
+                }
+            }
+        }
+        $listUserMark = $listUserMarkTmp;
+//        var_dump($rolesCanMark);
+//        dd($evaluationResults);
+
+        return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark','evaluationResults'));
     }
 
     /**
