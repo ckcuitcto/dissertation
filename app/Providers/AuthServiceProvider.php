@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Model\EvaluationForm;
 use App\Model\Permission;
+use App\Model\Student;
+use App\Policies\EvaluationFormPolicy;
+use App\Policies\PersonalInformationPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -15,7 +19,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        EvaluationForm::class => EvaluationFormPolicy::class,
+        Student::class => PersonalInformationPolicy::class,
     ];
 
     /**

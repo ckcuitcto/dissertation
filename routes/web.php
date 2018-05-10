@@ -128,9 +128,9 @@ Route::group(['middleware' => 'auth'], function () {
         // tao moi form
 //        Route::get('/{semesterId}', ['as' => 'evaluation-form-create', 'uses' => 'Evaluation\EvaluationFormController@create']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
-        Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show'])->middleware('can:can-mark');
+        Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show']);
         // lưu kết quả
-        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
+        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update'])->middleware('can:can-mark,App\Model\EvaluationForm');
         // xoa 1
 //        Route::get('/destroy/{id}', ['as' => 'evaluation-form-destroy', 'uses' => 'Evaluation\EvaluationFormController@destroy']);
 
@@ -144,7 +144,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::group(['prefix' => 'thong-tin-ca-nhan'], function () {
-        Route::get('/', ['as' => 'personal-information', 'uses' => 'Information\InformationController@index']);
+        Route::get('/danh-sach', ['as' => 'personal-information', 'uses' => 'Information\InformationController@index'])->middleware('can:personal-information-list');
         Route::get('/{id}', ['as' => 'personal-information-show', 'uses' => 'Information\InformationController@show']);
         Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'Information\InformationController@update']);
 

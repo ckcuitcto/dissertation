@@ -211,10 +211,12 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            @can('can-mark')
                             <div align="right">
                                 <button class="btn btn-primary" type="submit">Lưu</button>
                                 <button class="btn btn-secondary" type="reset">Hủy</button>
                             </div>
+                            @endcan
                         </form>
                     </div>
                 </div>
@@ -230,10 +232,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            {{--var roleLogin = "{{ $user->Role->name }}";--}}
-            {{--$("input." + roleLogin).removeAttr('disabled');--}}
-
-                    //nếu quá hạn thì k thể chấm điểm
+            //nếu quá hạn thì k thể chấm điểm
             @if( strtotime($evaluationForm->Semester->date_start_to_mark) > strtotime(date('Y-m-d')) OR strtotime($evaluationForm->Semester->date_end_to_mark) < strtotime(date('Y-m-d')))
                 $('input').attr('disabled', true);
                 $('button').attr('disabled', true);

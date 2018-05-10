@@ -43,7 +43,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'can-list-student-transcript',
                 'display_name' => 'Xem danh sách sinh viên',
                 'description' => 'Xem danh sách sinh viên để xem bảng điểm'
-
+            ],[
+                'name' => 'personal-information-list',
+                'display_name' => 'Xem danh sách sinh viên',
+                'description' => 'Xem danh sách sinh viên để thông tin cá nhân'
             ],
             // cái này là tạo. để sau này k dùng db khác thì k phải tạo nữa.
         ]);
