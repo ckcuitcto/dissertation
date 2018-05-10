@@ -30,5 +30,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(EvaluationForm::class);
 
+        $this->call(MarkTime::class);
+        $this->call(UpdateStudent::class);
+
     }
 }
