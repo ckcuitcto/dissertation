@@ -182,7 +182,6 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             orientation: "top left"
-
         });
         @foreach($rolesCanMark as $key => $role)
             $("input#date_start_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "top left"});

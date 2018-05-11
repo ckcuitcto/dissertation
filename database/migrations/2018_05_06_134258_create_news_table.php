@@ -20,7 +20,7 @@ class CreateNewsTable extends Migration
             $table->integer('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('staff');
             $table->integer('faculty_id')->unsigned()->nullable();
-            $table->foreign('faculty_id')->references('id')->on('faculties');
+//            $table->foreign('faculty_id')->references('id')->on('faculties');
             $table->timestamps();
         });
     }

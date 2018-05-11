@@ -35,16 +35,24 @@
                     <td>{{$tintuc->created_at}}</td>
                     <td>{{$tintuc->updated_at}}</td>
                     <td>                        
-                        <button type="button" class="btn btn-secondary">
-                            <a data-news-id="{{$tintuc->id}}" id="news-update"
+                        <button type="button" class="btn btn-secondary"
+                        data-news-id="{{$tintuc->id}}" id="news-update"
                                 data-news-edit-link="{{route('news-edit',$tintuc->id)}}"
                                 data-news-update-link="{{route('news-update',$tintuc->id)}}">
-                             </a>Sửa</button>
+                            {{-- <a data-news-id="{{$tintuc->id}}" id="news-update"
+                                data-news-edit-link="{{route('news-edit',$tintuc->id)}}"
+                                data-news-update-link="{{route('news-update',$tintuc->id)}}">
+                             </a>Sửa --}}
+                             Sửa
+                        </button>
                               
-                        <button type="button" class="btn btn-danger">
-                          <a data-news-id="{{$tintuc->id}}" id="news-destroy"
+                        <button type="button" class="btn btn-danger"
+                        data-news-id="{{$tintuc->id}}" id="news-destroy"
+                        data-news-link="{{route('news-destroy',$tintuc->id)}}"
+                        >Xóa
+                          {{-- <a data-news-id="{{$tintuc->id}}" id="news-destroy"
                             data-news-link="{{route('news-destroy',$tintuc->id)}}">Xóa
-                         </a>
+                         </a> --}}
                         </button>
                       </td> 
                   </tr>                 
@@ -74,7 +82,7 @@
                                     <div class="form-group">
                                         <label for="faculty_id">Khoa</label>
                                             <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
-                                                <option>Tất cả khoa</option>
+                                                <option value="0">Tất cả khoa</option>
                                                 @foreach($faculties as $value)
                                                     <option value="{{ $value->id }}">{{ $value->name}}</option>
                                                 @endforeach
@@ -152,7 +160,7 @@
                 });
             });
 
-          $("a#news-update").click(function () {
+          $("button#news-update").click(function () {
                 var urlEdit = $(this).attr('data-news-edit-link');
                 var urlUpdate = $(this).attr('data-news-update-link');
                 var id = $(this).attr('data-news-id');
@@ -181,7 +189,7 @@
                 $('#myModal').modal('show');
             });
 
-            $('a#news-destroy').click(function () {
+            $('button#news-destroy').click(function () {
                 var id = $(this).attr("data-news-id");
                 var url = $(this).attr('data-news-link');
                 swal({

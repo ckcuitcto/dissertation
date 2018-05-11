@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+
 class NewsController extends Controller
 {
     /**
@@ -30,14 +31,14 @@ class NewsController extends Controller
     {
         $newsList = News::all();
         $faculties = Faculty::all();
-        return view('news.index', compact('newsList','faculties'));
+        return view('news.index', compact('newsList', 'faculties'));
     }
 
-     public function show($id)
-     {
+    public function show($id)
+    {
 //         $news = News::find($id);
 //         return view('news.index', compact('news'));
-     }
+    }
 
     public function edit($id)
     {
@@ -69,40 +70,31 @@ class NewsController extends Controller
             $news->faculty_id = $request->faculty_id;
             $news->created_by = Auth::user()->Staff->id;
             $news->save();
+            return response()->json([
+                'news' => $news,
+                'status' => true
+            ], 200);
         } else {
-            $news = News::find($id);
-            if (!empty($news)) {
-                $news->title = $request->title;
-                $news->content = $request->content;
-                $news->faculty_id = $request->faculty_id;
-                $news->created_by = Auth::user()->Staff->id;
-                $news->save();
-                return response()->json([
-                    'news' => $news,
-                    'status' => true
-                ], 200);
-            }
             return response()->json([
                 'status' => false
             ], 200);
         }
-        
     }
 
     public function store(Request $request)
     {
         // dd($request->all());
-        $validator = Validator::make($request->all(), 
-        [
-            'title' => 'required',
-            'content' => 'required',
-        ],
-        [
-            'title.required' => 'Tiêu đề là bắt buộc',
-            'content.required' => 'Nội dung là bắt buộc',
-        ]
+        $validator = Validator::make($request->all(),
+            [
+                'title' => 'required',
+                'content' => 'required',
+            ],
+            [
+                'title.required' => 'Tiêu đề là bắt buộc',
+                'content.required' => 'Nội dung là bắt buộc',
+            ]
         // tu gio lam them cai nay nua
-    );
+        );
 
         if ($validator->fails()) {
             return response()->json([
@@ -116,7 +108,7 @@ class NewsController extends Controller
             $news->content = $request->content;
             $news->faculty_id = $request->faculty_id;
             $news->created_by = Auth::user()->Staff->id;
-  
+
             $news->save();
             return response()->json([
                 'news' => $news,
