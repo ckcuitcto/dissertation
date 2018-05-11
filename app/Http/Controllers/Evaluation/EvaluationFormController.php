@@ -63,9 +63,13 @@ class EvaluationFormController extends Controller
      */
     public function show($id)
     {
-        $user = Auth::user();
 
         $evaluationForm = EvaluationForm::find($id);
+
+        // phân quyền quan trọng. chỉ nhân viên ở khoa nào ms đc xem ở khoa đó.
+        $this->authorize($evaluationForm,'view');
+
+        $user = Auth::user();
         $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
 
         $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id',$id)->get()->toArray();

@@ -11,16 +11,19 @@ class InformationController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // $user = User::all();
-        // dd($user);
-        return view('user.personal-information', compact('user'));
+        $students = $this->getStudentByRoleUserLogin($user);
+
+        return view('user.personal-information-list', compact('students'));
     }
 
     public function show($id)
     {
         // $user = Auth::user();
         $user = User::find($id);
-        return view('user.personal-information', compact('user'));
+
+        $this->authorize($user->Student,'view');
+
+        return view('user.personal-information-show', compact('user'));
     }
 
     public function update($id, Request $request){

@@ -138,17 +138,17 @@
             <li><a class="app-menu__item active" href="{{ route('home') }}"><i class="app-menu__icon fa fa-home"
                                                                                aria-hidden="true"></i><span
                             class="app-menu__label">Trang chủ</span></a></li>
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-pencil-square-o"></i><span class="app-menu__label">Đánh giá rèn luyện</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
+            <li class="treeview">
+                <a class="app-menu__item" href="#" data-toggle="treeview">
+                    <i class="app-menu__icon fa fa-pencil-square-o"></i><span class="app-menu__label">Đánh giá rèn luyện</span>
+                    <i class="treeview-indicator fa fa-angle-right"></i>
+                </a>
                 <ul class="treeview-menu">
                     @can('can-list-student-transcript')
                         <li>
                             <a class="treeview-item" href="{{ route('transcript') }}"><i class="icon fa fa-circle-o"></i> Danh sách </a>
                         </li>
                     @endcan
-                    {{--<li><a class="treeview-item" href="{{ route('evaluation-form') }}"><i--}}
-                                    {{--class="icon fa fa-circle-o"></i> Phiếu Đánh Giá</a></li>--}}
                     @if($authCheck)
                         @if($user->Role->id == 1 OR $user->Role->id == 2)
                         <li><a class="treeview-item" href="{{route('transcript-show',$user->Student->id )}}"><i class="icon fa fa-circle-o"></i> Tổng
@@ -158,31 +158,58 @@
                     @endif
                 </ul>
             </li>
-            <li><a class="app-menu__item" href="{{ route('personal-information') }}"><i
-                            class="app-menu__icon fa fa-user-circle-o"></i><span class="app-menu__label">Thông tin sinh viên</span></a>
-            </li>
-            <li><a class="app-menu__item" href="{{ route('proofs') }}"><i
-                            class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span></a>
+            <li class="treeview">
+                {{--<a class="app-menu__item" data-toggle="treeview">--}}
+                <a class="app-menu__item" href="#" data-toggle="treeview">
+                    <i class="app-menu__icon fa fa-user-circle-o"></i></i><span class="app-menu__label">Thông tin sinh viên</span>
+                    <i class="treeview-indicator fa fa-angle-right"></i>
+                </a>
+                {{--<i class="app-menu__icon fa fa-user-circle-o"></i><span class="app-menu__label">Thông tin sinh viên</span></a>--}}
+                <ul class="treeview-menu">
+                    @can('personal-information-list')
+                    <li><a class="treeview-item" href="{{ route('personal-information') }}"><i class="icon fa fa-circle-o"></i> Danh sách sinh viên</a></li>
+                    @endcan
+                    @if($authCheck)
+                    <li><a class="treeview-item" href="{{ route('personal-information-show',$user->id) }}"><i class="icon fa fa-circle-o"></i>Thông tin cá nhân</a></li>
+                    @endif
+                </ul>
+
             </li>
 
+            @can('proofs-list')
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                            class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span><i
+                            class="treeview-indicator fa fa-angle-right"></i></a>
+                    
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" href="{{ route('proof') }}"><i
+                                        class="icon fa fa-circle-o"></i> Danh sách minh chứng</a></li>
+                    </ul>
+                    
+            </li>
+            @endcan
+
+            @can('can-change-news')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Tin tức</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('notification') }}"><i class="icon fa fa-circle-o"></i>
-                            Thông Báo</a></li>
-                    <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Tin Tức,
-                            Sự Kiện</a></li>
+                    {{--<li><a class="treeview-item" href="{{ route('notification') }}"><i class="icon fa fa-circle-o"></i>--}}
+                            {{--Thông Báo</a></li>--}}
+                    <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Sự Kiện, Thông báo</a></li>
                 </ul>
             </li>
+            @endcan
 
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-cogs"></i><span
                             class="app-menu__label">Quản lí Khoa,Phòng ban</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
+                    @can('faculty-list')
                     <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>
                     </li>
+                    @endcan
                     <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> Sinh
                             viên</a></li>
                     <li><a class="treeview-item" href="{{ route('departmentlist') }}"><i
@@ -193,7 +220,7 @@
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
-                @can('comment-add')
+                @can('comment-change')
                     <ul class="treeview-menu">
                         <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
                                         class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
@@ -208,6 +235,7 @@
                 @endcan
             </li>
 
+            @can('user-rights')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">Phân quyền User</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
@@ -218,7 +246,9 @@
                                     class="icon fa fa-circle-o"></i> Danh sách các quyền</a></li>
                 </ul>
             </li>
+            @endcan
 
+            @can('semester-change')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Học kì</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
@@ -227,6 +257,7 @@
                             sách học kì </a></li>
                 </ul>
             </li>
+            @endcan
 
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i
@@ -270,6 +301,7 @@
     <script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#sampleTable').DataTable({

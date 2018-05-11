@@ -22,14 +22,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'faculty', 'uses' => 'Department\FacultyController@index']);
         Route::get('/{id}', ['as' => 'faculty-detail', 'uses' => 'Department\FacultyController@show']);
 
-        Route::post('/store', ['as' => 'faculty-store', 'uses' => 'Department\FacultyController@store']);
+        Route::post('/store', ['as' => 'faculty-store', 'uses' => 'Department\FacultyController@store'])->middleware('can:faculty-change');
 
-        Route::get('/destroy/{id}', ['as' => 'faculty-destroy', 'uses' => 'Department\FacultyController@destroy']);
+        Route::get('/destroy/{id}', ['as' => 'faculty-destroy', 'uses' => 'Department\FacultyController@destroy'])->middleware('can:faculty-change');
 
         // hien thi form
-        Route::get('/edit/{id}', ['as' => 'faculty-edit', 'uses' => 'Department\FacultyController@edit']);
+        Route::get('/edit/{id}', ['as' => 'faculty-edit', 'uses' => 'Department\FacultyController@edit'])->middleware('can:faculty-change');
         //update
-        Route::post('/update/{id}', ['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update']);
+        Route::post('/update/{id}', ['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update'])->middleware('can:faculty-change');
 
     });
 
@@ -84,12 +84,12 @@ Route::group(['middleware' => 'auth'], function () {
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
         Route::get('/{id}', ['as' => 'permission-detail', 'uses' => 'Permission\PermissionController@show']);
         // xoa 1 role
-        Route::get('/destroy/{id}', ['as' => 'permission-destroy', 'uses' => 'Permission\PermissionController@destroy']);
+        Route::get('/destroy/{id}', ['as' => 'permission-destroy', 'uses' => 'Permission\PermissionController@destroy'])->middleware('can:user-rights');
         // them 1 role
-        Route::post('/store', ['as' => 'permission-store', 'uses' => 'Permission\PermissionController@store']);
+        Route::post('/store', ['as' => 'permission-store', 'uses' => 'Permission\PermissionController@store'])->middleware('can:user-rights');
         // chỉnh sửa role
-        Route::post('/update/{id}', ['as' => 'permission-update', 'uses' => 'Permission\PermissionController@update']);
-        Route::get('/edit/{id}', ['as' => 'permission-edit', 'uses' => 'Permission\PermissionController@edit']);
+        Route::post('/update/{id}', ['as' => 'permission-update', 'uses' => 'Permission\PermissionController@update'])->middleware('can:user-rights');
+        Route::get('/edit/{id}', ['as' => 'permission-edit', 'uses' => 'Permission\PermissionController@edit'])->middleware('can:user-rights');
 //        });
     });
 
@@ -99,12 +99,12 @@ Route::group(['middleware' => 'auth'], function () {
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
         Route::get('/{id}', ['as' => 'semester-detail', 'uses' => 'Semester\SemesterController@show']);
         // them 1
-        Route::post('/store', ['as' => 'semester-store', 'uses' => 'Semester\SemesterController@store']);
+        Route::post('/store', ['as' => 'semester-store', 'uses' => 'Semester\SemesterController@store'])->middleware('can:semester-change');
         // xoa 1
-        Route::get('/destroy/{id}', ['as' => 'semester-destroy', 'uses' => 'Semester\SemesterController@destroy']);
+        Route::get('/destroy/{id}', ['as' => 'semester-destroy', 'uses' => 'Semester\SemesterController@destroy'])->middleware('can:semester-change');
         // chỉnh sửa
-        Route::post('/update/{id}', ['as' => 'semester-update', 'uses' => 'Semester\SemesterController@update']);
-        Route::get('/edit/{id}', ['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit']);
+        Route::post('/update/{id}', ['as' => 'semester-update', 'uses' => 'Semester\SemesterController@update'])->middleware('can:semester-change');
+        Route::get('/edit/{id}', ['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit'])->middleware('can:semester-change');
     });
 
     Route::group(['prefix' => 'bang-diem'], function () {
@@ -128,9 +128,9 @@ Route::group(['middleware' => 'auth'], function () {
         // tao moi form
 //        Route::get('/{semesterId}', ['as' => 'evaluation-form-create', 'uses' => 'Evaluation\EvaluationFormController@create']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
-        Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show'])->middleware('can:can-mark');
+        Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show']);
         // lưu kết quả
-        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
+        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update'])->middleware('can:can-mark,App\Model\EvaluationForm');
         // xoa 1
 //        Route::get('/destroy/{id}', ['as' => 'evaluation-form-destroy', 'uses' => 'Evaluation\EvaluationFormController@destroy']);
 
@@ -144,16 +144,21 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::group(['prefix' => 'thong-tin-ca-nhan'], function () {
-        Route::get('/', ['as' => 'personal-information', 'uses' => 'Information\InformationController@index']);
+        Route::get('/danh-sach', ['as' => 'personal-information', 'uses' => 'Information\InformationController@index'])->middleware('can:personal-information-list');
         Route::get('/{id}', ['as' => 'personal-information-show', 'uses' => 'Information\InformationController@show']);
         Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'Information\InformationController@update']);
 
     });
 
-    Route::group(['prefix' => 'y-kien'], function () {
-        Route::get('/', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create'])->middleware('can:comment-add');
+    Route::group(['prefix' => 'quan-ly-minh-chung'], function () {
+        Route::get('/', ['as' => 'proof', 'uses' => 'Proof\ProofController@index']);
+        Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store'])->middleware('can:can-change-proofs');
+    });
 
-        Route::post('/store', ['as' => 'comment-store', 'uses' => 'Comment\CommentController@store'])->middleware('can:comment-add');
+    Route::group(['prefix' => 'y-kien'], function () {
+        Route::get('/', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create'])->middleware('can:comment-change');
+
+        Route::post('/store', ['as' => 'comment-store', 'uses' => 'Comment\CommentController@store'])->middleware('can:comment-change');
 
         Route::post('/reply/{id}', ['as' => 'comment-reply', 'uses' => 'Comment\CommentController@reply']);
         Route::get('/show/{id}', ['as' => 'comment-show', 'uses' => 'Comment\CommentController@show']);
@@ -167,18 +172,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/'], function () {
         Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
 
-        Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@index']);     
-        Route::post('/add', ['as' => 'news-add', 'uses' => 'News\NewsController@add']);
-        Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update']);
+        Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@index']);    
+        
+        Route::post('/store', ['as' => 'news-store', 'uses' => 'News\NewsController@store'])->middleware('can:can-change-news');
+        Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update'])->middleware('can:can-change-news');
         Route::get('/{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
-        Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit']);
+        Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit'])->middleware('can:can-change-news');
+        Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy'])->middleware('can:can-change-news');
     });
-
-    Route::get('/thoi-khoa-bieu', ['as' => 'schedule', 'uses' => 'Home\HomeController@schedule']);    
-    
-    Route::get('/hoc-phi', ['as' => 'tuition', 'uses' => 'Home\HomeController@tuition']);
-
-    Route::get('/quan-ly-minh-chung', ['as' => 'proofs', 'uses' => 'Home\HomeController@proofs']);    
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
 });
