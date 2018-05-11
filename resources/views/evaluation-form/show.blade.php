@@ -88,7 +88,9 @@
                                                         $name= "score".$valueLevel2->id;
                                                         $keyResult = $valueLevel2->id."_".$role['userId'];
                                                     @endphp
-                                                    @if($role['name'] == $user->Role->name)
+                                                    {{-- nếu role của user đang đăng nhập = với role của input và đang trong thời gian có thể chấm thì mới đc nhập--}}
+                                                    {{-- các input còn lại sẽ bị ẩn đi --}}
+                                                    @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{$name}}"
                                                                    value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                                    min="{{$valueLevel2->mark_range_from}}"
@@ -98,7 +100,8 @@
                                                         </td>
                                                     @else
                                                         <td>
-                                                            <input type="number" disabled="true" class="form-control" {{ $role['name'] }} value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                            <input type="number" disabled="true" class="form-control"
+                                                                   {{ $role['name'] }} value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
                                                         </td>
                                                     @endif
                                                 @endforeach
@@ -132,7 +135,7 @@
                                                         $name= "score".$valueLevel3->id;
                                                         $keyResult = $valueLevel3->id."_".$role['userId'];
                                                     @endphp
-                                                    @if($role['name'] == $user->Role->name)
+                                                    @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{ $name }}"
                                                                    value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                                    min="{{$valueLevel3->mark_range_from}}"
@@ -142,7 +145,9 @@
                                                         </td>
                                                     @else
                                                         <td>
-                                                            <input type="number" disabled="true" class="form-control {{ $role['name'] }}" value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                            <input type="number" disabled="true"
+                                                                   class="form-control {{ $role['name'] }}"
+                                                                   value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
                                                         </td>
                                                     @endif
                                                 @endforeach
@@ -158,7 +163,7 @@
                                                 $name= "score".$valueLevel1->id;
                                                 $keyResult = $valueLevel1->id."_".$role['userId'];
                                             @endphp
-                                            @if($role['name'] == $user->Role->name)
+                                            @if($role['name'] == $user->Role->name  AND $currentRoleCanMark->id == $role['userRole'])
                                                 <td>
                                                     <input type="number"
                                                            name="{{ $name }}" required
@@ -172,7 +177,9 @@
                                                 </td>
                                             @else
                                                 <td>
-                                                    <input type="number" disabled="true" class="form-control {{ $role['name'] }}" value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                    <input type="number" disabled="true"
+                                                           class="form-control {{ $role['name'] }}"
+                                                           value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
                                                 </td>
                                             @endif
                                         @endforeach
@@ -188,7 +195,7 @@
                                             $name= "score".$valueLevel1->id;
                                             $keyResult = $valueLevel1->id."_".$role['userId'];
                                         @endphp
-                                        @if($role['name'] == $user->Role->name)
+                                        @if($role['name'] == $user->Role->name  AND $currentRoleCanMark->id == $role['userRole'])
                                             <td><input type="text"
                                                        class="form-control {{ $role['name'] }}"
                                                        required
@@ -199,7 +206,8 @@
                                                 >
                                             </td>
                                         @else
-                                            <td><input type="number" disabled="true" value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
+                                            <td><input type="number" disabled="true"
+                                                       value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                        class="form-control {{ $role['name'] }}"></td>
                                         @endif
                                     @endforeach
@@ -233,11 +241,12 @@
             {{--var roleLogin = "{{ $user->Role->name }}";--}}
             {{--$("input." + roleLogin).removeAttr('disabled');--}}
 
-                    //nếu quá hạn thì k thể chấm điểm
+            //nếu quá hạn thì k thể chấm điểm
             @if( strtotime($evaluationForm->Semester->date_start_to_mark) > strtotime(date('Y-m-d')) OR strtotime($evaluationForm->Semester->date_end_to_mark) < strtotime(date('Y-m-d')))
                 $('input').attr('disabled', true);
                 $('button').attr('disabled', true);
             @endif
+
             $('.proof').change(function (e) {
                 var urlCheckFile = "{{ route('evaluation-form-upload') }}";
                 var formData = new FormData();
@@ -270,7 +279,7 @@
                                 $("button[type=submit]").attr('disabled', true);
                             }
                         }
-                        // nếu k tìm thấy thẻ class messageErrors => hết lỗi ở các input file. cho submit
+                        // nếu k tìm thấy thẻ có class messageErrors => hết lỗi ở các input file. cho submit
                         if ($("form#evaluation-form").find(".messageErrors").html() === undefined) {
                             $("button[type=submit]").removeAttr('disabled');
                         }

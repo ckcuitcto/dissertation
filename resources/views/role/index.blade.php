@@ -90,7 +90,7 @@
                         <form id="role-form">
                             {!! csrf_field() !!}
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name">Tên vai trò :</label>
                                         <input type="hidden" name="id" class="id" id="idRoleModal">
@@ -98,12 +98,16 @@
                                                aria-describedby="role">
                                         <p style="color:red; display: none;" class="name"></p>
                                     </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name">Tên hiển thị:</label>
                                         <input class="form-control display_name" id="display_name" name="display_name" type="text" required
                                                aria-describedby="permission">
                                         <p style="color:red; display: none;" class="display_name"></p>
                                     </div>
+                                </div>
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="name">Miêu tả :</label>
                                         <input class="form-control description" id="description" name="description" type="text" required
@@ -125,8 +129,8 @@
                                         @foreach($permissions as $key => $permission)
                                             <tr>
                                                 <th scope="row">{{ $key+1 }}</th>
-                                                <td>{{ $permission->name }}</td>
-                                                <td>{{ $permission->title }}</td>
+                                                <td>{{ $permission->display_name }}</td>
+                                                <td>{{ $permission->description }}</td>
                                                 <td>
                                                     <div class="toggle">
                                                         <label>
@@ -208,7 +212,7 @@
 //                $('#myModal').find(".modal-footer > button[name=btn-save-role]").html('Thêm');
                 var valueForm = $('form#role-form').serialize();
                 var url = $(this).attr('data-link');
-                $('.form-group').find('span.messageErrors').remove();
+                $('span.messageErrors').remove();
                 $.ajax({
                     type: "post",
                     url: url,

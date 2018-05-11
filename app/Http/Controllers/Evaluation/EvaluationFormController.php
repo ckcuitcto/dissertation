@@ -7,9 +7,11 @@ use App\Model\EvaluationForm;
 use App\Http\Controllers\Controller;
 
 use App\Model\EvaluationResult;
+use App\Model\MarkTime;
 use App\Model\Role;
 use App\Model\Semester;
 use App\Model\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -104,7 +106,6 @@ class EvaluationFormController extends Controller
         $listUserMarkTmp = array();
         if(count($rolesCanMark) != count($listUserMark)){
             for($i = 0; $i < count($rolesCanMark); $i++){
-//                var_dump($listUserMark[$i]);
                 if(!empty($listUserMark[$i])){
                     $listUserMarkTmp [] = [
                         'userId' => $listUserMark[$i]->userId,
@@ -124,9 +125,24 @@ class EvaluationFormController extends Controller
         }
         $listUserMark = $listUserMarkTmp;
 //        var_dump($rolesCanMark);
-//        dd($evaluationResults);
+//        dd($listUserMark);
 
-        return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark','evaluationResults'));
+        // lấy role được phép chấm ở thời điểm hiện tại
+        $dateNow = Carbon::now()->format('Y/m/d');
+        $currentRoleCanMark = DB::table('roles')
+                                        ->leftJoin('mark_times','roles.id','=','mark_times.role_id')
+                                        ->where('mark_times.semester_id',$evaluationForm->Semester->id)
+                                        ->whereDate('mark_times.mark_time_start','<=',$dateNow)
+                                        ->whereDate('mark_times.mark_time_end','>=',$dateNow)
+                                        ->select('roles.*')
+                                        ->first();
+        // nếu không có role nào có thể chấm ở hiện tại thì để mặc định là admin
+        // 6 là role adminx
+        if(empty($currentRoleCanMark)){
+            $currentRoleCanMark = Role::find(6);
+        }
+//        dd($currentRoleCanMark);
+        return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark','evaluationResults','currentRoleCanMark'));
     }
 
     /**

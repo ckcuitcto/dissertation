@@ -65,9 +65,9 @@ class NewsController extends Controller
         if (!empty($news)) {
             $news->title = $request->title;
             $news->ordinal_display = $request->ordinal_display;
-            
-            $semester->term = $request->term;
-            $semester->save();
+
+            $news->term = $request->term;
+            $news->save();
             return response()->json([
                 'news' => $news,
                 'status' => true
