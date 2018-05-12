@@ -145,6 +145,8 @@ class EvaluationFormController extends Controller
         if(empty($currentRoleCanMark)){
             $currentRoleCanMark = Role::find(6);
         }
+//        var_dump($currentRoleCanMark);
+//        die;
 //        dd($currentRoleCanMark);
         return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark','evaluationResults','currentRoleCanMark'));
     }

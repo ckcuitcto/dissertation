@@ -1,6 +1,13 @@
 @extends('layouts.default')
 
 @section('content')
+    @php
+        //  lưu lại tổng điểm từng role chấm
+        foreach($listUserMark as $role)
+        {
+            $arrTotalScore[$role['userRole']] = 0;
+        }
+    @endphp
     <main class="app-content">
         <div class="app-title">
             <div>
@@ -87,6 +94,13 @@
                                                     @php
                                                         $name= "score".$valueLevel2->id;
                                                         $keyResult = $valueLevel2->id."_".$role['userId'];
+
+                                                        //lưu lại điểm mỗi loại role
+                                                        if(!empty($evaluationResults[$keyResult]['marker_score'])){
+                                                            $arrTotalScore[$role['userRole']] += $evaluationResults[$keyResult]['marker_score'];
+                                                        }else{
+                                                            $arrTotalScore[$role['userRole']] += 0;
+                                                        }
                                                     @endphp
                                                     {{-- nếu role của user đang đăng nhập = với role của input và đang trong thời gian có thể chấm thì mới đc nhập--}}
                                                     {{-- các input còn lại sẽ bị ẩn đi --}}
@@ -134,6 +148,11 @@
                                                     @php
                                                         $name= "score".$valueLevel3->id;
                                                         $keyResult = $valueLevel3->id."_".$role['userId'];
+                                                        if(!empty($evaluationResults[$keyResult]['marker_score'])){
+                                                            $arrTotalScore[$role['userRole']] += $evaluationResults[$keyResult]['marker_score'];
+                                                        }else{
+                                                            $arrTotalScore[$role['userRole']] += 0;
+                                                        }
                                                     @endphp
                                                     @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{ $name }}"
@@ -162,6 +181,7 @@
                                             @php
                                                 $name= "score".$valueLevel1->id;
                                                 $keyResult = $valueLevel1->id."_".$role['userId'];
+
                                             @endphp
                                             @if($role['name'] == $user->Role->name  AND $currentRoleCanMark->id == $role['userRole'])
                                                 <td>
@@ -199,7 +219,7 @@
                                             <td><input type="text"
                                                        class="form-control {{ $role['name'] }}"
                                                        required
-                                                       value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
+                                                       value="{{ $arrTotalScore[$role['userRole']] }}"
                                                        name="totalScoreOfForm"
                                                        id="totalScoreOfForm"
                                                        readonly
@@ -207,7 +227,7 @@
                                             </td>
                                         @else
                                             <td><input type="number" disabled="true"
-                                                       value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
+                                                       value="{{ $arrTotalScore[$role['userRole']] }}"
                                                        class="form-control {{ $role['name'] }}"></td>
                                         @endif
                                     @endforeach
