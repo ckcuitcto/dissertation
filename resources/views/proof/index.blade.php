@@ -37,17 +37,22 @@
                       <td>{{$proof->semester_id}}</td>
                       <td>{{$proof->created_by}}</td>
                       <td>                        
-                        <button type="button" class="btn btn-secondary">
                             <a data-proof-id="{{$proof->id}}" id="proof-update"
                                 data-proof-edit-link="{{route('proof-edit',$proof->id)}}"
                                 data-proof-update-link="{{route('proof-update',$proof->id)}}">
-                             </a>Sửa</button>
+                                <i class="fa fa-lg fa-edit"></i></a>
                               
-                        <button type="button" class="btn btn-danger">
+                        {{-- <button type="button" class="btn btn-danger"> --}}
                           <a data-proof-id="{{$proof->id}}" id="proof-destroy"
                             data-proof-link="{{route('proof-destroy',$proof->id)}}">Xóa
-                         </a>
-                        </button>
+                            <i class="fa fa-lg fa-trash"></i></a>
+                        {{-- </button> --}}
+
+                        {{-- <div class="btn-group">
+                            <a class="btn btn-primary" href="#"><i class="fa fa-lg fa-plus"></i></a>
+                            <a class="btn btn-primary" href="#"><i class="fa fa-lg fa-edit"></i></a>
+                            <a class="btn btn-primary" href="#"><i class="fa fa-lg fa-trash"></i></a>
+                        </div> --}}
                       </td> 
                     </tr>
                   @endforeach

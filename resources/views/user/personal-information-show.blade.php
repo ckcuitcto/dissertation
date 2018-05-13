@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: huynh
- * Date: 10-May-18
- * Time: 10:56 PM
- */
-?>
 @extends('layouts.default')
 
 @section('content')
@@ -37,7 +29,7 @@
                 <div class="tile p-0">
                     <div class="info">
                         <img id="imageChange" style="width: 100%;" class="user-image" src="https://goo.gl/CXFpEd">
-                        <input type='file' id="avatar" />
+                        <input type='file' id="avatar" class="form-control"/>
                         <div class="alert alert-primary" role="alert">
                             Cập nhật gần nhất
                         {{--</div>--}}
