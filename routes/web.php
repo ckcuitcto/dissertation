@@ -148,6 +148,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{id}', ['as' => 'personal-information-show', 'uses' => 'Information\InformationController@show']);
         Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'Information\InformationController@update']);
 
+        Route::post('/upload', ['as' => 'personal-information-upload', 'uses' => 'Information\InformationController@checkFileUpload']);
+
     });
 
     Route::group(['prefix' => 'quan-ly-minh-chung'], function () {

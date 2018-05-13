@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Student;
 use App\Model\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -29,4 +30,9 @@ class Controller extends BaseController
         }
 
     }
+
+    public function formatDate($date){
+        return Carbon::createFromFormat('d/m/Y', $date);
+    }
+
 }
