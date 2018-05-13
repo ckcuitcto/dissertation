@@ -21,14 +21,16 @@ class InformationController extends Controller
 
     public function show($id)
     {
-        // $user = Auth::user();
         $user = User::find($id);
+        if(!empty($user)) {
+            $this->authorize($user->Student,'view');
 
-        $this->authorize($user->Student,'view');
-
-        $user->birthday = Carbon::parse($user->birthday)->format('d/m/Y');
-
-        return view('user.personal-information-show', compact('user'));
+            if (!empty($user->birthday)) {
+                $user->birthday = Carbon::parse($user->birthday)->format('d/m/Y');
+            }
+            return view('user.personal-information-show', compact('user'));
+        }
+        return redirect()->back();
     }
 
     public function update($id, Request $request){

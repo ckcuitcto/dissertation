@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Comment;
 use App\Http\Controllers\Controller;
 use App\Mail\ReplyComment;
 use App\Model\Comment;
+use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,16 +20,30 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $facultyId = Auth::user()->Faculty->id;
+        $user = Auth::user();
         $comment = DB::table('comments')
             ->leftJoin('students', 'students.id', '=', 'comments.created_by')
             ->leftJoin('users', 'students.user_id', '=', 'users.id')
             ->leftJoin('classes', 'classes.id', '=', 'students.class_id')
-            ->select('comments.*','users.name as userName','classes.name as className')
-            ->where('users.faculty_id', $facultyId)
-            ->orderBy('comments.id')
-            ->get();
-        return view('comment.index',compact('comment'));
+            ->select('comments.*','users.name as userName','classes.name as className');
+        if ($user->Role->id >= 5) // admin va phong ctsv thì lấy tất cả user
+        {
+            //  lấy hết. k cần điều kiện gì
+        }else{
+            $facultyId = Auth::user()->Faculty->id;
+            $comment->where('users.faculty_id', $facultyId);
+            if ($user->Role->id >= 4) // chu nhiem khoa thì lấy user thuộc khoa giống
+            {
+                // lấy ra tất cả user cùng khoa vs user đang đăng nhập
+//                $users = array_flatten(User::where('faculty_id', $user->faculty_id)->where('role_id', '<=', 2)->select('id')->get()->toArray());
+            }elseif($user->Role->id >=3){ // cố vấn học tập
+                $comment->where('classes.staff_id', $user->Staff->id);
+            }else { // sinh viên. bán bộ
+                $comment->where('comments.created_by', $user->Student->id);
+            }
+        }
+        $comments = $comment->orderBy('comments.id')->get();
+        return view('comment.index',compact('comments','user'));
     }
 
     /**
@@ -70,7 +85,7 @@ class CommentController extends Controller
         $comment->content = $request->content;
         $comment->save();
     
-        return redirect()->back()->with('success','Gửi ý kiến thành công!');
+        return redirect()->route('comment-list')->with('success','Gửi ý kiến thành công!');
     }
 
     /**

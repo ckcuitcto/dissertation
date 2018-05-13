@@ -19,7 +19,7 @@
                 <div class="tile p-0">
                     <div class="info">
 
-                        @if($user->avatar)
+                        @if(!empty($user->avatar))
                             <img id="imageChange" style="width: 100%;" class="user-image" src="{{ asset('image/avatar/'.$user->avatar ) }}" title="Click vào đây ảnh để đổi ảnh đại diện">
                         @else
                             <img id="imageChange" style="width: 100%;" class="user-image" src="{{ asset('image/avatar_default.jpg') }}" title="Click vào đây ảnh để đổi ảnh đại diện">
@@ -30,7 +30,7 @@
 
                         {{--</div>--}}
                         {{--<div class="alert alert-success" role="alert">--}}
-                         <p>  {{ ($user->updated_at) ? "Cập nhật gần nhất ".$user->updated_at  : "" }} </p>
+                         <p>  {{ (!empty($user->updated_at)) ? "Cập nhật gần nhất ".$user->updated_at  : "" }} </p>
                         {{--</div>--}}
                         {{--<div class="alert alert-info" role="alert">--}}
                             <p>Yêu cầu chỉnh sửa các thông tin khác xin liên hệ: Phòng đào tạo</p>

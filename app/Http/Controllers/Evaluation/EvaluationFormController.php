@@ -65,60 +65,60 @@ class EvaluationFormController extends Controller
     {
 
         $evaluationForm = EvaluationForm::find($id);
+        if(!empty($evaluationForm)) {
+            // phân quyền quan trọng. chỉ nhân viên ở khoa nào ms đc xem ở khoa đó.
+            $this->authorize($evaluationForm, 'view');
 
-        // phân quyền quan trọng. chỉ nhân viên ở khoa nào ms đc xem ở khoa đó.
-        $this->authorize($evaluationForm,'view');
+            $user = Auth::user();
+            $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
 
-        $user = Auth::user();
-        $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
+            $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id', $id)->get()->toArray();
+            // chuyển sang lấy id tiêu chí và id người chấm làm key. để lấy ra heiẻn thị trên form dễ hơn
+            $evaluationResults = array();
+            foreach ($evaluationResultsTmp as $key => &$val) {
+                // key = id tiêu chí + id người chấm.
+                $keyResult = $val['evaluation_criteria_id'] . "_" . $val['marker_id'];
+                $evaluationResults[$keyResult] = $val;
+                unset($evaluationResultsTmp[$key]);
+            }
 
-        $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id',$id)->get()->toArray();
-        // chuyển sang lấy id tiêu chí và id người chấm làm key. để lấy ra heiẻn thị trên form dễ hơn
-        $evaluationResults = array();
-        foreach($evaluationResultsTmp as $key => &$val){
-            // key = id tiêu chí + id người chấm.
-            $keyResult = $val['evaluation_criteria_id']."_".$val['marker_id'];
-            $evaluationResults[$keyResult] = $val;
-            unset($evaluationResultsTmp[$key]);
-        }
-
-        //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
-        $rolesCanMark = Role::whereHas('permissions', function ($query) {
-            $query->where('name', 'like', '%can-mark%');
-        })->select('id','name','display_name')->orderBy('id')->get()->toArray();
+            //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
+            $rolesCanMark = Role::whereHas('permissions', function ($query) {
+                $query->where('name', 'like', '%can-mark%');
+            })->select('id', 'name', 'display_name')->orderBy('id')->get()->toArray();
 //        $rolesCanMark = array_flatten($rolesCanMark);
 
-        //lấy danh sách Id role can mark
-        $arrRoleId = array();
-        foreach($rolesCanMark as $key => $value){
-            $arrRoleId[] = $value['id'];
-        }
+            //lấy danh sách Id role can mark
+            $arrRoleId = array();
+            foreach ($rolesCanMark as $key => $value) {
+                $arrRoleId[] = $value['id'];
+            }
 
-        // lấy ra danh sách các role và user
-        $listUserMark = DB::table('roles')
-            ->leftJoin('users', 'users.role_id', '=', 'roles.id')
-            ->leftJoin('evaluation_results', 'evaluation_results.marker_id', '=', 'users.id')
-            ->select('users.id as userId','users.role_id as userRole', 'roles.*')
-            ->where('evaluation_results.evaluation_form_id', $id)
-            ->whereIn('roles.id', $arrRoleId)
-            ->groupBy('roles.id')
-            ->orderBy('roles.id')
-            ->get()->toArray();
+            // lấy ra danh sách các role và user
+            $listUserMark = DB::table('roles')
+                ->leftJoin('users', 'users.role_id', '=', 'roles.id')
+                ->leftJoin('evaluation_results', 'evaluation_results.marker_id', '=', 'users.id')
+                ->select('users.id as userId', 'users.role_id as userRole', 'roles.*')
+                ->where('evaluation_results.evaluation_form_id', $id)
+                ->whereIn('roles.id', $arrRoleId)
+                ->groupBy('roles.id')
+                ->orderBy('roles.id')
+                ->get()->toArray();
 
 //        var_dump($rolesCanMark);
 //        var_dump($listUserMark);
-        // gộp mảng id và mảng user lại. nếu user nào k có thì cho rỗng. vẫn giữ id để hiển thị fỏm input
-        $listUserMarkTmp = array();
+            // gộp mảng id và mảng user lại. nếu user nào k có thì cho rỗng. vẫn giữ id để hiển thị fỏm input
+            $listUserMarkTmp = array();
 //        if(count($rolesCanMark) != count($listUserMark)){
-            for($i = 0; $i < count($rolesCanMark); $i++){
-                if(!empty($listUserMark[$i])){
+            for ($i = 0; $i < count($rolesCanMark); $i++) {
+                if (!empty($listUserMark[$i])) {
                     $listUserMarkTmp [] = [
                         'userId' => $listUserMark[$i]->userId,
                         'userRole' => $listUserMark[$i]->userRole,
                         'name' => $listUserMark[$i]->name,
                         'display_name' => $listUserMark[$i]->display_name
                     ];
-                }else{
+                } else {
                     $listUserMarkTmp [] = [
                         'userId' => null,
                         'userRole' => $rolesCanMark[$i]['id'],
@@ -127,29 +127,29 @@ class EvaluationFormController extends Controller
                     ];
                 }
 //            }
-        }
-        $listUserMark = $listUserMarkTmp;
+            }
+            $listUserMark = $listUserMarkTmp;
 //        var_dump($rolesCanMark);
 //        dd($listUserMark);
 
-        // lấy role được phép chấm ở thời điểm hiện tại
-        $dateNow = Carbon::now()->format('Y/m/d');
-        $currentRoleCanMark = DB::table('roles')
-                                        ->leftJoin('mark_times','roles.id','=','mark_times.role_id')
-                                        ->where('mark_times.semester_id',$evaluationForm->Semester->id)
-                                        ->whereDate('mark_times.mark_time_start','<=',$dateNow)
-                                        ->whereDate('mark_times.mark_time_end','>=',$dateNow)
-                                        ->select('roles.*')
-                                        ->first();
-        // nếu không có role nào có thể chấm ở hiện tại thì để mặc định là admin
-        // 6 là role adminx
-        if(empty($currentRoleCanMark)){
-            $currentRoleCanMark = Role::find(6);
+            // lấy role được phép chấm ở thời điểm hiện tại
+            $dateNow = Carbon::now()->format('Y/m/d');
+            $currentRoleCanMark = DB::table('roles')
+                ->leftJoin('mark_times', 'roles.id', '=', 'mark_times.role_id')
+                ->where('mark_times.semester_id', $evaluationForm->Semester->id)
+                ->whereDate('mark_times.mark_time_start', '<=', $dateNow)
+                ->whereDate('mark_times.mark_time_end', '>=', $dateNow)
+                ->select('roles.*')
+                ->first();
+            // nếu không có role nào có thể chấm ở hiện tại thì để mặc định là admin
+            // 6 là role adminx
+            if (empty($currentRoleCanMark)) {
+                $currentRoleCanMark = Role::find(6);
+            }
+
+            return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark'));
         }
-//        var_dump($currentRoleCanMark);
-//        die;
-//        dd($currentRoleCanMark);
-        return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark','evaluationResults','currentRoleCanMark'));
+        return redirect()->back();
     }
 
     /**
@@ -195,8 +195,14 @@ class EvaluationFormController extends Controller
                     ];
                 } elseif (substr($key, "0", "5") == "proof") {
                     $evaluationCriteriaId = (int)substr($key, "5", "7");
+
+                    $fileName = str_random(8) . "_" . $value->getClientOriginalName();
+                    while (file_exists("image/avatar/" . $fileName)) {
+                        $fileName = str_random(8) . "_" . $value->getClientOriginalName();
+                    }
+
                     $arrProof[] = [
-                        'name' => $value->getClientOriginalExtension(),
+                        'name' => $value->getClientOriginalName(),
                         'semester_id' => $evaluationForm->semester_id,
                         'created_by' => $userLogin->Student->id,
                         'evaluation_criteria_id' => $evaluationCriteriaId
