@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Validator;
 
 class InformationController extends Controller
@@ -79,12 +80,11 @@ class InformationController extends Controller
                     $file->move('image/avatar/', $fileName);
 
                     if(file_exists("image/avatar/" . $user->avatar)){ // nếu  sản phẩm đã có ảnh thì sẽ xóa ảnh trong thư mục
-                        unlink("image/avatar/" . $user->avatar);
+//                        unlink("image/avatar/" . $user->avatar);
+                        Storage::delete('public/image/avatar/'.$user->avatar);
                     }
 
                     $user->avatar = $fileName;
-
-
 
                 }
                 $user->save();

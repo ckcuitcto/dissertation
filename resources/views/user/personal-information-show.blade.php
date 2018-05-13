@@ -142,7 +142,7 @@
 
                         </div>
                     </div>
-                <a class="btn btn-secondary" id="btn-update-inform" > Sửa</a>
+                <a class="btn btn-primary" id="btn-update-inform" style="color:white"> Sửa</a>
             </div>
             {{-- </div>          --}}
         </div>
@@ -161,7 +161,7 @@
                 language: "vi",
                 format: "dd/mm/yyyy",
                 clearBtn: true,
-                orientation: "top right"
+                orientation: "bot right"
 
             });
 
