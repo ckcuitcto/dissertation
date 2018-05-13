@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use App\Model\EvaluationResult;
 use App\Model\MarkTime;
+use App\Model\Proof;
 use App\Model\Role;
 use App\Model\Semester;
 use App\Model\User;
@@ -147,7 +148,13 @@ class EvaluationFormController extends Controller
                 $currentRoleCanMark = Role::find(6);
             }
 
-            return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark'));
+            //danh sách minh chứng
+            $proofs = Proof::where([
+                'semester_id' => $evaluationForm->Semester->id,
+                'created_by' => $evaluationForm->Student->id
+            ])->get();
+
+            return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark','proofs'));
         }
         return redirect()->back();
     }
@@ -176,7 +183,7 @@ class EvaluationFormController extends Controller
         $evaluationForm = EvaluationForm::find($evaluationFormId);
         $userLogin = Auth::user();
 
-//        dd($request->all());
+        //dd($request->all());
         // lưu điểm đánh giá
         $arrEvaluationResult = array();
         $arrProof = array();
@@ -195,21 +202,25 @@ class EvaluationFormController extends Controller
                     ];
                 } elseif (substr($key, "0", "5") == "proof") {
                     $evaluationCriteriaId = (int)substr($key, "5", "7");
-
-                    $fileName = str_random(8) . "_" . $value->getClientOriginalName();
-                    while (file_exists("image/avatar/" . $fileName)) {
-                        $fileName = str_random(8) . "_" . $value->getClientOriginalName();
+                    foreach($value as $proof){
+                        $fileName = str_random(13) . "_" . $proof->getClientOriginalName();
+                        $fileName = preg_replace('/\s+/', '', $fileName);
+                        while (file_exists("upload/proof/" . $fileName)) {
+                            $fileName = str_random(13) . "_" . $fileName;
+                        }
+                        $proof->move('upload/proof/', $fileName);  // lưu file vào thư mục
+                        $arrProof[] = [
+                            'name' => $fileName,
+                            'semester_id' => $evaluationForm->semester_id,
+                            'created_by' => $userLogin->Student->id,
+                            'evaluation_criteria_id' => $evaluationCriteriaId
+                        ];
                     }
-
-                    $arrProof[] = [
-                        'name' => $value->getClientOriginalName(),
-                        'semester_id' => $evaluationForm->semester_id,
-                        'created_by' => $userLogin->Student->id,
-                        'evaluation_criteria_id' => $evaluationCriteriaId
-                    ];
                 }
             }
         }
+//        dd($arrProof);
+//        die;
         $evaluationForm->EvaluationResults()->createMany($arrEvaluationResult);
         $evaluationForm->total = $request->totalScoreOfForm;
         $evaluationForm->save();
@@ -282,6 +293,14 @@ class EvaluationFormController extends Controller
 //                ], 200);
 //            }
 //        }
+    }
+
+    public function getProofById($id){
+        $proof = Proof::find($id);
+        return response()->json([
+            'file_path' => $proof->name,
+            'status' => true
+        ],200);
     }
 
 

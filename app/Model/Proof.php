@@ -8,7 +8,7 @@ class Proof extends Model
 {
     protected $table = 'proofs';
 
-    protected $fillable = ['name','semester_id','created_by'];
+    protected $fillable = ['name','semester_id','created_by','evaluation_criteria_id'];
 
     public function Student(){
         return $this->belongsTo('App\Model\Student','created_by','id');
