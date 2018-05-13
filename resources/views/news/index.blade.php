@@ -15,16 +15,16 @@
         <div class="row">
           <div class="col-md-12">
             <div class="tile">
-              <table class="table">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th>STT</th>
                     <th>Tiêu đề</th>
-                    <th>Nội dung</th>
+                    <th style="width:40%">Nội dung</th>
                     <th>Ngày tạo</th>
                     <th>Ngày cập nhật</th>    
                     <th>Tác vụ</th>
-                  </tr>          
+                  </tr>    
                 </thead>
                 <tbody>
                   @foreach($newsList as $tintuc)
