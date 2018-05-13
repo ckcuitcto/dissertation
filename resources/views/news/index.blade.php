@@ -18,24 +18,24 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tiêu đề</th>
-                    <th scope="col">Nội dung</th>
-                    <th scope="col">Ngày tạo</th>
-                    <th scope="col">Ngày cập nhật</th>    
+                    <th>STT</th>
+                    <th>Tiêu đề</th>
+                    <th>Nội dung</th>
+                    <th>Ngày tạo</th>
+                    <th>Ngày cập nhật</th>    
                     <th>Tác vụ</th>
-                  </tr>
+                  </tr>          
                 </thead>
                 <tbody>
                   @foreach($newsList as $tintuc)
                   <tr>
-                    <th scope="row">1</th>
+                    <th>1</th>
                     <td>{{$tintuc->title}}</td>
                     <td>{{$tintuc->content}}</td>
                     <td>{{$tintuc->created_at}}</td>
                     <td>{{$tintuc->updated_at}}</td>
                     <td>                      
-                        <button type="button" class="btn btn-secondary"
+                        <button type="button" class="btn btn-primary"
                         data-news-id="{{$tintuc->id}}" id="news-update"
                                 data-news-edit-link="{{route('news-edit',$tintuc->id)}}"
                                 data-news-update-link="{{route('news-update',$tintuc->id)}}">                         

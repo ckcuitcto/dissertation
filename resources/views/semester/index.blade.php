@@ -156,7 +156,7 @@
             todayBtn: "linked",
             clearBtn: true,
             language: "vi",
-            orientation: "top left"
+            orientation: "bot right"
         });
         $("input#year_to").datepicker({
             format: "yyyy",
@@ -165,7 +165,7 @@
             todayBtn: "linked",
             clearBtn: true,
             language: "vi",
-            orientation: "top left"
+            orientation: "bot right"
 
         });
         $('input#date_start_to_mark').datepicker({
@@ -173,7 +173,7 @@
             language: "vi",
             format: "dd/mm/yyyy",
             clearBtn: true,
-            orientation: "top left"
+            orientation: "bot right"
 
         });
         $('input#date_end_to_mark').datepicker({
@@ -181,11 +181,11 @@
             language: "vi",
             format: "dd/mm/yyyy",
             clearBtn: true,
-            orientation: "top left"
+            orientation: "bot right"
         });
         @foreach($rolesCanMark as $key => $role)
-            $("input#date_start_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "top left"});
-            $("input#date_end_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "top left"});
+            $("input#date_start_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "bot right"});
+            $("input#date_end_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "bot right"});
         @endforeach
 
         $(document).ready(function () {
