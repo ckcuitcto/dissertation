@@ -15,8 +15,7 @@ $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/home', 'Home\HomeController@index')->name('home');
-
+    Route::get('/home', 'Home\HomeController@index')->name('home');   
 
     Route::group(['prefix' => 'khoa', 'middleware' => 'can:manage-faculty'], function () {
         Route::get('/', ['as' => 'faculty', 'uses' => 'Department\FacultyController@index']);

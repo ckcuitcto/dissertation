@@ -78,7 +78,7 @@
             </div>
         </div>
         <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="tile">
                     <h3 class="tile-title">Thông báo</h3>
                     <div class="alert alert-primary" role="alert">
@@ -87,10 +87,16 @@
                     <div class="alert alert-primary" role="alert">
                         STU tham gia chương trình Tư vấn Hướng nghiệp, xét tuyển ĐH - CĐ năm 2018 tại khu vực Tây Nguyên, Nam Trung Bộ và Tây Nam Bộ.
                     </div>
+                    <div class="alert alert-primary" role="alert">
+                            STU tham gia chương trình Tư vấn Hướng nghiệp, xét tuyển ĐH - CĐ năm 2018 tại khu vực Tây Nguyên, Nam Trung Bộ và Tây Nam Bộ.
+                    </div>
+                    <div class="alert alert-primary" role="alert">
+                        STU tham gia chương trình Tư vấn Hướng nghiệp, xét tuyển ĐH - CĐ năm 2018 tại khu vực Tây Nguyên, Nam Trung Bộ và Tây Nam Bộ.
+                    </div>
                     <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
             </div>
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Tin tức & sự kiện</h3>
                     <div class="alert alert-success" role="alert">
@@ -101,11 +107,11 @@
                     </div>
                     <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Thông tin tuyển dụng</h3>
                     <div class="alert alert-danger" role="alert">
@@ -128,7 +134,7 @@
                       </div>
                       <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
-            </div>
+            </div> --}}
             <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Pie Chart</h3>
