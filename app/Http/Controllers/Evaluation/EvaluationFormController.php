@@ -105,10 +105,11 @@ class EvaluationFormController extends Controller
             ->orderBy('roles.id')
             ->get()->toArray();
 
-
+//        var_dump($rolesCanMark);
+//        var_dump($listUserMark);
         // gộp mảng id và mảng user lại. nếu user nào k có thì cho rỗng. vẫn giữ id để hiển thị fỏm input
         $listUserMarkTmp = array();
-        if(count($rolesCanMark) != count($listUserMark)){
+//        if(count($rolesCanMark) != count($listUserMark)){
             for($i = 0; $i < count($rolesCanMark); $i++){
                 if(!empty($listUserMark[$i])){
                     $listUserMarkTmp [] = [
@@ -125,7 +126,7 @@ class EvaluationFormController extends Controller
                         'display_name' => $rolesCanMark[$i]['display_name']
                     ];
                 }
-            }
+//            }
         }
         $listUserMark = $listUserMarkTmp;
 //        var_dump($rolesCanMark);

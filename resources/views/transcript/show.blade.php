@@ -56,9 +56,9 @@
                             <td rowspan="2">Tác Vụ</td>
                         </tr>
                         <tr>
-                            <td>Cá Nhân</td>
-                            <td>Lớp</td>
-                            <td>Khoa</td>
+                            @foreach($rolesCanMark as $role)
+                                <td>{{ $role['display_name'] }}</td>
+                            @endforeach
                             <td>Tổng</td>
                         </tr>
                         @foreach($evaluationForms as $key => $evaluationForm)
@@ -66,10 +66,30 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $evaluationForm->Semester->term }}</td>
                                 <td>{{ $evaluationForm->Semester->year_from . " - " . $evaluationForm->Semester->year_to }}</td>
-                                <td>x</td>
-                                <td>x</td>
-                                <td>x</td>
-                                <td>x</td>
+                                {{-- nếu sô kết quả = với số role có thể chấm nghĩa là đã chấm hết. thì hiển thị ra đủ.--}}
+                                @if(count($scoreList->where('evaluationFormId',$evaluationForm->id)) == count($rolesCanMark))
+                                    @foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)
+                                        @php
+                                            $total = $value->total;
+                                        @endphp
+                                        <td>{{ $value->totalRoleScore }}</td>
+                                    @endforeach
+                                @else
+                                {{-- còn nếu k thì hiển thị ra. còn thiếu bao nhiêu thì for rồi hiển thị ra thẻ td rỗng--}}
+                                    @php
+                                    // tính số người chưa chấm điểm
+                                    $count = count($rolesCanMark) - count($scoreList->where('evaluationFormId',$evaluationForm->id));
+                                    @endphp
+                                    {{-- hiển thị điểm ra. được bao nheieu hiển thị bấy nhiêu--}}
+                                    @foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)
+                                        <td>{{ $value->totalRoleScore }}</td>
+                                    @endforeach
+                                    {{-- chạy vòng for hiển thị các thẻ td còn thiếu--}}
+                                    @for($i = 0 ; $i < $count ; $i++)
+                                        <td></td>
+                                    @endfor
+                                @endif
+                                <td> {{ $total OR 0 }}</td>
                                 <td>Trung Bình</td>
                                 <td>Hoàn Thành</td>
                                 <td>
