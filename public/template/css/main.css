@@ -371,7 +371,7 @@ template {
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 0.5rem;
-  font-family: inherit;
+  font-family: 'Dosis', sans-serif;
   font-weight: bold;
   line-height: 1.2;
   color: inherit;
@@ -14105,8 +14105,12 @@ be a descendant of the grid when it is being dragged.
 }
 
 .material-half-bg .cover {
-  background-color: #009688;
-  height: 50vh;
+  height: 100vh;
+  background : url('https://goo.gl/gpRCrW') no-repeat center center;  
+   -webkit-background-size: cover;  
+   -moz-background-size: cover;  
+   -o-background-size: cover;  
+   background-size: cover;  
 }
 
 .m-loader {
@@ -14465,7 +14469,8 @@ be a descendant of the grid when it is being dragged.
 
 .login-content .logo {
   margin-bottom: 40px;
-  font-family: "Niconne";
+  font-family: 'Slabo 27px', serif;
+  text-shadow: 0 0 0.2em #87F, 0 0 0.2em #87F, 0 0 0.2em #87F;
   color: #fff;
 }
 
@@ -14581,7 +14586,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .lockscreen-content .logo {
-  font-family: "Niconne";
+  font-family: 'Dosis', sans-serif;
   margin-bottom: 40px;
   color: #fff;
 }

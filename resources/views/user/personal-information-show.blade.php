@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: huynh
- * Date: 10-May-18
- * Time: 10:56 PM
- */
-?>
 @extends('layouts.default')
 
 @section('content')
@@ -23,16 +15,6 @@
         <form id="form-update-infomation" method="post" enctype="multipart/form-data">
         <div class="row user">
 
-            {{--<div class="col-md-12">--}}
-            {{--<div class="profile">--}}
-            {{--<div class="info"><img class="user-img" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/128.jpg">--}}
-            {{--<h4>John Doe</h4>--}}
-            {{--<p>FrontEnd Developer</p>--}}
-            {{--</div>--}}
-            {{--<div class="cover-image"></div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-
             <div class="col-md-3">
                 <div class="tile p-0">
                     <div class="info">
@@ -43,6 +25,7 @@
                             <img id="imageChange" style="width: 100%;" class="user-image" src="{{ asset('image/avatar_default.jpg') }}" title="Click vào đây ảnh để đổi ảnh đại diện">
                         @endif
                         <input type='file' id="avatar" class="avatar" name="avatar" disabled style="display: none;"/>
+
                         <div class="alert alert-primary" role="alert">
 
                         {{--</div>--}}

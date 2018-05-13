@@ -17,13 +17,13 @@
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                   <div class="carousel-item active">
-                    <img class="d-block w-100 carousel-size" src="https://goo.gl/NH1z3m" alt="First slide"  style="height:400px">
+                    <img class="d-block w-100 carousel-size" src="template/assets/1.jpg" alt="First slide"  style="height:500px">
                   </div>
                   <div class="carousel-item">
-                    <img class="d-block w-100 carousel-size" src="https://goo.gl/NH1z3m" alt="Second slide" style="height:400px">
+                    <img class="d-block w-100 carousel-size" src="template/assets/2.jpg" alt="Second slide" style="height:500px">
                   </div>
                   <div class="carousel-item">
-                    <img class="d-block w-100 carousel-size" src="https://goo.gl/NH1z3m" alt="Third slide" style="height:400px">
+                    <img class="d-block w-100 carousel-size" src="template/assets/3.jpg" alt="Third slide" style="height:500px">
                   </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -78,7 +78,7 @@
             </div>
         </div>
         <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="tile">
                     <h3 class="tile-title">Thông báo</h3>
                     <div class="alert alert-primary" role="alert">
@@ -87,10 +87,16 @@
                     <div class="alert alert-primary" role="alert">
                         STU tham gia chương trình Tư vấn Hướng nghiệp, xét tuyển ĐH - CĐ năm 2018 tại khu vực Tây Nguyên, Nam Trung Bộ và Tây Nam Bộ.
                     </div>
+                    <div class="alert alert-primary" role="alert">
+                            STU tham gia chương trình Tư vấn Hướng nghiệp, xét tuyển ĐH - CĐ năm 2018 tại khu vực Tây Nguyên, Nam Trung Bộ và Tây Nam Bộ.
+                    </div>
+                    <div class="alert alert-primary" role="alert">
+                        STU tham gia chương trình Tư vấn Hướng nghiệp, xét tuyển ĐH - CĐ năm 2018 tại khu vực Tây Nguyên, Nam Trung Bộ và Tây Nam Bộ.
+                    </div>
                     <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
             </div>
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Tin tức & sự kiện</h3>
                     <div class="alert alert-success" role="alert">
@@ -101,11 +107,11 @@
                     </div>
                     <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Thông tin tuyển dụng</h3>
                     <div class="alert alert-danger" role="alert">
@@ -128,7 +134,7 @@
                       </div>
                       <div align="right"><a href="#">Xem tất cả ></a></div>
                 </div>
-            </div>
+            </div> --}}
             <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title">Pie Chart</h3>

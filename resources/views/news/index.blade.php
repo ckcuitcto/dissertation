@@ -34,25 +34,18 @@
                     <td>{{$tintuc->content}}</td>
                     <td>{{$tintuc->created_at}}</td>
                     <td>{{$tintuc->updated_at}}</td>
-                    <td>                        
+                    <td>                      
                         <button type="button" class="btn btn-secondary"
                         data-news-id="{{$tintuc->id}}" id="news-update"
                                 data-news-edit-link="{{route('news-edit',$tintuc->id)}}"
-                                data-news-update-link="{{route('news-update',$tintuc->id)}}">
-                            {{-- <a data-news-id="{{$tintuc->id}}" id="news-update"
-                                data-news-edit-link="{{route('news-edit',$tintuc->id)}}"
-                                data-news-update-link="{{route('news-update',$tintuc->id)}}">
-                             </a>Sửa --}}
-                             Sửa
+                                data-news-update-link="{{route('news-update',$tintuc->id)}}">                         
+                             <i class="fa fa-lg fa-edit"></i>
                         </button>
                               
                         <button type="button" class="btn btn-danger"
                         data-news-id="{{$tintuc->id}}" id="news-destroy"
                         data-news-link="{{route('news-destroy',$tintuc->id)}}"
-                        >Xóa
-                          {{-- <a data-news-id="{{$tintuc->id}}" id="news-destroy"
-                            data-news-link="{{route('news-destroy',$tintuc->id)}}">Xóa
-                         </a> --}}
+                        ><i class="fa fa-lg fa-trash"></i>                        
                         </button>
                       </td> 
                   </tr>                 
