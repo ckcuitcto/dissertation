@@ -13,49 +13,36 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
             <form method="post" action="{{ route('comment-store') }}">
+                {!! csrf_field() !!}
                 <div class="tile">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            {!! csrf_field() !!}
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label for="exampleText">Tiêu đề</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="title" name="title" type="text" placeholder="Nhập vào chủ đề">
-                                    <small class="form-text text-muted" id="emailHelp"></small>
-                                    @if ($errors->has('title'))
-                                        <span class="help-block">
+                    <h3 class="tile-title">Vertical Form</h3>
+                    <div class="tile-body">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label">Tiêu đề</label>
+                                <input class="form-control" id="title" name="title" type="text" placeholder="Nhập vào chủ đề">
+                                <small class="form-text text-muted" id="emailHelp"></small>
+                                @if ($errors->has('title'))
+                                    <span class="help-block">
                                             <strong>{{ $errors->first('title') }}</strong>
                                         </span>
-                                    @endif
-                                </div>
-                            </div>                  
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label for="exampleTextarea">Nội dung</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <textarea class="form-control" id="content" name="content" rows="5"></textarea>
-                                    @if ($errors->has('content'))
-                                        <span class="help-block">
+                                @endif
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Nội dung</label>
+                                <textarea class="form-control" id="content" name="content" rows="5"></textarea>
+                                @if ($errors->has('content'))
+                                    <span class="help-block">
                                             <strong>{{ $errors->first('content') }}</strong>
                                         </span>
-                                    @endif
-                                </div>
-                            </div>                                                
-
-                        </div>           
+                                @endif
+                            </div>
+                        </form>
                     </div>
                     <div class="tile-footer">
-                        <button class="btn btn-primary" type="submit" id="btn-save-comment" name="btn-save-comment">Gửi</button>
-                        <button class="btn btn-danger" type="cancel">Hủy</button>
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Gửi</button>
+                        &nbsp;&nbsp;&nbsp;
                     </div>
                 </div>
             </form>

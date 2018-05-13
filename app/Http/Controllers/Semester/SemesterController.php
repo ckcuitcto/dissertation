@@ -173,9 +173,11 @@ class SemesterController extends Controller
         foreach ($rolesCanMark as $role) {
             $dateEnd = "date_end_to_mark_" . $role->id;
             $dateStart = "date_start_to_mark_" . $role->id;
-//            $arrValidatorRole[$dateEnd] = "before:" . $dateStart;
+//            $arrValidatorRole[$dateEnd] = "required|before:" . $dateStart;
+            $arrValidatorRole[$dateEnd] = "required";
 
 //            $arrValidatorRoleMessage[$dateEnd . ".before"] = "Ngày kết thúc phải > ngày bắt đầu";
+            $arrValidatorRoleMessage[$dateEnd . ".required"] = "Bắt buộc nhập";
         }
         $arrValidatorRole['year_from'] = "required";
         $arrValidatorRole['year_to'] = "required|after:year_from";
@@ -184,11 +186,6 @@ class SemesterController extends Controller
         $arrValidatorRoleMessage['year_to.required'] = 'Bắt buộc nhập. ';
         $arrValidatorRoleMessage['year_to.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
         $validator = Validator::make($request->all(), $arrValidatorRole, $arrValidatorRoleMessage);
-
-//        $validator = Validator::make($request->all(), [
-//            'year_from' => 'date_format:"Y"|required',
-//            'year_to' => 'date_format:"Y"|required|after:year_from',
-//        ]);
 
         if ($validator->fails()) {
             return response()->json([

@@ -212,27 +212,25 @@
                     @endcan
                     <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> Sinh
                             viên</a></li>
-                    <li><a class="treeview-item" href="{{ route('departmentlist') }}"><i
-                                    class="icon fa fa-circle-o"></i> Phòng ban</a></li>
+                    {{--<li><a class="treeview-item" href="{{ route('departmentlist') }}"><i--}}
+                                    {{--class="icon fa fa-circle-o"></i> Phòng ban</a></li>--}}
                 </ul>
             </li>
 
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
-                @can('comment-change')
+                @can('comment-add')
                     <ul class="treeview-menu">
                         <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
                                         class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
                     </ul>
                 @endcan
-                @can('comment-list')
-                    <ul class="treeview-menu">
-                        <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
-                                        class="icon fa fa-circle-o"></i>
-                                Danh sách ý kiến đóng góp</a></li>
-                    </ul>
-                @endcan
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
+                                    class="icon fa fa-circle-o"></i>
+                            Danh sách ý kiến</a></li>
+                </ul>
             </li>
 
             @can('user-rights')
@@ -310,7 +308,7 @@
                     "zeroRecords": "Không có bản ghi nào!",
                     "info": "Hiển thị trang _PAGE_ của _PAGES_",
                     "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
                 },
                 "pageLength": 25
             });

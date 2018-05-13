@@ -13,9 +13,15 @@
         </div>
         <div class="row">
             <div class="col-md-12">
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 <div class="tile">
                     <div class="tile-body">
                         <table class="table table-hover table-bordered" id="sampleTable">
+                            {{--@if($user->Role->id <= 3)--}}
                             <thead>
                             <tr>
                                 <th>STT</th>
@@ -24,11 +30,11 @@
                                 <th>Tiêu đề</th>
                                 <th>Nội dung ý kiến</th>
                                 <th>Ngày gửi</th>
-                                <th>Phản hồi ý kiến</th>
+                                <th>Tùy chọn</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($comment as $cmt)
+                            @foreach($comments as $cmt)
                                 <tr>
                                     <td>{{ $cmt->id }}</td>
                                     {{--                                    <td> {{ $cmt->userName}}</td>--}}
@@ -37,15 +43,19 @@
                                     <td>{!! $cmt->content !!}</td>
                                     <td>{{ $cmt->created_at }}</td>
                                     <td>
+                                    @can('comment-reply')
                                         <a data-comment-id="{{$cmt->id}}" id="comment-reply"
                                            data-comment-show-link="{{route('comment-show',$cmt->id)}}"
                                            data-comment-reply-link="{{route('comment-reply',$cmt->id)}}">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
+                                    @endcan
+                                    @can('comment-delete')
                                         <a data-comment-id="{{$cmt->id}}" id="comment-destroy"
                                            data-comment-link="{{route('comment-destroy',$cmt->id)}}">
                                             <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                         </a>
+                                    @endcan
                                     </td>
                                 </tr>
                             @endforeach
@@ -111,6 +121,8 @@
 
     <script>
         $(document).ready(function () {
+            $('div.alert-success').delay(2000).slideUp();
+
             $("a#comment-reply").click(function () {
                 var urlShow = $(this).attr('data-comment-show-link');
                 var urlReply = $(this).attr('data-comment-reply-link');

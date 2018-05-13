@@ -19,6 +19,11 @@ class PersonalInformationPolicy
      */
     public function view(User $user, Student $student)
     {
-        return $user->faculty_id == $student->User->faculty_id OR $user->role_id >= 5;
+        if($user->role_id >= 3){
+            return $user->faculty_id == $student->User->faculty_id OR $user->role_id >= 5;
+        }else{
+            return $user->id == $student->user_id;
+        }
+
     }
 }

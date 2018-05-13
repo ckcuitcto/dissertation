@@ -58,30 +58,33 @@ class TranscriptController extends Controller
     public function show($id)
     {
         $student = Student::find($id);
-        $user = User::find($student->user_id);
+        if(!empty($student)) {
+            $user = User::find($student->user_id);
 
-        $rolesCanMark = Role::whereHas('permissions', function ($query) {
-            $query->where('name', 'like', '%can-mark%');
-        })->select('id','name','display_name')->orderBy('id')->get()->toArray();
+            $rolesCanMark = Role::whereHas('permissions', function ($query) {
+                $query->where('name', 'like', '%can-mark%');
+            })->select('id', 'name', 'display_name')->orderBy('id')->get()->toArray();
 
 
-        // danh  sách user chấm điểm + role + total
-        $scoreList = DB::table('evaluation_results')
-            ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
-            ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
-            ->leftJoin('users', 'users.id', '=', 'evaluation_results.marker_id')
-            ->select(DB::raw('SUM(evaluation_results.marker_score) as totalRoleScore'), 'evaluation_forms.total','users.role_id','evaluation_results.marker_id','evaluation_forms.id as evaluationFormId')
-            ->where([
-                ['evaluation_forms.student_id', $id],
-                ['evaluation_criterias.level','>','1']
-            ])
-            ->groupBy('evaluation_results.marker_id','evaluation_forms.id')
-            ->get();
+            // danh  sách user chấm điểm + role + total
+            $scoreList = DB::table('evaluation_results')
+                ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
+                ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
+                ->leftJoin('users', 'users.id', '=', 'evaluation_results.marker_id')
+                ->select(DB::raw('SUM(evaluation_results.marker_score) as totalRoleScore'), 'evaluation_forms.total', 'users.role_id', 'evaluation_results.marker_id', 'evaluation_forms.id as evaluationFormId')
+                ->where([
+                    ['evaluation_forms.student_id', $id],
+                    ['evaluation_criterias.level', '>', '1']
+                ])
+                ->groupBy('evaluation_results.marker_id', 'evaluation_forms.id')
+                ->get();
 //        var_dump($scoreList->where('evaluationFormId',9));
 //        dd($scoreList);
 
-        $evaluationForms = EvaluationForm::where('student_id', $id)->get();
-        return view('transcript.show', compact('user', 'evaluationForms','rolesCanMark','scoreList'));
+            $evaluationForms = EvaluationForm::where('student_id', $id)->get();
+            return view('transcript.show', compact('user', 'evaluationForms', 'rolesCanMark', 'scoreList'));
+        }
+        return redirect()->back();
     }
 
     /**

@@ -72,8 +72,8 @@ class PermissionTableSeeder extends Seeder
                 'description' => 'Ai cũng có thể xem minh chứng'
             ],
             [
-                'name' => 'comment-change',
-                'display_name' => 'Thêm và sửa ý kiến',
+                'name' => 'comment-add',
+                'display_name' => 'Thêm ý kiến',
                 'description' => 'Sinh viên và ban cán sự lớp có quyền thêm và sửa ý kiến'
             ],
             [
@@ -82,9 +82,9 @@ class PermissionTableSeeder extends Seeder
                 'description' => 'Chỉ admin mới được xóa ý kiến'
             ],
             [
-                'name' => 'comment-list',
-                'display_name' => 'Danh sách ý kiến',
-                'description' => 'Giáo viên, khoa và admin được xem ý kiến'
+                'name' => 'comment-reply',
+                'display_name' => 'Trả lời ý kiến',
+                'description' => 'Trả lời ý kiến sinh viên'
             ],
             [
                 'name' => 'count-point',
