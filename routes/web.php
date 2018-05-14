@@ -139,6 +139,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         //kiem tra file upload = ajax
         Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Evaluation\EvaluationFormController@checkFileUpload']);
+
+        Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Evaluation\EvaluationFormController@getProofById']);
     });
 
 

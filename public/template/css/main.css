@@ -14830,3 +14830,8 @@ be a descendant of the grid when it is being dragged.
 .user .user-settings label {
   color: #666;
 }
+
+.doc {
+  width: 100%;
+  height: 500px;
+}

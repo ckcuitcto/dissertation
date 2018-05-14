@@ -72,8 +72,19 @@
                                                     @isset($valueLevel2->proof)
                                                         @php $name= "proof".$valueLevel2->id; @endphp
                                                         <input type="file" class="proof" id="{{$valueLevel2->id}}"
-                                                               name="{{ $name }}" multiple>
+                                                               name="{{ $name."[]" }}" multiple>
                                                     @endisset
+                                                    @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel2->id)))
+                                                        @foreach($proofs->where('evaluation_criteria_id',$valueLevel2->id) as $proof)
+                                                            <p>
+                                                                <a data-proof-id="{{$proof->id}}" id="proof-view-file"
+                                                                   data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
+                                                                   data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
+                                                                    <i class="fa fa-eye" aria-hidden="true"></i>{{ $proof->name }}
+                                                                </a>
+                                                            </p>
+                                                        @endforeach
+                                                    @endif
                                                     {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($valueLevel2->detail)  !!}
                                                 </td>
                                             @else
@@ -82,8 +93,19 @@
                                                     @isset($valueLevel2->proof)
                                                         @php $name= "proof".$valueLevel2->id; @endphp
                                                         <input type="file" class="proof" id="{{$valueLevel2->id}}"
-                                                               name="{{ $name }}" multiple>
+                                                               name="{{ $name."[]" }}" multiple>
                                                     @endisset
+                                                    @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel2->id)))
+                                                        @foreach($proofs->where('evaluation_criteria_id',$valueLevel2->id) as $proof)
+                                                            <p>
+                                                                <a data-proof-id="{{$proof->id}}" id="proof-view-file"
+                                                                   data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
+                                                                   data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
+                                                                    <i class="fa fa-eye" aria-hidden="true"></i>{{ $proof->name }}
+                                                                </a>
+                                                            </p>
+                                                        @endforeach
+                                                    @endif
                                                 </td>
                                             @endif
                                             <td>
@@ -129,8 +151,19 @@
                                                         @isset($valueLevel3->proof)
                                                             @php $name= "proof".$valueLevel3->id; @endphp
                                                             <input type="file" class="proof" id="{{$valueLevel3->id}}"
-                                                                   name="{{ $name }}" multiple>
+                                                                   name="{{ $name."[]" }}" multiple>
                                                         @endisset
+                                                        @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel3->id)))
+                                                            @foreach($proofs->where('evaluation_criteria_id',$valueLevel3->id) as $proof)
+                                                                <p>
+                                                                    <a data-proof-id="{{$proof->id}}" id="proof-view-file"
+                                                                       data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
+                                                                       data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
+                                                                        <i class="fa fa-eye" aria-hidden="true"></i>{{ $proof->name }}
+                                                                    </a>
+                                                                </p>
+                                                            @endforeach
+                                                        @endif
                                                         {!!  \App\Http\Controllers\Evaluation\EvaluationFormController::handleDetail($valueLevel3->detail)  !!}
                                                     </td>
                                                 @else
@@ -139,8 +172,19 @@
                                                         @isset($valueLevel3->proof)
                                                             @php $name= "proof".$valueLevel3->id; @endphp
                                                             <input type="file" class="proof" id="{{$valueLevel3->id}} "
-                                                                   name="{{ $name }}" multiple>
+                                                                   name="{{ $name."[]" }}" multiple>
                                                         @endisset
+                                                        @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel3->id)))
+                                                            @foreach($proofs->where('evaluation_criteria_id',$valueLevel3->id) as $proof)
+                                                                <p>
+                                                                    <a data-proof-id="{{$proof->id}}" id="proof-view-file"
+                                                                       data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
+                                                                       data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
+                                                                        <i class="fa fa-eye" aria-hidden="true"></i>{{ $proof->name }}
+                                                                    </a>
+                                                                </p>
+                                                            @endforeach
+                                                        @endif
                                                     </td>
                                                 @endif
                                                 <td>{{ $valueLevel3->mark_range_display OR "" }}</td>
@@ -250,14 +294,46 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Xem file minh chứng</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="iframe-view-file">
+
+                        </div>
+                        {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
+                        <form id="semester-form">
+                            {!! csrf_field() !!}
+                            <div class="row">
+                                <div class="animated-checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="invalid" id="invalid"><span class="label-text">File hợp lệ</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-link="{{ route('semester-store') }}" class="btn btn-primary"
+                                id="btn-save-semester" name="btn-save-semester" type="button">Thêm
+                        </button>
+                        <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
     </main>
-
 @endsection
-
 @section('sub-javascript')
-
     <script type="text/javascript" src="{{ asset('js//evaluationForm.js') }}"></script>
-
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -305,6 +381,53 @@
                         }
                     }
                 });
+            });
+
+            $("a#proof-view-file").click(function (e) {
+                var name = $(this).attr('data-proof-file-path');
+                var id = $(this).attr('data-proof-id');
+                var url = $(this).attr('data-get-file-link');
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {id: id},
+                    success: function (data) {
+                        if (data.status === true) {
+                            var modal = $('#myModal');
+                            var urlFile = '{{ asset("upload/proof/") }}'+ '/' + data.file_path;
+                            var contentView = '<iframe class="doc" src="' + urlFile +'"></iframe>';
+                            $('#iframe-view-file').html(contentView);
+                            modal.modal('show');
+                        }
+                    }
+                });
+
+
+                // $.ajax({
+                //     type: "post",
+                //     url: url,
+                //     data: valueForm,
+                //     dataType: 'json',
+                //     success: function (result) {
+                //         if (result.status === false) {
+                //             //show error list fields
+                //             if (result.arrMessages !== undefined) {
+                //                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                //                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                //                         $('form#semester-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                //                     });
+                //                 });
+                //             }
+                //         } else if (result.status === true) {
+                //             $('#myModal').find('.modal-body').html('<p>Thành công</p>');
+                //             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                //             $('#myModal').on('hidden.bs.modal', function (e) {
+                //                 location.reload();
+                //             });
+                //         }
+                //     }
+                // });
             });
         });
     </script>
