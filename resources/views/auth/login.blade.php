@@ -8,24 +8,32 @@
         <div class="cover"></div>
     </section>
     <section class="login-content">
-        <div class="logo">
+        {{-- <div class="logo">
             <h1>Trường Đại học Công nghệ Sài Gòn</h1>
-        </div>
+        </div> --}}
         <div class="login-box">
             <form class="login-form" method="POST" action="{{ route('login') }}">
                 {{ csrf_field() }}
-                <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Đăng nhập</h3>
+                <img src="{{'template/assets/logo.bmp'}}" width="30%">
+                <div class="row" style="margin-top:-65px;">
+                    <div class="col-sm-6 col-md-4"></div>
+                    <div class="col-sm-6 col-md-8">
+                        <h4 class="login-head" style="text-align:right;color:#006BB3;font-family: 'Dosis', sans-serif;">                    
+                         SAIGON TECHNOLOGY UNIVERSITY</h4>
+                    </div>
+                </div>              
+                                 
                 <div class="form-group {{ $errors->has('id') ? ' has-error' : '' }}">
-                    <label class="control-label">Mã số sinh viên</label>
-                    <input class="form-control" type="text" placeholder="MSSV" id="id" name="id" value="{{ old('id') }}" required autofocus>
+                    <label class="control-label">MSSV</label>
+                    <input class="form-control" type="text" placeholder="Mã số sinh viên" id="id" name="id" value="{{ old('id') }}" required autofocus>
                     @if ($errors->has('id'))
                             <strong>{{ $errors->first('id') }}</strong>
                     @endif
                 </div>
 
                 <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
-                    <label for="password" class="ontrol-label">Mật khẩu</label>
-                    <input id="password" type="password" class="form-control" name="password" required>
+                    <label for="password" class="ontrol-label">Password</label>
+                    <input id="password" type="password" placeholder="Mật khẩu" class="form-control" name="password" required>
                     @if ($errors->has('password'))
                         <span class="help-block">
                             <strong>{{ $errors->first('password') }}</strong>
@@ -45,13 +53,21 @@
                 </div>
 
                 <div class="form-group btn-container">
-                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>Đăng nhập</button>
+                    <button type="submit" class="btn btn-info btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>Đăng nhập</button>
                 </div>
             </form>
 
             <form class="forget-form" method="POST" action="{{ route('password.email') }}">
                 {{ csrf_field() }}
-                <h3 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Quên mật khẩu ?</h3>
+                <img src="{{'template/assets/logo.bmp'}}" width="30%">
+                <div class="row" style="margin-top:-65px;">
+                    <div class="col-sm-6 col-md-4"></div>
+                    <div class="col-sm-6 col-md-8">
+                        <h4 class="login-head" style="text-align:right;color:#006BB3;font-family: 'Dosis', sans-serif;">                    
+                         SAIGON TECHNOLOGY UNIVERSITY</h4>
+                    </div>
+                </div>  
+                <h4 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Quên mật khẩu ?</h4>
                 <div class="form-group">
                     <label class="control-label">Email</label>
                     <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>

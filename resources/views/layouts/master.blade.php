@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('template/css/main.css') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
     {{--<link rel="stylesheet" type="text/css" href="{{ URL::asset('css/font-awesome.min.css') }}">--}}
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
