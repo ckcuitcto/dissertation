@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Transcript;
 
+use App\Model\EvaluationCriteria;
 use App\Model\EvaluationForm;
+use App\Model\EvaluationResult;
 use App\Model\Role;
 use App\Model\Semester;
 use App\Model\Student;
@@ -65,7 +67,6 @@ class TranscriptController extends Controller
                 $query->where('name', 'like', '%can-mark%');
             })->select('id', 'name', 'display_name')->orderBy('id')->get()->toArray();
 
-
             // danh  sách user chấm điểm + role + total
             $scoreList = DB::table('evaluation_results')
                 ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
@@ -80,6 +81,9 @@ class TranscriptController extends Controller
                 ->get();
 //        var_dump($scoreList->where('evaluationFormId',9));
 //        dd($scoreList);
+
+            //
+
 
             $evaluationForms = EvaluationForm::where('student_id', $id)->get();
             return view('transcript.show', compact('user', 'evaluationForms', 'rolesCanMark', 'scoreList'));
@@ -119,5 +123,45 @@ class TranscriptController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    // lấy các tiêu chí con
+    private function getEvaluationCriteriaByParentId($parentId){
+        $arrChildId = array();
+        $evaluationCriteria = EvaluationCriteria::find($parentId);
+        foreach($evaluationCriteria->Child as $key => $childLevel1){
+            $arrChildId[] = $childLevel1->id;
+            if(!empty($childLevel1->Child)){
+                foreach($childLevel1->Child as $key => $childLevel2){
+                    $arrChildId[] = $childLevel2->id;
+                }
+            }
+        }
+        return $arrChildId;
+    }
+
+    //  lấy điểm của mỗi  nội dung đánh giá level 1 trong 1 form
+    private function getTotalScoreTopic($evaluationFormId,$markerId,$evaluationCriteriaId){
+        $arrEvaluationCriterial = $this->getEvaluationCriteriaByParentId($evaluationCriteriaId);
+//        $evaluationResults = EvaluationResult::where('evaluation_form_id',$id)->get();
+        $score = DB::table('evaluation_results')->where([
+            'evaluation_form_id' => $evaluationFormId,
+            'marker_id' => $markerId
+        ])->whereIn('evaluation_criteria_id',$arrEvaluationCriterial)->select(DB::raw('sum(marker_score) as total'))->first();
+        return $score->total;
+    }
+
+    // lấy điểm đánh giá  một form của 1 người chấm
+    private function geTotalScoreForm($evaluationFormId,$markerId){
+        $total = 0;
+        $evaluationCriteria = EvaluationCriteria::where('level',1)->get();
+        foreach($evaluationCriteria as $key => $value){
+            $score = $this->getTotalScoreTopic($evaluationFormId,$markerId,$value->id);
+            if($score > $value->mark_range_to){
+                $score =  $value->mark_range_to;
+            }
+            $total += $score;
+        }
+        return $total;
     }
 }

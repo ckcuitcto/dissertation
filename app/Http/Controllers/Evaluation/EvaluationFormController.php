@@ -187,22 +187,38 @@ class EvaluationFormController extends Controller
         // lưu điểm đánh giá
         $arrEvaluationResult = array();
         $arrProof = array();
+
+        // xóa điểm cũ nếu đã chấm.
+        $isMarked =  EvaluationResult::where([
+            'evaluation_form_id' => $evaluationFormId,
+            'marker_id' => $userLogin->id
+        ])->first();
+        // nếu chấm rồi thì xóa hết điểm r thêm lại
+        if(!empty($isMarked)) {
+            EvaluationResult::where([
+                'evaluation_form_id' => $evaluationFormId,
+                'marker_id' => $userLogin->id
+            ])->delete();
+        }
+
         foreach ($request->all() as $key => $value) {
             if ($key != '_token') {
                 if (substr($key, "0", "5") == "score") {
-
+                    $evaluationCriteriaId = (int)substr($key, "5", "7");
                     // mỗi form input điểm sẽ có tên = score + id tiêu chí.
                     // lấy ra rồi lưu 1 lần 1 mảng cho nhanh.
-                    $evaluationCriteriaId = (int)substr($key, "5", "7");
+                    // nếu chưa chấm thì là thêm vào 1 mảng để them vào db cho nhanh.
+
                     $arrEvaluationResult[] = [
                         'evaluation_criteria_id' => $evaluationCriteriaId,
                         'evaluation_form_id' => $evaluationFormId,
                         'marker_id' => $userLogin->id,
                         'marker_score' => $value
                     ];
+
                 } elseif (substr($key, "0", "5") == "proof") {
                     $evaluationCriteriaId = (int)substr($key, "5", "7");
-                    foreach($value as $proof){
+                    foreach ($value as $proof) {
                         $fileName = str_random(13) . "_" . $proof->getClientOriginalName();
                         $fileName = preg_replace('/\s+/', '', $fileName);
                         while (file_exists("upload/proof/" . $fileName)) {
@@ -219,8 +235,6 @@ class EvaluationFormController extends Controller
                 }
             }
         }
-//        dd($arrProof);
-//        die;
         $evaluationForm->EvaluationResults()->createMany($arrEvaluationResult);
         $evaluationForm->total = $request->totalScoreOfForm;
         $evaluationForm->save();
@@ -261,12 +275,10 @@ class EvaluationFormController extends Controller
 
     public function checkFileUpload(Request $request)
     {
-
-        $arrFileType = array('xlsx', 'doc', 'docx', 'img', 'jpg', 'pdf', 'png', 'jpeg', 'bmp');
-
+//        $arrFileType = array('xlsx', 'doc', 'docx', 'img', 'jpg', 'pdf', 'png', 'jpeg', 'bmp');
         $arrFile = $request->file('fileUpload');
         foreach ($arrFile as $file) {
-            if (!in_array($file->getClientOriginalExtension(), $arrFileType)) {
+            if (!in_array($file->getClientOriginalExtension(), FILE_VALID)) {
                 $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ "]);
                 return response()->json([
                     'status' => false,
@@ -277,22 +289,6 @@ class EvaluationFormController extends Controller
         return response()->json([
             'status' => true,
         ], 200);
-//
-//        if($file){
-//
-//            if(!in_array($file->getClientOriginalExtension(),$arrFileType))
-//            {
-//                $arrMessage = array("fileImport" => ["File ".$file->getClientOriginalName()." không hợp lệ "] );
-//                return response()->json([
-//                    'status' => false,
-//                    'arrMessages' => $arrMessage
-//                ], 200);
-//            }else{
-//                return response()->json([
-//                    'status' => true,
-//                ], 200);
-//            }
-//        }
     }
 
     public function getProofById($id){
