@@ -102,7 +102,7 @@
 
 @section('sub-javascript')
     <!-- Page specific javascripts-->
-    <script type="text/javascript" src="{{ URL::asset('template/js/plugins/chart.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ URL::asset('template/js/plugins/chart.js') }}"></script>
     <script type="text/javascript">
         var data = {
             labels: ["January", "February", "March", "April", "May"],
@@ -147,6 +147,6 @@
 
         var ctxp = $("#pieChartDemo").get(0).getContext("2d");
         var pieChart = new Chart(ctxp).Pie(pdata);
-    </script>
+    </script> --}}
 
 @stop
