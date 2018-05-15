@@ -56,6 +56,7 @@
             <div class="col-md-12">
                 <div class="tile">
                     <h3 class="tile-title"><i class="fa fa-bell" aria-hidden="true"></i> &nbsp;Thông báo</h3>
+                    <div class="card-columns">
                     @foreach($newsList as $news)
                     <div class="card text-white bg-info mb-3">
                         <div class="card-header"><h5>{{$news->title}}</h5></div>
@@ -64,19 +65,24 @@
                           <p class="card-text">{{$news->content}}</p>
                         </div>
                     </div>  
-                    @endforeach                  
+                    @endforeach     
+                    </div>            
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="tile">
-                    <h3 class="tile-title"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> &nbsp;Công việc cần làm</h3>
+                    <h3 class="tile-title"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> &nbsp;Thời gian đánh giá điểm rèn luyện</h3>                   
                     <div class="card text-white bg-warning mb-3">
-                        <div class="card-header">Header</div>
+                        <div class="card-header">
+                            <div>Đánh giá điểm rèn luyện học kỳ {{$timeList->term}} năm học {{$timeList->year_to}}</div>
+                        </div>
                         <div class="card-body">
-                          <h5 class="card-title">Warning card title</h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                          {{-- <h5 class="card-title">Warning card title</h5> --}}
+                          <p class="card-text">Ngày bắt đầu {{$timeList->date_start_to_mark}}</p>
+                          <p class="card-text">Ngày kết thúc {{$timeList->date_end_to_mark}} >>><a href="#">Đánh giá ngay</a></p>
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>
