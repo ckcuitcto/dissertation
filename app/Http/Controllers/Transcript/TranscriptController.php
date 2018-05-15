@@ -59,6 +59,7 @@ class TranscriptController extends Controller
      */
     public function show($id)
     {
+//        dd(Semester::orderBy('id','desc')->first());
         $student = Student::find($id);
         if(!empty($student)) {
             $user = User::find($student->user_id);
@@ -75,7 +76,7 @@ class TranscriptController extends Controller
                 ->select(DB::raw('SUM(evaluation_results.marker_score) as totalRoleScore'), 'evaluation_forms.total', 'users.role_id', 'evaluation_results.marker_id', 'evaluation_forms.id as evaluationFormId')
                 ->where([
                     ['evaluation_forms.student_id', $id],
-                    ['evaluation_criterias.level', '>', '1']
+                    ['evaluation_criterias.level', '=', '1']
                 ])
                 ->groupBy('evaluation_results.marker_id', 'evaluation_forms.id')
                 ->get();
@@ -152,7 +153,7 @@ class TranscriptController extends Controller
     }
 
     // lấy điểm đánh giá  một form của 1 người chấm
-    private function geTotalScoreForm($evaluationFormId,$markerId){
+    public function geTotalScoreForm($evaluationFormId,$markerId){
         $total = 0;
         $evaluationCriteria = EvaluationCriteria::where('level',1)->get();
         foreach($evaluationCriteria as $key => $value){

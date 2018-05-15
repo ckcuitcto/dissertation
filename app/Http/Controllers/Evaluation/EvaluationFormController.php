@@ -16,6 +16,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 class EvaluationFormController extends Controller
 {
     /**
@@ -192,7 +194,8 @@ class EvaluationFormController extends Controller
         $isMarked =  EvaluationResult::where([
             'evaluation_form_id' => $evaluationFormId,
             'marker_id' => $userLogin->id
-        ])->first();
+        ])->get();
+
         // nếu chấm rồi thì xóa hết điểm r thêm lại
         if(!empty($isMarked)) {
             EvaluationResult::where([
@@ -294,8 +297,40 @@ class EvaluationFormController extends Controller
     public function getProofById($id){
         $proof = Proof::find($id);
         return response()->json([
-            'file_path' => $proof->name,
+            'proof' => $proof,
             'status' => true
+        ],200);
+    }
+
+    public function updateValidProofFile(Request $request, $id){
+
+        if($request->valid == 1) {
+            $validator = Validator::make($request->all(), [
+                'note' => 'required',
+            ], [
+                'note.required' => "Vui lòng nhập lí do File không phù hợp",
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'arrMessages' => $validator->errors()
+                ], 200);
+            }
+        }
+
+        $proof = Proof::find($id);
+        if(!empty($proof)){
+            $proof->valid = $request->valid;
+            $proof->note = $request->note;
+            $proof->save();
+            return response()->json([
+                'proof' => $proof,
+                'status' => true
+            ],200);
+        }
+
+        return response()->json([
+            'status' => false
         ],200);
     }
 

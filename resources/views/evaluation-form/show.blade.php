@@ -79,8 +79,10 @@
                                                             <p>
                                                                 <a data-proof-id="{{$proof->id}}" id="proof-view-file"
                                                                    data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
+                                                                   data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
                                                                    data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
-                                                                    <i class="fa fa-eye" aria-hidden="true"></i>{{ $proof->name }}
+                                                                    <i class="fa fa-eye"
+                                                                       aria-hidden="true"></i>{{ $proof->name }}
                                                                 </a>
                                                             </p>
                                                         @endforeach
@@ -100,8 +102,10 @@
                                                             <p>
                                                                 <a data-proof-id="{{$proof->id}}" id="proof-view-file"
                                                                    data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
+                                                                   data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
                                                                    data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
-                                                                    <i class="fa fa-eye" aria-hidden="true"></i>{{ $proof->name }}
+                                                                    <i class="fa fa-eye"
+                                                                       aria-hidden="true"></i>{{ $proof->name }}
                                                                 </a>
                                                             </p>
                                                         @endforeach
@@ -117,12 +121,6 @@
                                                         $name= "score".$valueLevel2->id;
                                                         $keyResult = $valueLevel2->id."_".$role['userId'];
 
-                                                        //lưu lại điểm mỗi loại role
-                                                        if(!empty($evaluationResults[$keyResult]['marker_score'])){
-                                                            $arrTotalScore[$role['userRole']] += $evaluationResults[$keyResult]['marker_score'];
-                                                        }else{
-                                                            $arrTotalScore[$role['userRole']] += 0;
-                                                        }
                                                     @endphp
                                                     {{-- nếu role của user đang đăng nhập = với role của input và đang trong thời gian có thể chấm thì mới đc nhập--}}
                                                     {{-- các input còn lại sẽ bị ẩn đi --}}
@@ -156,10 +154,13 @@
                                                         @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel3->id)))
                                                             @foreach($proofs->where('evaluation_criteria_id',$valueLevel3->id) as $proof)
                                                                 <p>
-                                                                    <a data-proof-id="{{$proof->id}}" id="proof-view-file"
+                                                                    <a data-proof-id="{{$proof->id}}"
+                                                                       id="proof-view-file"
                                                                        data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
+                                                                       data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
                                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
-                                                                        <i class="fa fa-eye" aria-hidden="true"></i>{{ $proof->name }}
+                                                                        <i class="fa fa-eye"
+                                                                           aria-hidden="true"></i>{{ $proof->name }}
                                                                     </a>
                                                                 </p>
                                                             @endforeach
@@ -177,10 +178,13 @@
                                                         @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel3->id)))
                                                             @foreach($proofs->where('evaluation_criteria_id',$valueLevel3->id) as $proof)
                                                                 <p>
-                                                                    <a data-proof-id="{{$proof->id}}" id="proof-view-file"
+                                                                    <a data-proof-id="{{$proof->id}}"
+                                                                       id="proof-view-file"
                                                                        data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
+                                                                       data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
                                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
-                                                                        <i class="fa fa-eye" aria-hidden="true"></i>{{ $proof->name }}
+                                                                        <i class="fa fa-eye"
+                                                                           aria-hidden="true"></i>{{ $proof->name }}
                                                                     </a>
                                                                 </p>
                                                             @endforeach
@@ -192,11 +196,6 @@
                                                     @php
                                                         $name= "score".$valueLevel3->id;
                                                         $keyResult = $valueLevel3->id."_".$role['userId'];
-                                                        if(!empty($evaluationResults[$keyResult]['marker_score'])){
-                                                            $arrTotalScore[$role['userRole']] += $evaluationResults[$keyResult]['marker_score'];
-                                                        }else{
-                                                            $arrTotalScore[$role['userRole']] += 0;
-                                                        }
                                                     @endphp
                                                     @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{ $name }}"
@@ -225,7 +224,11 @@
                                             @php
                                                 $name= "score".$valueLevel1->id;
                                                 $keyResult = $valueLevel1->id."_".$role['userId'];
-
+                                                if(!empty($evaluationResults[$keyResult]['marker_score'])){
+                                                    $arrTotalScore[$role['userRole']] += $evaluationResults[$keyResult]['marker_score'];
+                                                }else{
+                                                    $arrTotalScore[$role['userRole']] += 0;
+                                                }
                                             @endphp
                                             @if($role['name'] == $user->Role->name  AND $currentRoleCanMark->id == $role['userRole'])
                                                 <td>
@@ -284,10 +287,10 @@
                                 </tbody>
                             </table>
                             @can('can-mark')
-                            <div align="right">
-                                <button class="btn btn-primary" type="submit">Lưu</button>
-                                <button class="btn btn-secondary" type="reset">Hủy</button>
-                            </div>
+                                <div align="right">
+                                    <button class="btn btn-primary" type="submit">Lưu</button>
+                                    <button class="btn btn-secondary" type="reset">Hủy</button>
+                                </div>
                             @endcan
                         </form>
                     </div>
@@ -298,50 +301,71 @@
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="overlay">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Xem file minh chứng</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="iframe-view-file">
-
-                        </div>
-                        {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
-                        <form id="semester-form">
-                            {!! csrf_field() !!}
-                            <div class="row">
-                                <div class="animated-checkbox">
-                                    <label>
-                                        <input type="checkbox" value="1" name="invalid" id="invalid"><span class="label-text">File hợp lệ</span>
-                                    </label>
+                    <form id="proof-form" method="post" enctype="multipart/form-data">
+                        {!! csrf_field() !!}
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Xem file minh chứng</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="iframe-view-file"></div>
+                                {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
+                                <input type="hidden" class="id" name="id">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <fieldset class="form-group">
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input valid" id="valid" type="radio" name="valid" value="1">File có hợp lệ
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input valid" id="invalid" type="radio" name="valid" value="0"> File không hợp lệ
+                                                </label>
+                                            </div>
+                                        </fieldset>
+                                        <div class="form-group" id="textarea-note" style="display: none;">
+                                            <label for="note">Ghi chú</label>
+                                            <textarea class="form-control note" name="note" id="note" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    {{--<label>--}}
+                                        {{--<input type="radio" name="valid" value="1"><span class="label-text">Radio Button</span>--}}
+                                        {{--<input type="radio" name="valid" value="2"><span class="label-text">Radio Button</span>--}}
+                                    {{--</label>--}}
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button data-link="{{ route('semester-store') }}" class="btn btn-primary"
-                                id="btn-save-semester" name="btn-save-semester" type="button">Thêm
-                        </button>
-                        <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">Đóng</button>
-                    </div>
-                </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" id="btn-update-valid-proof-file" name="btn-update-valid-proof-file"
+                                        type="button">
+                                    Sửa
+                                </button>
+                                <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">Đóng
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </main>
 @endsection
 @section('sub-javascript')
+    <script type="text/javascript" src=" {{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
+    <script type="text/javascript" src=" {{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js//evaluationForm.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
 
             //nếu quá hạn thì k thể chấm điểm
             @if( strtotime($evaluationForm->Semester->date_start_to_mark) > strtotime(date('Y-m-d')) OR strtotime($evaluationForm->Semester->date_end_to_mark) < strtotime(date('Y-m-d')))
-                $('input').attr('disabled', true);
-                $('button').attr('disabled', true);
+            $('input').attr('disabled', true);
+            $('button').attr('disabled', true);
             @endif
+
+
 
             $('.proof').change(function (e) {
                 var urlCheckFile = "{{ route('evaluation-form-upload') }}";
@@ -387,47 +411,78 @@
                 var name = $(this).attr('data-proof-file-path');
                 var id = $(this).attr('data-proof-id');
                 var url = $(this).attr('data-get-file-link');
+                var urlUpdateProofFile = $(this).attr('data-link-update-proof-file');
+
                 $.ajax({
                     url: url,
                     type: 'POST',
                     dataType: 'json',
                     data: {id: id},
                     success: function (data) {
-                        if (data.status === true) {
-                            var modal = $('#myModal');
-                            var urlFile = '{{ asset("upload/proof/") }}'+ '/' + data.file_path;
-                            var contentView = '<iframe class="doc" src="' + urlFile +'"></iframe>';
-                            $('#iframe-view-file').html(contentView);
-                            modal.modal('show');
+                        if (data.status === true && data.proof !== undefined) {
+                            $.each(data.proof, function (elementName, value) {
+                                // alert(elementName + "- " + value)
+                                if (elementName === 'name') {
+                                    var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
+                                    var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
+                                    $('div#iframe-view-file').html(contentView);
+                                } else if (elementName === 'valid') {
+                                    if (value == 1) {
+                                        $('form#proof-form').find('#valid').attr('checked', true);
+                                        $("form#proof-form").find('#textarea-note').hide();
+                                    } else {
+                                        $('form#proof-form').find('#invalid').attr('checked', true);
+                                        $("form#proof-form").find('#textarea-note').show();
+                                    }
+                                } else if (elementName === 'id') {
+                                    $("button#btn-update-valid-proof-file").attr("data-link-update-valid-proof", urlUpdateProofFile);
+                                } else {
+                                    $('form#proof-form').find('.' + elementName).val(value);
+                                }
+                            });
+
+                            $('#myModal').modal('show');
                         }
                     }
                 });
+            });
 
+            $("form#proof-form").submit(function (e) {
+                // e.preventDefault();
+                var formData = new FormData(this);
+                $('span.messageErrors').remove();
+                $.ajax({
+                    type: "post",
+                    url: $("btn-update-valid-proof-file").attr("data-link-update-valid-proof"),
+                    data: formData,
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        console.log(data);
+                        if (result.status === true) {
+                            $.notify({
+                                title: "Cập nhật thành công : ",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "info"
+                            });
+                        }else{
+                            console.log(data);
+                            $('form#proof-form').find('.note').parents('.form-group').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                        }
+                    }
+                });
+            });
 
-                // $.ajax({
-                //     type: "post",
-                //     url: url,
-                //     data: valueForm,
-                //     dataType: 'json',
-                //     success: function (result) {
-                //         if (result.status === false) {
-                //             //show error list fields
-                //             if (result.arrMessages !== undefined) {
-                //                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                //                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                //                         $('form#semester-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                //                     });
-                //                 });
-                //             }
-                //         } else if (result.status === true) {
-                //             $('#myModal').find('.modal-body').html('<p>Thành công</p>');
-                //             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                //             $('#myModal').on('hidden.bs.modal', function (e) {
-                //                 location.reload();
-                //             });
-                //         }
-                //     }
-                // });
+            $("input.valid").change(function(){
+                if($(this).val() == 1){
+                    $("form#proof-form").find('#textarea-note').hide();
+                }else{
+                    $("form#proof-form").find('#textarea-note').show();
+                }
             });
         });
     </script>
