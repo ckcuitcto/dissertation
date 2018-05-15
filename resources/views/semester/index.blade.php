@@ -6,9 +6,8 @@
                 <h1><i class="fa fa-file-text-o"></i> Danh sách học kỳ </h1>
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
-            <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></li>
-                </a>
+            <ul class="app-breadcrumb breadcrumb">
+                <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item active"> Danh sách học kỳ</li>
             </ul>
         </div>
