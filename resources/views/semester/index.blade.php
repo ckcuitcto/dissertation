@@ -6,9 +6,8 @@
                 <h1><i class="fa fa-file-text-o"></i> Danh sách học kỳ </h1>
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
-            <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></li>
-                </a>
+            <ul class="app-breadcrumb breadcrumb">
+                <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item active"> Danh sách học kỳ</li>
             </ul>
         </div>
@@ -75,10 +74,10 @@
                                     <div class="form-row">
                                         <label for="year">Năm học</label>
                                         <div class="input-group">
-                                            <input type="text" class="input-sm form-control year_from" id="year_from"
+                                            <input type="year" class="input-sm form-control year_from" id="year_from"
                                                    name="year_from"/>
                                             <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control year_to" name="year_to"
+                                            <input type="year" class="input-sm form-control year_to" name="year_to"
                                                    id="year_to"/>
                                         </div>
                                     </div>
@@ -149,43 +148,70 @@
     <script>
 
 
-        $("input#year_from").datepicker({
+        $("input#year_from").datepicker({  
             format: "yyyy",
             viewMode: "years",
             minViewMode: "years",
-            todayBtn: "linked",
+            todayBtn: "linked",            
             clearBtn: true,
             language: "vi",
-            orientation: "bot right"
+            orientation: "bottom right",
+            autoclose: true,
+            toggleActive: true,
+            
         });
         $("input#year_to").datepicker({
             format: "yyyy",
             viewMode: "years",
             minViewMode: "years",
-            todayBtn: "linked",
+            todayBtn: "linked",            
             clearBtn: true,
             language: "vi",
-            orientation: "bot right"
-
+            orientation: "bot right",
+            autoclose: true,
+            toggleActive: true
         });
         $('input#date_start_to_mark').datepicker({
             todayBtn: "linked",
             language: "vi",
             format: "dd/mm/yyyy",
             clearBtn: true,
-            orientation: "bot right"
-
+            todayHighlight: true,
+            orientation: "bot right",
+            autoclose: true,
+            toggleActive: true,
         });
         $('input#date_end_to_mark').datepicker({
             todayBtn: "linked",
             language: "vi",
             format: "dd/mm/yyyy",
             clearBtn: true,
-            orientation: "bot right"
+            todayHighlight: true,
+            orientation: "bot right",
+            autoclose: true,
+            toggleActive: true
         });
         @foreach($rolesCanMark as $key => $role)
-            $("input#date_start_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "bot right"});
-            $("input#date_end_to_mark_{{$role->id}}").datepicker({todayBtn: "linked", language: "vi", format: "dd/mm/yyyy", clearBtn: true,orientation: "bot right"});
+            $("input#date_start_to_mark_{{$role->id}}").datepicker({
+                todayBtn: "linked", 
+                language: "vi", 
+                format: "dd/mm/yyyy", 
+                clearBtn: true,
+                orientation: "bot right",
+                autoclose: true,
+                toggleActive: true,
+                todayHighlight: true,
+                });
+            $("input#date_end_to_mark_{{$role->id}}").datepicker({
+                todayBtn: "linked", 
+                language: "vi", 
+                format: "dd/mm/yyyy", 
+                clearBtn: true,
+                orientation: "bot right",
+                autoclose: true,
+                toggleActive: true,
+                todayHighlight: true,
+                });
         @endforeach
 
         $(document).ready(function () {

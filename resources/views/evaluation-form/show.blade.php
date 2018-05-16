@@ -83,6 +83,11 @@
                                                                    data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                     <i class="fa fa-eye"
                                                                        aria-hidden="true"></i>{{ $proof->name }}
+                                                                    @if($proof->valid == 1)
+                                                                        <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-check {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
+                                                                    @else
+                                                                        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-times {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
+                                                                    @endif
                                                                 </a>
                                                             </p>
                                                         @endforeach
@@ -106,6 +111,12 @@
                                                                    data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                     <i class="fa fa-eye"
                                                                        aria-hidden="true"></i>{{ $proof->name }}
+
+                                                                @if($proof->valid == 1)
+                                                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-check {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
+                                                                @else
+                                                                    <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-times {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
+                                                                @endif
                                                                 </a>
                                                             </p>
                                                         @endforeach
@@ -161,6 +172,12 @@
                                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                         <i class="fa fa-eye"
                                                                            aria-hidden="true"></i>{{ $proof->name }}
+
+                                                                    @if($proof->valid == 1)
+                                                                        <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-check {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
+                                                                    @else
+                                                                        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-times {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
+                                                                    @endif
                                                                     </a>
                                                                 </p>
                                                             @endforeach
@@ -185,6 +202,12 @@
                                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                         <i class="fa fa-eye"
                                                                            aria-hidden="true"></i>{{ $proof->name }}
+
+                                                                    @if($proof->valid == 1)
+                                                                        <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-check {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
+                                                                    @else
+                                                                        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-times {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
+                                                                    @endif
                                                                     </a>
                                                                 </p>
                                                             @endforeach
@@ -301,48 +324,50 @@
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="overlay">
-                    <form id="proof-form" method="post" enctype="multipart/form-data">
+                    <form id="proof-form" method="post">
                         {!! csrf_field() !!}
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Xem file minh chứng</h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">×</span></button>
                             </div>
                             <div class="modal-body">
                                 <div id="iframe-view-file"></div>
                                 {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
-                                <input type="hidden" class="id" name="id">
+                                <input type="hidden" class="id" name="id" id="proofId">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-2">
                                         <fieldset class="form-group">
+                                            <label for="">File hợp lệ?</label>
                                             <div class="form-check">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input valid" id="valid" type="radio" name="valid" value="1">File có hợp lệ
+                                                    <input class="form-check-input valid" id="valid" type="radio"  name="valid" value="1">Có
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input valid" id="invalid" type="radio" name="valid" value="0"> File không hợp lệ
+                                                    <input class="form-check-input valid" id="invalid" type="radio"  name="valid" value="0">Không
                                                 </label>
                                             </div>
                                         </fieldset>
+                                    </div>
+                                    <div class="col-md-10">
                                         <div class="form-group" id="textarea-note" style="display: none;">
                                             <label for="note">Ghi chú</label>
-                                            <textarea class="form-control note" name="note" id="note" rows="3"></textarea>
+                                            <textarea class="form-control note" name="note" id="note"
+                                                      rows="3"></textarea>
                                         </div>
                                     </div>
-                                    {{--<label>--}}
-                                        {{--<input type="radio" name="valid" value="1"><span class="label-text">Radio Button</span>--}}
-                                        {{--<input type="radio" name="valid" value="2"><span class="label-text">Radio Button</span>--}}
-                                    {{--</label>--}}
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary" id="btn-update-valid-proof-file" name="btn-update-valid-proof-file"
-                                        type="button">
+                                <button class="btn btn-primary" id="btn-update-valid-proof-file"
+                                        name="btn-update-valid-proof-file">
                                     Sửa
                                 </button>
-                                <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">Đóng
+                                <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">
+                                    Đóng
                                 </button>
                             </div>
                         </div>
@@ -364,8 +389,6 @@
             $('input').attr('disabled', true);
             $('button').attr('disabled', true);
             @endif
-
-
 
             $('.proof').change(function (e) {
                 var urlCheckFile = "{{ route('evaluation-form-upload') }}";
@@ -408,10 +431,11 @@
             });
 
             $("a#proof-view-file").click(function (e) {
-                var name = $(this).attr('data-proof-file-path');
-                var id = $(this).attr('data-proof-id');
-                var url = $(this).attr('data-get-file-link');
-                var urlUpdateProofFile = $(this).attr('data-link-update-proof-file');
+                var thisproof = $(this);
+                var name = thisproof.attr('data-proof-file-path');
+                var id = thisproof.attr('data-proof-id');
+                var url = thisproof.attr('data-get-file-link');
+                var urlUpdateProofFile = thisproof.attr('data-link-update-proof-file');
 
                 $.ajax({
                     url: url,
@@ -420,6 +444,7 @@
                     data: {id: id},
                     success: function (data) {
                         if (data.status === true && data.proof !== undefined) {
+                            $("form#proof-form").attr("data-link", urlUpdateProofFile);
                             $.each(data.proof, function (elementName, value) {
                                 // alert(elementName + "- " + value)
                                 if (elementName === 'name') {
@@ -430,13 +455,12 @@
                                     if (value == 1) {
                                         $('form#proof-form').find('#valid').attr('checked', true);
                                         $("form#proof-form").find('#textarea-note').hide();
-                                    } else {
+                                    } else if(value == 0) {
                                         $('form#proof-form').find('#invalid').attr('checked', true);
                                         $("form#proof-form").find('#textarea-note').show();
                                     }
-                                } else if (elementName === 'id') {
-                                    $("button#btn-update-valid-proof-file").attr("data-link-update-valid-proof", urlUpdateProofFile);
-                                } else {
+                                } else
+                                {
                                     $('form#proof-form').find('.' + elementName).val(value);
                                 }
                             });
@@ -448,20 +472,36 @@
             });
 
             $("form#proof-form").submit(function (e) {
-                // e.preventDefault();
+                e.preventDefault();
                 var formData = new FormData(this);
+                var url = $(this).attr("data-link");
+                var proofId = formData.get('id');
+                console.log(formData.get('valid'));
                 $('span.messageErrors').remove();
                 $.ajax({
                     type: "post",
-                    url: $("btn-update-valid-proof-file").attr("data-link-update-valid-proof"),
+                    url: url,
                     data: formData,
                     dataType: 'json',
                     cache: false,
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        console.log(data);
+                        // console.log(result);
                         if (result.status === true) {
+
+                            if(formData.get('valid') == 1){
+
+                                $("i.proofId_"+proofId).removeClass('fa-times').addClass('fa-check');
+                                $("i.proofId_"+proofId).parent().removeClass('btn-danger').addClass('btn-primary');
+                            }else{
+                                $("i.proofId_"+proofId).removeClass('fa-check').addClass('fa-times');
+                                $("i.proofId_"+proofId).parent().removeClass('btn-primary').addClass('btn-danger');
+
+
+                            }
+
+                            $('#myModal').modal('hide');
                             $.notify({
                                 title: "Cập nhật thành công : ",
                                 message: ":D",
@@ -469,20 +509,26 @@
                             }, {
                                 type: "info"
                             });
-                        }else{
-                            console.log(data);
-                            $('form#proof-form').find('.note').parents('.form-group').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                        } else {
+                            $('form#proof-form').find('.note').parents('.form-group').append('<span class="messageErrors" style="color:red">' + result.arrMessages.note + '</span>');
                         }
                     }
                 });
             });
 
-            $("input.valid").change(function(){
-                if($(this).val() == 1){
+            $("input.valid").change(function () {
+                if ($(this).val() == 1) {
                     $("form#proof-form").find('#textarea-note').hide();
-                }else{
+                } else {
                     $("form#proof-form").find('#textarea-note').show();
                 }
+            });
+
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $('div#iframe-view-file').html('');
+                $("input[type=text],input[type=number], select").val('');
+                $('span.messageErrors').remove();
+                $("#note").html('');
             });
         });
     </script>

@@ -9314,6 +9314,12 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
   left: 0;
   padding: 4px;
 }
+/* div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-right.datepicker-orient-bottom {
+  top: 170px !important;
+  left: 385px !important;
+  z-index: 1060;
+  display: block;
+} */
 
 .datepicker-dropdown:before {
   content: '';
@@ -13079,10 +13085,16 @@ be a descendant of the grid when it is being dragged.
   min-height: calc(100vh - 50px);
   margin-top: 50px;
   padding: 30px;
-  background-color: #E5E5E5;
+  /* background-color: #E5E5E5; */
+  background: lightblue url("../assets/2.jpg") no-repeat fixed center;
   -webkit-transition: margin-left 0.3s ease;
   -o-transition: margin-left 0.3s ease;
   transition: margin-left 0.3s ease;
+  /* background: url(địa chỉ ảnh) no-repeat center center fixed; */
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 @media (min-width: 768px) {
@@ -14093,21 +14105,7 @@ be a descendant of the grid when it is being dragged.
   }
 }
 
-.material-half-bg {
-  /* height: 100vh; */
-
-  /* background-color: #4273B5; */
-  /* background-image: url("../assets/4.jpg");
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1; */
-}
-
 .material-half-bg .cover {
-  /* background-color: #62B0D4; */
   height: 100vh;
   background : url('../assets/4.jpg') no-repeat center center;  
    -webkit-background-size: cover;  

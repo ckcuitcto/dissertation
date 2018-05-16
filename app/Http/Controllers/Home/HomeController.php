@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Model\News;
+use App\Model\Semester;
 
 class HomeController extends Controller
 {
@@ -24,7 +26,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home.home');
+        $newsList = News::all();
+        $timeList = Semester::orderBy('id','desc')->first();
+        return view('home.home', compact('newsList','timeList'));
     }
 
     public function showLoginAnimatedForm()

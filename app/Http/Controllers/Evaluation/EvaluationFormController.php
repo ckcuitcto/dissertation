@@ -108,8 +108,7 @@ class EvaluationFormController extends Controller
                 ->orderBy('roles.id')
                 ->get()->toArray();
 
-//        var_dump($rolesCanMark);
-//        var_dump($listUserMark);
+
             // gộp mảng id và mảng user lại. nếu user nào k có thì cho rỗng. vẫn giữ id để hiển thị fỏm input
             $listUserMarkTmp = array();
 //        if(count($rolesCanMark) != count($listUserMark)){
@@ -132,12 +131,11 @@ class EvaluationFormController extends Controller
 //            }
             }
             $listUserMark = $listUserMarkTmp;
-//        var_dump($rolesCanMark);
-//        dd($listUserMark);
+
 
             // lấy role được phép chấm ở thời điểm hiện tại
             $dateNow = Carbon::now()->format('Y/m/d');
-            $currentRoleCanMark = DB::table('roles')
+                $currentRoleCanMark = DB::table('roles')
                 ->leftJoin('mark_times', 'roles.id', '=', 'mark_times.role_id')
                 ->where('mark_times.semester_id', $evaluationForm->Semester->id)
                 ->whereDate('mark_times.mark_time_start', '<=', $dateNow)
@@ -304,7 +302,8 @@ class EvaluationFormController extends Controller
 
     public function updateValidProofFile(Request $request, $id){
 
-        if($request->valid == 1) {
+//        var_dump($request->all());die;
+        if($request->valid == 0) {
             $validator = Validator::make($request->all(), [
                 'note' => 'required',
             ], [
@@ -328,7 +327,6 @@ class EvaluationFormController extends Controller
                 'status' => true
             ],200);
         }
-
         return response()->json([
             'status' => false
         ],200);

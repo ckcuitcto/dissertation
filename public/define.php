@@ -7,4 +7,4 @@
  */
 define("FILE_IMAGE", array('img', 'jpg', 'png', 'jpeg', 'bmp'), true);
 
-define("FILE_VALID", array('xlsx', 'doc', 'docx', 'img', 'jpg', 'pdf', 'png', 'jpeg', 'bmp'), true);
+define("FILE_VALID", array('img', 'jpg', 'pdf', 'png', 'jpeg', 'bmp'), true);
