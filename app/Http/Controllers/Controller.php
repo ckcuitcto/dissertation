@@ -35,4 +35,11 @@ class Controller extends BaseController
         return Carbon::createFromFormat('d/m/Y', $date);
     }
 
+    public function checkImageFile($name){
+        $mime = explode('.',$name)[count(explode('.',$name))-1];
+        if(in_array($mime,FILE_IMAGE)){
+            return true;
+        }
+        return false;
+    }
 }
