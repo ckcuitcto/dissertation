@@ -77,30 +77,33 @@
                                             <input type="year" class="input-sm form-control year_from" id="year_from"
                                                    name="year_from" />
                                             <span class="input-group-addon">to</span>
-                                            <input type="year" class="input-sm form-control year_to" name="year_to"
-                                                   id="year_to"/>
+                                            <input type="year" class="input-sm form-control year_to" name="year_to" id="year_to"/>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <label for="mark_date">Ngày chấm</label>
                                         <div class="input-group">
-
                                             <input type="text" class="input-sm form-control date_start_to_mark"
                                                    id="date_start_to_mark" name="date_start_to_mark"/>
-
                                             <span class="input-group-addon">to</span>
-
                                             <input type="text" class="input-sm form-control date_end_to_mark"
                                                    id="date_end_to_mark" name="date_end_to_mark"/>
-
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="mark_date">Thời gian khiếu nại</label>
+                                        <div class="input-group">
+                                            <input type="text" class="input-sm form-control date_start_to_re_mark"
+                                                   id="date_start_to_re_mark" name="date_start_to_re_mark"/>
+                                            <span class="input-group-addon">to</span>
+                                            <input type="text" class="input-sm form-control date_end_to_re_mark"
+                                                   id="date_end_to_re_mark" name="date_end_to_re_mark"/>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <label for="term">Học kì</label>
-                                        <input type="number" class="form-control term" name="term" id="term" max="3" min="1"
-                                               placeholder="Học kì">
+                                        <input type="number" class="form-control term" name="term" id="term" max="3" min="1" placeholder="Học kì">
                                     </div>
-
                                 </div>
                                 <div class="col-md-6">
                                     @foreach($rolesCanMark as $key => $role)
@@ -127,7 +130,8 @@
                                     id="btn-save-semester" name="btn-save-semester" type="button">
                                 Thêm
                             </button>
-                            <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">Đóng</button>
+                            <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">Đóng
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -138,8 +142,8 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
+    {{--<script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>--}}
+    {{--<script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>--}}
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <!--<script type="text/javascript">$('#sampleTable').DataTable();</script>-->
@@ -148,26 +152,26 @@
     <script>
 
 
-        $("input#year_from").datepicker({  
+        $("input#year_from").datepicker({
             format: "yyyy",
             viewMode: "years",
             minViewMode: "years",
-            todayBtn: "linked",            
+            todayBtn: "linked",
             clearBtn: true,
             language: "vi",
-            orientation: "bottom right",
+            orientation: "top right",
             autoclose: true,
             toggleActive: true,
-            
+
         });
         $("input#year_to").datepicker({
             format: "yyyy",
             viewMode: "years",
             minViewMode: "years",
-            todayBtn: "linked",            
+            todayBtn: "linked",
             clearBtn: true,
             language: "vi",
-            orientation: "bot right",
+            orientation: "top right",
             autoclose: true,
             toggleActive: true
         });
@@ -177,9 +181,9 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "bot right",
+            orientation: "top right",
             autoclose: true,
-            toggleActive: true,
+            toggleActive: true
         });
         $('input#date_end_to_mark').datepicker({
             todayBtn: "linked",
@@ -187,31 +191,54 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "bot right",
+            orientation: "top right",
             autoclose: true,
             toggleActive: true
         });
+
+        $('input#date_end_to_re_mark').datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            todayHighlight: true,
+            orientation: "top right",
+            autoclose: true,
+            toggleActive: true
+        });
+
+        $('input#date_start_to_re_mark').datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            todayHighlight: true,
+            orientation: "top right",
+            autoclose: true,
+            toggleActive: true
+        });
+
         @foreach($rolesCanMark as $key => $role)
-            $("input#date_start_to_mark_{{$role->id}}").datepicker({
-                todayBtn: "linked", 
-                language: "vi", 
-                format: "dd/mm/yyyy", 
-                clearBtn: true,
-                orientation: "bot right",
-                autoclose: true,
-                toggleActive: true,
-                todayHighlight: true,
-                });
-            $("input#date_end_to_mark_{{$role->id}}").datepicker({
-                todayBtn: "linked", 
-                language: "vi", 
-                format: "dd/mm/yyyy", 
-                clearBtn: true,
-                orientation: "bot right",
-                autoclose: true,
-                toggleActive: true,
-                todayHighlight: true,
-                });
+        $("input#date_start_to_mark_{{$role->id}}").datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            orientation: "top right",
+            autoclose: true,
+            toggleActive: true,
+            todayHighlight: true
+        });
+        $("input#date_end_to_mark_{{$role->id}}").datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            orientation: "top right",
+            autoclose: true,
+            toggleActive: true,
+            todayHighlight: true
+        });
         @endforeach
 
         $(document).ready(function () {
@@ -229,26 +256,33 @@
                         if (result.status === true) {
                             if (result.semester !== undefined) {
                                 $.each(result.semester, function (elementName, value) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + messageValue)
-                                    $('.' + elementName).val(value);
-//                                    });
+                                    if (elementName === 'date_start_to_mark') {
+                                        $('.' + elementName).datepicker('setDate', value)   ;
+                                    } else if (elementName === 'date_end_to_mark') {
+                                        $('.' + elementName).datepicker('setDate', value);
+                                    } else if (elementName === 'date_start_to_re_mark') {
+                                        $('.' + elementName).datepicker('setDate', value);
+                                    } else if (elementName === 'date_end_to_re_mark') {
+                                        $('.' + elementName).datepicker('setDate', value);
+                                    } else {
+                                        $('.' + elementName).val(value);
+                                    }
                                 });
                             }
                             if (result.marktime !== undefined) {
                                 $.each(result.marktime, function (elementName, value) {
                                     var role_id = value.role_id;
-                                   $.each(value, function (messageType, messageValue) {
-                                       if(messageType === 'mark_time_start'){
-                                           $('.date_start_to_mark_' + role_id).val(messageValue);
-                                           // alert(messageType + " --- "+role_id+" ---" + "+ " + messageValue);
-                                       }
-                                       if( messageType === 'mark_time_end'){
-                                           $('.date_end_to_mark_' + role_id).val(messageValue);
-                                           // alert(messageType + " --- "+role_id+" ---" + "+ " + messageValue);
-                                       }
-                                   //
-                                   });
+                                    $.each(value, function (messageType, messageValue) {
+                                        if (messageType === 'mark_time_start') {
+                                            $('.date_start_to_mark_' + role_id).datepicker('setDate', messageValue);
+                                            // alert(messageType + " --- "+role_id+" ---" + "+ " + messageValue);
+                                        }
+                                        if (messageType === 'mark_time_end') {
+                                            $('.date_end_to_mark_' + role_id).datepicker('setDate', messageValue);
+                                            // alert(messageType + " --- "+role_id+" ---" + "+ " + messageValue);
+                                        }
+                                        //
+                                    });
                                 });
                             }
                         }

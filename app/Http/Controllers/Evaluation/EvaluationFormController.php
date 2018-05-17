@@ -16,6 +16,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 class EvaluationFormController extends Controller
 {
     /**
@@ -106,8 +108,7 @@ class EvaluationFormController extends Controller
                 ->orderBy('roles.id')
                 ->get()->toArray();
 
-//        var_dump($rolesCanMark);
-//        var_dump($listUserMark);
+
             // gộp mảng id và mảng user lại. nếu user nào k có thì cho rỗng. vẫn giữ id để hiển thị fỏm input
             $listUserMarkTmp = array();
 //        if(count($rolesCanMark) != count($listUserMark)){
@@ -130,12 +131,11 @@ class EvaluationFormController extends Controller
 //            }
             }
             $listUserMark = $listUserMarkTmp;
-//        var_dump($rolesCanMark);
-//        dd($listUserMark);
+
 
             // lấy role được phép chấm ở thời điểm hiện tại
             $dateNow = Carbon::now()->format('Y/m/d');
-            $currentRoleCanMark = DB::table('roles')
+                $currentRoleCanMark = DB::table('roles')
                 ->leftJoin('mark_times', 'roles.id', '=', 'mark_times.role_id')
                 ->where('mark_times.semester_id', $evaluationForm->Semester->id)
                 ->whereDate('mark_times.mark_time_start', '<=', $dateNow)
@@ -187,22 +187,39 @@ class EvaluationFormController extends Controller
         // lưu điểm đánh giá
         $arrEvaluationResult = array();
         $arrProof = array();
+
+        // xóa điểm cũ nếu đã chấm.
+        $isMarked =  EvaluationResult::where([
+            'evaluation_form_id' => $evaluationFormId,
+            'marker_id' => $userLogin->id
+        ])->get();
+
+        // nếu chấm rồi thì xóa hết điểm r thêm lại
+        if(!empty($isMarked)) {
+            EvaluationResult::where([
+                'evaluation_form_id' => $evaluationFormId,
+                'marker_id' => $userLogin->id
+            ])->delete();
+        }
+
         foreach ($request->all() as $key => $value) {
             if ($key != '_token') {
                 if (substr($key, "0", "5") == "score") {
-
+                    $evaluationCriteriaId = (int)substr($key, "5", "7");
                     // mỗi form input điểm sẽ có tên = score + id tiêu chí.
                     // lấy ra rồi lưu 1 lần 1 mảng cho nhanh.
-                    $evaluationCriteriaId = (int)substr($key, "5", "7");
+                    // nếu chưa chấm thì là thêm vào 1 mảng để them vào db cho nhanh.
+
                     $arrEvaluationResult[] = [
                         'evaluation_criteria_id' => $evaluationCriteriaId,
                         'evaluation_form_id' => $evaluationFormId,
                         'marker_id' => $userLogin->id,
                         'marker_score' => $value
                     ];
+
                 } elseif (substr($key, "0", "5") == "proof") {
                     $evaluationCriteriaId = (int)substr($key, "5", "7");
-                    foreach($value as $proof){
+                    foreach ($value as $proof) {
                         $fileName = str_random(13) . "_" . $proof->getClientOriginalName();
                         $fileName = preg_replace('/\s+/', '', $fileName);
                         while (file_exists("upload/proof/" . $fileName)) {
@@ -219,8 +236,6 @@ class EvaluationFormController extends Controller
                 }
             }
         }
-//        dd($arrProof);
-//        die;
         $evaluationForm->EvaluationResults()->createMany($arrEvaluationResult);
         $evaluationForm->total = $request->totalScoreOfForm;
         $evaluationForm->save();
@@ -261,12 +276,10 @@ class EvaluationFormController extends Controller
 
     public function checkFileUpload(Request $request)
     {
-
-        $arrFileType = array('xlsx', 'doc', 'docx', 'img', 'jpg', 'pdf', 'png', 'jpeg', 'bmp');
-
+//        $arrFileType = array('xlsx', 'doc', 'docx', 'img', 'jpg', 'pdf', 'png', 'jpeg', 'bmp');
         $arrFile = $request->file('fileUpload');
         foreach ($arrFile as $file) {
-            if (!in_array($file->getClientOriginalExtension(), $arrFileType)) {
+            if (!in_array($file->getClientOriginalExtension(), FILE_VALID)) {
                 $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ "]);
                 return response()->json([
                     'status' => false,
@@ -277,29 +290,45 @@ class EvaluationFormController extends Controller
         return response()->json([
             'status' => true,
         ], 200);
-//
-//        if($file){
-//
-//            if(!in_array($file->getClientOriginalExtension(),$arrFileType))
-//            {
-//                $arrMessage = array("fileImport" => ["File ".$file->getClientOriginalName()." không hợp lệ "] );
-//                return response()->json([
-//                    'status' => false,
-//                    'arrMessages' => $arrMessage
-//                ], 200);
-//            }else{
-//                return response()->json([
-//                    'status' => true,
-//                ], 200);
-//            }
-//        }
     }
 
     public function getProofById($id){
         $proof = Proof::find($id);
         return response()->json([
-            'file_path' => $proof->name,
+            'proof' => $proof,
             'status' => true
+        ],200);
+    }
+
+    public function updateValidProofFile(Request $request, $id){
+
+//        var_dump($request->all());die;
+        if($request->valid == 0) {
+            $validator = Validator::make($request->all(), [
+                'note' => 'required',
+            ], [
+                'note.required' => "Vui lòng nhập lí do File không phù hợp",
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'arrMessages' => $validator->errors()
+                ], 200);
+            }
+        }
+
+        $proof = Proof::find($id);
+        if(!empty($proof)){
+            $proof->valid = $request->valid;
+            $proof->note = $request->note;
+            $proof->save();
+            return response()->json([
+                'proof' => $proof,
+                'status' => true
+            ],200);
+        }
+        return response()->json([
+            'status' => false
         ],200);
     }
 

@@ -9,7 +9,7 @@ class Semester extends Model
     //
     protected $table = 'semesters';
 
-    protected $fillable = ['year_from','year_to','term','date_start_to_mark','date_end_to_mark'];
+    protected $fillable = ['year_from','year_to','term','date_start_to_mark','date_end_to_mark','date_start_to_re_mark','date_end_to_re_mark'];
 
     public function Proofs(){
         return $this->hasMany('App\Model\Proof','semester_id','id');
