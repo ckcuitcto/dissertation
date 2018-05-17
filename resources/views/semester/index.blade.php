@@ -75,7 +75,7 @@
                                         <label for="year">Năm học</label>
                                         <div class="input-group">
                                             <input type="year" class="input-sm form-control year_from" id="year_from"
-                                                   name="year_from"/>
+                                                   name="year_from" />
                                             <span class="input-group-addon">to</span>
                                             <input type="year" class="input-sm form-control year_to" name="year_to"
                                                    id="year_to"/>
