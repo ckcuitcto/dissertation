@@ -1,5 +1,8 @@
 @extends('layouts.default')
+@section('title')
+    STU| Phieu Danh Gia {{ $evaluationForm->Student->User->name }}
 
+@endsection
 @section('content')
     @php
         //  lưu lại tổng điểm từng role chấm
@@ -352,23 +355,27 @@
                                             </div>
                                         </fieldset>
                                     </div>
-                                    <div class="col-md-10">
+                                    <div class="col-md-7">
                                         <div class="form-group" id="textarea-note" style="display: none;">
                                             <label for="note">Ghi chú</label>
                                             <textarea class="form-control note" name="note" id="note"
                                                       rows="3"></textarea>
                                         </div>
                                     </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <p></p>
+                                            <button class="btn btn-primary" id="btn-update-valid-proof-file"
+                                                    name="btn-update-valid-proof-file">Sửa
+                                            </button>
+                                            <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">
+                                                Đóng
+                                            </button>
+                                        </div>
+
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" id="btn-update-valid-proof-file"
-                                        name="btn-update-valid-proof-file">
-                                    Sửa
-                                </button>
-                                <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">
-                                    Đóng
-                                </button>
+
                             </div>
                         </div>
                     </form>
@@ -446,7 +453,6 @@
                         if (data.status === true && data.proof !== undefined) {
                             $("form#proof-form").attr("data-link", urlUpdateProofFile);
                             $.each(data.proof, function (elementName, value) {
-                                // alert(elementName + "- " + value)
                                 if (elementName === 'name') {
                                     var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
                                     var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
@@ -464,7 +470,6 @@
                                     $('form#proof-form').find('.' + elementName).val(value);
                                 }
                             });
-
                             $('#myModal').modal('show');
                         }
                     }
@@ -489,16 +494,12 @@
                     success: function (result) {
                         // console.log(result);
                         if (result.status === true) {
-
                             if(formData.get('valid') == 1){
-
                                 $("i.proofId_"+proofId).removeClass('fa-times').addClass('fa-check');
                                 $("i.proofId_"+proofId).parent().removeClass('btn-danger').addClass('btn-primary');
                             }else{
                                 $("i.proofId_"+proofId).removeClass('fa-check').addClass('fa-times');
                                 $("i.proofId_"+proofId).parent().removeClass('btn-primary').addClass('btn-danger');
-
-
                             }
 
                             $('#myModal').modal('hide');
@@ -525,10 +526,10 @@
             });
 
             $('#myModal').on('hidden.bs.modal', function (e) {
-                $('div#iframe-view-file').html('');
-                $("input[type=text],input[type=number], select").val('');
+                $('#myModal').find('div#iframe-view-file').html('');
+                $('#myModal').find("input[type=text],input[type=number], select").val('');
                 $('span.messageErrors').remove();
-                $("#note").html('');
+                $('#myModal').find("#note").html('');
             });
         });
     </script>

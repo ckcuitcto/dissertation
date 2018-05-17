@@ -210,8 +210,10 @@
                     <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>
                     </li>
                     @endcan
+                    @can('student-list')
                     <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> Sinh
                             viên</a></li>
+                    @endcan
                     {{--<li><a class="treeview-item" href="{{ route('departmentlist') }}"><i--}}
                                     {{--class="icon fa fa-circle-o"></i> Phòng ban</a></li>--}}
                 </ul>

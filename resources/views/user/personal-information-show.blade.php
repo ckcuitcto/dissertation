@@ -1,5 +1,8 @@
 @extends('layouts.default')
 
+@section('title')
+    STU| Thong Tin Ca Nhan {{ $user->name }}
+@endsection
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -178,6 +181,7 @@
                 $(".button-edit").hide();
                 $("input").prop('disabled',true);
                 $("a#btn-update-inform").show();
+                $('span.messageErrors').remove();
             });
 
             // $("#btn-save-inform").click(function(e){

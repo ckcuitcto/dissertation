@@ -130,19 +130,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show']);
         // lưu kết quả
         Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update'])->middleware('can:can-mark,App\Model\EvaluationForm');
-        // xoa 1
-//        Route::get('/destroy/{id}', ['as' => 'evaluation-form-destroy', 'uses' => 'Evaluation\EvaluationFormController@destroy']);
-
         // chỉnh sửa
-//        Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update']);
-//        Route::get('/edit/{id}', ['as' => 'evaluation-form-edit', 'uses' => 'Evaluation\EvaluationFormController@edit']);
 
         //kiem tra file upload = ajax
         Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Evaluation\EvaluationFormController@checkFileUpload']);
 
         Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Evaluation\EvaluationFormController@getProofById']);
 
-        Route::post('/update-valid-proof-file/{id}', ['as' => 'update-valid-proof-file', 'uses' => 'Evaluation\EvaluationFormController@updateValidProofFile']);
+
     });
 
 
@@ -155,9 +150,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::group(['prefix' => 'quan-ly-minh-chung'], function () {
+    Route::group(['prefix' => 'minh-chung'], function () {
         Route::get('/', ['as' => 'proof', 'uses' => 'Proof\ProofController@index']);
-        Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store'])->middleware('can:can-change-proofs');
+
+        Route::get('/destroy/{id}', ['as' => 'proof-destroy', 'uses' => 'Proof\ProofController@destroy'])->middleware('can:proofs-delete');
+        Route::post('/update-valid-proof-file/{id}', ['as' => 'update-valid-proof-file', 'uses' => 'Proof\ProofController@updateValidProofFile']);
+
+        Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Proof\ProofController@getProofById']);
     });
 
     Route::group(['prefix' => 'y-kien'], function () {

@@ -292,45 +292,5 @@ class EvaluationFormController extends Controller
         ], 200);
     }
 
-    public function getProofById($id){
-        $proof = Proof::find($id);
-        return response()->json([
-            'proof' => $proof,
-            'status' => true
-        ],200);
-    }
-
-    public function updateValidProofFile(Request $request, $id){
-
-//        var_dump($request->all());die;
-        if($request->valid == 0) {
-            $validator = Validator::make($request->all(), [
-                'note' => 'required',
-            ], [
-                'note.required' => "Vui lòng nhập lí do File không phù hợp",
-            ]);
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'arrMessages' => $validator->errors()
-                ], 200);
-            }
-        }
-
-        $proof = Proof::find($id);
-        if(!empty($proof)){
-            $proof->valid = $request->valid;
-            $proof->note = $request->note;
-            $proof->save();
-            return response()->json([
-                'proof' => $proof,
-                'status' => true
-            ],200);
-        }
-        return response()->json([
-            'status' => false
-        ],200);
-    }
-
 
 }
