@@ -34,15 +34,15 @@ class ProofController extends Controller
     {
         $userLogin = Auth::user();
         // nếu role vào k phải là học sinh
-        if($userLogin->role_id >= 2) {
+        if($userLogin->Role->weight >= ROLE_BANCANSULOP) {
             return redirect()->back();
         }
 
         // xác định role để lấy thời gian chấm.
-        $role = $userLogin->role_id;
+        $role = $userLogin->Role->weight;
         // nếu user đăng nhạp là ban cán sự lớp thì sẽ lấy thời gian chấm của sinh viên bình thường
         // nếu lấy theo role của ban cán sự lớp thì ban cán sự lớp có thể xóa file quá thời gian chấm
-        if($userLogin->role_id == 2) {
+        if($userLogin->Role->weight == ROLE_BANCANSULOP) {
             $role = 1;
         }
 

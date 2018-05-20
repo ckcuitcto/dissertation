@@ -142,8 +142,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::group(['prefix' => 'thong-tin-ca-nhan'], function () {
-        Route::get('/danh-sach', ['as' => 'personal-information', 'uses' => 'Information\InformationController@index'])->middleware('can:personal-information-list');
+
         Route::get('/{id}', ['as' => 'personal-information-show', 'uses' => 'Information\InformationController@show']);
+
         Route::post('/update/{id}', ['as' => 'personal-information-update', 'uses' => 'Information\InformationController@update']);
 
         Route::post('/upload', ['as' => 'personal-information-upload', 'uses' => 'Information\InformationController@checkFileUpload']);

@@ -22,7 +22,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         EvaluationForm::class => EvaluationFormPolicy::class,
-        Student::class => PersonalInformationPolicy::class,
+//        Student::class => PersonalInformationPolicy::class,
         Proof::class => ProofPolicy::class,
     ];
 
@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::before(function () {
-            if (Auth::user()->Role->id == 6) {
+            if (Auth::user()->Role->weight == ROLE_ADMIN) {
                 return true;
             }
         });

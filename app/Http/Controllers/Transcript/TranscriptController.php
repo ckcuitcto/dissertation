@@ -80,13 +80,14 @@ class TranscriptController extends Controller
                 ])
                 ->groupBy('evaluation_results.marker_id', 'evaluation_forms.id')
                 ->get();
-//        var_dump($scoreList->where('evaluationFormId',9));
-//        dd($scoreList);
-
-            //
 
 
             $evaluationForms = EvaluationForm::where('student_id', $id)->get();
+
+            // kiểm tra quyền.
+            foreach($evaluationForms as $value){
+                $this->authorize($value,'view');
+            }
             return view('transcript.show', compact('user', 'evaluationForms', 'rolesCanMark', 'scoreList'));
         }
         return redirect()->back();

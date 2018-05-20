@@ -1,5 +1,7 @@
 @extends('layouts.default')
-
+@section('title')
+    STU| BẢNG ĐIỂM {{ $user->name }}
+@endsection
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -69,9 +71,6 @@
                                 {{-- nếu sô kết quả = với số role có thể chấm nghĩa là đã chấm hết. thì hiển thị ra đủ.--}}
                                 @if(count($scoreList->where('evaluationFormId',$evaluationForm->id)) == count($rolesCanMark))
                                     @foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)
-                                        @php
-                                            $total = $value->total;
-                                        @endphp
                                         <td>{{ $value->totalRoleScore }}</td>
                                     @endforeach
                                 @else
@@ -89,14 +88,11 @@
                                         <td></td>
                                     @endfor
                                 @endif
-                                <td> {{ $total OR 0 }}</td>
-                                <td>Trung Bình</td>
+                                <td> {{ $evaluationForm->total OR 0 }}</td>
+                                <td> {{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }} </td>
                                 <td>Hoàn Thành</td>
                                 <td>
-                                    {{--@php dd($semester->EvaluationForm->where('student_id',$user->id)); @endphp--}}
-                                    <a
-                                            href="{{ route('evaluation-form-show',$evaluationForm->id) }}"
-                                    >
+                                    <a href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                     </a>
                                     <i class="fa fa-pencil" aria-hidden="true"></i>

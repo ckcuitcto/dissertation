@@ -23,7 +23,11 @@ class InformationController extends Controller
     {
         $user = User::find($id);
         if(!empty($user)) {
-            $this->authorize($user->Student,'view');
+            $userLogin = Auth::user();
+            if($user->id != $userLogin->id){
+                return view('errors.403');
+            }
+//            $this->authorize($user,'view');
 
             if (!empty($user->birthday)) {
                 $user->birthday = Carbon::parse($user->birthday)->format('d/m/Y');

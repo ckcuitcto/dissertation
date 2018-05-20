@@ -73,6 +73,7 @@ class EvaluationFormController extends Controller
             $this->authorize($evaluationForm, 'view');
 
             $user = Auth::user();
+//            dd($user->Role->weight);
             $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
 
             $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id', $id)->get()->toArray();
@@ -101,7 +102,7 @@ class EvaluationFormController extends Controller
             $listUserMark = DB::table('roles')
                 ->leftJoin('users', 'users.role_id', '=', 'roles.id')
                 ->leftJoin('evaluation_results', 'evaluation_results.marker_id', '=', 'users.id')
-                ->select('users.id as userId', 'users.role_id as userRole', 'roles.*')
+                ->select('users.id as userId', 'roles.weight as userRole', 'roles.*')
                 ->where('evaluation_results.evaluation_form_id', $id)
                 ->whereIn('roles.id', $arrRoleId)
                 ->groupBy('roles.id')
@@ -111,7 +112,6 @@ class EvaluationFormController extends Controller
 
             // gộp mảng id và mảng user lại. nếu user nào k có thì cho rỗng. vẫn giữ id để hiển thị fỏm input
             $listUserMarkTmp = array();
-//        if(count($rolesCanMark) != count($listUserMark)){
             for ($i = 0; $i < count($rolesCanMark); $i++) {
                 if (!empty($listUserMark[$i])) {
                     $listUserMarkTmp [] = [
@@ -128,10 +128,8 @@ class EvaluationFormController extends Controller
                         'display_name' => $rolesCanMark[$i]['display_name']
                     ];
                 }
-//            }
             }
             $listUserMark = $listUserMarkTmp;
-
 
             // lấy role được phép chấm ở thời điểm hiện tại
             $dateNow = Carbon::now()->format('Y/m/d');
@@ -276,7 +274,7 @@ class EvaluationFormController extends Controller
 
     public function checkFileUpload(Request $request)
     {
-//        $arrFileType = array('xlsx', 'doc', 'docx', 'img', 'jpg', 'pdf', 'png', 'jpeg', 'bmp');
+
         $arrFile = $request->file('fileUpload');
         foreach ($arrFile as $file) {
             if (!in_array($file->getClientOriginalExtension(), FILE_VALID)) {
@@ -290,6 +288,22 @@ class EvaluationFormController extends Controller
         return response()->json([
             'status' => true,
         ], 200);
+    }
+
+    public static function checkRank($score){
+        if($score >= EXCELLENT){
+            return "Xuất sắc";
+        }elseif($score >= VERY_GOOD ) {
+            return "Tốt";
+        }elseif($score >= GOOD ) {
+            return "Khá";
+        }elseif($score >= AVERAGE ) {
+            return "Trung bình";
+        }elseif($score >= POOR ) {
+            return "Yếu";
+        }elseif($score >= BAD ) {
+            return "Kém";
+        }
     }
 
 
