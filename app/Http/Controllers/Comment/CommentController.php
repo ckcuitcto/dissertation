@@ -35,7 +35,6 @@ class CommentController extends Controller
             if ($user->Role->id >= 4) // chu nhiem khoa thì lấy user thuộc khoa giống
             {
                 // lấy ra tất cả user cùng khoa vs user đang đăng nhập
-//                $users = array_flatten(User::where('faculty_id', $user->faculty_id)->where('role_id', '<=', 2)->select('id')->get()->toArray());
             }elseif($user->Role->id >=3){ // cố vấn học tập
                 $comment->where('classes.staff_id', $user->Staff->id);
             }else { // sinh viên. bán bộ

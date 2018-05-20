@@ -13,22 +13,41 @@ class EvaluationFormPolicy
     /**
      * Determine whether the user can view the evaluationForm.
      *
-     * @param  \App\Model\User  $user
-     * @param  \App\Model\EvaluationForm  $evaluationForm
+     * @param  \App\Model\User $user
+     * @param  \App\Model\EvaluationForm $evaluationForm
      * @return mixed
      */
     public function view(User $user, EvaluationForm $evaluationForm)
     {
-        return $user->faculty_id == $evaluationForm->Student->User->faculty_id OR $user->role_id >= 5;
+        //nếu là phòng ctsv or > thì xem đc tất cả
+        // nếu là khoa  thì xem đc cùng khoa
+        // cvht  chri xem dc cac lop là cvht
+        if($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN ){
+            return true;
+        }elseif($user->Role->weight >= ROLE_BANCHUNHIEMKHOA ){
+            return $user->faculty_id == $evaluationForm->Student->User->faculty_id;
+        }elseif($user->Role->weight >= ROLE_COVANHOCTAP ){
+            // nêu là cố vấn học tập thì sinh viên chủ form phải thuộc lớp của CVHT
+            return $user->Staff->Classes->id == $evaluationForm->Student->Classes->id;
+
+        }elseif($user->Role->weight >= ROLE_BANCANSULOP ){
+            // nếu là ban cán sự lớp thì phhải cùng lớp
+            return $user->Student->Classes->id == $evaluationForm->Student->Classes->id;
+        }elseif($user->Student->id == $evaluationForm->student_id){
+            // nếu là ính viên thì phải là chủ form
+            return true;
+        }
+        return false;
     }
 
     /**
      * Determine whether the user can create evaluationForms.
      *
-     * @param  \App\Model\User  $user
+     * @param  \App\Model\User $user
      * @return mixed
      */
-    public function create(User $user)
+    public
+    function create(User $user)
     {
         //
     }
@@ -36,11 +55,12 @@ class EvaluationFormPolicy
     /**
      * Determine whether the user can update the evaluationForm.
      *
-     * @param  \App\Model\User  $user
-     * @param  \App\Model\EvaluationForm  $evaluationForm
+     * @param  \App\Model\User $user
+     * @param  \App\Model\EvaluationForm $evaluationForm
      * @return mixed
      */
-    public function update(User $user, EvaluationForm $evaluationForm)
+    public
+    function update(User $user, EvaluationForm $evaluationForm)
     {
         //
     }
@@ -48,11 +68,12 @@ class EvaluationFormPolicy
     /**
      * Determine whether the user can delete the evaluationForm.
      *
-     * @param  \App\Model\User  $user
-     * @param  \App\Model\EvaluationForm  $evaluationForm
+     * @param  \App\Model\User $user
+     * @param  \App\Model\EvaluationForm $evaluationForm
      * @return mixed
      */
-    public function delete(User $user, EvaluationForm $evaluationForm)
+    public
+    function delete(User $user, EvaluationForm $evaluationForm)
     {
         //
     }

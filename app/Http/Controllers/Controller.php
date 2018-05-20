@@ -9,23 +9,29 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function getStudentByRoleUserLogin(User $user){
-        if ($user->Role->id >= 5) // admin va phong ctsv thì lấy tất cả user
+        if ($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
         {
             $students = Student::all();
-//            $students = Student::whereHas('users', function ($query) {
-//                $query->where('role_id', '<=', 2);
-//            })->get();
             return $students;
-        } elseif ($user->Role->id >= 2) //ban can su lop, co van hoc tpa, chu nhiem khoa thì lấy user thuộc khoa giống
+        } elseif ($user->Role->weight >= ROLE_BANCANSULOP) //ban can su lop, co van hoc tpa, chu nhiem khoa thì lấy user thuộc khoa giống
         {
-            $users = array_flatten(User::where('faculty_id', $user->faculty_id)->where('role_id', '<=', 2)->select('id')->get()->toArray());
-            $students = Student::whereIn('user_id', $users)->get();
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles','users.role_id','=','roles.id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->select('users.id')->get()->toArray();
+            foreach($arrUserId as $key => $value){
+                $userIds[$key] = [$value->id];
+            }
+
+            $students = Student::whereIn('user_id', $userIds)->get();
             return $students;
         }
 

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Model\Role;
 use App\Model\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,7 +21,14 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $users = User::where('role_id', '<', '2')->get();
+
+        $users = User::where('role_id','<=',ROLE_BANCANSULOP)->get();
+
+//        $users = DB::table('users')
+//            ->leftJoin('roles','users.role_id','=','roles.id')
+//            ->where('roles.weight', '<=', 2)
+//            ->select('users.*')->get();
+
         return view('student.index', compact('users'));
     }
 

@@ -46,10 +46,6 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'can-list-student-transcript',
                 'display_name' => 'Xem danh sách sinh viên',
                 'description' => 'Xem danh sách sinh viên để xem bảng điểm'
-            ],[
-                'name' => 'personal-information-list',
-                'display_name' => 'Xem danh sách sinh viên',
-                'description' => 'Xem danh sách sinh viên để thông tin cá nhân'
             ],
             [
                 'name' => 'can-list-student',
@@ -62,14 +58,22 @@ class PermissionTableSeeder extends Seeder
                 'description' => 'Chỉ nhân viên mới được thêm, sửa, xóa sinh viên'
             ],
             [
-                'name' => 'proofs-change',
-                'display_name' => 'Thêm, xóa, sửa minh chứng',
-                'description' => 'Chỉ sinh viên mới được thêm, xóa, sửa minh chứng'
-            ],
-            [
                 'name' => 'proofs-list',
                 'display_name' => 'Xem minh chứng',
-                'description' => 'Ai cũng có thể xem minh chứng'
+                'description' => 'Sinh viên xem lại danh sách minh chứng của mình'
+            ],
+            [
+                'name' => 'proofs-update',
+                'display_name' => 'Sửa trạng thái minh chứng',
+                'description' => 'Xem minh chứng có hợp lệ hay không và sửa trạng thía minh chứng đó'
+            ], [
+                'name' => 'proofs-add',
+                'display_name' => 'Thêm minh chứng',
+                'description' => 'Thêm minh chứng mới'
+            ], [
+                'name' => 'proofs-delete',
+                'display_name' => 'Xóa minh chứng',
+                'description' => 'Xóa minh chứng nếu trang trong thời gian chấm của sinh viên'
             ],
             [
                 'name' => 'comment-add',
@@ -100,27 +104,11 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'semester-change',
                 'display_name' => 'Thêm xóa sửa học kỳ',
                 'description' => 'Chỉ nhân viên mới được thêm xóa sửa học kỳ'
-            ]
-            // [
-            //     'name' => 'information-technology',
-            //     'display_name' => 'Công nghệ thông tin',
-            //     'description' => 'Ban chấp hành khoa, giáo viên'
-            // ],
-            // [
-            //     'name' => 'business-administration',
-            //     'display_name' => 'Quản trị kinh doanh',
-            //     'description' => 'Ban chấp hành khoa, giáo viên'
-            // ],
-            // [
-            //     'name' => 'design',
-            //     'display_name' => 'Design',
-            //     'description' => 'Ban chấp hành khoa, giáo viên'
-            // ],
-            // [
-            //     'name' => 'Faculty-of-Electrical-Electronics-Engineering',
-            //     'display_name' => 'Khoa Điện & Điện tử',
-            //     'description' => 'Ban chấp hành khoa, giáo viên'
-            // ]
+            ],[
+                'name' => 'student-list',
+                'display_name' => 'Xem danh sách sinh viên',
+                'description' => 'Có thể xem danh sách sinh viên'
+            ],
         ]);
     }
 }

@@ -23,7 +23,11 @@ class InformationController extends Controller
     {
         $user = User::find($id);
         if(!empty($user)) {
-            $this->authorize($user->Student,'view');
+            $userLogin = Auth::user();
+            if($user->id != $userLogin->id){
+                return view('errors.403');
+            }
+//            $this->authorize($user,'view');
 
             if (!empty($user->birthday)) {
                 $user->birthday = Carbon::parse($user->birthday)->format('d/m/Y');
@@ -35,19 +39,17 @@ class InformationController extends Controller
 
     public function update($id, Request $request){
 
-//        var_dump(1);
-//        dd($request->all());
-
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:users,email,'.$id.',id',
             'gender' => 'required',
             'address' => 'required',
             'phone_number' => 'required|numeric|phone',
             'birthday' => 'required|date_format:d/m/Y'
-        ], [
+        ],[
             'name.required' => "Vui lòng nhập tên",
             'email.required' => "Vui lòng nhập email",
+            'email.unique' => "Email đã tồn tại",
             'gender.required' => "Vui lòng nhập giới tính",
             'address.required' => "Vui lòng nhập địa chỉ",
             'phone_number.required' => "Vui lòng nhập số điện thoại",
@@ -63,7 +65,6 @@ class InformationController extends Controller
                 'arrMessages' => $validator->errors()
             ], 200);
         } else {
-//            $user = Auth::user();
              $user = User::find($id);
             if (!empty($user)) {
                 $user->name = $request->name;

@@ -43,7 +43,7 @@
                                     <td> {{ $key +1 }}</td>
                                     <td>{{ $student->name }} </td>
                                     <td>{{ $student->Role->display_name }}</td>
-                                    <td>{{ $student->Student->Classes->name or "" }}</td>
+                                    <td>{{ $student->Student->Classes->name OR "" }}</td>
                                     <td>{{ $student->Faculty->name }}</td>
                                     <td> {{ $student->Student->academic_year_from  ." - ". $student->Student->academic_year_to }}</td>
                                     <td>

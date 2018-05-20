@@ -164,11 +164,7 @@
                     <i class="app-menu__icon fa fa-user-circle-o"></i></i><span class="app-menu__label">Thông tin sinh viên</span>
                     <i class="treeview-indicator fa fa-angle-right"></i>
                 </a>
-                {{--<i class="app-menu__icon fa fa-user-circle-o"></i><span class="app-menu__label">Thông tin sinh viên</span></a>--}}
                 <ul class="treeview-menu">
-                    @can('personal-information-list')
-                    <li><a class="treeview-item" href="{{ route('personal-information') }}"><i class="icon fa fa-circle-o"></i> Danh sách sinh viên</a></li>
-                    @endcan
                     @if($authCheck)
                     <li><a class="treeview-item" href="{{ route('personal-information-show',$user->id) }}"><i class="icon fa fa-circle-o"></i>Thông tin cá nhân</a></li>
                     @endif
@@ -210,8 +206,10 @@
                     <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>
                     </li>
                     @endcan
+                    @can('student-list')
                     <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> Sinh
                             viên</a></li>
+                    @endcan
                     {{--<li><a class="treeview-item" href="{{ route('departmentlist') }}"><i--}}
                                     {{--class="icon fa fa-circle-o"></i> Phòng ban</a></li>--}}
                 </ul>

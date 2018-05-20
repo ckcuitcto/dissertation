@@ -18,7 +18,7 @@ class CheckLevel
     {
         if (Auth::check()) {
             $user = Auth::user();
-            if ($user->role_id == 6) {
+            if ($user->Role->weight == ROLE_ADMIN) {
                 return $next($request);
             } else {
                 return redirect()->back();

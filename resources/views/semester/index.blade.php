@@ -195,7 +195,6 @@
             autoclose: true,
             toggleActive: true
         });
-
         $('input#date_end_to_re_mark').datepicker({
             todayBtn: "linked",
             language: "vi",
@@ -206,7 +205,6 @@
             autoclose: true,
             toggleActive: true
         });
-
         $('input#date_start_to_re_mark').datepicker({
             todayBtn: "linked",
             language: "vi",
@@ -217,7 +215,6 @@
             autoclose: true,
             toggleActive: true
         });
-
         @foreach($rolesCanMark as $key => $role)
         $("input#date_start_to_mark_{{$role->id}}").datepicker({
             todayBtn: "linked",
@@ -256,16 +253,13 @@
                         if (result.status === true) {
                             if (result.semester !== undefined) {
                                 $.each(result.semester, function (elementName, value) {
-                                    if (elementName === 'date_start_to_mark') {
-                                        $('.' + elementName).datepicker('setDate', value)   ;
-                                    } else if (elementName === 'date_end_to_mark') {
-                                        $('.' + elementName).datepicker('setDate', value);
-                                    } else if (elementName === 'date_start_to_re_mark') {
-                                        $('.' + elementName).datepicker('setDate', value);
-                                    } else if (elementName === 'date_end_to_re_mark') {
-                                        $('.' + elementName).datepicker('setDate', value);
-                                    } else {
+                                    // alert(elementName + '- ' + value);
+                                    if(elementName === 'year_from' || elementName ==='year_to'){
+                                        $('.' + elementName).attr('value',value);
+                                    }else if (elementName === 'term') {
                                         $('.' + elementName).val(value);
+                                    } else {
+                                        $('.' + elementName).datepicker('setDate', value);
                                     }
                                 });
                             }
@@ -273,15 +267,13 @@
                                 $.each(result.marktime, function (elementName, value) {
                                     var role_id = value.role_id;
                                     $.each(value, function (messageType, messageValue) {
+                                        // alert(messageType + '-' + messageValue);
                                         if (messageType === 'mark_time_start') {
                                             $('.date_start_to_mark_' + role_id).datepicker('setDate', messageValue);
-                                            // alert(messageType + " --- "+role_id+" ---" + "+ " + messageValue);
                                         }
                                         if (messageType === 'mark_time_end') {
                                             $('.date_end_to_mark_' + role_id).datepicker('setDate', messageValue);
-                                            // alert(messageType + " --- "+role_id+" ---" + "+ " + messageValue);
                                         }
-                                        //
                                     });
                                 });
                             }
@@ -361,7 +353,7 @@
             });
 
             $('#myModal').on('hidden.bs.modal', function (e) {
-                $("input[type=text],input[type=number], select").val('');
+                $('#myModal').find("input[type=text],input[type=number], select").val('');
                 $('.text-red').html('');
                 $('span.messageErrors').remove();
                 $('#myModal').find(".modal-title").text('Thêm mới học kì');
