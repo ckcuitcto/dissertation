@@ -46,7 +46,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
-                    <table class="table table-hover table-bordered">
+                    <table class="table table-hover table-bordered" style="text-align:center">
                         <tbody>
                         <tr>
                             <td rowspan="2">STT</td>
@@ -92,10 +92,9 @@
                                 <td> {{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }} </td>
                                 <td>Hoàn Thành</td>
                                 <td>
-                                    <a href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
-                                        <i class="fa fa-eye" aria-hidden="true"></i>
-                                    </a>
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    <a class="btn btn-primary" href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
+                                        <i class="fa fa-eye" aria-hidden="true" style="color:white"></i>Xem
+                                    </a>                   
                                 </td>
                             </tr>
                         @endforeach
