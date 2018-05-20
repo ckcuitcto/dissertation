@@ -254,9 +254,9 @@
                                 $.each(result.semester, function (elementName, value) {
                                     // alert(elementName + '- ' + value);
                                     if(elementName === 'year_from' || elementName ==='year_to'){
-                                        $('.' + elementName).attr('value',value);
+                                        $('.' + elementName).attr('value',value).prop('disabled',true);
                                     }else if (elementName === 'term') {
-                                        $('.' + elementName).val(value);
+                                        $('.' + elementName).val(value).prop('disabled',true);
                                     } else {
                                         $('.' + elementName).datepicker('setDate', value);
                                     }

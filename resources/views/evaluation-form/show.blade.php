@@ -73,9 +73,11 @@
                                                 <td class='detail-evaluation-form'>
                                                     {{ $valueLevel2->content }}
                                                     @isset($valueLevel2->proof)
-                                                        @php $name= "proof".$valueLevel2->id; @endphp
-                                                        <input type="file" class="proof" id="{{$valueLevel2->id}}"
-                                                               name="{{ $name."[]" }}" multiple>
+                                                        @if( $evaluationForm->Student->User->id == $user->id )
+                                                            @php $name= "proof".$valueLevel2->id; @endphp
+                                                            <input type="file" class="proof" id="{{$valueLevel2->id}}"
+                                                                   name="{{ $name."[]" }}" multiple>
+                                                        @endif
                                                     @endisset
                                                     @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel2->id)))
                                                         @foreach($proofs->where('evaluation_criteria_id',$valueLevel2->id) as $proof)
@@ -91,6 +93,7 @@
                                                                     @else
                                                                         <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-times {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
                                                                     @endif
+
                                                                 </a>
                                                             </p>
                                                         @endforeach
@@ -101,9 +104,11 @@
                                                 <td>
                                                     {{ $valueLevel2->content }}
                                                     @isset($valueLevel2->proof)
-                                                        @php $name= "proof".$valueLevel2->id; @endphp
-                                                        <input type="file" class="proof" id="{{$valueLevel2->id}}"
-                                                               name="{{ $name."[]" }}" multiple>
+                                                        @if( $evaluationForm->Student->User->id == $user->id )
+                                                            @php $name= "proof".$valueLevel2->id; @endphp
+                                                            <input type="file" class="proof" id="{{$valueLevel2->id}}"
+                                                                   name="{{ $name."[]" }}" multiple>
+                                                        @endif
                                                     @endisset
                                                     @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel2->id)))
                                                         @foreach($proofs->where('evaluation_criteria_id',$valueLevel2->id) as $proof)
@@ -138,6 +143,7 @@
                                                     @endphp
                                                     {{-- nếu role của user đang đăng nhập = với role của input và đang trong thời gian có thể chấm thì mới đc nhập--}}
                                                     {{-- các input còn lại sẽ bị ẩn đi --}}
+
                                                     @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{$name}}"
                                                                    value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
@@ -160,10 +166,14 @@
                                                 @if($valueLevel3->detail)
                                                     <td class='detail-evaluation-form'>
                                                         {{ $valueLevel3->content }}
+                                                        {{-- nếu có tồn tại minh chứng cho tiêu chí thì sẽ hiện ra form input--}}
                                                         @isset($valueLevel3->proof)
-                                                            @php $name= "proof".$valueLevel3->id; @endphp
-                                                            <input type="file" class="proof" id="{{$valueLevel3->id}}"
-                                                                   name="{{ $name."[]" }}" multiple>
+                                                            {{-- để hiện form input thì thêm 1 điều khiện là user phải là chủ form.--}}
+                                                            @if( $evaluationForm->Student->User->id == $user->id )
+                                                                @php $name= "proof".$valueLevel3->id; @endphp
+                                                                <input type="file" class="proof" id="{{$valueLevel3->id}}"
+                                                                       name="{{ $name."[]" }}" multiple>
+                                                            @endif
                                                         @endisset
                                                         @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel3->id)))
                                                             @foreach($proofs->where('evaluation_criteria_id',$valueLevel3->id) as $proof)
@@ -191,9 +201,11 @@
                                                     <td>
                                                         {{ $valueLevel3->content }}
                                                         @isset($valueLevel3->proof)
-                                                            @php $name= "proof".$valueLevel3->id; @endphp
-                                                            <input type="file" class="proof" id="{{$valueLevel3->id}} "
-                                                                   name="{{ $name."[]" }}" multiple>
+                                                            @if( $evaluationForm->Student->User->id == $user->id )
+                                                                @php $name= "proof".$valueLevel3->id; @endphp
+                                                                <input type="file" class="proof" id="{{$valueLevel3->id}} "
+                                                                       name="{{ $name."[]" }}" multiple>
+                                                            @endif
                                                         @endisset
                                                         @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel3->id)))
                                                             @foreach($proofs->where('evaluation_criteria_id',$valueLevel3->id) as $proof)
@@ -205,7 +217,6 @@
                                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                         <i class="fa fa-eye"
                                                                            aria-hidden="true"></i>{{ $proof->name }}
-
                                                                     @if($proof->valid == 1)
                                                                         <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-check {{ "proofId_".$proof->id }}" aria-hidden="true"></i></button>
                                                                     @else
@@ -312,12 +323,16 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            @can('can-mark')
-                                <div align="right">
-                                    <button class="btn btn-primary" type="submit">Lưu</button>
-                                    <button class="btn btn-secondary" type="reset">Hủy</button>
-                                </div>
-                            @endcan
+
+                            {{-- nếu user đang đăg nhập có quyền = quyền user đang có thể chấm thì mới hiện ra nút lưu--}}
+                            @if($currentRoleCanMark->weight == $user->Role->weight)
+                                @can('can-mark')
+                                    <div align="right" id="button-submit-form">
+                                        <button class="btn btn-primary" type="submit">Lưu</button>
+                                        <button class="btn btn-secondary" type="reset">Hủy</button>
+                                    </div>
+                                @endcan
+                            @endif
                         </form>
                     </div>
                 </div>
@@ -339,6 +354,8 @@
                                 <div id="iframe-view-file"></div>
                                 {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
                                 <input type="hidden" class="id" name="id" id="proofId">
+                                {{--khi bấm vào modal. thì chỉ những ng khác k phải là chủ của phiếu mới đc chỉnh sửa file có hợp lệ hay k--}}
+                                @if( $evaluationForm->Student->User->id != $user->id )
                                 <div class="row">
                                     <div class="col-md-2">
                                         <fieldset class="form-group">
@@ -375,7 +392,7 @@
 
                                     </div>
                                 </div>
-
+                                @endif
                             </div>
                         </div>
                     </form>
@@ -481,7 +498,7 @@
                 var formData = new FormData(this);
                 var url = $(this).attr("data-link");
                 var proofId = formData.get('id');
-                console.log(formData.get('valid'));
+                // console.log(formData.get('valid'));
                 $('span.messageErrors').remove();
                 $.ajax({
                     type: "post",

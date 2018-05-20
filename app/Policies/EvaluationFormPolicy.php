@@ -28,8 +28,13 @@ class EvaluationFormPolicy
             return $user->faculty_id == $evaluationForm->Student->User->faculty_id;
         }elseif($user->Role->weight >= ROLE_COVANHOCTAP ){
             // nêu là cố vấn học tập thì sinh viên chủ form phải thuộc lớp của CVHT
-            return $user->Staff->Classes->id == $evaluationForm->Student->Classes->id;
-
+            foreach($user->Staff->Classes as $class){
+                if($class->id == $evaluationForm->Student->Classes->id){
+                    return true;
+                }
+            }
+            return false;
+//            return $user->Staff->Classes->id == $evaluationForm->Student->Classes->id;
         }elseif($user->Role->weight >= ROLE_BANCANSULOP ){
             // nếu là ban cán sự lớp thì phhải cùng lớp
             return $user->Student->Classes->id == $evaluationForm->Student->Classes->id;

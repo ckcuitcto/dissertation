@@ -192,12 +192,14 @@ class SemesterController extends Controller
 //            $arrValidatorRoleMessage[$dateEnd . ".before"] = "Ngày kết thúc phải > ngày bắt đầu";
             $arrValidatorRoleMessage[$dateEnd . ".required"] = "Bắt buộc nhập";
         }
-        $arrValidatorRole['year_from'] = "required";
-        $arrValidatorRole['year_to'] = "required|after:year_from";
 
-        $arrValidatorRoleMessage['year_from.required'] = 'Bắt buộc nhập. ';
-        $arrValidatorRoleMessage['year_to.required'] = 'Bắt buộc nhập. ';
-        $arrValidatorRoleMessage['year_to.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
+//        $arrValidatorRole['year_from'] = "required";
+//        $arrValidatorRole['year_to'] = "required|after:year_from";
+
+//        $arrValidatorRoleMessage['year_from.required'] = 'Bắt buộc nhập. ';
+//        $arrValidatorRoleMessage['year_to.required'] = 'Bắt buộc nhập. ';
+//        $arrValidatorRoleMessage['year_to.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
+
         $validator = Validator::make($request->all(), $arrValidatorRole, $arrValidatorRoleMessage);
 
         if ($validator->fails()) {

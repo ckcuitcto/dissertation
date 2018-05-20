@@ -20,21 +20,44 @@ class Controller extends BaseController
         {
             $students = Student::all();
             return $students;
-        } elseif ($user->Role->weight >= ROLE_BANCANSULOP) //ban can su lop, co van hoc tpa, chu nhiem khoa thì lấy user thuộc khoa giống
-        {
+        }elseif($user->Role->weight >= ROLE_BANCHUNHIEMKHOA ){
+            // neeus laf ban chu nhiem khoa thi lay cung khoa
             $arrUserId = DB::table('users')
                 ->leftJoin('roles','users.role_id','=','roles.id')
                 ->where('users.faculty_id', $user->faculty_id)
                 ->where('roles.weight', '<=', ROLE_BANCANSULOP)
                 ->select('users.id')->get()->toArray();
-            foreach($arrUserId as $key => $value){
-                $userIds[$key] = [$value->id];
+        }elseif($user->Role->weight >= ROLE_COVANHOCTAP ){
+            // neeus laf ban co van hoc tap thi lay cac sinh vien thuoc cac lop ma ng nay lam co  van
+
+            // lấy danh sách các lớp mà ng này làm cố vấn
+            $arrClassId = [];
+            foreach($user->Staff->Classes as $class){
+                $arrClassId[] = $class->id;
             }
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles','users.role_id','=','roles.id')
+                ->leftJoin('students','students.user_id','=','users.id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->whereIn('students.class_id',$arrClassId)
+                ->select('users.id')->get()->toArray();
 
-            $students = Student::whereIn('user_id', $userIds)->get();
-            return $students;
+        } else if ($user->Role->weight >= ROLE_BANCANSULOP) //ban can su lop, thì lấy user thuộc lop
+        {
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles','users.role_id','=','roles.id')
+                ->leftJoin('students','students.user_id','=','users.id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->where('students.class_id',$user->Student->class_id)
+                ->select('users.id')->get()->toArray();
         }
-
+        foreach($arrUserId as $key => $value){
+            $userIds[$key] = [$value->id];
+        }
+        $students = Student::whereIn('user_id', $userIds)->get();
+        return $students;
     }
 
     public function formatDate($date){
