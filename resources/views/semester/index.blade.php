@@ -159,7 +159,7 @@
             todayBtn: "linked",
             clearBtn: true,
             language: "vi",
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true,
 
@@ -171,7 +171,7 @@
             todayBtn: "linked",
             clearBtn: true,
             language: "vi",
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -181,7 +181,7 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -191,7 +191,7 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -202,7 +202,7 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -213,7 +213,7 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
