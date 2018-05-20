@@ -73,7 +73,7 @@ class EvaluationFormController extends Controller
             $this->authorize($evaluationForm, 'view');
 
             $user = Auth::user();
-//            dd($user->Role->weight);
+
             $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
 
             $evaluationResultsTmp = EvaluationResult::where('evaluation_form_id', $id)->get()->toArray();
@@ -145,6 +145,7 @@ class EvaluationFormController extends Controller
             if (empty($currentRoleCanMark)) {
                 $currentRoleCanMark = Role::find(6);
             }
+//            var_dump($currentRoleCanMark);dd($evaluationForm);
 
             //danh sách minh chứng
             $proofs = Proof::where([
@@ -152,6 +153,14 @@ class EvaluationFormController extends Controller
                 'created_by' => $evaluationForm->Student->id
             ])->get();
 
+            /// evaluationForm : form đang đánh giá,
+            /// $user : đang đăng nhập
+            /// evaluationCriterias : cáctiêu chí đánh giá,
+            /// listUserMark : danh sách user và quyền. nếu đã chấm thì lấy ra userid. nếu chưa chấm thì userId=  rrỗng
+            /// evaluationResults : mảng :key là id tiếu chí + userId ng chấm. value: điểm,...
+            /// currentRoleCanMark : xác định role có thể chấm ở thời điểm hiện tại
+            /// proofs. danh sách minh chứng của user.
+            ///
             return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark','proofs'));
         }
         return redirect()->back();
@@ -278,7 +287,7 @@ class EvaluationFormController extends Controller
         $arrFile = $request->file('fileUpload');
         foreach ($arrFile as $file) {
             if (!in_array($file->getClientOriginalExtension(), FILE_VALID)) {
-                $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ "]);
+                $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ. File hợp lệ: img,jpg,pdf,png,jpeg,bmp "]);
                 return response()->json([
                     'status' => false,
                     'arrMessages' => $arrMessage

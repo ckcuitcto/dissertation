@@ -85,9 +85,17 @@ class TranscriptController extends Controller
             $evaluationForms = EvaluationForm::where('student_id', $id)->get();
 
             // kiểm tra quyền.
+//            $arr = [];
+//            $userLogin = Auth::user();
+//            var_dump($userLogin->Student->Classes->id);
+//            if($userLogin->Role->weight >= ROLE_BANCANSULOP ) {
             foreach($evaluationForms as $value){
+//                var_dump($value->Student->Classes->id);
+//                $arr[] = $userLogin->Student->Classes->id == $value->Student->Classes->id;
+//                }
                 $this->authorize($value,'view');
             }
+//            dd($arr);
             return view('transcript.show', compact('user', 'evaluationForms', 'rolesCanMark', 'scoreList'));
         }
         return redirect()->back();
