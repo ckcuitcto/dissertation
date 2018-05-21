@@ -7,12 +7,12 @@
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="fa fa-edit"></i> Thông tin sinh viên</h1>
+                <h1><i class="fa fa-edit"></i> Thông tin cá nhân</h1>
                 <p>Trường đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item">Thông tin sinh viên</li>
+                <li class="breadcrumb-item">Thông tin cá nhân</li>
             </ul>
         </div>
         <form id="form-update-infomation" method="post" enctype="multipart/form-data">

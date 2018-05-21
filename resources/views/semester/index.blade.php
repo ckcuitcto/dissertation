@@ -221,7 +221,7 @@
             language: "vi",
             format: "dd/mm/yyyy",
             clearBtn: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true,
             todayHighlight: true
@@ -231,7 +231,7 @@
             language: "vi",
             format: "dd/mm/yyyy",
             clearBtn: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true,
             todayHighlight: true
@@ -255,9 +255,9 @@
                                 $.each(result.semester, function (elementName, value) {
                                     // alert(elementName + '- ' + value);
                                     if(elementName === 'year_from' || elementName ==='year_to'){
-                                        $('.' + elementName).attr('value',value).prop('disabled',true);
+                                        $('.' + elementName).attr('value',value);
                                     }else if (elementName === 'term') {
-                                        $('.' + elementName).val(value).prop('disabled',true);
+                                        $('.' + elementName).val(value);
                                     } else {
                                         $('.' + elementName).datepicker('setDate', value);
                                     }
