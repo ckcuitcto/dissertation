@@ -30,91 +30,81 @@ class NewsController extends Controller
     public function index()
     {
         $newsList = News::all();
-        $faculties = Faculty::all();
+
         return view('news.index', compact('newsList', 'faculties'));
+    }
+
+    public function create()
+    {
+        $faculties = Faculty::all();
+        return view('news.add', compact('faculties'));
     }
 
     public function show($id)
     {
-//         $news = News::find($id);
-//         return view('news.index', compact('news'));
+        $news = News::find($id);
+        if(!empty($news)){
+            $faculties = Faculty::all();
+            return view('news.show', compact('news'));
+        }
+        return redirect()->back();
     }
 
     public function edit($id)
     {
         $news = News::find($id);
-        return response()->json([
-            'news' => $news,
-            'status' => true
-        ], 200);
+        if(!empty($news)){
+            $faculties = Faculty::all();
+            return view('news.edit', compact('faculties','news'));
+        }
+        return redirect()->back();
     }
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'content' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'arrMessages' => $validator->errors()
-            ], 200);
-        }
+        $this->validate($request,
+            [
+                'title' => 'required',
+                'news_content' => 'required',
+            ],
+            [
+                'title.required' => "Vui lòng nhập tiêu đề",
+                'news_content.required' => 'Vui lòng nhập nội dung',
+            ]
+        );
 
         $news = News::find($id);
         if (!empty($news)) {
             $news->title = $request->title;
-            $news->content = $request->content;
+            $news->content = $request->news_content;
             $news->faculty_id = $request->faculty_id;
             $news->created_by = Auth::user()->Staff->id;
             $news->save();
-            return response()->json([
-                'news' => $news,
-                'status' => true
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => false
-            ], 200);
+            return redirect()->route('news')->with('success','Sửa tin tức thành công!');
         }
+        return redirect()->back();
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        $validator = Validator::make($request->all(),
+        $this->validate($request,
             [
                 'title' => 'required',
-                'content' => 'required',
+                'news_content' => 'required',
             ],
             [
-                'title.required' => 'Tiêu đề là bắt buộc',
-                'content.required' => 'Nội dung là bắt buộc',
+                'title.required' => "Vui lòng nhập tiêu đề",
+                'news_content.required' => 'Vui lòng nhập nội dung',
             ]
-        // tu gio lam them cai nay nua
         );
+        $news = new News();
+        $news->title = $request->title;
+        $news->content = $request->news_content;
+        $news->faculty_id = $request->faculty_id;
+        $news->created_by = Auth::user()->Staff->id;
+        $news->save();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'arrMessages' => $validator->errors()
-            ], 200);
-        } else {
-
-            $news = new News();
-            $news->title = $request->title;
-            $news->content = $request->content;
-            $news->faculty_id = $request->faculty_id;
-            $news->created_by = Auth::user()->Staff->id;
-
-            $news->save();
-            return response()->json([
-                'news' => $news,
-                'status' => true
-            ], 200);
-        }
+        return redirect()->route('news')->with('success','Thêm tin tức thành công!');
     }
 
     public function destroy($id)

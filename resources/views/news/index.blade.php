@@ -1,115 +1,57 @@
 @extends('layouts.default')
 
 @section('content')
-<main class="app-content">
-<div class="app-title">
-        <div>
-          <h1><i class="fa fa-laptop"></i> Quản lý tin tức, sự kiện</h1>
-          <p>Trường Đại học Công nghệ Sài Gòn</p>
-        </div>
-        <ul class="app-breadcrumb breadcrumb">
-          <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
-          <li class="breadcrumb-item"><a href="#"> Quản lý tin tức, sự kiện</a></li>
-        </ul>
-      </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="tile">
-              <table class="table table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th>STT</th>
-                    <th>Tiêu đề</th>
-                    <th style="width:40%">Nội dung</th>
-                    <th>Ngày tạo</th>
-                    <th>Ngày cập nhật</th>    
-                    <th>Tác vụ</th>
-                  </tr>    
-                </thead>
-                <tbody>
-                  @foreach($newsList as $tintuc)
-                  <tr>
-                    <th>1</th>
-                    <td>{{$tintuc->title}}</td>
-                    <td>{{$tintuc->content}}</td>
-                    <td>{{$tintuc->created_at}}</td>
-                    <td>{{$tintuc->updated_at}}</td>
-                    <td>                      
-                        <button type="button" class="btn btn-primary"
-                        data-news-id="{{$tintuc->id}}" id="news-update"
-                                data-news-edit-link="{{route('news-edit',$tintuc->id)}}"
-                                data-news-update-link="{{route('news-update',$tintuc->id)}}">                         
-                             <i class="fa fa-lg fa-edit"></i>
-                        </button>
-                              
-                        <button type="button" class="btn btn-danger"
-                        data-news-id="{{$tintuc->id}}" id="news-destroy"
-                        data-news-link="{{route('news-destroy',$tintuc->id)}}"
-                        ><i class="fa fa-lg fa-trash"></i>                        
-                        </button>
-                      </td> 
-                  </tr>                 
-                  @endforeach
-                </tbody>
-              </table>
-              <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
-                                        id="btnAddNews" type="button">Thêm </button>
+    <main class="app-content">
+        <div class="app-title">
+            <div>
+                <h1><i class="fa fa-laptop"></i> Quản lý tin tức, sự kiện</h1>
+                <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
-          </div>
+            <ul class="app-breadcrumb breadcrumb">
+                <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
+                <li class="breadcrumb-item"><a href="#"> Quản lý tin tức, sự kiện</a></li>
+            </ul>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tile">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tiêu đề</th>
+                            <th>Ngày tạo</th>
+                            <th>Ngày cập nhật</th>
+                            <th>Tác vụ</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($newsList as $key =>  $tintuc)
+                            <tr>
+                                <th>{{ $key + 1 }}</th>
+                                <td>{{ $tintuc->id ." | ".$tintuc->title}}</td>
+                                <td>{{$tintuc->created_at}}</td>
+                                <td>{{$tintuc->updated_at}}</td>
+                                <td>
+                                    <a class="btn btn-primary" href="{{route('news-edit',$tintuc->id)}}">
+                                        <i class="fa fa-lg fa-edit"></i>
+                                    </a>
 
-        <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Thêm mới tin tức</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-
-                        <form id="news-form">
-                            {!! csrf_field() !!}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="faculty_id">Khoa</label>
-                                            <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
-                                                <option value="0">Tất cả khoa</option>
-                                                @foreach($faculties as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        <p style="color:red; display: none;" class="faculty_id"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="title">Tiêu đề</label>
-                                        <input type="hidden" name="id" class="id" id="idNewsModal">
-                                        <input class="form-control title" id="title" name="title" type="text" required
-                                            aria-describedby="news" placeholder="Nhập tiêu đề">
-                                        <p class="title"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="content">Nội dung</label>
-                                        <textarea class="form-control content" id="content" name="content" required aria-describedby="news" >
-                                        </textarea>
-                                        <p class="content"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="modal-footer">
-                            <button data-link="{{ route('news-store') }}" class="btn btn-primary"
-                                    id="btn-save-news" name="btn-save-news" type="button">
-                                Thêm
-                            </button>
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
-                        </div>
-                    </div>
+                                    <button type="button" class="btn btn-danger"
+                                            data-news-id="{{$tintuc->id}}" id="news-destroy"
+                                            data-news-link="{{route('news-destroy',$tintuc->id)}}"><i
+                                                class="fa fa-lg fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <a href="{{ route('news-create') }}" class="btn btn-primary" id="btnAddNews" type="button">Thêm </a>
                 </div>
             </div>
         </div>
-      </main>
+    </main>
 @endsection
 
 @section('sub-javascript')
@@ -119,69 +61,8 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
 
-
     <script>
-        // CKEDITOR.replace('content');
         $(document).ready(function () {
-            $("button#btn-save-news").click(function () {
-                var valueForm = $('form#news-form').serialize();
-                var url = $(this).attr('data-link');
-                $('.form-group').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: valueForm,
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#news-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
-                                });
-                            }
-                        } else if (result.status === true) {
-                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
-                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
-                            });
-                        }
-                    }
-                });
-            });
-
-          $("button#news-update").click(function () {
-                var urlEdit = $(this).attr('data-news-edit-link');
-                var urlUpdate = $(this).attr('data-news-update-link');
-                var id = $(this).attr('data-news-id');
-                $('.form-group').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "get",
-                    url: urlEdit,
-                    data: {id: id},
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === true) {
-                            if (result.news !== undefined) {
-                                $.each(result.news, function (elementName, value) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + messageValue)
-                                    $('.' + elementName).val(value);
-//                                    });
-                                });
-                            }
-                        }
-                    }
-                });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
-                $('#myModal').find(".modal-footer > button[name=btn-save-news]").html('Sửa')
-                $('#myModal').find(".modal-footer > button[name=btn-save-news]").attr('data-link',urlUpdate);
-                $('#myModal').modal('show');
-            });
-
             $('button#news-destroy').click(function () {
                 var id = $(this).attr("data-news-id");
                 var url = $(this).attr('data-news-link');
@@ -203,12 +84,12 @@
                             data: {"id": id},
                             success: function (data) {
                                 if (data.status === true) {
-                                    swal("Deleted!", "Đã xóa góp ý !", "success");
+                                    swal("Deleted!", "Đã tin tức góp ý !", "success");
                                     $('.sa-confirm-button-container').click(function () {
                                         location.reload();
                                     })
                                 } else {
-                                    swal("Cancelled", "Không tìm thấy góp ý !!! :)", "error");
+                                    swal("Cancelled", "Không tìm thấy tin tức !!! :)", "error");
                                 }
                             }
                         });
@@ -217,9 +98,6 @@
                     }
                 });
             });
-
         });
-
     </script>
-
 @endsection
