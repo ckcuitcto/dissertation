@@ -36,7 +36,6 @@
                                     <a class="btn btn-primary" href="{{route('news-edit',$tintuc->id)}}">
                                         <i class="fa fa-lg fa-edit"></i>
                                     </a>
-
                                     <button type="button" class="btn btn-danger"
                                             data-news-id="{{$tintuc->id}}" id="news-destroy"
                                             data-news-link="{{route('news-destroy',$tintuc->id)}}"><i
