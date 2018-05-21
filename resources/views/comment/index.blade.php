@@ -42,7 +42,7 @@
                                     <td>{!! $cmt->title !!} </td>
                                     <td>{!! $cmt->content !!}</td>
                                     <td>{{ $cmt->created_at }}</td>
-                                    <td>
+                                    <td align="center">
                                     @can('comment-reply')
                                         <a data-comment-id="{{$cmt->id}}" id="comment-reply"
                                            data-comment-show-link="{{route('comment-show',$cmt->id)}}"
@@ -51,9 +51,9 @@
                                         </a>
                                     @endcan
                                     @can('comment-delete')
-                                        <a data-comment-id="{{$cmt->id}}" id="comment-destroy"
+                                        <a class="btn btn-danger" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-destroy"
                                            data-comment-link="{{route('comment-destroy',$cmt->id)}}">
-                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>Xóa
                                         </a>
                                     @endcan
                                     </td>

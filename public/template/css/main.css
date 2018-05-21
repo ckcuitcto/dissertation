@@ -9314,12 +9314,6 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
   left: 0;
   padding: 4px;
 }
-/* div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-right.datepicker-orient-bottom {
-  top: 170px !important;
-  left: 385px !important;
-  z-index: 1060;
-  display: block;
-} */
 
 .datepicker-dropdown:before {
   content: '';

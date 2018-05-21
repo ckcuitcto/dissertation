@@ -74,7 +74,8 @@
                                     <div class="form-row">
                                         <label for="year">Năm học</label>
                                         <div class="input-group">
-                                            <input type="year" class="input-sm form-control year_from" id="year_from" name="year_from"/>
+                                            <input type="year" class="input-sm form-control year_from" id="year_from"
+                                                   name="year_from" />
                                             <span class="input-group-addon">to</span>
                                             <input type="year" class="input-sm form-control year_to" name="year_to" id="year_to"/>
                                         </div>
@@ -158,7 +159,7 @@
             todayBtn: "linked",
             clearBtn: true,
             language: "vi",
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true,
 
@@ -170,7 +171,7 @@
             todayBtn: "linked",
             clearBtn: true,
             language: "vi",
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -180,7 +181,7 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -190,7 +191,7 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -200,7 +201,7 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -210,7 +211,7 @@
             format: "dd/mm/yyyy",
             clearBtn: true,
             todayHighlight: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true
         });
@@ -220,7 +221,7 @@
             language: "vi",
             format: "dd/mm/yyyy",
             clearBtn: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true,
             todayHighlight: true
@@ -230,7 +231,7 @@
             language: "vi",
             format: "dd/mm/yyyy",
             clearBtn: true,
-            orientation: "top right",
+            orientation: "bottom right",
             autoclose: true,
             toggleActive: true,
             todayHighlight: true
@@ -254,9 +255,9 @@
                                 $.each(result.semester, function (elementName, value) {
                                     // alert(elementName + '- ' + value);
                                     if(elementName === 'year_from' || elementName ==='year_to'){
-                                        $('.' + elementName).attr('value',value).prop('disabled',true);
+                                        $('.' + elementName).attr('value',value);
                                     }else if (elementName === 'term') {
-                                        $('.' + elementName).val(value).prop('disabled',true);
+                                        $('.' + elementName).val(value);
                                     } else {
                                         $('.' + elementName).datepicker('setDate', value);
                                     }

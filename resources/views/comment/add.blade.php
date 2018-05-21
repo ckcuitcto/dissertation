@@ -16,7 +16,6 @@
             <form method="post" action="{{ route('comment-store') }}">
                 {!! csrf_field() !!}
                 <div class="tile">
-                    <h3 class="tile-title">Vertical Form</h3>
                     <div class="tile-body">
                         <form>
                             <div class="form-group">
