@@ -143,7 +143,6 @@
                                                     @endphp
                                                     {{-- nếu role của user đang đăng nhập = với role của input và đang trong thời gian có thể chấm thì mới đc nhập--}}
                                                     {{-- các input còn lại sẽ bị ẩn đi --}}
-
                                                     @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{$name}}"
                                                                    value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"

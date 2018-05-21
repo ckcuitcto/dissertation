@@ -34,18 +34,16 @@ class ProofController extends Controller
     {
         $userLogin = Auth::user();
         // nếu role vào k phải là học sinh
-        if($userLogin->Role->weight >= ROLE_BANCANSULOP) {
+        if($userLogin->Role->weight >= ROLE_COVANHOCTAP) {
             return redirect()->back();
         }
 
         // xác định role để lấy thời gian chấm.
-        $role = $userLogin->Role->weight;
         // nếu user đăng nhạp là ban cán sự lớp thì sẽ lấy thời gian chấm của sinh viên bình thường
         // nếu lấy theo role của ban cán sự lớp thì ban cán sự lớp có thể xóa file quá thời gian chấm
-        if($userLogin->Role->weight == ROLE_BANCANSULOP) {
-            $role = 1;
-        }
 
+
+        // luôn lấy theo thời gian của sinh viên
         $proofList = DB::table('proofs')
             ->leftJoin('evaluation_criterias','proofs.evaluation_criteria_id','=','evaluation_criterias.id')
             ->leftJoin('semesters','semesters.id','=','proofs.semester_id')
@@ -53,7 +51,7 @@ class ProofController extends Controller
             ->select('evaluation_criterias.content','evaluation_criterias.detail','proofs.*','semesters.year_from','semesters.year_to','semesters.term','mark_times.mark_time_start','mark_times.mark_time_end')
             ->where([
                 ['proofs.created_by','=', $userLogin->Student->id],
-                ['mark_times.role_id','=', $role]
+                ['mark_times.role_id','=', ROLE_SINHVIEN ]
             ])
             ->orderBy('proofs.id')
             ->get();

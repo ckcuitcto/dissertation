@@ -14,7 +14,7 @@ class CreateEvaluationResultsTable extends Migration
     public function up()
     {
         Schema::create('evaluation_results', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
+            $table->bigIncrements('id')->unsigned();
 //            $table->integer('score')->unsigned();
             $table->integer('evaluation_criteria_id')->unsigned()->nullable();
             $table->integer('evaluation_form_id')->unsigned()->nullable();
