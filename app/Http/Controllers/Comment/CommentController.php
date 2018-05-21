@@ -26,17 +26,21 @@ class CommentController extends Controller
             ->leftJoin('users', 'students.user_id', '=', 'users.id')
             ->leftJoin('classes', 'classes.id', '=', 'students.class_id')
             ->select('comments.*','users.name as userName','classes.name as className');
-        if ($user->Role->id >= 5) // admin va phong ctsv thì lấy tất cả user
+        if ($user->Role->id >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
         {
             //  lấy hết. k cần điều kiện gì
         }else{
             $facultyId = Auth::user()->Faculty->id;
             $comment->where('users.faculty_id', $facultyId);
-            if ($user->Role->id >= 4) // chu nhiem khoa thì lấy user thuộc khoa giống
+            if ($user->Role->id >= ROLE_BANCHUNHIEMKHOA) // chu nhiem khoa thì lấy user thuộc khoa giống
             {
                 // lấy ra tất cả user cùng khoa vs user đang đăng nhập
-            }elseif($user->Role->id >=3){ // cố vấn học tập
-                $comment->where('classes.staff_id', $user->Staff->id);
+            }elseif($user->Role->id >=ROLE_COVANHOCTAP){ // cố vấn học tập
+                $arrClassId = [];
+                foreach($user->Staff->Classes as $class){
+                    $arrClassId[] = $class->id;
+                }
+                $comment->whereIn('classes.id', $arrClassId);
             }else { // sinh viên. bán bộ
                 $comment->where('comments.created_by', $user->Student->id);
             }

@@ -145,13 +145,17 @@ class EvaluationFormController extends Controller
             if (empty($currentRoleCanMark)) {
                 $currentRoleCanMark = Role::find(6);
             }
-//            var_dump($currentRoleCanMark);dd($evaluationForm);
-
+            // nếu role có thể chấm hiện tại là sinh viên. thì gán role sinh viên cho ban cán sự lớp
+            if($currentRoleCanMark->weight == ROLE_SINHVIEN AND $user->Role->weight == ROLE_BANCANSULOP){
+                $user->Role = Role::where('weight',ROLE_SINHVIEN)->first();
+                $user->role_id = ROLE_SINHVIEN;
+            }
             //danh sách minh chứng
             $proofs = Proof::where([
                 'semester_id' => $evaluationForm->Semester->id,
                 'created_by' => $evaluationForm->Student->id
             ])->get();
+
 
             /// evaluationForm : form đang đánh giá,
             /// $user : đang đăng nhập
