@@ -13,6 +13,44 @@ class StaffSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
+                'id' => 'CTSV000001',
+                'name' => 'Phòng CTSV 1',
+                'email' => 'CTSV000001@gmail1.com',
+                'password' => bcrypt('CTSV000001'),
+                'role_id' => 5,
+                'faculty_id' => null
+            ],[
+                'id' => 'CTSV000002',
+                'name' => 'Phòng CTSV 2',
+                'email' => 'CTSV000002@gmail1.com',
+                'password' => bcrypt('CTSV000002'),
+                'role_id' => 5,
+                'faculty_id' => null
+            ],[
+                'id' => 'BCMK000001',
+                'name' => 'Ban chủ nhiệm Khoa IT 1',
+                'email' => 'BCMK000001@gmail1.com',
+                'password' => bcrypt('BCMK000001'),
+                'role_id' => 4,
+                'faculty_id' => 1
+            ],          
+            [
+                'id' => 'BCMK000002',
+                'name' => 'Ban chủ nhiệm Khoa QTKD 1',
+                'email' => 'BCMK000002@gmail1.com',
+                'password' => bcrypt('BCMK000002'),
+                'role_id' => 4,
+                'faculty_id' => 2
+            ],          
+            [
+                'id' => 'BCMK000003',
+                'name' => 'Ban chủ nhiệm Khoa Cơ Khí 1',
+                'email' => 'BCMK000003@gmail1.com',
+                'password' => bcrypt('BCMK000003'),
+                'role_id' => 4,
+                'faculty_id' => 6
+            ],
+            [
                 'id' => 'GVIT000001',
                 'name' => 'CVHT Khoa IT 1',
                 'email' => 'GVIT000001@gmail.com',
@@ -27,51 +65,21 @@ class StaffSeeder extends Seeder
                 'password' => bcrypt('GVIT000002'),
                 'role_id' => 3,
                 'faculty_id' => 1
-            ],[
-                'id' => 'GVIT000003',
-                'name' => 'Ban chủ nhiệm Khoa IT 3',
-                'email' => 'GVIT000003@gmail1.com',
-                'password' => bcrypt('GVIT000003'),
-                'role_id' => 3,
-                'faculty_id' => 1
             ],
             [
-                'id' => 'CTSV000004',
-                'name' => 'Phòng CTSV 4',
-                'email' => 'CTSV000004@gmail1.com',
-                'password' => bcrypt('CTSV000004'),
-                'role_id' => 5,
-                'faculty_id' => null
-            ],[
-                'id' => 'CTSV000005',
-                'name' => 'Phòng CTSV 5',
-                'email' => 'CTSV000005@gmail1.com',
-                'password' => bcrypt('CTSV000005'),
-                'role_id' => 5,
-                'faculty_id' => null
-            ],
-            [
-                'id' => 'GVQT000006',
-                'name' => 'Ban chủ nhiệm Khoa QTKD 6',
-                'email' => 'GVQT000006@gmail1.com',
-                'password' => bcrypt('GVQT000006'),
-                'role_id' => 4,
-                'faculty_id' => 2
-            ],
-            [
-                'id' => 'GVQT000007',
-                'name' => 'CVHT Khoa QTKD 7',
-                'email' => 'GVQT000007@gmail1.com',
-                'password' => bcrypt('GVQT000007'),
+                'id' => 'GVQT000001',
+                'name' => 'CVHT Khoa QTKD 1',
+                'email' => 'GVQT000001@gmail1.com',
+                'password' => bcrypt('GVQT000001'),
                 'role_id' => 3,
                 'faculty_id' => 2
             ],[
-                'id' => 'GVQT000008',
-                'name' => 'CVHT Khoa QTKD 8',
-                'email' => 'GVQT000008@gmail1.com',
-                'password' => bcrypt('GVQT000008'),
+                'id' => 'GVCK000001',
+                'name' => 'CVHT Khoa Cơ Khí 1',
+                'email' => 'GVCK000001@gmail1.com',
+                'password' => bcrypt('GVCK000001'),
                 'role_id' => 3,
-                'faculty_id' => 2
+                'faculty_id' => 6
             ]
         ]);
     }
