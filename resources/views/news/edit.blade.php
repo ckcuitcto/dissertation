@@ -69,7 +69,7 @@
 
 @section('sub-javascript')
     <script>
-        CKEDITOR.replace('news_content');
+        CKEDITOR.replace('news_content',options);
         $(document).ready(function () {
             $("select#faculty_id").val({{ $news->faculty_id }}).change();
         });

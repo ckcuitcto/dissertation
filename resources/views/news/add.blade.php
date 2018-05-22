@@ -68,7 +68,7 @@
 
 @section('sub-javascript')
     <script>
-        CKEDITOR.replace('news_content');
+        CKEDITOR.replace('news_content',options);
         $(document).ready(function () {
         });
     </script>
