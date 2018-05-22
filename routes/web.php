@@ -180,9 +180,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@index']);    
         
         Route::post('/store', ['as' => 'news-store', 'uses' => 'News\NewsController@store'])->middleware('can:can-change-news');
-        Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update'])->middleware('can:can-change-news');
+        Route::get('/create', ['as' => 'news-create', 'uses' => 'News\NewsController@create'])->middleware('can:can-change-news');
+
         Route::get('/{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
+        Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update'])->middleware('can:can-change-news');
         Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit'])->middleware('can:can-change-news');
+
         Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy'])->middleware('can:can-change-news');
     });
 
