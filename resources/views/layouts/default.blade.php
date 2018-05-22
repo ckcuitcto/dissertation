@@ -103,9 +103,11 @@
                     @endif<i class="fa fa-user fa-lg"></i>
                 </a>
                 <ul class="dropdown-menu settings-menu dropdown-menu-right">
-                    <li><a class="dropdown-item" href="{{ route('home') }}"><i class="fa fa-cog fa-lg"></i> Settings</a>
+                    <li><a class="dropdown-item" href="{{ route('permission-list') }}"><i class="fa fa-cog fa-lg"></i> Settings</a>
                     </li>
-                    <li><a class="dropdown-item" href="{{ route('home') }}"><i class="fa fa-user fa-lg"></i> Profile</a>
+                    @if($authCheck)
+                    <li><a class="dropdown-item" href="{{ route('personal-information-show',$user->id) }}"><i class="fa fa-user fa-lg"></i> Profile</a>
+                    @endif
                     </li>
 
 

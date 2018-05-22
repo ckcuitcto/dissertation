@@ -176,7 +176,7 @@
                         }
                     }
                 });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
+                $('#myModal').find(".modal-title").text('Sửa nội dung tin tức, sự kiện');
                 $('#myModal').find(".modal-footer > button[name=btn-save-news]").html('Sửa')
                 $('#myModal').find(".modal-footer > button[name=btn-save-news]").attr('data-link',urlUpdate);
                 $('#myModal').modal('show');

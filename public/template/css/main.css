@@ -13272,9 +13272,10 @@ be a descendant of the grid when it is being dragged.
 
 .app-search__input {
   border: 0;
+  width: 350px;
   padding: 5px 10px;
   padding-right: 30px;
-  border-radius: 2px;
+  border-radius: 50px;
   background-color: rgba(255, 255, 255, 0.8);
   -webkit-transition: background-color 0.3s ease;
   -o-transition: background-color 0.3s ease;
