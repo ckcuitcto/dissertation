@@ -146,10 +146,10 @@ class EvaluationFormController extends Controller
                 $currentRoleCanMark = Role::find(6);
             }
             // nếu role có thể chấm hiện tại là sinh viên. thì gán role sinh viên cho ban cán sự lớp
-            if($currentRoleCanMark->weight == ROLE_SINHVIEN AND $user->Role->weight == ROLE_BANCANSULOP){
-                $user->Role = Role::where('weight',ROLE_SINHVIEN)->first();
-                $user->role_id = ROLE_SINHVIEN;
-            }
+//            if($currentRoleCanMark->weight == ROLE_SINHVIEN AND $user->Role->weight == ROLE_BANCANSULOP){
+//                $user->Role = Role::where('weight',ROLE_SINHVIEN)->first();
+//                $user->role_id = ROLE_SINHVIEN;
+//            }
             //danh sách minh chứng
             $proofs = Proof::where([
                 'semester_id' => $evaluationForm->Semester->id,
