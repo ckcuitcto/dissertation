@@ -44,7 +44,7 @@
                                     <td>{{ $cmt->created_at }}</td>
                                     <td align="center">
                                     @can('comment-reply')
-                                        <a data-comment-id="{{$cmt->id}}" id="comment-reply"
+                                        <a class="btn btn-primary" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-reply"
                                            data-comment-show-link="{{route('comment-show',$cmt->id)}}"
                                            data-comment-reply-link="{{route('comment-reply',$cmt->id)}}">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
@@ -53,7 +53,7 @@
                                     @can('comment-delete')
                                         <a class="btn btn-danger" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-destroy"
                                            data-comment-link="{{route('comment-destroy',$cmt->id)}}">
-                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>Xóa
+                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                         </a>
                                     @endcan
                                     </td>
