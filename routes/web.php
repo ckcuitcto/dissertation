@@ -15,6 +15,10 @@ $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/laravel-filemanager', '\Unisharp\Laravelfilemanager\controllers\LfmController@show');
+    Route::post('/laravel-filemanager/upload', '\Unisharp\Laravelfilemanager\controllers\UploadController@upload');
+
     Route::get('/home', 'Home\HomeController@index')->name('home');   
 
     Route::group(['prefix' => 'khoa', 'middleware' => 'can:manage-faculty'], function () {
