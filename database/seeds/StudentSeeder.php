@@ -44,26 +44,26 @@ class StudentSeeder extends Seeder
                 'faculty_id' => 1
             ],
             [
-                'id' => 'DH51400243',
-                'name' => 'SV Khoa QTKD 4',
-                'email' => 'DH51400243@gmail.com',
-                'password' => bcrypt('DH51400243'),
-                'role_id' => 1,
-                'faculty_id' => 1
-            ],
-            [
-                'id' => 'DH51400999',
-                'name' => 'SV Khoa QTKD 5',
-                'email' => 'DH51400999@gmail.com',
-                'password' => bcrypt('DH51400999'),
+                'id' => 'DH51401681',
+                'name' => 'SV Khoa QTKD 1',
+                'email' => 'DH51401681@gmail.com',
+                'password' => bcrypt('DH51401681'),
                 'role_id' => 1,
                 'faculty_id' => 2
             ],
             [
-                'id' => 'DH51400838',
-                'name' => 'SV Khoa QTKD 6',
-                'email' => 'DH51400838@gmail.com',
-                'password' => bcrypt('DH51400838'),
+                'id' => 'DH51401682',
+                'name' => 'SV Khoa QTKD 2',
+                'email' => 'DH51401682@gmail.com',
+                'password' => bcrypt('DH51401682'),
+                'role_id' => 1,
+                'faculty_id' => 2
+            ],
+            [
+                'id' => 'DH51401683',
+                'name' => 'BCSL Khoa QTKD 1',
+                'email' => 'DH51401683@gmail.com',
+                'password' => bcrypt('DH51401683'),
                 'role_id' => 2,
                 'faculty_id' => 2
             ],[
@@ -71,6 +71,13 @@ class StudentSeeder extends Seeder
                 'name' => 'SV Khoa CoKhi 1',
                 'email' => 'DH51400777@gmail.com',
                 'password' => bcrypt('CD51402222'),
+                'role_id' => 1,
+                'faculty_id' => 6
+            ],[
+                'id' => 'DH51400778',
+                'name' => 'BCSL Khoa CoKhi 1',
+                'email' => 'DH51400778@gmail.com',
+                'password' => bcrypt('DH51400778'),
                 'role_id' => 2,
                 'faculty_id' => 6
             ]
