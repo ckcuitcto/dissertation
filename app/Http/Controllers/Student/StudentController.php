@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Student;
 
-use App\Model\Role;
+use App\Model\Classes;
+use App\Model\Faculty;
+use     App\Model\Role;
+use App\Model\Student;
 use App\Model\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Excel;
 use Validator;
+//use Excel;
 
 class StudentController extends Controller
 {
@@ -116,30 +120,101 @@ class StudentController extends Controller
         } else {
 
             $arrFile = $request->file('fileImport');
-            foreach ($arrFile as $file){
-                if($file->getClientOriginalExtension() != "xlsx"){
-                    $arrMessage = array("fileImport" => ["File ".$file->getClientOriginalName()." không hợp lệ "] );
+            foreach ($arrFile as $file) {
+                if ($file->getClientOriginalExtension() != "xlsx") {
+                    $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ "]);
                     return response()->json([
                         'status' => false,
                         'arrMessages' => $arrMessage
                     ], 200);
                 }
             }
-            foreach ($arrFile as $file){
-//                $fileName = str_random(8) . "_" . $file->getClientOriginalName();
-//                while(File::exists("upload/student/".$fileName)){
-//                    $fileName = str_random(8) . "_" . $file->getClientOriginalName();
-//                }
-//                $file->move('upload/student/', $fileName);
-                $result = Excel::load($file,function($reader){
-                    $reader->all();
-                })->get();
-            }
+            foreach ($arrFile as $file) {
+                $fileName = str_random(8) . "_" . $file->getClientOriginalName();
+                while (File::exists("upload/student/" . $fileName)) {
+                    $fileName = str_random(8) . "_" . $file->getClientOriginalName();
+                }
+                $file->move('upload/student/', $fileName);
 
-            return response()->json([
-                'semester' => $result,
-                'status' => true
-            ], 200);
+                $arrUser = array();
+                $arrUpdateStudent = array();
+                $arrKey = array();
+
+                \Maatwebsite\Excel\Facades\Excel::load("upload/student/" . $fileName, function ($reader) {
+                    $facultyId = null;
+                    $classId = null;
+                    foreach($reader->all() as $key => $value){
+                        if(!empty($value->mssv)) {
+
+                            if(!empty($facultyId)){
+                                if($value->khoa != $facultyId->name) {
+                                    $facultyId = Faculty::where('name', 'like', "%$value->khoa%")->first();
+                                }
+                            }else{
+                                $facultyId = Faculty::where('name', 'like', "%$value->khoa%")->first();
+                            }
+                            if(!empty($classId)){
+                                if($value->lop != $classId->name) {
+                                    $classId = Classes::where('name', 'like', "%$value->lop%")->first();
+                                }
+                            }else{
+                                $classId = Classes::where('name', 'like', "%$value->lop%")->first();
+                            }
+
+                            $academicYearFrom = explode('-', $value->nien_khoa)[0];
+                            $academicYearTo = explode('-', $value->nien_khoa)[1];
+
+                            $arrUser[] = [
+                                'id' => $value->mssv,
+                                'name' => $value->ho . ' ' . $value->ten,
+                                'password' => bcrypt($value->mssv),
+                                'role_id' => ROLE_SINHVIEN,
+                                'faculty_id' => $facultyId->id
+                            ];
+
+                            $arrKey [] = [
+                                'user_id' => $value->mssv
+                            ];
+
+                            $arrUpdateStudent[] = [
+                                'class_id' => $classId->id,
+                                'academic_year_from' => $academicYearFrom,
+                                'academic_year_to' => $academicYearTo
+                            ];
+                        }
+                    }
+//var_dump(count($arrKey));
+//                    var_dump($arrUser);
+//                    var_dump($arrKey);
+//
+//                    var_dump($arrUpdateStudent);die;
+
+                    // create user
+                    User::insert($arrUser);
+                    for($i=0; $i< count($arrKey)-1; $i++){
+                        Student::updateOrCreate(
+                            $arrKey[$i],$arrUpdateStudent[$i]
+                        );
+                    }
+                })->get();
+
+//                if (!empty($data) && $data->count()) {
+//                    $dataArr = $data->toArray();
+//                    foreach ($data->toArray() as $key => $value) {
+//                        if (!empty($value)) {
+//                            foreach ($value as $v) {
+//                                var_dump($v);
+////                                $insert[] = ['title' => $v['title'], 'description' => $v['description']];
+//                            }
+//                        }
+//                    }
+//                    die;
+//
+//                }
+                return response()->json([
+                    'status' => true
+                ], 200);
+            }
         }
     }
 
