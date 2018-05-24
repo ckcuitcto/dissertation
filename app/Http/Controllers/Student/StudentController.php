@@ -171,7 +171,6 @@ class StudentController extends Controller
                                 'role_id' => ROLE_SINHVIEN,
                                 'faculty_id' => $facultyId->id
                             ];
-
                             $arrKey [] = [
                                 'user_id' => $value->mssv
                             ];
@@ -183,34 +182,17 @@ class StudentController extends Controller
                             ];
                         }
                     }
-//var_dump(count($arrKey));
-//                    var_dump($arrUser);
-//                    var_dump($arrKey);
-//
-//                    var_dump($arrUpdateStudent);die;
-
                     // create user
-                    User::insert($arrUser);
-                    for($i=0; $i< count($arrKey)-1; $i++){
-                        Student::updateOrCreate(
-                            $arrKey[$i],$arrUpdateStudent[$i]
-                        );
+                    if(!empty($arrUser)) {
+                        User::insert($arrUser);
+                        for ($i = 0; $i < count($arrKey); $i++) {
+                            Student::updateOrCreate(
+                                $arrKey[$i], $arrUpdateStudent[$i]
+                            );
+                        }
                     }
                 })->get();
 
-//                if (!empty($data) && $data->count()) {
-//                    $dataArr = $data->toArray();
-//                    foreach ($data->toArray() as $key => $value) {
-//                        if (!empty($value)) {
-//                            foreach ($value as $v) {
-//                                var_dump($v);
-////                                $insert[] = ['title' => $v['title'], 'description' => $v['description']];
-//                            }
-//                        }
-//                    }
-//                    die;
-//
-//                }
                 return response()->json([
                     'status' => true
                 ], 200);

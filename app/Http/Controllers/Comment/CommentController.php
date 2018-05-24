@@ -58,6 +58,10 @@ class CommentController extends Controller
     // ít dùng. vì ta dùng jquery để hiển thị ra rồi.
     public function create()
     {
+        $user = Auth::user();
+        if($user->Role->weight >= ROLE_COVANHOCTAP){
+            return view('errors.403');
+        }
         return view('comment.add');
     }
 
@@ -70,6 +74,10 @@ class CommentController extends Controller
     // hàm này để lưuu thông tin khi tạo mới. 
     public function store(Request $request)
     {
+        $user = Auth::user();
+        if($user->Role->weight >= ROLE_COVANHOCTAP){
+            return view('errors.403');
+        }
 
         $this->validate($request,
             [

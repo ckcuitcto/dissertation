@@ -162,6 +162,16 @@ class EvaluationFormController extends Controller
 //                        'display_name' => $rolesCanMark[$i]['display_name']
 //                    ];
 //                }
+
+            }else{
+                for($i = 0; $i < count($rolesCanMark); $i++) {
+                    $listUserMarkTmp [] = [
+                        'userId' => $listUserMark[$i]->userId,
+                        'userRole' => $listUserMark[$i]->userRole,
+                        'name' => $listUserMark[$i]->name,
+                        'display_name' => $listUserMark[$i]->display_name
+                    ];
+                }
             }
             $listUserMark = $listUserMarkTmp;
 
