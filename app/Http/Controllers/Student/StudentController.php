@@ -139,12 +139,12 @@ class StudentController extends Controller
                 $arrUser = array();
                 $arrUpdateStudent = array();
                 $arrKey = array();
-
+                $arrError = array();
                 \Maatwebsite\Excel\Facades\Excel::load("upload/student/" . $fileName, function ($reader) {
                     $facultyId = null;
                     $classId = null;
                     foreach($reader->all() as $key => $value){
-                        if(!empty($value->mssv)) {
+                        if(!empty($value->mssv) AND !empty($value->khoa) AND !empty($value->lop) AND !empty($value->nien_khoa) AND !empty($value->ho) AND !empty($value->ten)  ) {
 
                             if(!empty($facultyId)){
                                 if($value->khoa != $facultyId->name) {
@@ -180,6 +180,8 @@ class StudentController extends Controller
                                 'academic_year_from' => $academicYearFrom,
                                 'academic_year_to' => $academicYearTo
                             ];
+                        }else{
+                            $arrError[]= " Giá trị ở dòng có STT ".$value->stt;
                         }
                     }
                     // create user
@@ -193,9 +195,16 @@ class StudentController extends Controller
                     }
                 })->get();
 
-                return response()->json([
-                    'status' => true
-                ], 200);
+                if(empty($arrError)){
+                    return response()->json([
+                        'status' => true
+                    ], 200);
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'errors' => $arrError
+                    ], 200);
+                }
             }
         }
     }

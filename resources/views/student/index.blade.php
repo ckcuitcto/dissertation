@@ -156,7 +156,7 @@
             </div>
         </div>
     </main>
-
+    </div>
 @endsection
 
 @section('sub-javascript')
@@ -290,6 +290,17 @@
                     contentType: false,
 //                    enctype: 'multipart/form-data',
                     processData: false,
+                    beforeSend: function () {
+                        $('main.app-content').before("<div class='tile'>\n" +
+                            "        <div class='overlay' style='z-index: 999999;'>\n" +
+                            "            <div class='m-loader mr-4'>\n" +
+                            "                <svg class='m-circular' viewBox='25 25 50 50'>\n" +
+                            "                    <circle class='path' cx='50' cy='50' r='20' fill='none' stroke-width='4' stroke-miterlimit='10'/>\n" +
+                            "                </svg>\n" +
+                            "            </div>\n" +
+                            "            <h3 class='l-text'>Chờ tí...!</h3>\n" +
+                            "        </div>");
+                    },
                     success: function (result) {
                         if (result.status === false) {
                             //show error list fields
