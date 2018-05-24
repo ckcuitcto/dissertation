@@ -104,10 +104,10 @@
                                         <label for="staff_id">Cố vấn học tập :</label>
                                         <select class="form-control staff_id" id="staff_id" name="staff_id" type="text"
                                                 required aria-describedby="staff">
-                                            @if($faculty->Users->where('role_id','>','2'))
+                                            @if($faculty->Users->where('role_id','=', ROLE_COVANHOCTAP))
                                                 @foreach($faculty->Users->where('role_id','>','2') as $value)
-                                                    @php var_dump($value->Staff); @endphp
-{{--                                                    <option value="{{ $value->Staff->id }}"> {{ $value->name . ":".$value->Staff->id }}  </option>--}}
+{{--                                                    @php var_dump($value->Staff); @endphp--}}
+                                                    <option value="{{ $value->Staff->id }}"> {{ $value->Staff->id . "|". $value->name }}  </option>
                                                 @endforeach
                                             @else
                                                 <option> Không có giảng viên nào !</option>

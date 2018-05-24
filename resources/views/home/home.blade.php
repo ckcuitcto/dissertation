@@ -62,7 +62,7 @@
                         <div class="card-header"><h5>{{$news->title}}</h5></div>
                         <div class="card-body">
                           {{-- <h5 class="card-title">Info card title</h5> --}}
-                          <p class="card-text">{{$news->content}}</p>
+                          <p class="card-text">{!! $news->content !!}</p>
                         </div>
                     </div>  
                     @endforeach     

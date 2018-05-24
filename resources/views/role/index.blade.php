@@ -119,27 +119,42 @@
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th scope="col">#</th>
+                                            <th scope="col">#STT</th>
+                                            <th scope="col">Quyền</th>
+                                            <th scope="col">Miêu tả</th>
+                                            <th></th>
+                                            <th scope="col">#STT</th>
                                             <th scope="col">Quyền</th>
                                             <th scope="col">Miêu tả</th>
                                             <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($permissions as $key => $permission)
+                                        @for($i = 0; $i< $permissions->count()-1; $i+=2)
                                             <tr>
-                                                <th scope="row">{{ $key+1 }}</th>
-                                                <td>{{ $permission->display_name }}</td>
-                                                <td>{{ $permission->description }}</td>
+                                                <th scope="row">{{ $i+1 }}</th>
+                                                <td>{{ $permissions[$i]->display_name }}</td>
+                                                <td>{{ $permissions[$i]->description }}</td>
                                                 <td>
                                                     <div class="toggle">
                                                         <label>
-                                                            <input type="checkbox" name="permission[]" value="{{$permission->id}}" class="permission_{{ $permission->id }}" id="{{$permission->id}}"><span class="button-indecator"></span>
+                                                            <input type="checkbox" name="permission[]" value="{{$permissions[$i]->id}}" class="permission_{{ $permissions[$i]->id }}" id="{{$permissions[$i]->id}}"><span class="button-indecator"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+
+                                                <th scope="row">{{ $i+2 }}</th>
+                                                <td>{{ $permissions[$i+1]->display_name }}</td>
+                                                <td>{{ $permissions[$i+1]->description }}</td>
+                                                <td>
+                                                    <div class="toggle">
+                                                        <label>
+                                                            <input type="checkbox" name="permission[]" value="{{$permissions[$i+1]->id}}" class="permission_{{ $permissions[$i+1]->id }}" id="{{$permissions[$i+1]->id}}"><span class="button-indecator"></span>
                                                         </label>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @endfor
                                         </tbody>
                                     </table>
                                 </div>
