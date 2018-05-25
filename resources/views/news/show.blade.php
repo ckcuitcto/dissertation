@@ -19,10 +19,10 @@
                     <div class="jumbotron">
                         <h1 class="display-4" align="center">{{ $news->title}}</h1>
                         <hr class="my-4">
-                        <p class="lead">
+                        {{-- <p class="lead">
                             <img src="http://placeimg.com/1180/400/any">
-                        </p>
-                        <hr class="my-4">
+                        </p> --}}
+                        {{-- <hr class="my-4"> --}}
                         <p>{!! $news->content !!}</p>
                     </div>                       
                 </div>
