@@ -89,7 +89,7 @@ class EvaluationFormController extends Controller
             //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
             $rolesCanMark = Role::whereHas('permissions', function ($query) {
                 $query->where('name', 'like', '%can-mark%');
-            })->select('id', 'name', 'display_name')->orderBy('id')->get()->toArray();
+            })->select('id', 'name', 'display_name','weight')->orderBy('id')->get()->toArray();
 //        $rolesCanMark = array_flatten($rolesCanMark);
 
             //lấy danh sách Id role can mark
@@ -109,23 +109,67 @@ class EvaluationFormController extends Controller
                 ->orderBy('roles.id')
                 ->get()->toArray();
 
-
             // gộp mảng id và mảng user lại. nếu user nào k có thì cho rỗng. vẫn giữ id để hiển thị fỏm input
             $listUserMarkTmp = array();
-            for ($i = 0; $i < count($rolesCanMark); $i++) {
-                if (!empty($listUserMark[$i])) {
+            if(count($rolesCanMark) != count($listUserMark)){
+                for ($i = 0; $i < count($rolesCanMark); $i++) {
+                    $tmp = null;
+                    for ($j = 0; $j < count($listUserMark); $j++) {
+                        if ($listUserMark[$j]->name == $rolesCanMark[$i]['name']) {
+                            $tmp = $listUserMark[$j];
+                            break;
+                        }
+                    }
+                    if(!empty($tmp)) {
+                        $listUserMarkTmp [] = [
+                            'userId' => $tmp->userId,
+                            'userRole' => $tmp->userRole,
+                            'name' => $tmp->name,
+                            'display_name' => $tmp->display_name
+                        ];
+                    }else {
+                        $listUserMarkTmp [] = [
+                            'userId' => null,
+                            'userRole' => $rolesCanMark[$i]['id'],
+                            'name' => $rolesCanMark[$i]['name'],
+                            'display_name' => $rolesCanMark[$i]['display_name']
+                        ];
+                    }
+                }
+//                if ($listUserMark[$i]->name == $rolesCanMark[$i]['name']) {
+//                    $listUserMarkTmp [] = [
+//                        'userId' => $listUserMark[$i]->userId,
+//                        'userRole' => $listUserMark[$i]->userRole,
+//                        'name' => $listUserMark[$i]->name,
+//                        'display_name' => $listUserMark[$i]->display_name
+//                    ];
+//                }elseif($listUserMark[$i]->name == $rolesCanMark[$i]['name']){
+//                    $listUserMarkTmp [] = [
+//                        'userId' => $userId,
+//                        'userRole' => $rolesCanMark[$i]['id'],
+//                        'name' => $rolesCanMark[$i]['name'],
+//                        'display_name' => $rolesCanMark[$i]['display_name']
+//                    ];
+//                } else {
+//                    $userId = null;
+//                    if(!empty($listUserMark[$i]->userId)){
+//                        $userId  = $listUserMark[$i]->userId;
+//                    }
+//                    $listUserMarkTmp [] = [
+//                        'userId' => $userId,
+//                        'userRole' => $rolesCanMark[$i]['id'],
+//                        'name' => $rolesCanMark[$i]['name'],
+//                        'display_name' => $rolesCanMark[$i]['display_name']
+//                    ];
+//                }
+
+            }else{
+                for($i = 0; $i < count($rolesCanMark); $i++) {
                     $listUserMarkTmp [] = [
                         'userId' => $listUserMark[$i]->userId,
                         'userRole' => $listUserMark[$i]->userRole,
                         'name' => $listUserMark[$i]->name,
                         'display_name' => $listUserMark[$i]->display_name
-                    ];
-                } else {
-                    $listUserMarkTmp [] = [
-                        'userId' => null,
-                        'userRole' => $rolesCanMark[$i]['id'],
-                        'name' => $rolesCanMark[$i]['name'],
-                        'display_name' => $rolesCanMark[$i]['display_name']
                     ];
                 }
             }
@@ -133,7 +177,7 @@ class EvaluationFormController extends Controller
 
             // lấy role được phép chấm ở thời điểm hiện tại
             $dateNow = Carbon::now()->format('Y/m/d');
-                $currentRoleCanMark = DB::table('roles')
+            $currentRoleCanMark = DB::table('roles')
                 ->leftJoin('mark_times', 'roles.id', '=', 'mark_times.role_id')
                 ->where('mark_times.semester_id', $evaluationForm->Semester->id)
                 ->whereDate('mark_times.mark_time_start', '<=', $dateNow)
@@ -194,7 +238,7 @@ class EvaluationFormController extends Controller
         $evaluationForm = EvaluationForm::find($evaluationFormId);
         $userLogin = Auth::user();
 
-        //dd($request->all());
+//        dd($request->all());
         // lưu điểm đánh giá
         $arrEvaluationResult = array();
         $arrProof = array();

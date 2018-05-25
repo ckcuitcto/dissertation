@@ -62,6 +62,7 @@
 
     <script>
         $(document).ready(function () {
+
             $("button#btn-save-news").click(function () {
                 var valueForm = $('form#news-form').serialize();
                 var url = $(this).attr('data-link');
@@ -120,6 +121,65 @@
                 $('#myModal').find(".modal-footer > button[name=btn-save-news]").attr('data-link',urlUpdate);
                 $('#myModal').modal('show');
             });
+
+            // $("button#btn-save-news").click(function () {
+            //     var valueForm = $('form#news-form').serialize();
+            //     var url = $(this).attr('data-link');
+            //     $('.form-group').find('span.messageErrors').remove();
+            //     $.ajax({
+            //         type: "post",
+            //         url: url,
+            //         data: valueForm,
+            //         dataType: 'json',
+            //         success: function (result) {
+            //             if (result.status === false) {
+            //                 //show error list fields
+            //                 if (result.arrMessages !== undefined) {
+            //                     $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+            //                         $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+            //                             $('form#news-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+            //                         });
+            //                     });
+            //                 }
+            //             } else if (result.status === true) {
+            //                 $('#myModal').find('.modal-body').html('<p>Thành công</p>');
+            //                 $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+            //                 $('#myModal').on('hidden.bs.modal', function (e) {
+            //                     location.reload();
+            //                 });
+            //             }
+            //         }
+            //     });
+            // });
+
+//           $("button#news-update").click(function () {
+//                 var urlEdit = $(this).attr('data-news-edit-link');
+//                 var urlUpdate = $(this).attr('data-news-update-link');
+//                 var id = $(this).attr('data-news-id');
+//                 $('.form-group').find('span.messageErrors').remove();
+//                 $.ajax({
+//                     type: "get",
+//                     url: urlEdit,
+//                     data: {id: id},
+//                     dataType: 'json',
+//                     success: function (result) {
+//                         if (result.status === true) {
+//                             if (result.news !== undefined) {
+//                                 $.each(result.news, function (elementName, value) {
+// //                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+// //                                    alert(elementName + "+ " + messageValue)
+//                                     $('.' + elementName).val(value);
+// //                                    });
+//                                 });
+//                             }
+//                         }
+//                     }
+//                 });
+//                 $('#myModal').find(".modal-title").text('Sửa nội dung tin tức, sự kiện');
+//                 $('#myModal').find(".modal-footer > button[name=btn-save-news]").html('Sửa')
+//                 $('#myModal').find(".modal-footer > button[name=btn-save-news]").attr('data-link',urlUpdate);
+//                 $('#myModal').modal('show');
+//             });
             $('button#news-destroy').click(function () {
                 var id = $(this).attr("data-news-id");
                 var url = $(this).attr('data-news-link');

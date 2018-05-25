@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Department;
 use App\Model\Faculty;
 use App\Http\Controllers\Controller;
+use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Validator;
@@ -66,7 +67,11 @@ class FacultyController extends Controller
     public function show($id)
     {
         $faculty = Faculty::find($id);
-        return view('department.faculty.faculty-detail', compact('faculty'));
+        $listStaffByFacultyId = User::join('roles','users.role_id','=','roles.id')
+            ->select("users.*")
+            ->where('roles.weight','=',ROLE_COVANHOCTAP)
+            ->where('users.faculty_id','=',$id)->get();
+        return view('department.faculty.faculty-detail', compact('faculty','listStaffByFacultyId'));
     }
 
     /**
