@@ -18,7 +18,7 @@ class NewsController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        // $this->middleware('aut thêh');
     }
 
     /**
@@ -40,11 +40,10 @@ class NewsController extends Controller
         return view('news.add', compact('faculties'));
     }
 
-    public function show($id)
+    public function show($title,$id)
     {
         $news = News::find($id);
         if(!empty($news)){
-            $faculties = Faculty::all();
             return view('news.show', compact('news'));
         }
         return redirect()->back();

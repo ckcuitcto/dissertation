@@ -29,7 +29,7 @@
                         @foreach($newsList as $key =>  $tintuc)
                             <tr>
                                 <th>{{ $key + 1 }}</th>
-                                <td>{{ $tintuc->id ." | ".$tintuc->title}}</td>
+                            <td><a href="{{ route('news-show',[$tintuc->title,$tintuc->id]) }}"> {{ $tintuc->id ." | ".$tintuc->title}}</a> </td>
                                 <td>{{$tintuc->created_at}}</td>
                                 <td>{{$tintuc->updated_at}}</td>
                                 <td>
@@ -62,7 +62,6 @@
 
     <script>
         $(document).ready(function () {
-<<<<<<< HEAD
             $("button#btn-save-news").click(function () {
                 var valueForm = $('form#news-form').serialize();
                 var url = $(this).attr('data-link');
@@ -121,9 +120,6 @@
                 $('#myModal').find(".modal-footer > button[name=btn-save-news]").attr('data-link',urlUpdate);
                 $('#myModal').modal('show');
             });
-
-=======
->>>>>>> cc196db20d35858da520286c5490b8fa8d9cc902
             $('button#news-destroy').click(function () {
                 var id = $(this).attr("data-news-id");
                 var url = $(this).attr('data-news-link');

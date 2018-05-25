@@ -178,19 +178,22 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::group(['prefix' => '/'], function () {
-        Route::get('/thong-bao', ['as' => 'notification', 'uses' => 'Notification\NotificationController@notification']);
+    Route::group(['prefix' => 'tin-tuc'], function () {
 
-        Route::get('/tin-tuc-su-kien', ['as' => 'news', 'uses' => 'News\NewsController@index']);    
+        Route::get('/', ['as' => 'news', 'uses' => 'News\NewsController@index']);    
         
         Route::post('/store', ['as' => 'news-store', 'uses' => 'News\NewsController@store'])->middleware('can:can-change-news');
         Route::get('/create', ['as' => 'news-create', 'uses' => 'News\NewsController@create'])->middleware('can:can-change-news');
 
-        Route::get('/{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
+
+        // hiển thi jchi tiết sẽ là cái này
+        Route::get('/{title}-{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
+
         Route::post('/update/{id}', ['as' => 'news-update', 'uses' => 'News\NewsController@update'])->middleware('can:can-change-news');
         Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit'])->middleware('can:can-change-news');
 
         Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy'])->middleware('can:can-change-news');
+
     });
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
