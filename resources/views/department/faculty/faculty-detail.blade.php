@@ -93,7 +93,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="name">Tên lớp :</label>
-                                        <input type="hidden" name="id" class="id" id="modal-class-id">
+                                        {{--<input type="hidden" name="id" class="id" id="modal-class-id">--}}
                                         <input type="hidden" name="faculty_id" class="faculty_id" id="faculty_id"
                                                value="{{ $faculty->id }}">
                                         <input class="form-control name" id="name" name="name" type="text" required
@@ -199,6 +199,12 @@
                             $('#myModal').find('.modal-body').html('<p>Đã thêm lớp thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#myModal').on('hidden.bs.modal', function (e) {
+                                $('#myModal').find("input[type=text],input[type=number], select").val('');
+                                $('.text-red').html('');
+                                $('span.messageErrors').remove();
+                                $('#myModal').find(".modal-title").text("Thêm mới lớp thuộc khoa {{ $faculty->name }}");
+                                $('#myModal').find(".modal-footer > button[name=btn-save-class]").html('Thêm');
+                                $('#myModal').find(".modal-footer > button[name=btn-save-class]").attr('data-link', "{{ route('class-store') }}");
                                 location.reload();
                             });
                         }
@@ -241,7 +247,15 @@
                     }
                 });
             });
-//
+
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $('#myModal').find("input[type=text],input[type=number], select").val('');
+                $('.text-red').html('');
+                $('span.messageErrors').remove();
+                $('#myModal').find(".modal-title").text("Thêm mới lớp thuộc khoa {{ $faculty->name }}");
+                $('#myModal').find(".modal-footer > button[name=btn-save-class]").html('Thêm');
+                $('#myModal').find(".modal-footer > button[name=btn-save-class]").attr('data-link', "{{ route('class-store') }}");
+            });
         });
 
     </script>

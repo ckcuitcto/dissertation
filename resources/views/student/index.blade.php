@@ -92,13 +92,20 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="modal-footer">
-                            <button data-link="{{ route('student-import') }}" class="btn btn-primary"
-                                    id="btn-import-student" name="btn-import-student" type="button">
-                                Thêm
-                            </button>
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger show-error" style="display: none">
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-link="{{ route('student-import') }}" class="btn btn-primary"
+                                id="btn-import-student" name="btn-import-student" type="button">
+                            Thêm
+                        </button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>
@@ -266,15 +273,14 @@
 //            import
             $("#btn-import-student").click(function (e) {
                 e.preventDefault();
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
+                $("#importModal").find("p.child-error").remove();
+                // $.ajaxSetup({
+                //     headers: {
+                //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                //     }
+                // });
                 var formData = new FormData();
                 var fileImport = document.getElementById('fileImport');
-                console.log(fileImport);
                 var inss = fileImport.files.length;
                 for (var x = 0; x < inss; x++) {
                     file = fileImport.files[x];
@@ -288,20 +294,13 @@
                     data: formData,
                     cache: false,
                     contentType: false,
-//                    enctype: 'multipart/form-data',
+                    // enctype: 'multipart/form-data',
                     processData: false,
-                    beforeSend: function () {
-                        $('main.app-content').before("<div class='tile'>\n" +
-                            "        <div class='overlay' style='z-index: 999999;'>\n" +
-                            "            <div class='m-loader mr-4'>\n" +
-                            "                <svg class='m-circular' viewBox='25 25 50 50'>\n" +
-                            "                    <circle class='path' cx='50' cy='50' r='20' fill='none' stroke-width='4' stroke-miterlimit='10'/>\n" +
-                            "                </svg>\n" +
-                            "            </div>\n" +
-                            "            <h3 class='l-text'>Chờ tí...!</h3>\n" +
-                            "        </div>");
+                    beforeSend: function() {
+                        $("#importModal").find("button#btn-import-student").prop('disabled',true);
                     },
                     success: function (result) {
+                        $("#importModal").find("button#btn-import-student").prop('disabled',false);
                         if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
@@ -309,6 +308,13 @@
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
                                         $('form#import-student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
                                     });
+                                });
+                            }
+                            if(result.errors !== undefined){
+                                // console.log(result.errors);
+                                $('#importModal').find('div.alert-danger').show();
+                                $.each(result.errors, function (elementName, arrMessagesEveryElement) {
+                                    $('#importModal').find('div.alert-danger').append("<p class='child-error'>"+arrMessagesEveryElement+ "</p>");
                                 });
                             }
                         } else if (result.status === true) {

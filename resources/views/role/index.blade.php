@@ -130,11 +130,11 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @for($i = 0; $i< $permissions->count()-1; $i+=2)
+                                        @for($i = 0; $i< $permissions->count(); $i+=2)
                                             <tr>
                                                 <th scope="row">{{ $i+1 }}</th>
                                                 <td>{{ $permissions[$i]->display_name }}</td>
-                                                <td>{{ $permissions[$i]->description }}</td>
+                                                <td>{{ $permissions->count() }}</td>
                                                 <td>
                                                     <div class="toggle">
                                                         <label>
@@ -142,7 +142,7 @@
                                                         </label>
                                                     </div>
                                                 </td>
-
+                                                @isset($permissions[$i+1])
                                                 <th scope="row">{{ $i+2 }}</th>
                                                 <td>{{ $permissions[$i+1]->display_name }}</td>
                                                 <td>{{ $permissions[$i+1]->description }}</td>
@@ -153,6 +153,7 @@
                                                         </label>
                                                     </div>
                                                 </td>
+                                                @endisset
                                             </tr>
                                         @endfor
                                         </tbody>

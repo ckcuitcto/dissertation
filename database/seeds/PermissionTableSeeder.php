@@ -96,11 +96,6 @@ class PermissionTableSeeder extends Seeder
                 'description' => 'Chỉ CVHT'
             ],
             [
-                'name' => 'user-rights',
-                'display_name' => 'Phân quyền cho user',
-                'description' => 'Chỉ admin mới được cấp quyền'
-            ],
-            [
                 'name' => 'semester-change',
                 'display_name' => 'Thêm xóa sửa học kỳ',
                 'description' => 'Chỉ nhân viên mới được thêm xóa sửa học kỳ'
