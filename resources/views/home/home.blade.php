@@ -69,6 +69,7 @@
                     </div>            
                 </div>
             </div>
+            @isset($timeList)
             <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> &nbsp;Thời gian đánh giá điểm rèn luyện</h3>                   
@@ -85,6 +86,7 @@
                     
                 </div>
             </div>
+            @endisset
         </div>
 
         {{-- <div class="row">

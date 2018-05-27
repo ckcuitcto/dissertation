@@ -19,10 +19,10 @@ class CreateMarkTimesTable extends Migration
             $table->date('mark_time_end');
 
             $table->integer('semester_id')->unsigned();
-            $table->foreign('semester_id')->references('id')->on('semesters');
+            $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade');
 
             $table->integer('role_id')->unsigned();
-            $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamps();
         });
     }
