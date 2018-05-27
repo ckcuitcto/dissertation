@@ -84,13 +84,20 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="modal-footer">
-                            <button data-link="{{ route('student-import') }}" class="btn btn-primary"
-                                    id="btn-import-student" name="btn-import-student" type="button">
-                                Thêm
-                            </button>
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger show-error" style="display: none">
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-link="{{ route('student-import') }}" class="btn btn-primary"
+                                id="btn-import-student" name="btn-import-student" type="button">
+                            Thêm
+                        </button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>
@@ -200,7 +207,7 @@
                 </div>
             </div>
     </main>
-
+    </div>
 @endsection
 
 @section('sub-javascript')
@@ -310,15 +317,14 @@
 //            import
             $("#btn-import-student").click(function (e) {
                 e.preventDefault();
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
+                $("#importModal").find("p.child-error").remove();
+                // $.ajaxSetup({
+                //     headers: {
+                //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                //     }
+                // });
                 var formData = new FormData();
                 var fileImport = document.getElementById('fileImport');
-                console.log(fileImport);
                 var inss = fileImport.files.length;
                 for (var x = 0; x < inss; x++) {
                     file = fileImport.files[x];
@@ -332,9 +338,13 @@
                     data: formData,
                     cache: false,
                     contentType: false,
-//                    enctype: 'multipart/form-data',
+                    // enctype: 'multipart/form-data',
                     processData: false,
+                    beforeSend: function() {
+                        $("#importModal").find("button#btn-import-student").prop('disabled',true);
+                    },
                     success: function (result) {
+                        $("#importModal").find("button#btn-import-student").prop('disabled',false);
                         if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
@@ -342,6 +352,13 @@
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
                                         $('form#import-student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
                                     });
+                                });
+                            }
+                            if(result.errors !== undefined){
+                                // console.log(result.errors);
+                                $('#importModal').find('div.alert-danger').show();
+                                $.each(result.errors, function (elementName, arrMessagesEveryElement) {
+                                    $('#importModal').find('div.alert-danger').append("<p class='child-error'>"+arrMessagesEveryElement+ "</p>");
                                 });
                             }
                         } else if (result.status === true) {

@@ -13,7 +13,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(PermissionTableSeeder::class);
         $this->call(Role::class);
-        $this->call(Semester::class);
+
+        // không chạy cái này. vì code là ghi tạo semester thì sẽ tạo form cho các sinh viên có sẵn.
+        // nếu chạy ở đây thì sv k có form
+//        $this->call(Semester::class);
 
         $this->call(Faculty::class);
 
@@ -30,8 +33,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call(EvaluationForm::class);
 
-        $this->call(MarkTime::class);
-        $this->call(UpdateStudent::class);
+        // thời gian chấm thì yêu cầu học kì. nên cũng bỏ qua. cái này tạo học kì xong r gọi riêng hoặc tự tạo = tay
+//        $this->call(MarkTime::class);
+
+        // tạm thời bị lỗi
+//        $this->call(UpdateStudent::class);
 
     }
 }

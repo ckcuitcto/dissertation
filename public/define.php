@@ -22,3 +22,9 @@ define('ROLE_BANCHUNHIEMKHOA',4);
 define('ROLE_COVANHOCTAP',3);
 define('ROLE_BANCANSULOP',2);
 define('ROLE_SINHVIEN',1);
+
+
+define('FORM_STATUS_MARK',1);
+define('FORM_STATUS_REMARK',2);
+define('FORM_STATUS_FINISH',3);
+define('FORM_STATUS_CLOSE',4);

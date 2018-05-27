@@ -19,65 +19,39 @@ class StudentSeeder extends Seeder
                 'password' => bcrypt('DH99999999'),
                 'role_id' => 6,
                 'faculty_id' => null
-            ],
-            [
-                'id' => 'DH51400250',
-                'name' => 'SV Khoa IT 1',
-                'email' => 'thducit@gmail.com',
-                'password' => bcrypt('DH51400250'),
-                'role_id' => 1,
-                'faculty_id' => 1
-            ],
-            [
-                'id' => 'DH51400251',
-                'name' => 'SV Khoa IT 2',
-                'email' => 'thducit1@gmail.com',
-                'password' => bcrypt('DH51400251'),
-                'role_id' => 1,
-                'faculty_id' => 1
             ], [
-                'id' => 'DH51400252',
-                'name' => 'BCSL Khoa IT 3',
-                'email' => 'thducit2@gmail.com',
-                'password' => bcrypt('DH51400252'),
-                'role_id' => 2,
-                'faculty_id' => 1
-            ],
-            [
-                'id' => 'DH51401681',
+                'id' => 'DH88888888',
                 'name' => 'SV Khoa QTKD 1',
-                'email' => 'DH51401681@gmail.com',
-                'password' => bcrypt('DH51401681'),
+                'email' => 'DH88888888@gmail.com',
+                'password' => bcrypt('DH88888888'),
                 'role_id' => 1,
                 'faculty_id' => 2
-            ],
-            [
-                'id' => 'DH51401682',
+            ], [
+                'id' => 'DH88888887',
                 'name' => 'SV Khoa QTKD 2',
-                'email' => 'DH51401682@gmail.com',
-                'password' => bcrypt('DH51401682'),
+                'email' => 'DH88888887@gmail.com',
+                'password' => bcrypt('DH88888887'),
                 'role_id' => 1,
                 'faculty_id' => 2
-            ],
-            [
-                'id' => 'DH51401683',
+            ], [
+                'id' => 'DH88888884',
                 'name' => 'BCSL Khoa QTKD 1',
-                'email' => 'DH51401683@gmail.com',
-                'password' => bcrypt('DH51401683'),
+                'email' => 'DH88888884@gmail.com',
+                'password' => bcrypt('DH88888884'),
                 'role_id' => 2,
                 'faculty_id' => 2
-            ],[
-                'id' => 'DH51400777',
+            ], [
+                'id' => 'DH88888886',
                 'name' => 'SV Khoa CoKhi 1',
-                'email' => 'DH51400777@gmail.com',
-                'password' => bcrypt('CD51402222'),
+                'email' => 'DH88888886@gmail.com',
+                'password' => bcrypt('DH88888886'),
                 'role_id' => 1,
                 'faculty_id' => 6
-            ],[
-                'id' => 'DH51400778',
+            ], [
+                'id' => 'DH88888885',
                 'name' => 'BCSL Khoa CoKhi 1',
-                'email' => 'DH51400778@gmail.com',
-                'password' => bcrypt('DH51400778'),
+                'email' => 'DH88888885@gmail.com',
+                'password' => bcrypt('DH88888885'),
                 'role_id' => 2,
                 'faculty_id' => 6
             ]
