@@ -211,8 +211,8 @@ class SemesterController extends Controller
 
         $semester = Semester::find($id);
         if (!empty($semester)) {
-            $semester->year_from = $request->year_from;
-            $semester->year_to = $request->year_to;
+//            $semester->year_from = $request->year_from;
+//            $semester->year_to = $request->year_to;
             if (!empty($request->date_start_to_re_mark)) {
                 $semester->date_start_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_re_mark);
             }

@@ -255,9 +255,9 @@
                                 $.each(result.semester, function (elementName, value) {
                                     // alert(elementName + '- ' + value);
                                     if(elementName === 'year_from' || elementName ==='year_to'){
-                                        $('.' + elementName).attr('value',value);
+                                        $('.' + elementName).val(value).prop('disabled',true);
                                     }else if (elementName === 'term') {
-                                        $('.' + elementName).val(value);
+                                        $('.' + elementName).val(value).prop('readonly',true);
                                     } else {
                                         $('.' + elementName).datepicker('setDate', value);
                                     }
@@ -281,7 +281,7 @@
                     }
                 });
                 $('#myModal').find(".modal-title").text('Sửa thông tin học kì');
-                $('#myModal').find(".modal-footer > button[name=btn-save-semester]").html('Sửa')
+                $('#myModal').find(".modal-footer > button[name=btn-save-semester]").html('Sửa');
                 $('#myModal').find(".modal-footer > button[name=btn-save-semester]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');
             });
@@ -368,4 +368,18 @@
 
         });
     </script>
+
+    {{--<script>--}}
+
+           {{--$('.form-row .input-sm.form-control').on('click', function () {--}}
+               {{--$(this).addClass('active')--}}
+           {{--})--}}
+    {{--</script>--}}
+    {{--<style>--}}
+        {{--.datepicker-days{--}}
+            {{--display: none !important;--}}
+        {{--}--}}
+    {{--</style>--}}
 @endsection
+
+
