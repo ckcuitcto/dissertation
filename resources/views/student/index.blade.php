@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Thai Duc
- * Date: 10-Apr-18
- * Time: 12:41 AM
- */
-?>
 @extends('layouts.default')
 @section('content')
     <main class="app-content">
@@ -155,6 +147,58 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="myModal1" role="dialog">
+                <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Thêm mới học kì</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="student-form">
+                                {!! csrf_field() !!}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-row">
+                                            <label for="year">Năm học</label>
+                                            <div class="input-group">
+                                                <input type="text" class="input-sm form-control year_from" id="year_from"
+                                                       name="year_from"/>
+                                                <span class="input-group-addon">to</span>
+                                                <input type="text" class="input-sm form-control year_to" name="year_to"
+                                                       id="year_to"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="mark_date">Ngày chấm</label>
+                                            <div class="input-group">
+                                                <input type="text" class="input-sm form-control date_start_to_mark"
+                                                       id="date_start_to_mark" name="date_start_to_mark"/>
+                                                <span class="input-group-addon">to</span>
+                                                <input type="text" class="input-sm form-control date_end_to_mark"
+                                                       id="date_end_to_mark" name="date_end_to_mark"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="term">Học kì</label>
+                                            <input type="number" class="form-control term" name="term" id="term"
+                                                   placeholder="Học kì">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button data-link="{{ route('student-store') }}" class="btn btn-primary"
+                                        id="btn-save-student" name="btn-save-student" type="button">
+                                    Thêm
+                                </button>
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </main>
 
 @endsection
@@ -192,10 +236,10 @@
                         }
                     }
                 });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
-                $('#myModal').find(".modal-footer > button[name=btn-save-student]").html('Sửa')
-                $('#myModal').find(".modal-footer > button[name=btn-save-student]").attr('data-link', urlUpdate);
-                $('#myModal').modal('show');
+                $('#myModal1').find(".modal-title").text('Sửa thông tin khoa');
+                $('#myModal1').find(".modal-footer > button[name=btn-save-student]").html('Sửa')
+                $('#myModal1').find(".modal-footer > button[name=btn-save-student]").attr('data-link', urlUpdate);
+                $('#myModal1').modal('show');
             });
             // lưu
             $("#btn-save-student").click(function () {
