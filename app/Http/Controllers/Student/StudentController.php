@@ -83,7 +83,7 @@ class StudentController extends Controller
         $student = DB::table('students')
             ->join('users','users.id','=','students.user_id')
 //            ->leftJoin('roles','roles.id','=','users.role_id')
-            ->select('users.*','students.status as studentStatus')->where('students.id',$id)->first();
+            ->select('users.id','users.address','users.name','users.role_id','users.gender','users.id','students.status as studentStatus')->where('students.id',$id)->first();
         if(empty($student)){
             return response()->json([
                 'status' => false
