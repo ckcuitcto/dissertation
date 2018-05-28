@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\News;
 use App\Model\Semester;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -26,7 +27,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $newsList = News::all();
+        $userLogin = Auth::user();
+        if($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN ){
+            $newsList = News::all();
+        }else{
+            $newsList = News::where( 'faculty_id','=',$userLogin->faculty_id)->orWhere('faculty_id','=',null)->orderBy('id','DESC')->limit(6)->get();
+        }
+
         $timeList = Semester::orderBy('id','desc')->first();
         return view('home.home', compact('newsList','timeList'));
     }

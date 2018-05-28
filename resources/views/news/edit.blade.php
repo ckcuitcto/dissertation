@@ -21,7 +21,7 @@
                             <div class="form-group">
                                 <label for="faculty_id">Khoa</label>
                                 <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
-                                    {{--<option value="0">Tất cả khoa</option>--}}
+                                    <option value="0">Tất cả khoa</option>
                                     @foreach($faculties as $value)
                                         <option value="{{ $value->id }}">{{ $value->name}}</option>
                                     @endforeach

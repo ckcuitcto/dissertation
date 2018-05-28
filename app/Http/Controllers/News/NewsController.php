@@ -42,6 +42,10 @@ class NewsController extends Controller
 
     public function show($title,$id)
     {
+        if(!is_numeric($id)){
+            $id = explode('-',$id);
+            $id = $id[count($id)-1];
+        }
         $news = News::find($id);
         if(!empty($news)){
             return view('news.show', compact('news'));
@@ -77,7 +81,7 @@ class NewsController extends Controller
             $news->title = $request->title;
             $news->content = $request->news_content;
             $news->faculty_id = $request->faculty_id;
-            $news->created_by = Auth::user()->Staff->id;
+//            $news->created_by = Auth::user()->Staff->id;
             $news->save();
             return redirect()->route('news')->with('success','Sửa tin tức thành công!');
         }
@@ -99,8 +103,15 @@ class NewsController extends Controller
         $news = new News();
         $news->title = $request->title;
         $news->content = $request->news_content;
-        $news->faculty_id = $request->faculty_id;
-        $news->created_by = Auth::user()->Staff->id;
+        if($request->faculty_id) {
+            $news->faculty_id = $request->faculty_id;
+        }
+        if(!empty(Auth::user()->Staff->id)){
+            $news->created_by =Auth::user()->Staff->id;
+        }else{
+            $news->created_by =Auth::user()->Student->id;
+        }
+
         $news->save();
 
         return redirect()->route('news')->with('success','Thêm tin tức thành công!');

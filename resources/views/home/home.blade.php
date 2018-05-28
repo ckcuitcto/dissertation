@@ -53,6 +53,7 @@
         </div>
 
         <div class="row mb-4">
+            @if(!empty($newsList))
             <div class="col-md-12">
                 <div class="tile">
                     <h3 class="tile-title"><i class="fa fa-bell" aria-hidden="true"></i> &nbsp;Thông báo</h3>
@@ -62,13 +63,14 @@
                         <div class="card-header"><h5>{{$news->title}}</h5></div>
                         <div class="card-body">
                           {{-- <h5 class="card-title">Info card title</h5> --}}
-                          <p class="card-text">{!! $news->content !!}</p>
+                          <p class="card-text">{!! str_limit($news->content,255) !!}</p>
                         </div>
                     </div>  
                     @endforeach     
                     </div>            
                 </div>
             </div>
+            @endif
             @isset($timeList)
             <div class="col-md-6">
                 <div class="tile">
@@ -80,7 +82,7 @@
                         <div class="card-body">
                           {{-- <h5 class="card-title">Warning card title</h5> --}}
                           <p class="card-text">Ngày bắt đầu {{$timeList->date_start_to_mark}}</p>
-                          <p class="card-text">Ngày kết thúc {{$timeList->date_end_to_mark}} >>><a href="#">Đánh giá ngay</a></p>
+                          <p class="card-text">Ngày kết thúc {{$timeList->date_end_to_mark}}</p>
                         </div>
                     </div>
                     

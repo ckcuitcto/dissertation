@@ -22,13 +22,16 @@
                     <div class="tile-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm cá nhân, Điểm lớp và Điểm khoa là
+                                <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm cá nhân, Điểm lớp và Điểm
+                                    khoa là
                                     điểm đánh giá chưa tính điểm học tập
                                 </div>
-                                <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm tổng là điểm sau khi P.CTSV kiểm
+                                <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Điểm tổng là điểm sau khi
+                                    P.CTSV kiểm
                                     duyệt đã bao gồm điểm học tập
                                 </div>
-                                <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Xếp loại và Điểm tổng nếu có giá trị
+                                <div><i class="fa fa-file-text-o" aria-hidden="true"></i> Xếp loại và Điểm tổng nếu có
+                                    giá trị
                                     là "_" thì đang đợi bổ sung điểm học tập
                                 </div>
                             </div>
@@ -54,8 +57,9 @@
                             <td rowspan="2">Năm Học</td>
                             <td colspan="4">Điểm</td>
                             <td rowspan="2">Xếp Loại</td>
-                            <td rowspan="2">Tình Trạng</td>
+                            {{--<td rowspan="2">Tình Trạng</td>--}}
                             <td rowspan="2">Tác Vụ</td>
+
                         </tr>
                         <tr>
                             @foreach($rolesCanMark as $role)
@@ -74,10 +78,10 @@
                                         <td>{{ $value->totalRoleScore }}</td>
                                     @endforeach
                                 @else
-                                {{-- còn nếu k thì hiển thị ra. còn thiếu bao nhiêu thì for rồi hiển thị ra thẻ td rỗng--}}
+                                    {{-- còn nếu k thì hiển thị ra. còn thiếu bao nhiêu thì for rồi hiển thị ra thẻ td rỗng--}}
                                     @php
-                                    // tính số người chưa chấm điểm
-                                    $count = count($rolesCanMark) - count($scoreList->where('evaluationFormId',$evaluationForm->id));
+                                        // tính số người chưa chấm điểm
+                                        $count = count($rolesCanMark) - count($scoreList->where('evaluationFormId',$evaluationForm->id));
                                     @endphp
                                     {{-- hiển thị điểm ra. được bao nheieu hiển thị bấy nhiêu--}}
                                     @foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)
@@ -90,11 +94,12 @@
                                 @endif
                                 <td> {{ $evaluationForm->total OR 0 }}</td>
                                 <td> {{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }} </td>
-                                <td>Hoàn Thành</td>
+                                {{--<td>Hoàn Thành</td>--}}
                                 <td>
-                                    <a class="btn btn-primary" href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
+                                    <a class="btn btn-primary"
+                                       href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
                                         <i class="fa fa-eye" aria-hidden="true" style="color:white"></i>Xem
-                                    </a>                   
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach

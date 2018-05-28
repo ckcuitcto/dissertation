@@ -46,7 +46,7 @@
                               enctype="multipart/form-data">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             {{--<input type="hidden" name="evaluationFormId" value="{{ $evaluationForm->id }}">--}}
-                            <table class="table table-hover table-bordered">
+                            <table class="table table-hover table-bordered table-responsive">
                                 <tbody>
                                 <tr>
                                     <td><strong>Nội dung đánh giá</strong></td>

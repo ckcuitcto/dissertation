@@ -215,7 +215,24 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
+    <script type="text/javascript">
+        {{--$('#sampleTable').DataTable({--}}
+            {{--"language": {--}}
+                {{--"lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",--}}
+                {{--"zeroRecords": "Không có bản ghi nào!",--}}
+                {{--"info": "Hiển thị trang _PAGE_ của _PAGES_",--}}
+                {{--"infoEmpty": "Không có bản ghi nào!!!",--}}
+                {{--"infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"--}}
+            {{--},--}}
+            {{--"pageLength": 25,--}}
+            {{--"processing": true,--}}
+            {{--"serverSide": true,--}}
+            {{--"ajax": {--}}
+                {{--url: "{{ route('student') }}",--}}
+                {{--type: "POST",--}}
+            {{--}--}}
+        {{--});--}}
+    </script>
 
 
     <script>

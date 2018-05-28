@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
-                    <table class="table table-bordered table-hover">
+                    <table id="sampleTable" class="table table-bordered table-hover">
                         <thead>
                         <tr>
                             <th>STT</th>
@@ -29,7 +29,7 @@
                         @foreach($newsList as $key =>  $tintuc)
                             <tr>
                                 <th>{{ $key + 1 }}</th>
-                            <td><a href="{{ route('news-show',[$tintuc->title,$tintuc->id]) }}"> {{ $tintuc->id ." | ".$tintuc->title}}</a> </td>
+                            <td><a href="{{ route('news-show',[ str_slug($tintuc->title),$tintuc->id]) }}"> {{ $tintuc->id ." | ".$tintuc->title}}</a> </td>
                                 <td>{{$tintuc->created_at}}</td>
                                 <td>{{$tintuc->updated_at}}</td>
                                 <td>

@@ -238,7 +238,6 @@ class EvaluationFormController extends Controller
         $evaluationForm = EvaluationForm::find($evaluationFormId);
         $userLogin = Auth::user();
 
-       //dd($request->all());
         // lưu điểm đánh giá
         $arrEvaluationResult = array();
         $arrProof = array();
@@ -247,7 +246,7 @@ class EvaluationFormController extends Controller
         $isMarked =  EvaluationResult::where([
             'evaluation_form_id' => $evaluationFormId,
             'marker_id' => $userLogin->id
-        ])->get();
+        ])->first();
 
         // nếu chấm rồi thì xóa hết điểm r thêm lại
         if(!empty($isMarked)) {
@@ -256,7 +255,7 @@ class EvaluationFormController extends Controller
                 'marker_id' => $userLogin->id
             ])->delete();
         }
-
+//        echo 1;die;
         foreach ($request->all() as $key => $value) {
             if ($key != '_token') {
                 if (substr($key, "0", "5") == "score") {
@@ -291,6 +290,7 @@ class EvaluationFormController extends Controller
                 }
             }
         }
+//        dd($arrEvaluationResult);
         $evaluationForm->EvaluationResults()->createMany($arrEvaluationResult);
         $evaluationForm->total = $request->totalScoreOfForm;
         $evaluationForm->save();
