@@ -56,8 +56,11 @@ class Controller extends BaseController
         foreach($arrUserId as $key => $value){
             $userIds[$key] = [$value->id];
         }
-        $students = Student::whereIn('user_id', $userIds)->get();
-        return $students;
+        if(!empty($userIds)){
+            $students = Student::whereIn('user_id', $userIds)->get();
+            return $students;
+        }
+        return false;
     }
 
     public function formatDate($date){
