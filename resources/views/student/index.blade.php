@@ -25,7 +25,7 @@
                                 <th>Lớp</th>
                                 <th>Khoa</th>
                                 <th>Khóa</th>
-                                <th></th>
+                                {{--<th></th>--}}
                             </tr>
                             </thead>
                             <tbody>
@@ -37,23 +37,23 @@
                                     <td>{{ $student->Student->Classes->name OR "" }}</td>
                                     <td>{{ $student->Faculty->name }}</td>
                                     <td> {{ $student->Student->academic_year_from  ." - ". $student->Student->academic_year_to }}</td>
-                                    <td>
-                                        <a data-student-id="{{$student->id}}" id="update-student"
-                                           data-student-edit-link="{{route('student-edit',$student->id)}}"
-                                           data-student-update-link="{{route('student-update',$student->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
-                                        </a>
-                                    </td>
+                                    {{--<td>--}}
+                                        {{--<a data-student-id="{{$student->id}}" id="update-student"--}}
+                                           {{--data-student-edit-link="{{route('student-edit',$student->id)}}"--}}
+                                           {{--data-student-update-link="{{route('student-update',$student->id)}}">--}}
+                                            {{--<i class="fa fa-lg fa-edit" aria-hidden="true"> </i>--}}
+                                        {{--</a>--}}
+                                    {{--</td>--}}
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
                         <div class="row">
                             <div class="col-md-6">
-                                <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
-                                        id="btnAddstudent" type="button"><i class="fa fa-pencil-square-o"
-                                                                            aria-hidden="true"></i>Thêm
-                                </button>
+                                {{--<button data-toggle="modal" data-target="#myModal" class="btn btn-primary"--}}
+                                        {{--id="btnAddstudent" type="button"><i class="fa fa-pencil-square-o"--}}
+                                                                            {{--aria-hidden="true"></i>Thêm--}}
+                                {{--</button>--}}
                                 <button data-toggle="modal" data-target="#importModal" class="btn btn-outline-primary"
                                         type="button"><i class="fa fa-pencil-square-o"
                                                          aria-hidden="true"></i>Import dữ liệu
@@ -102,110 +102,58 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-md" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Thêm mới học kì</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="student-form">
-                            {!! csrf_field() !!}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-row">
-                                        <label for="year">Năm học</label>
-                                        <div class="input-group">
-                                            <input type="text" class="input-sm form-control year_from" id="year_from"
-                                                   name="year_from"/>
-                                            <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control year_to" name="year_to"
-                                                   id="year_to"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="mark_date">Ngày chấm</label>
-                                        <div class="input-group">
-                                            <input type="text" class="input-sm form-control date_start_to_mark"
-                                                   id="date_start_to_mark" name="date_start_to_mark"/>
-                                            <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control date_end_to_mark"
-                                                   id="date_end_to_mark" name="date_end_to_mark"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="term">Học kì</label>
-                                        <input type="number" class="form-control term" name="term" id="term"
-                                               placeholder="Học kì">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="modal-footer">
-                            <button data-link="{{ route('student-store') }}" class="btn btn-primary"
-                                    id="btn-save-student" name="btn-save-student" type="button">
-                                Thêm
-                            </button>
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="myModal1" role="dialog">
-                <div class="modal-dialog modal-md" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Thêm mới học kì</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                        aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="student-form">
-                                {!! csrf_field() !!}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-row">
-                                            <label for="year">Năm học</label>
-                                            <div class="input-group">
-                                                <input type="text" class="input-sm form-control year_from" id="year_from"
-                                                       name="year_from"/>
-                                                <span class="input-group-addon">to</span>
-                                                <input type="text" class="input-sm form-control year_to" name="year_to"
-                                                       id="year_to"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <label for="mark_date">Ngày chấm</label>
-                                            <div class="input-group">
-                                                <input type="text" class="input-sm form-control date_start_to_mark"
-                                                       id="date_start_to_mark" name="date_start_to_mark"/>
-                                                <span class="input-group-addon">to</span>
-                                                <input type="text" class="input-sm form-control date_end_to_mark"
-                                                       id="date_end_to_mark" name="date_end_to_mark"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <label for="term">Học kì</label>
-                                            <input type="number" class="form-control term" name="term" id="term"
-                                                   placeholder="Học kì">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="modal-footer">
-                                <button data-link="{{ route('student-store') }}" class="btn btn-primary"
-                                        id="btn-save-student" name="btn-save-student" type="button">
-                                    Thêm
-                                </button>
-                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {{--<div class="modal fade" id="myModal" role="dialog">--}}
+            {{--<div class="modal-dialog modal-md" role="document">--}}
+                {{--<div class="modal-content">--}}
+                    {{--<div class="modal-header">--}}
+                        {{--<h5 class="modal-title">Thêm mới học kì</h5>--}}
+                        {{--<button class="close" type="button" data-dismiss="modal" aria-label="Close"><span--}}
+                                    {{--aria-hidden="true">×</span></button>--}}
+                    {{--</div>--}}
+                    {{--<div class="modal-body">--}}
+                        {{--<form id="student-form">--}}
+                            {{--{!! csrf_field() !!}--}}
+                            {{--<div class="row">--}}
+                                {{--<div class="col-md-12">--}}
+                                    {{--<div class="form-row">--}}
+                                        {{--<label for="year">Năm học</label>--}}
+                                        {{--<div class="input-group">--}}
+                                            {{--<input type="text" class="input-sm form-control year_from" id="year_from"--}}
+                                                   {{--name="year_from"/>--}}
+                                            {{--<span class="input-group-addon">to</span>--}}
+                                            {{--<input type="text" class="input-sm form-control year_to" name="year_to"--}}
+                                                   {{--id="year_to"/>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="form-row">--}}
+                                        {{--<label for="mark_date">Ngày chấm</label>--}}
+                                        {{--<div class="input-group">--}}
+                                            {{--<input type="text" class="input-sm form-control date_start_to_mark"--}}
+                                                   {{--id="date_start_to_mark" name="date_start_to_mark"/>--}}
+                                            {{--<span class="input-group-addon">to</span>--}}
+                                            {{--<input type="text" class="input-sm form-control date_end_to_mark"--}}
+                                                   {{--id="date_end_to_mark" name="date_end_to_mark"/>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="form-row">--}}
+                                        {{--<label for="term">Học kì</label>--}}
+                                        {{--<input type="number" class="form-control term" name="term" id="term"--}}
+                                               {{--placeholder="Học kì">--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</form>--}}
+                        {{--<div class="modal-footer">--}}
+                            {{--<button data-link="{{ route('student-store') }}" class="btn btn-primary"--}}
+                                    {{--id="btn-save-student" name="btn-save-student" type="button">--}}
+                                {{--Thêm--}}
+                            {{--</button>--}}
+                            {{--<button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--</div>--}}
     </main>
     </div>
 @endsection

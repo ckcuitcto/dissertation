@@ -28,6 +28,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @if($students != false)
                             @foreach($students as $key => $student)
                                 <tr>
                                     <td> {{ $key +1 }}</td>
@@ -40,6 +41,7 @@
                                     <td> {{ $student->academic_year_from  ." - ". $student->academic_year_to }}</td>
                                 </tr>
                             @endforeach
+                            @endisset
                             </tbody>
                         </table>
                     </div>

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Excel;
 use Validator;
 
@@ -79,7 +80,19 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $student = DB::table('students')
+            ->join('users','users.id','=','students.user_id')
+//            ->leftJoin('roles','roles.id','=','users.role_id')
+            ->select('users.*','students.status as studentStatus')->where('students.id',$id)->first();
+        if(empty($student)){
+            return response()->json([
+                'status' => false
+            ],200);
+        }
+        return response()->json([
+            'student' => $student,
+            'status' => true
+        ],200);
     }
 
     /**
@@ -91,7 +104,46 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $required['name'] = 'required';
+        $required['studentStatus'] = 'required';
+
+        $message['name.required'] = 'Vui lòng nhập tên';
+        $message['studentStatus.required'] = 'Vui lòng chọn trạng thái';
+
+        if($request->changePassword == 'off'){
+            $required['password'] = 'required|min:6';
+            $required['rePassword'] = 'required|same:password';
+
+            $message['password.required'] = 'Vui lòng nhập mật khẩu';
+            $message['rePassword.required'] = 'Vui lòng nhập lại mật khẩu ';
+            $message['rePassword.same'] = 'Mật khẩu không khớp ';
+            $message['password.min'] = 'Mật khẩu phải có ít nhất 6 kí tự ';
+        }
+        $validator = Validator::make($request->all(), $required,$message);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ], 200);
+        } else {
+
+            $user = User::find($request->id);
+            if (!empty($user)) {
+                $user->name = $request->name;
+                $user->gender = $request->gender;
+                $user->address = $request->address;
+                $user->role_id = $request->role_id;
+                $user->password =  Hash::make($request->password);
+                $user->save();
+
+                Student::find($id)->update(['status' => $request->studentStatus]);
+
+                return response()->json([
+                    'status' => true
+                ], 200);
+            }
+
+        }
     }
 
     /**

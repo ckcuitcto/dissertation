@@ -19,6 +19,8 @@ class CreateStudentsTable extends Migration
             $table->integer('class_id')->unsigned()->nullable();
             $table->integer('academic_year_from')->unsigned()->nullable();
             $table->integer('academic_year_to')->unsigned()->nullable();
+
+            $table->integer('status')->default(STUDENT_STUDYING)->nullable();
             $table->timestamps();
         });
     }

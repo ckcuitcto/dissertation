@@ -74,4 +74,36 @@ class Controller extends BaseController
         }
         return false;
     }
+
+    public static function getDisplayStatusStudent($status){
+        switch ($status) {
+            case STUDENT_STUDYING:
+                return "Đang học";
+                break;
+            case STUDENT_DEFERMENT:
+                return "Bảo lưu";
+                break;
+            case STUDENT_DROP_OUT:
+                return "Bỏ học";
+                break;
+            case STUDENT_GRADUATE:
+                return "Tốt nghiệp";
+                break;
+            default:
+                return "Đang học";
+        }
+    }
+
+    public static function getDisplayGender($gen){
+        switch ($gen) {
+            case MALE:
+                return "Nam";
+                break;
+            case FEMALE:
+                return "Nữ";
+                break;
+            default:
+                return "Khác";
+        }
+    }
 }

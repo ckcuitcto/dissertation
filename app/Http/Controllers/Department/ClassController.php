@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Department;
 
 use App\Model\Classes;
+use App\Model\Role;
 use App\Model\Staff;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -75,7 +76,8 @@ class ClassController extends Controller
             ->where('u.faculty_id',$class->Faculty->id)
             ->orderBy('u.name')
             ->get();
-        return view('department.class.class-detail',compact('class','staff'));
+        $roles = Role::where('weight','<=', ROLE_BANCANSULOP)->get();
+        return view('department.class.class-detail',compact('class','staff','roles'));
     }
 
     /**

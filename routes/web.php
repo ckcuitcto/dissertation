@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/destroy/{id}', ['as' => 'student-destroy', 'uses' => 'Student\StudentController@destroy']);
 
         Route::post('/update/{id}', ['as' => 'student-update', 'uses' => 'Student\StudentController@update']);
+
         Route::get('/edit/{id}', ['as' => 'student-edit', 'uses' => 'Student\StudentController@edit']);
 
         Route::post('/import', ['as' => 'student-import', 'uses' => 'Student\StudentController@import']);
