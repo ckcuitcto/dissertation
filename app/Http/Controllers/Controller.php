@@ -119,4 +119,17 @@ class Controller extends BaseController
                 return "Hoạt động";
         }
     }
+
+    public static function checkInTime($timeStart,$timeEnd, $timeCheck = null){
+        if(empty($timeStart) OR empty($timeEnd)){
+            return false;
+        }
+        if(empty($timeCheck)){
+            $timeCheck =  Carbon::now()->format('Y-m-d');
+        }
+        if(strtotime($timeCheck) >= strtotime($timeStart) AND strtotime($timeCheck) <= strtotime($timeEnd)){
+            return true;
+        }
+        return false;
+    }
 }

@@ -100,6 +100,12 @@
                                        href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
                                         <i class="fa fa-eye" aria-hidden="true" style="color:white"></i>Xem
                                     </a>
+                                    @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_re_mark, $evaluationForm->Semester->date_end_to_re_mark ))
+                                    <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
+                                            title="Yêu cầu phúc khảo">
+                                        <i class="fa fa-send" aria-hidden="true" style="color:white"></i>
+                                    </button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -108,5 +114,40 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Yêu cầu phúc khảo</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="remarking-form">
+                            {!! csrf_field() !!}
+                            <div class="col-md-12">
+                                <h3 class="tile-title">Lý do</h3>
+                                <div class="tile-body">
+                                    <div class="form-group">
+                                        <textarea class="form-control" rows="4" name="remarking_reason" placeholder="Vui lòng nhập lí do"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button data-link="{{ route('semester-store') }}" class="btn btn-primary"
+                                    id="btn-save-semester" name="btn-save-semester" type="button">
+                                <i class="fa fa-fw fa-lg fa-check-circle"></i>Gửi
+                            </button>
+                            <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">
+                                <i class="fa fa-fw fa-lg fa-times-circle"></i>Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+
 @endsection

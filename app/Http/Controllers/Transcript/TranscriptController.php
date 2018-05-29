@@ -95,7 +95,7 @@ class TranscriptController extends Controller
 //                }
                 $this->authorize($value,'view');
             }
-//            dd($arr);
+
             return view('transcript.show', compact('user', 'evaluationForms', 'rolesCanMark', 'scoreList'));
         }
         return redirect()->back();

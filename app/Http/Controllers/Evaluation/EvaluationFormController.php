@@ -363,5 +363,14 @@ class EvaluationFormController extends Controller
         }
     }
 
+    public function requestRemarking($formId){
+
+//        return
+    }
+
+    public function requestRemarkingStore(Request $request,$id){
+
+    }
+
 
 }
