@@ -103,6 +103,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'student-list',
                 'display_name' => 'Xem danh sách sinh viên',
                 'description' => 'Có thể xem danh sách sinh viên'
+            ],[
+                'name' => 'manage-user',
+                'display_name' => 'Quản lí tài khoản',
+                'description' => 'Thêm xóa sửa tài khoản'
             ],
         ]);
     }

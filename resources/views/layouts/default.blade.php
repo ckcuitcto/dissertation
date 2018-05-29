@@ -258,7 +258,7 @@
             </li>
             @endcan
 
-            <li><a class="app-menu__item active" href="{{ route('home') }}"><i class="app-menu__icon fa fa-home"
+            <li><a class="app-menu__item active" href="{{ route('user') }}"><i class="app-menu__icon fa fa-home"
                                                                                aria-hidden="true"></i><span
                             class="app-menu__label">Quản lí tài khoản </span></a></li>
 

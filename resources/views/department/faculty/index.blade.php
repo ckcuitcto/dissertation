@@ -21,7 +21,6 @@
                                 <th>Khoa</th>
                                 <th>Số lượng lớp</th>
                                 <th></th>
-                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -31,15 +30,13 @@
                                     </td>
                                     <td>{{ count($faculty->classes) }}</td>
                                     <td>
-                                        <a data-faculty-id="{{$faculty->id}}" id="faculty-update"
+                                        <a class="btn btn-primary icon-btn" data-faculty-id="{{$faculty->id}}" id="faculty-update"
                                            data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
                                            data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
-                                    </td>
-                                    <td>
-                                        @if(!count($faculty->classes)>0)
-                                            <a data-faculty-id="{{$faculty->id}}" id="faculty-destroy"
+                                        @if(!count($faculty->classes)>0 AND !count($faculty->News)>0)
+                                            <a class="btn btn-danger icon-btn" data-faculty-id="{{$faculty->id}}" id="faculty-destroy"
                                                data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
                                                 <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                             </a>

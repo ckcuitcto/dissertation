@@ -150,7 +150,7 @@
                         }
                     }
                 });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
+                $('#myModal').find(".modal-title").text('Sửa thông tin quyền');
                 $('#myModal').find(".modal-footer > button[name=btn-save-permission]").html('Sửa')
                 $('#myModal').find(".modal-footer > button[name=btn-save-permission]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');

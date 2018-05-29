@@ -53,11 +53,8 @@
                             <tbody>
                             @foreach($class->Students as $student)
                                 <tr>
-                                    <td><a href="{{ route('faculty-detail',$student->id) }}">{{ $student->user_id}} </a>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('faculty-detail',$student->id) }}">{{ $student->User->name }} </a>
-                                    </td>
+                                    <td>{{ $student->user_id}}</td>
+                                    <td>{{ $student->User->name }}</td>
                                     <td>{{ $student->User->email }}</td>
                                     <td>{{ $student->User->phone_number }}</td>
                                     <td>{{ \App\Http\Controllers\Controller::getDisplayGender( $student->User->gender) }}</td>
@@ -76,14 +73,14 @@
                             @endforeach
                             </tbody>
                         </table>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
-                                        id="btn-add-student" type="button"><i class="fa fa-pencil-square-o"
-                                                                              aria-hidden="true"></i>Thêm sinh viên
-                                </button>
-                            </div>
-                        </div>
+                        {{--<div class="row">--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--<button data-toggle="modal" data-target="#myModal" class="btn btn-primary"--}}
+                                        {{--id="btn-add-student" type="button"><i class="fa fa-pencil-square-o"--}}
+                                                                              {{--aria-hidden="true"></i>Thêm sinh viên--}}
+                                {{--</button>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                     </div>
                 </div>
             </div>
@@ -231,9 +228,7 @@
                             </div>
                         </form>
                         <div class="modal-footer">
-                            <button data-link="{{ route('student-update',$class->id) }}" class="btn btn-primary"
-                                    id="btn-save-student" name="btn-save-student" type="button">
-                                Sửa
+                            <button class="btn btn-primary" id="btn-save-student" name="btn-save-student" type="button"> Sửa
                             </button>
                             <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
                         </div>
@@ -253,7 +248,6 @@
 
     <script>
         $(document).ready(function () {
-            
             $("input#checkBoxChangePassword").change(function () {
                 if($(this).val() === 'on'){
                     $(this).val('off');
@@ -270,7 +264,7 @@
             $("#btn-save-class").click(function () {
                 var valueForm = $('form#class-form').serialize();
                 var url = $(this).attr('data-link');
-                $('.form-group').find('span.messageErrors').remove();
+                $('#modal-edit-class').find('span.messageErrors').remove();
                 $.ajax({
                     type: "post",
                     url: url,
@@ -297,7 +291,8 @@
                 });
             });
 
-            $("button.update-student").click(function () {
+            $('body').on('click', 'button.update-student', function (e) {
+            // $("button.update-student").click(function () {
                 var urlEdit = $(this).attr('data-student-edit-link');
                 var urlUpdate = $(this).attr('data-student-update-link');
                 var id = $(this).attr('data-student-id');
@@ -312,15 +307,13 @@
                             if (result.student !== undefined) {
                                 $.each(result.student, function (elementName, value) {
                                     if(elementName === 'gender'){
-                                        $("input[name=gender][value=" + value + "]").attr('checked', 'checked');
+                                        $('#modal-edit-student').find("input[name=gender][value=" + value + "]").attr('checked', 'checked');
                                     }else if(elementName === 'studentStatus' || elementName === 'role_id' ){
-                                        $("select."+elementName).val(value);
+                                        $('#modal-edit-student').find("select."+elementName).val(value);
                                     }
                                     else{
-                                        $('.' + elementName).val(value);
-
+                                        $('#modal-edit-student').find('.' + elementName).val(value);
                                     }
-
                                 });
                             }
                         }

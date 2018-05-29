@@ -361,11 +361,6 @@
                 $('#myModal').find(".modal-footer > button[name=btn-save-semester]").attr('data-link', "{{ route('semester-store') }}");
             });
 
-            // $('button#closeForm').click(function(){
-            //     $('#semester-form')[0].reset();
-            //
-            // });
-
         });
     </script>
 

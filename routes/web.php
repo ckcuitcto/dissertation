@@ -46,6 +46,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'class-edit', 'uses' => 'Department\ClassController@edit']);
         Route::post('/update/{id}', ['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
 
+        Route::post('/get-list-by-faculty', ['as' => 'class-get-list-by-faculty', 'uses' => 'Department\ClassController@getListClassByFaculty']);
+
     });
 
     Route::group(['prefix' => 'sinh-vien'], function () {
@@ -200,17 +202,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
 
     Route::group(['prefix' => 'tai-khoan', 'middleware' => 'can:manage-user'], function () {
-        Route::get('/', ['as' => 'user', 'uses' => 'Department\FacultyController@index']);
-        Route::get('/{id}', ['as' => 'user-detail', 'uses' => 'Department\FacultyController@show']);
 
-        Route::post('/store', ['as' => 'user-store', 'uses' => 'Department\FacultyController@store'])->middleware('can:faculty-change');
+        Route::get('/', ['as' => 'user', 'uses' => 'User\UserController@index']);
 
-        Route::get('/destroy/{id}', ['as' => 'user-destroy', 'uses' => 'Department\FacultyController@destroy'])->middleware('can:faculty-change');
+//        Route::get('/{id}', ['as' => 'user-detail', 'uses' => 'User\UserController@show']);
+
+        Route::post('/store', ['as' => 'user-store', 'uses' => 'User\UserController@store']);
+        Route::get('/destroy/{id}', ['as' => 'user-destroy', 'uses' => 'User\UserController@destroy']);
 
         // hien thi form
-        Route::get('/edit/{id}', ['as' => 'user-edit', 'uses' => 'Department\FacultyController@edit'])->middleware('can:faculty-change');
+        Route::get('/edit/{id}', ['as' => 'user-edit', 'uses' => 'User\UserController@edit']);
         //update
-        Route::post('/update/{id}', ['as' => 'user-update', 'uses' => 'Department\FacultyController@update'])->middleware('can:faculty-change');
+        Route::post('/update/{id}', ['as' => 'user-update', 'uses' => 'User\UserController@update']);
 
     });
 });

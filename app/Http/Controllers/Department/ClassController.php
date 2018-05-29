@@ -147,4 +147,12 @@ class ClassController extends Controller
             'status' => false
         ], 200);
     }
+
+    public function getListClassByFaculty(Request $request){
+        $id = $request->id;
+        $classes = Classes::where('faculty_id', $id)->select('id','name')->get()->toArray();
+        return response()->json([
+            'classes' => $classes
+        ],200);
+    }
 }
