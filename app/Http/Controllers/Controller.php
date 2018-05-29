@@ -106,4 +106,17 @@ class Controller extends BaseController
                 return "Khác";
         }
     }
+
+    public static function getDisplayStatusUser($status){
+        switch ($status) {
+            case USER_ACTIVE:
+                return "Hoạt động";
+                break;
+            case USER_INACTIVE:
+                return "Ngừng hoạt động";
+                break;
+            default:
+                return "Hoạt động";
+        }
+    }
 }

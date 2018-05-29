@@ -140,10 +140,11 @@
                         if (result.status === true) {
                             if (result.permission !== undefined) {
                                 $.each(result.permission, function (elementName, value) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + messageValue)
-                                    $('.' + elementName).val(value);
-//                                    });
+                                    if(elementName === 'name'){
+                                        $('.' + elementName).val(value).prop('disabled',true);
+                                    }else{
+                                        $('.' + elementName).val(value);
+                                    }
                                 });
                             }
                         }

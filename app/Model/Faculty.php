@@ -18,4 +18,8 @@ class Faculty extends Model
         return $this->hasMany('App\Model\User','faculty_id','id');
     }
 
+    public function News(){
+        return $this->hasMany('App\Model\News','faculty_id','id');
+    }
+
 }
