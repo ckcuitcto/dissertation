@@ -9,7 +9,7 @@
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item"><a href="#"> Quản lý tin tức, sự kiện</a></li>
+                <li class="breadcrumb-item"> Quản lý tin tức, sự kiện</li>
             </ul>
         </div>
         <div class="row">
@@ -46,7 +46,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                    <a href="{{ route('news-create') }}" class="btn btn-primary" id="btnAddNews" type="button">Thêm </a>
+                    <a href="{{ route('news-create') }}" class="btn btn-primary" id="btnAddNews" >Thêm </a>
                 </div>
             </div>
         </div>

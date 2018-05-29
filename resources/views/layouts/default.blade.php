@@ -148,7 +148,7 @@
                 <ul class="treeview-menu">
                     @can('can-list-student-transcript')
                         <li>
-                            <a class="treeview-item" href="{{ route('transcript') }}"><i class="icon fa fa-circle-o"></i> Danh sách </a>
+                            <a class="treeview-item" href="{{ route('transcript') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp; Danh sách </a>
                         </li>
                     @endcan
                     @if($authCheck)
@@ -161,16 +161,21 @@
                 </ul>
             </li>
             <li class="treeview">
+                    @if($authCheck)
+                    <a class="app-menu__item" href="{{ route('personal-information-show',$user->id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i>&nbsp; Thông tin cá nhân</a>
                 {{--<a class="app-menu__item" data-toggle="treeview">--}}
-                <a class="app-menu__item" href="#" data-toggle="treeview">
+                {{-- <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon fa fa-user-circle-o"></i></i><span class="app-menu__label">Thông tin cá nhân</span>
                     <i class="treeview-indicator fa fa-angle-right"></i>
-                </a>
-                <ul class="treeview-menu">
+                </a> --}}
+                @endif
+                {{-- <ul class="treeview-menu">
                     @if($authCheck)
-                    <li><a class="treeview-item" href="{{ route('personal-information-show',$user->id) }}"><i class="icon fa fa-circle-o"></i>Thông tin cá nhân</a></li>
+                    <li>
+                        <a class="treeview-item" href="{{ route('personal-information-show',$user->id) }}"><i class="icon fa fa-circle-o"></i>Thông tin cá nhân</a>
+                    </li>
                     @endif
-                </ul>
+                </ul> --}}
 
             </li>
 

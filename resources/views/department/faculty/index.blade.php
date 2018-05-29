@@ -20,7 +20,7 @@
                             <tr>
                                 <th>Khoa</th>
                                 <th>Số lượng lớp</th>
-                                <th></th>
+                                <th>Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -29,16 +29,17 @@
                                     <td><a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>
                                     </td>
                                     <td>{{ count($faculty->classes) }}</td>
-                                    <td>
+                                    <td style="color:white">
                                         <a class="btn btn-primary icon-btn" data-faculty-id="{{$faculty->id}}" id="faculty-update"
                                            data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
-                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
+                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}" class="btn btn-primary">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
                                         @if(!count($faculty->classes)>0 AND !count($faculty->News)>0)
-                                            <a class="btn btn-danger icon-btn" data-faculty-id="{{$faculty->id}}" id="faculty-destroy"
+                                            <a class="btn btn-danger" data-faculty-id="{{$faculty->id}}" id="faculty-destroy"
                                                data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
                                                 <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+
                                             </a>
                                         @endif
                                     </td>

@@ -8,7 +8,7 @@
             </div>
             <ul class="app-breadcrumb breadcrumb side">
                 <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item active"><a href="#"> Danh sách Sinh viên</a></li>
+                <li class="breadcrumb-item active"> Danh sách Sinh viên</li>
             </ul>
         </div>
         <div class="row">

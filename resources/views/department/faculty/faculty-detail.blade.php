@@ -37,27 +37,24 @@
                             <tr>
                                 <th>Lớp</th>
                                 <th>Số lượng sinh viên</th>
-                                <th></th>
-                                <th></th>
+                                <th>Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($faculty->classes as $class)
-                                <tr>
+                                <tr style="color:white">
                                     <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a></td>
                                     <td>{{ count($class->Students) }}</td>
                                     <td>
                                         <a data-id="{{$class->id}}" id="class-edit"
                                            data-edit-link="{{route('class-edit',$class->id)}}"
-                                           data-update-link="{{route('class-update',$class->id)}}">
-                                            <i class="fa fa-lg fa-edit " aria-hidden="true"> </i>
+                                           data-update-link="{{route('class-update',$class->id)}}" class="btn btn-primary">
+                                            <i class="fa fa-lg fa-edit " aria-hidden="true"> </i> Sửa
                                         </a>
-                                    </td>
-                                    <td>
                                         @if(!count($class->Students)>0)
                                             <a data-id="{{$class->id}}" id="class-destroy"
-                                               data-link="{{route('class-destroy',$class->id)}}">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                                               data-link="{{route('class-destroy',$class->id)}}" class="btn btn-danger">
+                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
                                             </a>
                                         @endif
                                     </td>

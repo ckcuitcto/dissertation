@@ -101,10 +101,8 @@ class PermissionController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
             'display_name' => 'required'
         ],[
-            'name.required' => "Vui lòng nhập tên quyền",
             'display_name.required' => 'Vui lòng nhập tiêu đề'
         ]);
 
@@ -117,7 +115,6 @@ class PermissionController extends Controller
         }else{
             $permission = Permission::find($id);
             if (!empty($permission)) {
-                $permission->name = $request->name;
                 $permission->display_name = $request->display_name;
                 $permission->description = $request->description;
                 $permission->save();

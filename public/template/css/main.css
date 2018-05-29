@@ -425,6 +425,7 @@ h6, .h6 {
 }
 
 .display-4 {
+  font-family: 'Times New Roman', Times, serif;
   font-size: 3.5rem;
   font-weight: 300;
   line-height: 1.2;
@@ -13672,6 +13673,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .app-title {
+  font-family: 'Times New Roman', Times, serif;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -13713,12 +13715,13 @@ be a descendant of the grid when it is being dragged.
 }
 
 .app-title h1 {
+  font-family: 'Times New Roman', Times, serif;
   margin: 0;
   font-size: 24px;
   font-weight: 400;
 }
 
-.app-title p {
+.app-title p {  
   margin-bottom: 0;
   font-style: italic;
 }
@@ -13800,6 +13803,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .tile .tile-title {
+  font-family: 'Times New Roman', Times, serif;
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 1.5rem;
@@ -14272,6 +14276,7 @@ be a descendant of the grid when it is being dragged.
 
 .widget-small .info h4 {
   text-transform: uppercase;
+  font-family: time new roman;
   margin: 0;
   margin-bottom: 5px;
   font-weight: 400;
