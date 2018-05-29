@@ -8,7 +8,7 @@
             </div>
             <ul class="app-breadcrumb breadcrumb side">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item active"><a href="#"> Danh sách ý kiến</a></li>
+                <li class="breadcrumb-item active"> Danh sách ý kiến</li>
             </ul>
         </div>
         <div class="row">
@@ -30,7 +30,7 @@
                                 <th>Tiêu đề</th>
                                 <th>Nội dung ý kiến</th>
                                 <th>Ngày gửi</th>
-                                <th>Tùy chọn</th>
+                                <th>Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -47,13 +47,13 @@
                                         <a class="btn btn-primary" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-reply"
                                            data-comment-show-link="{{route('comment-show',$cmt->id)}}"
                                            data-comment-reply-link="{{route('comment-reply',$cmt->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Phản hồi
                                         </a>
                                     @endcan
                                     @can('comment-delete')
                                         <a class="btn btn-danger" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-destroy"
                                            data-comment-link="{{route('comment-destroy',$cmt->id)}}">
-                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
                                         </a>
                                     @endcan
                                     </td>

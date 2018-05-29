@@ -10,7 +10,7 @@
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item"><a href="#"> Quản lý minh chứng</a></li>
+                <li class="breadcrumb-item"> Quản lý minh chứng</li>
             </ul>
         </div>
         <div class="row">
@@ -27,7 +27,7 @@
                                     <th>Học kỳ</th>
                                     <th>Năm học</th>
                                     <th>Trạng thái</th>
-                                    <th></th>
+                                    <th>Tác vụ</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -36,14 +36,14 @@
                                         <td>{{$key+1}}</td>
                                         <td>{{$proof->content}}</td>
                                         <td>
-                                            <a data-proof-id="{{$proof->id}}"
+                                            <a style="color:white" data-proof-id="{{$proof->id}}"
                                                id="proof-view-file"
                                                data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
                                                data-link-update-proof-file="{{ route('proof-destroy',$proof->id ) }}"
-                                               data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
+                                               data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}" class="btn btn-primary">
                                                 <i class="fa fa-eye"
-                                                   aria-hidden="true"></i>{{ $proof->name }}
-                                            </a>
+                                                   aria-hidden="true"></i> Xem
+                                            </a>{{ $proof->name }}
                                         </td>
                                         <td>{{$proof->term}}</td>
                                         <td>{{$proof->year_from. "-".$proof->year_to}}</td>
@@ -53,7 +53,7 @@
                                                 <button type="button" class="btn btn-danger"
                                                         data-proof-id="{{$proof->id}}" id="proof-destroy"
                                                         data-proof-link="{{route('proof-destroy',$proof->id)}}">
-                                                    <i class="fa fa-lg fa-trash"></i>
+                                                    <i class="fa fa-lg fa-trash"></i> Xóa
                                                 </button>
                                             @endif
                                         </td>
