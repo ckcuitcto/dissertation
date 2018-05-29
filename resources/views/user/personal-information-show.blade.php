@@ -145,7 +145,8 @@
 
                         </div>
                     </div>
-                <a class="btn btn-primary" id="btn-update-inform" style="color:white"> Sửa</a>
+                <a class="btn btn-primary" id="btn-update-inform" style="color:white">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sửa</a>
             </div>
             {{-- </div>          --}}
         </div>

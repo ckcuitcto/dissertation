@@ -7,8 +7,7 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
+                <li class="breadcrumb-item"><a href="{{'home'}}"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item active"><a href="#"> Danh sách vai trò</a></li>
             </ul>
         </div>
@@ -47,17 +46,17 @@
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td>
+                                    <td style="color:white">
                                         <a data-role-id="{{$role->id}}" id="role-update"
                                            data-role-edit-link="{{route('role-edit',$role->id)}}"
-                                           data-role-update-link="{{route('role-update',$role->id)}}">
+                                           data-role-update-link="{{route('role-update',$role->id)}}" class="btn btn-primary">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td  style="color:white">
                                         @if(!count($role->Users)>0)
                                             <a data-role-id="{{$role->id}}" id="role-destroy"
-                                               data-role-link="{{route('role-destroy',$role->id)}}">
+                                               data-role-link="{{route('role-destroy',$role->id)}}" class="btn btn-danger">
                                                 <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                             </a>
                                         @endif

@@ -7,8 +7,7 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
+                <li class="breadcrumb-item"><a href="{{'home'}}"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item active"><a href="#"> Danh sách quyền</a></li>
             </ul>
         </div>
@@ -24,8 +23,8 @@
                                 <th>Tên</th>
                                 <th>Tên hiển thị</th>
                                 <th>Miêu tả</th>
-                                <th>Sửa</th>
-                                <th>Xóa</th>
+                                <th>Tác vụ</th>
+                                {{-- <th>Xóa</th> --}}
                             </tr>
                             </thead>
                             <tbody>
@@ -35,21 +34,21 @@
                                     <td>{{ $permission->name }} </td>
                                     <td>{{ $permission->display_name }} </td>
                                     <td>{{ $permission->description }} </td>
-                                    <td>
+                                    <td style="color:white">
                                         <a data-permission-id="{{$permission->id}}" id="permission-update"
                                            data-permission-edit-link="{{route('permission-edit',$permission->id)}}"
-                                           data-permission-update-link="{{route('permission-update',$permission->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                           data-permission-update-link="{{route('permission-update',$permission->id)}}" class="btn btn-primary">
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Sửa
                                         </a>
                                     </td>
-                                    <td>
+                                    {{-- <td style="color:white">
                                         @if(!count($permission->Roles)>0)
                                             <a data-permission-id="{{$permission->id}}" id="permission-destroy"
-                                               data-permission-link="{{route('permission-destroy',$permission->id)}}">
+                                               data-permission-link="{{route('permission-destroy',$permission->id)}}" class="btn btn-danger">
                                                 <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                             </a>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -150,7 +149,7 @@
                         }
                     }
                 });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
+                $('#myModal').find(".modal-title").text('Sửa thông tin quyền');
                 $('#myModal').find(".modal-footer > button[name=btn-save-permission]").html('Sửa')
                 $('#myModal').find(".modal-footer > button[name=btn-save-permission]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');

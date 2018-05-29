@@ -20,28 +20,25 @@
                             <tr>
                                 <th>Khoa</th>
                                 <th>Số lượng lớp</th>
-                                <th></th>
-                                <th></th>
+                                <th>Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($faculties as $faculty)
-                                <tr>
+                                <tr style="color:white">
                                     <td><a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>
                                     </td>
                                     <td>{{ count($faculty->classes) }}</td>
                                     <td>
                                         <a data-faculty-id="{{$faculty->id}}" id="faculty-update"
                                            data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
-                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}" class="btn btn-primary">
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Sửa
                                         </a>
-                                    </td>
-                                    <td>
                                         @if(!count($faculty->classes)>0)
                                             <a data-faculty-id="{{$faculty->id}}" id="faculty-destroy"
-                                               data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                                               data-faculty-link="{{route('faculty-destroy',$faculty->id)}}" class="btn btn-danger">
+                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
                                             </a>
                                         @endif
                                     </td>

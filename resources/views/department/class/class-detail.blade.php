@@ -8,8 +8,7 @@
             </div>
             <ul class="app-breadcrumb breadcrumb side">
                 <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
-                <li class="breadcrumb-item active"><a href="#"> Danh sách Khoa</a></li>
+                <li class="breadcrumb-item active"><a href="#"> Danh sách Sinh viên của lớp {{ $class->name }}</a></li>
             </ul>
         </div>
         <div class="row">
@@ -20,12 +19,12 @@
                         <h4 class="line-head">Thông tin lớp {{ $class->name }}</h4>
                         <div class="row">
                             <div class="col-md-6">
-                                <div>Sỉ số : {{ count($class->Students) }}</div>
-                                <div>Cố vấn học tập : {{ $class->Staff->User->name or "" }}</div>
+                                <div>- Sỉ số : {{ count($class->Students) }}</div>
+                                <div>- Cố vấn học tập : {{ $class->Staff->User->name or "" }}</div>
                             </div>
                             <div class="col-md-6">
                                 <div>- Khoa: {{ $class->Faculty->name }}</div>
-                                <div>
+                                <div style="float:right">
                                     <button data-toggle="modal" data-target="#modal-edit-class" class="btn btn-primary"
                                             id="btn-edit-class" type="button"><i class="fa fa-pencil-square-o"
                                                                                  aria-hidden="true"></i>Sửa
@@ -47,7 +46,7 @@
                                 <th>Ngày sinh</th>
                                 <th>Chức vụ</th>
                                 <th>Trạng thái</th>
-                                <th></th>
+                                <th>Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -66,10 +65,10 @@
                                     <td>{{ $student->User->Role->name }}</td>
                                     <td>{{ \App\Http\Controllers\Controller::getDisplayStatusStudent($student->status) }}</td>
                                     <td>
-                                        <button data-student-id="{{$student->id}}" class="btn update-student"
+                                        <button data-student-id="{{$student->id}}" class="btn update-student btn-primary"
                                                 data-student-edit-link="{{route('student-edit',$student->id)}}"
                                                 data-student-update-link="{{route('student-update',$student->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Sửa
                                         </button>
                                     </td>
                                 </tr>

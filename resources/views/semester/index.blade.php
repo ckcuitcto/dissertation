@@ -24,7 +24,7 @@
                                 <th>Năm học</th>
                                 <th>Ngày bắt đầu chấm</th>
                                 <th>Ngày kết thúc chấm</th>
-                                <th></th>
+                                <th>Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -35,11 +35,11 @@
                                     <td>{{ $semester->year_from . "-" . $semester->year_to }}</td>
                                     <td>{{ $semester->date_start_to_mark }}</td>
                                     <td>{{ $semester->date_end_to_mark }}</td>
-                                    <td>
+                                    <td style="color:white">
                                         <a data-semester-id="{{$semester->id}}" id="update-semester"
                                            data-semester-edit-link="{{route('semester-edit',$semester->id)}}"
-                                           data-semester-update-link="{{route('semester-update',$semester->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                           data-semester-update-link="{{route('semester-update',$semester->id)}}" class="btn btn-primary">
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Sửa
                                         </a>
                                     </td>
                                 </tr>

@@ -46,7 +46,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                    <a href="{{ route('news-create') }}" class="btn btn-primary" id="btnAddNews" type="button">Thêm </a>
+                    <a href="{{ route('news-create') }}" class="btn btn-primary" id="btnAddNews" >Thêm </a>
                 </div>
             </div>
         </div>
