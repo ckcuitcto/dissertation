@@ -353,7 +353,7 @@
             });
 
             $('#myModal').on('hidden.bs.modal', function (e) {
-                $('#myModal').find("input[type=text],input[type=number], select").val('');
+                $('#myModal').find("input[type=text],input[type=number],input[type=year], select").val('').prop('disabled',false).prop('readonly',false);
                 $('.text-red').html('');
                 $('span.messageErrors').remove();
                 $('#myModal').find(".modal-title").text('Thêm mới học kì');

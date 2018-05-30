@@ -137,13 +137,24 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{id}', ['as' => 'evaluation-form-show', 'uses' => 'Evaluation\EvaluationFormController@show']);
         // lưu kết quả
         Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update'])->middleware('can:can-mark,App\Model\EvaluationForm');
-        // chỉnh sửa
 
         //kiem tra file upload = ajax
         Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Evaluation\EvaluationFormController@checkFileUpload']);
 
         Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Evaluation\EvaluationFormController@getProofById']);
 
+    });
+
+    Route::group(['prefix' => 'phuc-khao'], function () {
+        Route::get('/', ['as' => 'remaking', 'uses' => 'Evaluation\ReMakingController@index']);
+
+        Route::post('/store', ['as' => 'remaking-store', 'uses' => 'Evaluation\ReMakingController@store']);
+
+        Route::get('/reply/{id}', ['as' => 'remaking-reply', 'uses' => 'Evaluation\ReMakingController@reply']);
+
+        Route::get('/edit/{id}', ['as' => 'remaking-edit', 'uses' => 'Evaluation\ReMakingController@edit']);
+
+        Route::post('/update/{id}', ['as' => 'remaking-update', 'uses' => 'Evaluation\ReMakingController@update']);
 
     });
 

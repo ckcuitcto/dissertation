@@ -19,8 +19,6 @@ class CreateEvaluationFormsTable extends Migration
             $table->integer('semester_id')->unsigned()->nullable();
             $table->integer('student_id')->unsigned();
             $table->tinyInteger('status')->nullable();
-            $table->text('remarking_reason')->nullable();
-            $table->text('remarking_reply')->nullable();
             $table->timestamps();
         });
     }

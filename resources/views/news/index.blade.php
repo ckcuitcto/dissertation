@@ -29,7 +29,9 @@
                         @foreach($newsList as $key =>  $tintuc)
                             <tr>
                                 <th>{{ $key + 1 }}</th>
-                            <td><a href="{{ route('news-show',[ str_slug($tintuc->title),$tintuc->id]) }}"> {{ $tintuc->id ." | ".$tintuc->title}}</a> </td>
+                                <td>
+                                    <a href="{{ route('news-show',[ str_slug($tintuc->title),$tintuc->id]) }}"> {{ $tintuc->id ." | ".$tintuc->title}}</a>
+                                </td>
                                 <td>{{$tintuc->created_at}}</td>
                                 <td>{{$tintuc->updated_at}}</td>
                                 <td>
@@ -46,7 +48,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                    <a href="{{ route('news-create') }}" class="btn btn-primary" id="btnAddNews" >Thêm </a>
+                    <a href="{{ route('news-create') }}" class="btn btn-primary" id="btnAddNews">Thêm </a>
                 </div>
             </div>
         </div>
@@ -93,7 +95,7 @@
                 });
             });
 
-          $("button#news-update").click(function () {
+            $("button#news-update").click(function () {
                 var urlEdit = $(this).attr('data-news-edit-link');
                 var urlUpdate = $(this).attr('data-news-update-link');
                 var id = $(this).attr('data-news-id');
@@ -118,7 +120,7 @@
                 });
                 $('#myModal').find(".modal-title").text('Sửa nội dung tin tức, sự kiện');
                 $('#myModal').find(".modal-footer > button[name=btn-save-news]").html('Sửa')
-                $('#myModal').find(".modal-footer > button[name=btn-save-news]").attr('data-link',urlUpdate);
+                $('#myModal').find(".modal-footer > button[name=btn-save-news]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');
             });
 

@@ -29,7 +29,7 @@ class CreateUsersTable extends Migration
             $table->integer('role_id')->unsigned()->nullable();
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
 
-            $table->integer('status')->default(USER_ACTIVE)->nullable();
+            $table->tinyInteger('status')->default(1)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

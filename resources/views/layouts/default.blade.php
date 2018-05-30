@@ -137,7 +137,7 @@
         </div>
         <ul class="app-menu">
 
-            <li><a class="app-menu__item active" href="{{ route('home') }}"><i class="app-menu__icon fa fa-home"
+            <li><a class="app-menu__item" href="{{ route('home') }}"><i class="app-menu__icon fa fa-home"
                                                                                aria-hidden="true"></i><span
                             class="app-menu__label">Trang chủ</span></a></li>
             <li class="treeview">
@@ -158,6 +158,11 @@
                         </li>
                         @endif
                     @endif
+                    @can('manage-remaking')
+                    <li>
+                        <a class="treeview-item" href="{{ route('remaking') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;DS yêu cầu phúc khảo</a>
+                    </li>
+                    @endcan
                 </ul>
             </li>
             <li class="treeview">
@@ -244,7 +249,7 @@
                             class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">Phân quyền User</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('role-list') }}"><i class="icon fa fa-circle-o"></i>Danh
+                    <li><a class="treeview-item active" href="{{ route('role-list') }}"><i class="icon fa fa-circle-o"></i>Danh
                             sách các nhóm vai trò </a></li>
                     <li><a class="treeview-item" href="{{ route('permission-list') }}"><i
                                     class="icon fa fa-circle-o"></i> Danh sách các quyền</a></li>
@@ -263,7 +268,7 @@
             </li>
             @endcan
 
-            <li><a class="app-menu__item active" href="{{ route('user') }}"><i class="app-menu__icon fa fa-home"
+            <li><a class="app-menu__item " href="{{ route('user') }}"><i class="app-menu__icon fa fa-home"
                                                                                aria-hidden="true"></i><span
                             class="app-menu__label">Quản lí tài khoản </span></a></li>
 

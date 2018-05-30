@@ -101,7 +101,7 @@
                                         <i class="fa fa-eye" aria-hidden="true" style="color:white"></i>Xem
                                     </a>
                                     @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_re_mark, $evaluationForm->Semester->date_end_to_re_mark ))
-                                    <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
+                                    <button data-toggle="modal" id="btn-request-remaking" data-target="#myModal" class="btn btn-primary" data-id-evaluation-form="{{ $evaluationForm->id }}"
                                             title="Yêu cầu phúc khảo">
                                         <i class="fa fa-send" aria-hidden="true" style="color:white"></i>
                                     </button>
@@ -125,19 +125,20 @@
                     </div>
                     <div class="modal-body">
                         <form id="remarking-form">
+                            <input type="hidden" id="evluationFormId" name="formId">
                             {!! csrf_field() !!}
                             <div class="col-md-12">
                                 <h3 class="tile-title">Lý do</h3>
                                 <div class="tile-body">
                                     <div class="form-group">
-                                        <textarea class="form-control" rows="4" name="remarking_reason" placeholder="Vui lòng nhập lí do"></textarea>
+                                        <textarea class="form-control remarking_reason" rows="4" name="remarking_reason" placeholder="Vui lòng nhập lí do"></textarea>
                                     </div>
                                 </div>
                             </div>
                         </form>
                         <div class="modal-footer">
-                            <button data-link="{{ route('semester-store') }}" class="btn btn-primary"
-                                    id="btn-save-semester" name="btn-save-semester" type="button">
+                            <button data-link="{{ route('remaking-store') }}" class="btn btn-primary"
+                                    id="btn-send-remaking" name="btn-send-remaking" type="button">
                                 <i class="fa fa-fw fa-lg fa-check-circle"></i>Gửi
                             </button>
                             <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">
@@ -149,5 +150,50 @@
             </div>
         </div>
     </main>
+
+
+@endsection
+
+@section('sub-javascript')
+
+    <script>
+        $(document).ready(function () {
+
+            $("button#btn-request-remaking").click(function () {
+                var evaluationFormId = $(this).attr('data-id-evaluation-form');
+                $("form#remarking-form").find("input#evluationFormId").val(evaluationFormId);
+            });
+
+            $("button#btn-send-remaking").click(function () {
+                var valueForm = $('form#remarking-form').serialize();
+                var url = $(this).attr('data-link');
+                $('.form-group').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: valueForm,
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status === false) {
+                            //show error list fields
+                            if (result.arrMessages !== undefined) {
+                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                                        $('form#remarking-form').find('.' + elementName).parents('.form-group').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                    });
+                                });
+                            }
+                        } else if (result.status === true) {
+                            $('div#myModal').find('.modal-body').html('<p>Gửi yêu cầu phúc khảo thành công</p>');
+                            $("div#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            $('div#myModal').on('hidden.bs.modal', function (e) {
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+        })
+    </script>
 
 @endsection
