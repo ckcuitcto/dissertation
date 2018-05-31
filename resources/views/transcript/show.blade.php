@@ -100,7 +100,8 @@
                                        href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
                                         <i class="fa fa-eye" aria-hidden="true" style="color:white"></i>Xem
                                     </a>
-                                    @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_re_mark, $evaluationForm->Semester->date_end_to_re_mark ))
+                                    {{-- ếu đang trong thời gian phúc khảo và user login = user chủ fomr thì hiện nút phúc khảo --}}
+                                    @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_re_mark, $evaluationForm->Semester->date_end_to_re_mark ) AND $user->id == $userLogin->id)
                                     <button data-toggle="modal" id="btn-request-remaking" data-target="#myModal" class="btn btn-primary" data-id-evaluation-form="{{ $evaluationForm->id }}"
                                             title="Yêu cầu phúc khảo">
                                         <i class="fa fa-send" aria-hidden="true" style="color:white"></i>

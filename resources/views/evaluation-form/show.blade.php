@@ -11,6 +11,12 @@
             $arrTotalScore[$role['userRole']] = 0;
         }
     @endphp
+
+@php
+$user = \Illuminate\Support\Facades\Auth::user();
+$authCheck = \Illuminate\Support\Facades\Auth::check();
+@endphp
+
     <main class="app-content">
         <div class="app-title">
             <div>
@@ -287,9 +293,7 @@
                                             @endif
                                         @endforeach
                                     </tr>
-
                                 @endforeach
-
                                 <tr>
                                     <td>Tổng cộng</td>
                                     <td>0 - 100</td>
@@ -328,7 +332,11 @@
                                 @can('can-mark')
                                     <div align="right" id="button-submit-form">
                                         <button class="btn btn-primary" type="submit">Lưu</button>
-                                        <button class="btn btn-secondary" type="reset">Hủy</button>
+                    {{--@if($authCheck)--}}
+                        {{--@if($user->Role->id == 1 OR $user->Role->id == 2)--}}
+                             <a  class="btn btn-secondary" href="{{route('transcript-show',$evaluationForm->student_id )}}">Hủy</a>
+                        {{--@endif--}}
+                    {{--@endif--}}
                                     </div>
                                 @endcan
                             @endif
@@ -346,8 +354,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Xem file minh chứng</h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                            aria-hidden="true">×</span></button>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                             </div>
                             <div class="modal-body">
                                 <div id="iframe-view-file"></div>
@@ -374,8 +381,7 @@
                                     <div class="col-md-7">
                                         <div class="form-group" id="textarea-note" style="display: none;">
                                             <label for="note">Ghi chú</label>
-                                            <textarea class="form-control note" name="note" id="note"
-                                                      rows="3"></textarea>
+                                            <textarea class="form-control note" name="note" id="note" rows="3"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -388,7 +394,6 @@
                                                 Đóng
                                             </button>
                                         </div>
-
                                     </div>
                                 </div>
                                 @endif
@@ -408,9 +413,12 @@
         $(document).ready(function () {
 
             //nếu quá hạn thì k thể chấm điểm
+            // nhưng nếu đang trong thời gian phúc khảo thì vẫn cho chấm
             @if( strtotime($evaluationForm->Semester->date_start_to_mark) > strtotime(date('Y-m-d')) OR strtotime($evaluationForm->Semester->date_end_to_mark) < strtotime(date('Y-m-d')))
-            $('input').attr('disabled', true);
-            $('button').attr('disabled', true);
+                @if(!(\App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark)))
+                    $('input').attr('disabled', true);
+                    $('button').attr('disabled', true);
+                @endif
             @endif
 
             $('.proof').change(function (e) {

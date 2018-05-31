@@ -47,10 +47,11 @@
                                 <td>{{  \App\Http\Controllers\Controller::getDisplayStatusRemaking($request->status)}}</td>
                                 <td>{{  $request->created_at}}</td>
                                 <td>
-                                    @if($request->status !=  RESOLVED  )
-                                    <a class="btn btn-primary" href="{{route('news-edit',$request->id)}}">
-                                        <i class="fa fa-lg fa-edit"></i> Sửa
-                                    </a>
+                                    @if($request->status !=  RESOLVED )
+                                        <a class="btn btn-primary"
+                                           href="{{ route('evaluation-form-show',[$request->EvaluationForm->id,'remaking=true&remaking_id='.$request->id]) }}">
+                                            <i class="fa fa-edit" aria-hidden="true" style="color:white"></i> Chấm lại
+                                        </a>
                                     @endif
                                 </td>
                             </tr>

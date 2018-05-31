@@ -19,6 +19,7 @@ class CreateRemakingsTable extends Migration
             $table->text('remarking_reply')->nullable();
             $table->integer('reply_by')->nullable();
             $table->tinyInteger('status')->default(1);
+            $table->json('old_score')->nullable();
             $table->integer('evaluation_form_id')->unsigned()->nullable();
             $table->foreign('evaluation_form_id')->references('id')->on('evaluation_forms')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

@@ -9,19 +9,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('template/css/main.css') }}">
-    <link href="{{ asset('css/font-css.css') }}" rel="stylesheet">
-    {{--<link rel="stylesheet" type="text/css" href="{{ URL::asset('css/font-awesome.min.css') }}">--}}
+    {{--<link href="{{ asset('css/font-css.css') }}" rel="stylesheet">--}}
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('template/css/font-awesome.min.css') }}">
     <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 {{--    <link href="{{ URL::asset('css/bootstrap-datepicker.css') }}" rel="stylesheet"/>--}}
     <link rel="shortcut icon" href="{{ url('icon/logoSTU.ico')}}">
-{{--    <link rel="stylesheet" type="text/css" href="{{ asset('template/css/font-awesome.min.css') }}">--}}
     <title>STU - @yield('title')</title>
-    <style>
-        td.detail-evaluation-form {
-            padding: 0px;
-        }
-    </style>
 </head>
 <body class="app sidebar-mini rtl">
 @section('header')

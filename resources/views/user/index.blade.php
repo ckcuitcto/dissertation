@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: huynh
- * Date: 29-May-18
- * Time: 7:09 PM
- */
-?>
 @extends('layouts.default')
 @section('content')
     <main class="app-content">
@@ -15,9 +7,8 @@
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item">Trang chủ</li>
-                <li class="breadcrumb-item active"><a href="#"> Danh sách tài khoản</a></li>
+                <li class="breadcrumb-item"><a href="{{'home'}}"><i class="fa fa-home fa-lg"></i></a></li>
+                <li class="breadcrumb-item active"> Danh sách tài khoản</li>
             </ul>
         </div>
         <div class="row">
@@ -31,7 +22,7 @@
                                 <th>Tên</th>
                                 <th>Chức vụ</th>
                                 <th>Trạng thái</th>
-                                <th></th>
+                                <th>Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -42,10 +33,10 @@
                                     <td>{{ $user->Role->display_name }}</td>
                                     <td>{{ \App\Http\Controllers\Controller::getDisplayStatusUser($user->status) }}</td>
                                     <td>
-                                        <button data-user-id="{{$user->id}}" class="btn update-user"
+                                        <button data-user-id="{{$user->id}}" class="btn update-user btn-primary"
                                                 data-user-edit-link="{{route('user-edit',$user->id)}}"
                                                 data-user-update-link="{{route('user-update',$user->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>Sửa
                                         </button>
                                     </td>
                                 </tr>
@@ -264,7 +255,7 @@
                         }
                     }
                 });
-                modal.find(".modal-title").text('Sửa thông sinh viên');
+                modal.find(".modal-title").text('Sửa thông tài khoản');
                 modal.find(".modal-footer > button[name=btn-save-user]").html('Sửa');
                 modal.find(".modal-footer > button[name=btn-save-user]").attr('data-link', urlUpdate);
                 modal.modal('show');

@@ -136,7 +136,6 @@
             </div>
         </div>
         <ul class="app-menu">
-
             <li><a class="app-menu__item" href="{{ route('home') }}"><i class="app-menu__icon fa fa-home"
                                                                                aria-hidden="true"></i><span
                             class="app-menu__label">Trang chủ</span></a></li>
@@ -165,15 +164,19 @@
                     @endcan
                 </ul>
             </li>
-            <li class="treeview">
+            <li>
+                    @if($authCheck)<a class="app-menu__item" href="{{ route('personal-information-show',$user->id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="app-menu__label">&nbsp; Thông tin cá nhân</span></a>
+                    @endif</li>
+
+            {{-- <li>
                     @if($authCheck)
-                    <a class="app-menu__item" href="{{ route('personal-information-show',$user->id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i>&nbsp; Thông tin cá nhân</a>
+                    <a class="app-menu__item" href="{{ route('personal-information-show',$user->id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i>&nbsp; Thông tin cá nhân</a> --}}
                 {{--<a class="app-menu__item" data-toggle="treeview">--}}
                 {{-- <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon fa fa-user-circle-o"></i></i><span class="app-menu__label">Thông tin cá nhân</span>
                     <i class="treeview-indicator fa fa-angle-right"></i>
                 </a> --}}
-                @endif
+                {{-- @endif --}}
                 {{-- <ul class="treeview-menu">
                     @if($authCheck)
                     <li>
@@ -182,7 +185,7 @@
                     @endif
                 </ul> --}}
 
-            </li>
+            {{-- </li> --}}
 
             @can('proofs-list')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
@@ -193,7 +196,6 @@
                         <li><a class="treeview-item" href="{{ route('proof') }}"><i
                                         class="icon fa fa-circle-o"></i> Danh sách minh chứng</a></li>
                     </ul>
-                    
             </li>
             @endcan
 
@@ -268,9 +270,11 @@
             </li>
             @endcan
 
-            <li><a class="app-menu__item " href="{{ route('user') }}"><i class="app-menu__icon fa fa-home"
-                                                                               aria-hidden="true"></i><span
-                            class="app-menu__label">Quản lí tài khoản </span></a></li>
+            <li><a class="app-menu__item" href="{{ route('user') }}">
+                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                            class="app-menu__label">Quản lí tài khoản </span>
+                </a>
+            </li>
 
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i
