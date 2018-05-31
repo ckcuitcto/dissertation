@@ -11,6 +11,13 @@
             $arrTotalScore[$role['userRole']] = 0;
         }
     @endphp
+
+@php
+$user = \Illuminate\Support\Facades\Auth::user();
+$authCheck = \Illuminate\Support\Facades\Auth::check();
+@endphp
+
+
     <main class="app-content">
         <div class="app-title">
             <div>
@@ -328,7 +335,11 @@
                                 @can('can-mark')
                                     <div align="right" id="button-submit-form">
                                         <button class="btn btn-primary" type="submit">Lưu</button>
-                                        <button class="btn btn-secondary" type="reset">Hủy</button>
+                    @if($authCheck)
+                        @if($user->Role->id == 1 OR $user->Role->id == 2)
+                             <a  class="btn btn-secondary" href="{{route('transcript-show',$evaluationForm->student_id )}}">Hủy</a>
+                        @endif
+                    @endif
                                     </div>
                                 @endcan
                             @endif

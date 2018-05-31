@@ -1,5 +1,4 @@
 @extends('layouts.default')
-
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -56,16 +55,19 @@
             @if(!empty($newsList))
             <div class="col-md-12">
                 <div class="tile">
-                    <h3 class="tile-title"><i class="fa fa-bell" aria-hidden="true"></i> &nbsp;Thông báo</h3>
+                    <h3 class="tile-title"><i class="fa fa-bell" aria-hidden="true"></i> &nbsp;Tin tức</h3>
                     <div class="card-columns">
                     @foreach($newsList as $news)
-                    <div class="card text-white bg-info mb-3">
+                    
+                        <div class="card text-white bg-info mb-3">
                         <div class="card-header"><h5>{{$news->title}}</h5></div>
                         <div class="card-body">
                           {{-- <h5 class="card-title">Info card title</h5> --}}
                           <p class="card-text">{!! str_limit($news->content,255) !!}</p>
+                          <a href="{{ route('news-show',[ str_slug($news->title),$news->id]) }}"><p style="color:white;float:right">Xem thêm >></p></a>
                         </div>
-                    </div>  
+                    </div> 
+                     
                     @endforeach     
                     </div>            
                 </div>
@@ -89,68 +91,8 @@
                 </div>
             </div>
             @endisset
-        </div>
-
-        {{-- <div class="row">
-            <div class="col-md-6">
-                <div class="tile">
-                    <h3 class="tile-title">Pie Chart</h3>
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <canvas class="embed-responsive-item" id="pieChartDemo"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
+        </div>       
     </main>
 @endsection
-
-@section('sub-javascript')
-    <!-- Page specific javascripts-->
-    {{-- <script type="text/javascript" src="{{ URL::asset('template/js/plugins/chart.js') }}"></script>
-    <script type="text/javascript">
-        var data = {
-            labels: ["January", "February", "March", "April", "May"],
-            datasets: [
-                {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: [65, 59, 80, 81, 56]
-                },
-                {
-                    label: "My Second dataset",
-                    fillColor: "rgba(151,187,205,0.2)",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "rgba(151,187,205,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(151,187,205,1)",
-                    data: [28, 48, 40, 19, 86]
-                }
-            ]
-        };
-        var pdata = [
-            {
-                value: 300,
-                color: "#46BFBD",
-                highlight: "#5AD3D1",
-                label: "Complete"
-            },
-            {
-                value: 50,
-                color:"#F7464A",
-                highlight: "#FF5A5E",
-                label: "In-Progress"
-            }
-        ];
-
-
-        var ctxp = $("#pieChartDemo").get(0).getContext("2d");
-        var pieChart = new Chart(ctxp).Pie(pdata);
-    </script> --}}
-
+@section('sub-javascript')  
 @stop
