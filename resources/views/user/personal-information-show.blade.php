@@ -166,8 +166,9 @@
                 language: "vi",
                 format: "dd/mm/yyyy",
                 clearBtn: true,
-                orientation: "bot right"
-
+                orientation: "bot right",
+                autoclose: true,
+                toggleActive: true,
             });
 
             $("img#imageChange").click(function() {
