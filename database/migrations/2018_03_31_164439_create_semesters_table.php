@@ -20,6 +20,9 @@ class CreateSemestersTable extends Migration
             $table->integer('term');
             $table->date('date_start_to_mark');
             $table->date('date_end_to_mark');
+            $table->date('date_start_to_request_re_mark')->nullable();
+            $table->date('date_end_to_request_re_mark')->nullable();
+
             $table->date('date_start_to_re_mark')->nullable();
             $table->date('date_end_to_re_mark')->nullable();
             $table->timestamps();

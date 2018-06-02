@@ -112,7 +112,35 @@ class ReMakingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'remarking_reply' => 'required'
+        ], [
+            'remarking_reply.required' => 'Trả lời bắt buộc nhập'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ], 200);
+        }
+
+        $remaking = Remaking::find($id);
+        if (!empty($remaking)) {
+
+            // trạng thía mặc định là đang xử lí
+            $remaking->update([
+                'remarking_reply' => $request->remarking_reply,
+                'status' => RESOLVED,
+            ]);
+            // lưu thời gian chấm
+            return response()->json([
+                'status' => true
+            ], 200);
+        }
+        return response()->json([
+            'status' => false
+        ], 200);
     }
 
 //    /**

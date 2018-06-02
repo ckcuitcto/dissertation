@@ -24,7 +24,6 @@ class TranscriptController extends Controller
     public function index()
     {
         $user = Auth::user();
-
         $students = $this->getStudentByRoleUserLogin($user);
 
         return view('transcript.index', compact('students'));

@@ -332,14 +332,11 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 @can('can-mark')
                                     <div align="right" id="button-submit-form">
                                         <button class="btn btn-primary" type="submit">Lưu</button>
-                    {{--@if($authCheck)--}}
-                        {{--@if($user->Role->id == 1 OR $user->Role->id == 2)--}}
-                             <a  class="btn btn-secondary" href="{{route('transcript-show',$evaluationForm->student_id )}}">Hủy</a>
-                        {{--@endif--}}
-                    {{--@endif--}}
+                                        <a class="btn btn-secondary" href="{{route('transcript-show',$evaluationForm->student_id )}}">Hủy</a>
                                     </div>
                                 @endcan
                             @endif
+                            <input type="hidden" name="remakingId" value="{{ $remaking->id OR "" }}">
                         </form>
                     </div>
                 </div>
@@ -403,6 +400,44 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                 </div>
             </div>
         </div>
+        {{--@isset($remaking)--}}
+            {{--<div class="modal fade" id="myModalRemaking" role="dialog">--}}
+                {{--<div class="modal-dialog modal-lg" role="document">--}}
+                    {{--<div class="modal-content">--}}
+                        {{--<div class="modal-header">--}}
+                            {{--<h5 class="modal-title">Nội dung phúc khảo</h5>--}}
+                            {{--<button class="close" type="button" data-dismiss="modal" aria-label="Close"><span--}}
+                                        {{--aria-hidden="true">×</span></button>--}}
+                        {{--</div>--}}
+                        {{--<div class="modal-body">--}}
+                            {{--<form id="remarking-form">--}}
+                                {{--{!! csrf_field() !!}--}}
+                                {{--<div class="col-md-12">--}}
+                                    {{--<h3 class="tile-title">Lý do</h3>--}}
+                                    {{--<div class="tile-body">--}}
+                                        {{--<div class="form-group">--}}
+                                            {{--<textarea class="form-control remarking_reason" rows="4" name="remarking_reason" disabled=""> {!! $remaking->remarking_reason !!} </textarea>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="form-group">--}}
+                                            {{--<textarea class="form-control remarking_reply" rows="4" name="remarking_reply" placeholder="Trả lời phúc khảo"></textarea>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                            {{--</form>--}}
+                            {{--<div class="modal-footer">--}}
+                                {{--<button data-link="{{ route('remaking-update',$remaking->id) }}" class="btn btn-primary"--}}
+                                        {{--id="btn-send-remaking" name="btn-send-remaking" type="button">--}}
+                                    {{--<i class="fa fa-fw fa-lg fa-check-circle"></i>Gửi--}}
+                                {{--</button>--}}
+                                {{--<button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">--}}
+                                    {{--<i class="fa fa-fw fa-lg fa-times-circle"></i>Đóng--}}
+                                {{--</button>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--@endisset--}}
     </main>
 @endsection
 @section('sub-javascript')
@@ -555,6 +590,36 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                 $('span.messageErrors').remove();
                 $('#myModal').find("#note").html('');
             });
+
+            // $("button#btn-send-remaking").click(function () {
+            //     var valueForm = $('form#remarking-form').serialize();
+            //     var url = $(this).attr('data-link');
+            //     $('.form-group').find('span.messageErrors').remove();
+            //     $.ajax({
+            //         type: "post",
+            //         url: url,
+            //         data: valueForm,
+            //         dataType: 'json',
+            //         success: function (result) {
+            //             if (result.status === false) {
+            //                 //show error list fields
+            //                 if (result.arrMessages !== undefined) {
+            //                     $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+            //                         $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+            //                             $('form#remarking-form').find('.' + elementName).parents('.form-group').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+            //                         });
+            //                     });
+            //                 }
+            //             } else if (result.status === true) {
+            //                 $('div#myModal').find('.modal-body').html('<p>Gửi yêu cầu phúc khảo thành công</p>');
+            //                 $("div#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+            //                 $('div#myModal').on('hidden.bs.modal', function (e) {
+            //                     location.reload();
+            //                 });
+            //             }
+            //         }
+            //     });
+            // });
         });
     </script>
 @endsection

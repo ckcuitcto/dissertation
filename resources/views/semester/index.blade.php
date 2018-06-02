@@ -93,6 +93,16 @@
                                     <div class="form-row">
                                         <label for="mark_date">Thời gian khiếu nại</label>
                                         <div class="input-group">
+                                            <input type="text" class="input-sm form-control date_start_to_request_re_mark"
+                                                   id="date_start_to_request_re_mark" name="date_start_to_request_re_mark"/>
+                                            <span class="input-group-addon">to</span>
+                                            <input type="text" class="input-sm form-control date_end_to_request_re_mark"
+                                                   id="date_end_to_request_re_mark" name="date_end_to_request_re_mark"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="mark_date">Thời gian chấm lại khiếu nại</label>
+                                        <div class="input-group">
                                             <input type="text" class="input-sm form-control date_start_to_re_mark"
                                                    id="date_start_to_re_mark" name="date_start_to_re_mark"/>
                                             <span class="input-group-addon">to</span>
@@ -206,6 +216,26 @@
             toggleActive: true
         });
         $('input#date_start_to_re_mark').datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            todayHighlight: true,
+            orientation: "bottom right",
+            autoclose: true,
+            toggleActive: true
+        });
+        $('input#date_start_to_request_re_mark').datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            todayHighlight: true,
+            orientation: "bottom right",
+            autoclose: true,
+            toggleActive: true
+        });
+        $('input#date_end_to_request_re_mark').datepicker({
             todayBtn: "linked",
             language: "vi",
             format: "dd/mm/yyyy",
