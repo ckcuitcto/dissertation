@@ -8,7 +8,7 @@
                     <div class="panel-heading">Login</div>
 
                     <div class="panel-body" style="margin-top: 700px;">
-                        <form class="form-horizontal" method="POST" action="{{ route('staff.login.submit') }}">
+                        <form class="form-horizontal" method="POST" action="">
                             {{ csrf_field() }}
                             <div class="svgContainer">
                                 <div>

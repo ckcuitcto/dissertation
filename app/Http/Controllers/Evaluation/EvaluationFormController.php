@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Model\EvaluationResult;
 use App\Model\MarkTime;
 use App\Model\Proof;
+use App\Model\Remaking;
 use App\Model\Role;
 use App\Model\Semester;
 use App\Model\User;
@@ -89,7 +90,6 @@ class EvaluationFormController extends Controller
             $rolesCanMark = Role::whereHas('permissions', function ($query) {
                 $query->where('name', 'like', '%can-mark%');
             })->select('id', 'name', 'display_name','weight')->orderBy('id')->get()->toArray();
-//        $rolesCanMark = array_flatten($rolesCanMark);
 
             //lấy danh sách Id role can mark
             $arrRoleId = array();
@@ -184,7 +184,7 @@ class EvaluationFormController extends Controller
                 ->select('roles.*')
                 ->first();
 
-            // nếu đã hết thời gian chấm => k có user nào có thể chấm. thì kiểm tra xem có đang trong thời gian phcú khảo k?
+            // nếu đã hết thời gian chấm => k có user nào có thể chấm. thì kiểm tra xem có đang trong thời gian chấm phcú khảo k?
             // nếu có thì gán vào role có thể phúc khảo.
             // tạm thời sẽ gán vào role là role cua co van hoc tap
             if (empty($currentRoleCanMark) AND $this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark) ) {
@@ -205,6 +205,14 @@ class EvaluationFormController extends Controller
             ])->get();
 
 
+            if(!empty($request->remaking_id)){
+                $remaking = Remaking::find($request->remaking_id);
+                if(empty($remaking)){
+                    return redirect()->back();
+                }else{
+                    return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark','proofs','remaking'));
+                }
+            }
             /// evaluationForm : form đang đánh giá,
             /// $user : đang đăng nhập
             /// evaluationCriterias : cáctiêu chí đánh giá,
@@ -253,8 +261,9 @@ class EvaluationFormController extends Controller
         ])->first();
 
         // nếu là chấm phúc khảo thì lưu lại điểm cũ
-        $isRemaking = $this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark);
-        if($isRemaking){
+//        $isRemaking = $this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark);
+        $remaking = Remaking::find($request->remakingId);
+        if(!empty($remaking)){
             $arrScoreOld = EvaluationResult::where([
                 'evaluation_form_id' => $evaluationFormId,
                 'marker_id' => $userLogin->id
@@ -308,14 +317,14 @@ class EvaluationFormController extends Controller
         $evaluationForm->total = $request->totalScoreOfForm;
         $evaluationForm->save();
 
-        // lưu lại điểm cũ vào remaking
-        if($isRemaking){
-//            $remaking =
-        }
-
         if($arrProof) {
             $semester = Semester::find($evaluationForm->semester_id);
             $semester->Proofs()->createMany($arrProof);
+        }
+
+        // lưu lại điểm cũ vào remaking
+        if(!empty($remaking)){
+            $remaking->update(['old_score' => json_encode($arrScoreOld)]);
         }
 
         return redirect()->back()->with(['flash_message' => 'Chấm điểm thành công']);
