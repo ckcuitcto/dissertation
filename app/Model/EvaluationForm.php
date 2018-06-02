@@ -8,7 +8,7 @@ class EvaluationForm extends Model
 {
     protected $table = "evaluation_forms";
 
-    protected $fillable = ['id','total', 'semester_id', 'student_id','status','remarking_reason','remarking_reply'];
+    protected $fillable = ['id','total', 'semester_id', 'student_id','status'];
 
     public function Semester()
     {
@@ -22,5 +22,9 @@ class EvaluationForm extends Model
 
     public function EvaluationResults(){
         return $this->hasMany('App\Model\EvaluationResult','evaluation_form_id','id');
+    }
+
+    public function Remaking(){
+        return $this->hasMany('App\Model\Remaking','evaluation_form_id','id');
     }
 }

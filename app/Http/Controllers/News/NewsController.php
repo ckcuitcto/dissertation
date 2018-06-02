@@ -35,7 +35,13 @@ class NewsController extends Controller
 
     public function create()
     {
-        $faculties = Faculty::all();
+        $userLogin = Auth::user();
+        if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
+            $faculties = Faculty::all()->toArray();
+            $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
+        }else{
+            $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
+        }
         return view('news.add', compact('faculties'));
     }
 

@@ -14838,3 +14838,7 @@ div.show-error {
   height: 250px;
   overflow: scroll;
 }
+
+td.detail-evaluation-form {
+  padding: 0px;
+}

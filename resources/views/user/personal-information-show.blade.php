@@ -111,12 +111,12 @@
                                 <label class="control-label">Giới tính </label>
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" value="1" disabled {{ ($user->gender == 1) ? "checked" : "" }} }} type="radio" name="gender">Nam
+                                        <input class="form-check-input" value="{{ MALE }}" disabled {{ ($user->gender == MALE) ? "checked" : "" }} }} type="radio" name="gender">Nam
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" value="0" disabled {{ ($user->gender == 0) ? "checked" : "" }} type="radio" name="gender">Nữ
+                                        <input class="form-check-input" value="{{ FEMALE }}" disabled {{ ($user->gender == FEMALE) ? "checked" : "" }} type="radio" name="gender">Nữ
                                     </label>
                                 </div>
                             </div>

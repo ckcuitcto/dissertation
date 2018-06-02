@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Model\EvaluationResult;
 use App\Model\MarkTime;
 use App\Model\Proof;
+use App\Model\Remaking;
 use App\Model\Role;
 use App\Model\Semester;
 use App\Model\User;
@@ -64,9 +65,8 @@ class EvaluationFormController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-
         $evaluationForm = EvaluationForm::find($id);
         if(!empty($evaluationForm)) {
             // phân quyền quan trọng. chỉ nhân viên ở khoa nào ms đc xem ở khoa đó.
@@ -90,7 +90,6 @@ class EvaluationFormController extends Controller
             $rolesCanMark = Role::whereHas('permissions', function ($query) {
                 $query->where('name', 'like', '%can-mark%');
             })->select('id', 'name', 'display_name','weight')->orderBy('id')->get()->toArray();
-//        $rolesCanMark = array_flatten($rolesCanMark);
 
             //lấy danh sách Id role can mark
             $arrRoleId = array();
@@ -184,16 +183,21 @@ class EvaluationFormController extends Controller
                 ->whereDate('mark_times.mark_time_end', '>=', $dateNow)
                 ->select('roles.*')
                 ->first();
-            // nếu không có role nào có thể chấm ở hiện tại thì để mặc định là admin
-            // 6 là role adminx
-            if (empty($currentRoleCanMark)) {
-                $currentRoleCanMark = Role::find(6);
+
+            // nếu đã hết thời gian chấm => k có user nào có thể chấm. thì kiểm tra xem có đang trong thời gian chấm phcú khảo k?
+            // nếu có thì gán vào role có thể phúc khảo.
+            // tạm thời sẽ gán vào role là role cua co van hoc tap
+            if (empty($currentRoleCanMark) AND $this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark) ) {
+                $currentRoleCanMark = Role::whereHas('permissions', function ($query) {
+                    $query->where('name', 'like', '%can-mark%');
+                })->where('weight',ROLE_COVANHOCTAP)->first();
+            }else{
+                // nếu hết thời gian chấm => k có role nào còn chấm
+                // và cũng k trong thời gian phúc khảo
+                // => gán quyền chấm cho admin => k được gì nhưng để bỏ qua lỗi
+                $currentRoleCanMark = Role::where('weight',ROLE_ADMIN)->first();
             }
-            // nếu role có thể chấm hiện tại là sinh viên. thì gán role sinh viên cho ban cán sự lớp
-//            if($currentRoleCanMark->weight == ROLE_SINHVIEN AND $user->Role->weight == ROLE_BANCANSULOP){
-//                $user->Role = Role::where('weight',ROLE_SINHVIEN)->first();
-//                $user->role_id = ROLE_SINHVIEN;
-//            }
+
             //danh sách minh chứng
             $proofs = Proof::where([
                 'semester_id' => $evaluationForm->Semester->id,
@@ -201,6 +205,14 @@ class EvaluationFormController extends Controller
             ])->get();
 
 
+            if(!empty($request->remaking_id)){
+                $remaking = Remaking::find($request->remaking_id);
+                if(empty($remaking)){
+                    return redirect()->back();
+                }else{
+                    return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark','proofs','remaking'));
+                }
+            }
             /// evaluationForm : form đang đánh giá,
             /// $user : đang đăng nhập
             /// evaluationCriterias : cáctiêu chí đánh giá,
@@ -248,6 +260,17 @@ class EvaluationFormController extends Controller
             'marker_id' => $userLogin->id
         ])->first();
 
+        // nếu là chấm phúc khảo thì lưu lại điểm cũ
+//        $isRemaking = $this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark);
+        $remaking = Remaking::find($request->remakingId);
+        if(!empty($remaking)){
+            $arrScoreOld = EvaluationResult::where([
+                'evaluation_form_id' => $evaluationFormId,
+                'marker_id' => $userLogin->id
+            ])->select('evaluation_criteria_id','evaluation_form_id','marker_id','marker_score')->get()->toArray();
+        }
+
+        // sau khi lấy đc giá trị điểm cũ r. thì kiểm tra điểm coi có phải chấm lại hay k rồi xóa
         // nếu chấm rồi thì xóa hết điểm r thêm lại
         if(!empty($isMarked)) {
             EvaluationResult::where([
@@ -255,7 +278,6 @@ class EvaluationFormController extends Controller
                 'marker_id' => $userLogin->id
             ])->delete();
         }
-//        echo 1;die;
         foreach ($request->all() as $key => $value) {
             if ($key != '_token') {
                 if (substr($key, "0", "5") == "score") {
@@ -298,6 +320,11 @@ class EvaluationFormController extends Controller
         if($arrProof) {
             $semester = Semester::find($evaluationForm->semester_id);
             $semester->Proofs()->createMany($arrProof);
+        }
+
+        // lưu lại điểm cũ vào remaking
+        if(!empty($remaking)){
+            $remaking->update(['old_score' => json_encode($arrScoreOld)]);
         }
 
         return redirect()->back()->with(['flash_message' => 'Chấm điểm thành công']);
@@ -362,6 +389,5 @@ class EvaluationFormController extends Controller
             return "Kém";
         }
     }
-
 
 }

@@ -107,6 +107,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'manage-user',
                 'display_name' => 'Quản lí tài khoản',
                 'description' => 'Thêm xóa sửa tài khoản'
+            ],[
+                'name' => 'manage-remaking',
+                'display_name' => 'Quản lí phúc khảo',
+                'description' => 'Xem danh sách, trả lời yêu cầu phúc khảo'
             ],
         ]);
     }

@@ -30,7 +30,10 @@ define('FORM_STATUS_FINISH',3);
 define('FORM_STATUS_CLOSE',4);
 
 define('USER_ACTIVE',1);
-define('USER_INACTIVE',0);
+define('USER_INACTIVE',2);
+
+define('HANDLE',1);
+define('RESOLVED',2);
 
 define('STUDENT_STUDYING',1); // đang học
 define('STUDENT_DEFERMENT',2); // bảo lưu
@@ -39,4 +42,4 @@ define('STUDENT_GRADUATE',4); // tốt nghiệp
 
 
 define('MALE',1);
-define('FEMALE',0);
+define('FEMALE',2);

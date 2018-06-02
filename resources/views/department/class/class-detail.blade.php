@@ -187,12 +187,12 @@
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     <input class="form-check-input gender" type="radio"
-                                                           name="gender" value="{{ 1 }}">Nam
+                                                           name="gender" value="{{ MALE }}">Nam
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input gender" type="radio" value="{{ 0 }}"
+                                                    <input class="form-check-input gender" type="radio" value="{{ FEMALE }}"
                                                            name="gender">Nữ
                                                 </label>
                                             </div>

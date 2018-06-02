@@ -158,6 +158,13 @@ class SemesterController extends Controller
             $semester->date_end_to_re_mark = Carbon::parse($semester->date_end_to_re_mark)->format('d/m/Y');
         }
 
+        if (!empty($semester->date_start_to_request_re_mark)) {
+            $semester->date_start_to_request_re_mark = Carbon::parse($semester->date_start_to_request_re_mark)->format('d/m/Y');
+        }
+        if (!empty($semester->date_end_to_request_re_mark)) {
+            $semester->date_end_to_request_re_mark = Carbon::parse($semester->date_end_to_request_re_mark)->format('d/m/Y');
+        }
+
         foreach($markTimeBySemester as $value){
             $value->mark_time_start =  Carbon::parse($value->mark_time_start)->format('d/m/Y');
             $value->mark_time_end =  Carbon::parse($value->mark_time_end)->format('d/m/Y');
@@ -224,6 +231,12 @@ class SemesterController extends Controller
             }
             if (!empty($request->date_end_to_mark)) {
                 $semester->date_end_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_mark);
+            }
+            if (!empty($request->date_end_to_request_re_mark)) {
+                $semester->date_end_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_request_re_mark);
+            }
+            if (!empty($request->date_start_to_request_re_mark)) {
+                $semester->date_start_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_request_re_mark);
             }
             $semester->term = $request->term;
             $semester->save();

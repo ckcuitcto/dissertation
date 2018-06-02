@@ -24,7 +24,6 @@ class TranscriptController extends Controller
     public function index()
     {
         $user = Auth::user();
-
         $students = $this->getStudentByRoleUserLogin($user);
 
         return view('transcript.index', compact('students'));
@@ -86,7 +85,7 @@ class TranscriptController extends Controller
 
             // kiểm tra quyền.
 //            $arr = [];
-//            $userLogin = Auth::user();
+            $userLogin = Auth::user();
 //            var_dump($userLogin->Student->Classes->id);
 //            if($userLogin->Role->weight >= ROLE_BANCANSULOP ) {
             foreach($evaluationForms as $value){
@@ -95,8 +94,8 @@ class TranscriptController extends Controller
 //                }
                 $this->authorize($value,'view');
             }
-//            dd($arr);
-            return view('transcript.show', compact('user', 'evaluationForms', 'rolesCanMark', 'scoreList'));
+
+            return view('transcript.show', compact('user','userLogin', 'evaluationForms', 'rolesCanMark', 'scoreList'));
         }
         return redirect()->back();
     }
