@@ -183,19 +183,23 @@ class EvaluationFormController extends Controller
                 ->whereDate('mark_times.mark_time_end', '>=', $dateNow)
                 ->select('roles.*')
                 ->first();
-
             // nếu đã hết thời gian chấm => k có user nào có thể chấm. thì kiểm tra xem có đang trong thời gian phcú khảo k?
             // nếu có thì gán vào role có thể phúc khảo.
             // tạm thời sẽ gán vào role là role cua co van hoc tap
-            if (empty($currentRoleCanMark) AND $this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark) ) {
+    
+            if (empty($currentRoleCanMark)) {
+                if($this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark))
+                {
                 $currentRoleCanMark = Role::whereHas('permissions', function ($query) {
                     $query->where('name', 'like', '%can-mark%');
                 })->where('weight',ROLE_COVANHOCTAP)->first();
-            }else{
-                // nếu hết thời gian chấm => k có role nào còn chấm
-                // và cũng k trong thời gian phúc khảo
-                // => gán quyền chấm cho admin => k được gì nhưng để bỏ qua lỗi
-                $currentRoleCanMark = Role::where('weight',ROLE_ADMIN)->first();
+                }
+                else{
+                        // nếu hết thời gian chấm => k có role nào còn chấm
+                        // và cũng k trong thời gian phúc khảo
+                        // => gán quyền chấm cho admin => k được gì nhưng để bỏ qua lỗi
+                    $currentRoleCanMark = Role::where('weight',ROLE_ADMIN)->first();
+                }
             }
 
             //danh sách minh chứng
