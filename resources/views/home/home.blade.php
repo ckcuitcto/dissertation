@@ -64,7 +64,9 @@
                         <div class="card-body">
                           {{-- <h5 class="card-title">Info card title</h5> --}}
                           <p class="card-text">{!! str_limit($news->content,255) !!}</p>
-                          <a href="{{ route('news-show',[ str_slug($news->title),$news->id]) }}"><p style="color:white;float:right">Xem thêm >></p></a>
+                          <a href="{{ route('news-show',[ str_slug($news->title),$news->id]) }}">
+                            <p style="color:white;float:right">Xem thêm >></p>
+                          </a>
                         </div>
                     </div> 
                      
