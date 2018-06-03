@@ -13,4 +13,8 @@ class Remaking extends Model
     public function EvaluationForm(){
         return $this->belongsTo('App\Model\EvaluationForm','evaluation_form_id','id');
     }
+
+    public function Staff(){
+        return $this->belongsTo('App\Model\Staff','reply_by','id');
+    }
 }

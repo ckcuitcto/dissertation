@@ -106,7 +106,7 @@
                     <li><a class="dropdown-item" href="{{ route('permission-list') }}"><i class="fa fa-cog fa-lg"></i> Settings</a>
                     </li>
                     @if($authCheck)
-                    <li><a class="dropdown-item" href="{{ route('personal-information-show',$user->id) }}"><i class="fa fa-user fa-lg"></i> Thông tin cá nhân</a>
+                    <li><a class="dropdown-item" href="{{ route('personal-information-show',$user->users_id) }}"><i class="fa fa-user fa-lg"></i> Thông tin cá nhân</a>
                     @endif
                     </li>
 
@@ -165,7 +165,7 @@
                 </ul>
             </li>
             <li>
-                    @if($authCheck)<a class="app-menu__item" href="{{ route('personal-information-show',$user->id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="app-menu__label">&nbsp; Thông tin cá nhân</span></a>
+                    @if($authCheck)<a class="app-menu__item" href="{{ route('personal-information-show',$user->users_id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="app-menu__label">&nbsp; Thông tin cá nhân</span></a>
                     @endif</li>
 
             {{-- <li>

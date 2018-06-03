@@ -59,7 +59,7 @@
                                     <td>{{ \App\Http\Controllers\Controller::getDisplayGender( $student->User->gender) }}</td>
                                     <td>{{ $student->User->address }}</td>
                                     <td>{{ $student->User->birthday }}</td>
-                                    <td>{{ $student->User->Role->name }}</td>
+                                    <td>{{ $student->User->Role->display_name }}</td>
                                     <td>{{ \App\Http\Controllers\Controller::getDisplayStatusStudent($student->status) }}</td>
                                     <td>
                                         <button data-student-id="{{$student->id}}" class="btn update-student btn-primary"
@@ -139,7 +139,7 @@
                     <div class="modal-body">
                         <form id="student-form" method="post" class="form-horizontal">
                             {{ csrf_field() }}
-                            <input type="hidden" name="id" class="id">
+                            <input type="hidden" name="users_id" class="users_id">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
@@ -305,6 +305,7 @@
                         if (result.status === true) {
                             if (result.student !== undefined) {
                                 $.each(result.student, function (elementName, value) {
+                                    // alert(elementName + '-' +value);
                                     if(elementName === 'gender'){
                                         $('#modal-edit-student').find("input[name=gender][value=" + value + "]").attr('checked', 'checked');
                                     }else if(elementName === 'studentStatus' || elementName === 'role_id' ){

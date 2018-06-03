@@ -38,7 +38,7 @@
                             <div class="col-md-6">
                                 <div>Họ và tên: {{ $user->name }}</div>
                                 <div>Lớp: {{ $user->Student->Classes->name OR "" }}</div>
-                                <div>MSSV: {{ $user->id }}</div>
+                                <div>MSSV: {{ $user->users_id }}</div>
                                 <div>Khoa: {{ $user->Faculty->name OR "" }}</div>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
-                    <table class="table table-hover table-bordered" style="text-align:center">
+                    <table class="table table-bordered" style="text-align:center">
                         <tbody>
                         <tr>
                             <td rowspan="2">STT</td>
@@ -72,36 +72,38 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $evaluationForm->Semester->term }}</td>
                                 <td>{{ $evaluationForm->Semester->year_from . " - " . $evaluationForm->Semester->year_to }}</td>
-                                {{-- nếu sô kết quả = với số role có thể chấm nghĩa là đã chấm hết. thì hiển thị ra đủ.--}}
-                                @if(count($scoreList->where('evaluationFormId',$evaluationForm->id)) == count($rolesCanMark))
-                                    @foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)
-                                        <td>{{ $value->totalRoleScore }}</td>
-                                    @endforeach
-                                @else
-                                    {{-- còn nếu k thì hiển thị ra. còn thiếu bao nhiêu thì for rồi hiển thị ra thẻ td rỗng--}}
-                                    @php
-                                        // tính số người chưa chấm điểm
-                                        $count = count($rolesCanMark) - count($scoreList->where('evaluationFormId',$evaluationForm->id));
-                                    @endphp
-                                    {{-- hiển thị điểm ra. được bao nheieu hiển thị bấy nhiêu--}}
-                                    @foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)
-                                        <td>{{ $value->totalRoleScore }}</td>
-                                    @endforeach
-                                    {{-- chạy vòng for hiển thị các thẻ td còn thiếu--}}
-                                    @for($i = 0 ; $i < $count ; $i++)
-                                        <td></td>
-                                    @endfor
-                                @endif
+                                 {{--nếu sô kết quả = với số role có thể chấm nghĩa là đã chấm hết. thì hiển thị ra đủ.--}}
+                                {{--@if(count($scoreList->where('evaluationFormId',$evaluationForm->id)) == count($rolesCanMark))--}}
+                                    {{--@foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)--}}
+                                        {{--<td>{{ $value->totalRoleScore }}</td>--}}
+                                    {{--@endforeach--}}
+                                {{--@else--}}
+                                     {{--còn nếu k thì hiển thị ra. còn thiếu bao nhiêu thì for rồi hiển thị ra thẻ td rỗng--}}
+                                    {{--@php--}}
+                                        {{--// tính số người chưa chấm điểm--}}
+                                        {{--$count = count($rolesCanMark) - count($scoreList->where('evaluationFormId',$evaluationForm->id));--}}
+                                    {{--@endphp--}}
+                                     {{--hiển thị điểm ra. được bao nheieu hiển thị bấy nhiêu--}}
+                                    {{--@foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)--}}
+                                        {{--<td>{{ $value->totalRoleScore }}</td>--}}
+                                    {{--@endforeach--}}
+                                     {{--chạy vòng for hiển thị các thẻ td còn thiếu--}}
+                                    {{--@for($i = 0 ; $i < $count ; $i++)--}}
+                                        {{--<td></td>--}}
+                                    {{--@endfor--}}
+                                {{--@endif--}}
+                                @foreach($arrRolesCanMarkWithScore[$evaluationForm->id] as $value)
+                                    <td> {{ $value['totalRoleScore'] }}</td>
+                                @endforeach
                                 <td> {{ $evaluationForm->total OR 0 }}</td>
                                 <td> {{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }} </td>
-                                {{--<td>Hoàn Thành</td>--}}
                                 <td>
                                     <a class="btn btn-primary"
                                        href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
                                         <i class="fa fa-eye" aria-hidden="true" style="color:white"></i>Xem
                                     </a>
                                     {{-- ếu đang trong thời gian phúc khảo và user login = user chủ fomr thì hiện nút phúc khảo --}}
-                                    @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_request_re_mark, $evaluationForm->Semester->date_end_to_request_re_mark ) AND $user->id == $userLogin->id)
+                                    @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_request_re_mark, $evaluationForm->Semester->date_end_to_request_re_mark ) AND $user->users_id == $userLogin->users_id)
                                     <button data-toggle="modal" id="btn-request-remaking" data-target="#myModal" class="btn btn-primary" data-id-evaluation-form="{{ $evaluationForm->id }}"
                                             title="Yêu cầu phúc khảo">
                                         <i class="fa fa-send" aria-hidden="true" style="color:white"></i>

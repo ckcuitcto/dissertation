@@ -80,9 +80,9 @@ class StudentController extends Controller
     public function edit($id)
     {
         $student = DB::table('students')
-            ->join('users','users.id','=','students.user_id')
+            ->join('users','users.users_id','=','students.user_id')
 //            ->leftJoin('roles','roles.id','=','users.role_id')
-            ->select('users.id','users.address','users.name','users.role_id','users.gender','users.id','students.status as studentStatus')->where('students.id',$id)->first();
+            ->select('users.users_id','users.address','users.name','users.role_id','users.gender','users.users_id','students.status as studentStatus')->where('students.id',$id)->first();
         if(empty($student)){
             return response()->json([
                 'status' => false
@@ -126,7 +126,7 @@ class StudentController extends Controller
             ], 200);
         } else {
 
-            $user = User::find($request->id);
+            $user = User::where('users_id',$request->users_id)->first();
             if (!empty($user)) {
                 $user->name = $request->name;
                 $user->gender = $request->gender;
@@ -141,7 +141,6 @@ class StudentController extends Controller
                     'status' => true
                 ], 200);
             }
-
         }
     }
 
@@ -184,9 +183,9 @@ class StudentController extends Controller
                 }
             }
             foreach ($arrFile as $file) {
-                $fileName = str_random(8) . "_" . $file->getClientOriginalName();
+                $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                 while (File::exists("upload/student/" . $fileName)) {
-                    $fileName = str_random(8) . "_" . $file->getClientOriginalName();
+                    $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                 }
                 $file->move('upload/student/', $fileName);
 

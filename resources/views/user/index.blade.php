@@ -28,14 +28,14 @@
                             <tbody>
                             @foreach($users as $user)
                                 <tr>
-                                    <td>{{ $user->id }}</td>
+                                    <td>{{ $user->users_id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->Role->display_name }}</td>
                                     <td>{{ \App\Http\Controllers\Controller::getDisplayStatusUser($user->status) }}</td>
                                     <td>
-                                        <button data-user-id="{{$user->id}}" class="btn update-user btn-primary"
-                                                data-user-edit-link="{{route('user-edit',$user->id)}}"
-                                                data-user-update-link="{{route('user-update',$user->id)}}">
+                                        <button data-user-id="{{$user->users_id}}" class="btn update-user btn-primary"
+                                                data-user-edit-link="{{route('user-edit',$user->users_id)}}"
+                                                data-user-update-link="{{route('user-update',$user->users_id)}}">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>Sửa
                                         </button>
                                     </td>

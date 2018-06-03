@@ -22,6 +22,6 @@ class Staff extends Model
     }
 
     public function User(){
-        return $this->belongsTo('App\Model\User','user_id','id');
+        return $this->belongsTo('App\Model\User','user_id','users_id');
     }
 }

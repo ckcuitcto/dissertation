@@ -20,10 +20,11 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user =
+            Auth::user();
         $comment = DB::table('comments')
             ->leftJoin('students', 'students.id', '=', 'comments.created_by')
-            ->leftJoin('users', 'students.user_id', '=', 'users.id')
+            ->leftJoin('users', 'students.user_id', '=', 'users.users_id')
             ->leftJoin('classes', 'classes.id', '=', 'students.class_id')
             ->select('comments.*','users.name as userName','classes.name as className');
         if ($user->Role->id >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user

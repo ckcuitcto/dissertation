@@ -23,7 +23,6 @@ class CheckLevel
             } else {
                 return redirect()->back();
             }
-
         } else {
             return redirect('login');
         }

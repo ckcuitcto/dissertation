@@ -49,22 +49,22 @@
                 <h4 class="line-head">Tổng quan</h4>
 
                     <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-                    <input type="hidden" name="id" value="{{ $user->id }}">
+                    <input type="hidden" name="id" value="{{ $user->users_id }}">
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <label>MSSV</label>
                             <input class="form-control" id="" type="text"
-                                    name="" value="{{ $user->id }}" readonly>
+                                    name="" value="{{ $user->users_id }}" disabled>
                         </div>
 
                         <div class="col-md-4">
                             <label>Họ và tên</label>
-                            <input class="form-control name" id="name" type="text"  name="name"
+                            <input class="form-control name can-edit" id="name" type="text"  name="name"
                                    value="{{ $user->name }}" disabled>
                         </div>
                         <div class="col-md-4">
                             <label>Ngày sinh</label>
-                            <input class="form-control birthday" id="birthday" type="text"
+                            <input class="form-control birthday can-edit" id="birthday" type="text"
                                     name="birthday" value="{{ $user->birthday }}" disabled>
                         </div>
                     </div>
@@ -72,21 +72,21 @@
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <label>Lớp</label>
-                            <input class="form-control" type="text" value="{{$user->Student->Classes->name OR ""}}" readonly>
+                            <input class="form-control" type="text" value="{{$user->Student->Classes->name OR ""}}" disabled>
                         </div>
                         <div class="col-md-4">
                             <label>Khoa</label>
                             <input class="form-control" id="" type="text"
-                                   name="" value="{{$user->Faculty->name OR ""}}" readonly>
+                                   name="" value="{{$user->Faculty->name OR ""}}" disabled>
                         </div>
                         <div class="col-md-4">
                             <label>Niên khóa</label>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <input class="form-control" id="" type="text" value="{{$user->Student->academic_year_from OR ""}}" readonly>
+                                    <input class="form-control" id="" type="text" value="{{$user->Student->academic_year_from OR ""}}" disabled>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" id="" type="text" value="{{$user->Student->academic_year_to OR ""}}" readonly>
+                                    <input class="form-control" id="" type="text" value="{{$user->Student->academic_year_to OR ""}}" disabled>
                                 </div>
                             </div>
 
@@ -99,24 +99,24 @@
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <label>Email</label>
-                            <input class="form-control email" id="email" type="text" name="email" value="{{$user->email OR ""}}" disabled>
+                            <input class="form-control email can-edit" id="email" type="text" name="email" value="{{$user->email OR ""}}" disabled>
                         </div>
 
                         <div class="col-md-4">
                             <label>Điện thoại</label>
-                            <input class="form-control phone_number" id="phone_number" type="text" name="phone_number" value="{{$user->phone_number OR ""}}" disabled>
+                            <input class="form-control phone_number can-edit" id="phone_number" type="text" name="phone_number" value="{{$user->phone_number OR ""}}" disabled>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label">Giới tính </label>
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" value="{{ MALE }}" disabled {{ ($user->gender == MALE) ? "checked" : "" }} }} type="radio" name="gender">Nam
+                                        <input class="form-check-input can-edit gender" value="{{ MALE }}" disabled {{ ($user->gender == MALE) ? "checked" : "" }} }} type="radio" name="gender">Nam
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" value="{{ FEMALE }}" disabled {{ ($user->gender == FEMALE) ? "checked" : "" }} type="radio" name="gender">Nữ
+                                        <input class="form-check-input can-edit gender" value="{{ FEMALE }}" disabled {{ ($user->gender == FEMALE) ? "checked" : "" }} type="radio" name="gender">Nữ
                                     </label>
                                 </div>
                             </div>
@@ -128,16 +128,15 @@
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <label>Địa chỉ</label>
-                            <textarea class="form-control address" rows="3" id="address" name="address" value="{{$user->address OR ""}}" disabled></textarea>
+                            <textarea class="form-control address can-edit" rows="3" id="address" name="address" value="{{$user->address OR ""}}" disabled></textarea>
                             {{-- <input class="form-control address" id="address" type="text" name="address" value="{{$user->address OR ""}}" disabled> --}}
                         </div>
-
                     </div>
 
                     <div class="row mb-10">
                         <div class="col-md-12">
                             <div class="button-edit" style="display: none;">
-                                <button class="btn btn-primary" data-link="{{ route('personal-information-update',$user->id) }}" id="btn-save-inform">
+                                <button class="btn btn-primary" data-link="{{ route('personal-information-update',$user->users_id) }}" id="btn-save-inform">
                                     <i class="fa fa-fw fa-lg fa-check-circle"></i>Lưu thông tin
                                 </button>
                                 &nbsp;&nbsp;&nbsp;
@@ -146,8 +145,9 @@
 
                         </div>
                     </div>
-                <a class="btn btn-primary" id="btn-update-inform" style="color:white">
-                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sửa</a>
+                <a class="btn btn-primary" id="btn-update-inform" style="color:white"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    Sửa
+                </a>
             </div>
             {{-- </div>          --}}
         </div>
@@ -177,12 +177,12 @@
 
             $("a#btn-update-inform").click(function(){
                 $(".button-edit").show();
-                $("input").removeAttr('disabled');
+                $(".can-edit").removeAttr('disabled');
                 $("a#btn-update-inform").hide();
             });
             $("a#btn-cancel-inform").click(function(){
                 $(".button-edit").hide();
-                $("input").prop('disabled',true);
+                $(".can-edit").prop('disabled',true);
                 $("a#btn-update-inform").show();
                 $('span.messageErrors').remove();
             });
@@ -235,7 +235,7 @@
 
                 $.ajax({
                     type: "post",
-                    url: "{{ route('personal-information-update',$user->id) }}",
+                    url: "{{ route('personal-information-update',$user->users_id) }}",
                     data: formData,
                     dataType: 'json',
                     cache: false,
@@ -247,7 +247,13 @@
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#form-update-infomation').find('.' + elementName).parents('.col-md-4').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                        if(elementName === 'address'){
+                                            $('form#form-update-infomation').find('.' + elementName).parents('.col-md-12').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                        }else if(elementName === 'gender'){
+                                            $('form#form-update-infomation').find('.' + elementName).parents('.form-group').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                        }else{
+                                            $('form#form-update-infomation').find('.' + elementName).parents('.col-md-4').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                        }
                                     });
                                 });
                             }

@@ -100,8 +100,8 @@ class EvaluationFormController extends Controller
             // lấy ra danh sách các role và user
             $listUserMark = DB::table('roles')
                 ->leftJoin('users', 'users.role_id', '=', 'roles.id')
-                ->leftJoin('evaluation_results', 'evaluation_results.marker_id', '=', 'users.id')
-                ->select('users.id as userId', 'roles.weight as userRole', 'roles.*')
+                ->leftJoin('evaluation_results', 'evaluation_results.marker_id', '=', 'users.users_id')
+                ->select('users.users_id as userId', 'roles.weight as userRole', 'roles.*')
                 ->where('evaluation_results.evaluation_form_id', $id)
                 ->whereIn('roles.id', $arrRoleId)
                 ->groupBy('roles.id')
@@ -135,33 +135,6 @@ class EvaluationFormController extends Controller
                         ];
                     }
                 }
-//                if ($listUserMark[$i]->name == $rolesCanMark[$i]['name']) {
-//                    $listUserMarkTmp [] = [
-//                        'userId' => $listUserMark[$i]->userId,
-//                        'userRole' => $listUserMark[$i]->userRole,
-//                        'name' => $listUserMark[$i]->name,
-//                        'display_name' => $listUserMark[$i]->display_name
-//                    ];
-//                }elseif($listUserMark[$i]->name == $rolesCanMark[$i]['name']){
-//                    $listUserMarkTmp [] = [
-//                        'userId' => $userId,
-//                        'userRole' => $rolesCanMark[$i]['id'],
-//                        'name' => $rolesCanMark[$i]['name'],
-//                        'display_name' => $rolesCanMark[$i]['display_name']
-//                    ];
-//                } else {
-//                    $userId = null;
-//                    if(!empty($listUserMark[$i]->userId)){
-//                        $userId  = $listUserMark[$i]->userId;
-//                    }
-//                    $listUserMarkTmp [] = [
-//                        'userId' => $userId,
-//                        'userRole' => $rolesCanMark[$i]['id'],
-//                        'name' => $rolesCanMark[$i]['name'],
-//                        'display_name' => $rolesCanMark[$i]['display_name']
-//                    ];
-//                }
-
             }else{
                 for($i = 0; $i < count($rolesCanMark); $i++) {
                     $listUserMarkTmp [] = [
@@ -187,7 +160,7 @@ class EvaluationFormController extends Controller
             // nếu đã hết thời gian chấm => k có user nào có thể chấm. thì kiểm tra xem có đang trong thời gian chấm phcú khảo k?
             // nếu có thì gán vào role có thể phúc khảo.
             // tạm thời sẽ gán vào role là role cua co van hoc tap
-            if (empty($currentRoleCanMark) AND $this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark) ) {
+            if (empty($currentRoleCanMark) AND $this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark)) {
                 $currentRoleCanMark = Role::whereHas('permissions', function ($query) {
                     $query->where('name', 'like', '%can-mark%');
                 })->where('weight',ROLE_COVANHOCTAP)->first();
@@ -195,7 +168,7 @@ class EvaluationFormController extends Controller
                 // nếu hết thời gian chấm => k có role nào còn chấm
                 // và cũng k trong thời gian phúc khảo
                 // => gán quyền chấm cho admin => k được gì nhưng để bỏ qua lỗi
-                $currentRoleCanMark = Role::where('weight',ROLE_ADMIN)->first();
+//                $currentRoleCanMark = Role::where('weight',ROLE_ADMIN)->first();
             }
 
             //danh sách minh chứng
@@ -257,7 +230,7 @@ class EvaluationFormController extends Controller
         // xóa điểm cũ nếu đã chấm.
         $isMarked =  EvaluationResult::where([
             'evaluation_form_id' => $evaluationFormId,
-            'marker_id' => $userLogin->id
+            'marker_id' => $userLogin->users_id
         ])->first();
 
         // nếu là chấm phúc khảo thì lưu lại điểm cũ
@@ -266,7 +239,7 @@ class EvaluationFormController extends Controller
         if(!empty($remaking)){
             $arrScoreOld = EvaluationResult::where([
                 'evaluation_form_id' => $evaluationFormId,
-                'marker_id' => $userLogin->id
+                'marker_id' => $userLogin->users_id
             ])->select('evaluation_criteria_id','evaluation_form_id','marker_id','marker_score')->get()->toArray();
         }
 
@@ -275,7 +248,7 @@ class EvaluationFormController extends Controller
         if(!empty($isMarked)) {
             EvaluationResult::where([
                 'evaluation_form_id' => $evaluationFormId,
-                'marker_id' => $userLogin->id
+                'marker_id' => $userLogin->users_id
             ])->delete();
         }
         foreach ($request->all() as $key => $value) {
@@ -289,7 +262,7 @@ class EvaluationFormController extends Controller
                     $arrEvaluationResult[] = [
                         'evaluation_criteria_id' => $evaluationCriteriaId,
                         'evaluation_form_id' => $evaluationFormId,
-                        'marker_id' => $userLogin->id,
+                        'marker_id' => $userLogin->users_id,
                         'marker_score' => $value
                     ];
 
@@ -297,9 +270,9 @@ class EvaluationFormController extends Controller
                     $evaluationCriteriaId = (int)substr($key, "5", "7");
                     foreach ($value as $proof) {
                         $fileName = str_random(13) . "_" . $proof->getClientOriginalName();
-                        $fileName = preg_replace('/\s+/', '', $fileName);
+                        $fileName = $this->convert_vi_to_en(preg_replace('/\s+/', '', $fileName));
                         while (file_exists("upload/proof/" . $fileName)) {
-                            $fileName = str_random(13) . "_" . $fileName;
+                            $fileName = $this->convert_vi_to_en(str_random(13) . "_" . $fileName);
                         }
                         $proof->move('upload/proof/', $fileName);  // lưu file vào thư mục
                         $arrProof[] = [

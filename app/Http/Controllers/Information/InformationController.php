@@ -21,10 +21,10 @@ class InformationController extends Controller
 
     public function show($id)
     {
-        $user = User::find($id);
+        $user = User::where('users_id',$id)->first();
         if(!empty($user)) {
             $userLogin = Auth::user();
-            if($user->id != $userLogin->id){
+            if($user->users_id != $userLogin->users_id){
                 return view('errors.403');
             }
 //            $this->authorize($user,'view');
@@ -41,7 +41,7 @@ class InformationController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|unique:users,email,'.$id.',id',
+            'email' => 'required|unique:users,email,'.$id.',users_id',
             'gender' => 'required',
             'address' => 'required',
             'phone_number' => 'required|numeric|phone',
@@ -50,7 +50,7 @@ class InformationController extends Controller
             'name.required' => "Vui lòng nhập tên",
             'email.required' => "Vui lòng nhập email",
             'email.unique' => "Email đã tồn tại",
-            'gender.required' => "Vui lòng nhập giới tính",
+            'gender.required' => "Vui lòng chọn giới tính",
             'address.required' => "Vui lòng nhập địa chỉ",
             'phone_number.required' => "Vui lòng nhập số điện thoại",
             'phone_number.numeric' => "Số điện thoại phải là số",
@@ -65,7 +65,7 @@ class InformationController extends Controller
                 'arrMessages' => $validator->errors()
             ], 200);
         } else {
-             $user = User::find($id);
+             $user = User::where('users_id',$id)->first();
             if (!empty($user)) {
                 $user->name = $request->name;
                 $user->email = $request->email;
@@ -76,9 +76,9 @@ class InformationController extends Controller
                 if($request->avatar){
                     $file = $request->avatar;
 
-                    $fileName = str_random(8) . "_" . $file->getClientOriginalName();
+                    $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                     while (file_exists("image/avatar/" . $fileName)) {
-                        $fileName = str_random(8) . "_" . $file->getClientOriginalName();
+                        $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                     }
                     $file->move('image/avatar/', $fileName);
 

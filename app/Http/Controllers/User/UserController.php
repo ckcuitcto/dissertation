@@ -72,7 +72,7 @@ class UserController extends Controller
             ], 200);
         } else {
             $user = new User();
-            $user->id = $request->id;
+            $user->users_id = $request->users_id;
             $user->name = $request->name;
             $user->status = $request->status;
             $user->role_id = $request->role_id;
@@ -133,7 +133,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($request->id);
+        $user = User::where('users_id',$request->id)->first();
+
         if (!empty($user)) {
             $user->status = $request->status;
             $user->role_id = $request->role_id;

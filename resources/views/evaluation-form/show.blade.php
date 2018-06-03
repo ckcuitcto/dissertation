@@ -79,7 +79,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                 <td class='detail-evaluation-form'>
                                                     {{ $valueLevel2->content }}
                                                     @isset($valueLevel2->proof)
-                                                        @if( $evaluationForm->Student->User->id == $user->id )
+                                                        @if( $evaluationForm->Student->User->users_id == $user->users_id )
                                                             @php $name= "proof".$valueLevel2->id; @endphp
                                                             <input type="file" class="proof" id="{{$valueLevel2->id}}"
                                                                    name="{{ $name."[]" }}" multiple>
@@ -110,7 +110,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                 <td>
                                                     {{ $valueLevel2->content }}
                                                     @isset($valueLevel2->proof)
-                                                        @if( $evaluationForm->Student->User->id == $user->id )
+                                                        @if( $evaluationForm->Student->User->users_id == $user->users_id )
                                                             @php $name= "proof".$valueLevel2->id; @endphp
                                                             <input type="file" class="proof" id="{{$valueLevel2->id}}"
                                                                    name="{{ $name."[]" }}" multiple>
@@ -155,11 +155,11 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                                    min="{{$valueLevel2->mark_range_from}}"
                                                                    max="{{$valueLevel2->mark_range_to}}"
                                                                    id="{{ "child_".$valueLevel1->id}}"
-                                                                   class="form-control {{ $role['name'] }}">
+                                                                   class="form-control {{ $role['name'] }} input-evaluation-form">
                                                         </td>
                                                     @else
                                                         <td>
-                                                            <input type="number" disabled="true" class="form-control"
+                                                            <input type="number" disabled="true" class="form-control input-evaluation-form"
                                                                    {{ $role['name'] }} value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
                                                         </td>
                                                     @endif
@@ -174,7 +174,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                         {{-- nếu có tồn tại minh chứng cho tiêu chí thì sẽ hiện ra form input--}}
                                                         @isset($valueLevel3->proof)
                                                             {{-- để hiện form input thì thêm 1 điều khiện là user phải là chủ form.--}}
-                                                            @if( $evaluationForm->Student->User->id == $user->id )
+                                                            @if( $evaluationForm->Student->User->users_id == $user->users_id )
                                                                 @php $name= "proof".$valueLevel3->id; @endphp
                                                                 <input type="file" class="proof" id="{{$valueLevel3->id}}"
                                                                        name="{{ $name."[]" }}" multiple>
@@ -206,7 +206,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                     <td>
                                                         {{ $valueLevel3->content }}
                                                         @isset($valueLevel3->proof)
-                                                            @if( $evaluationForm->Student->User->id == $user->id )
+                                                            @if( $evaluationForm->Student->User->users_id == $user->users_id )
                                                                 @php $name= "proof".$valueLevel3->id; @endphp
                                                                 <input type="file" class="proof" id="{{$valueLevel3->id}} "
                                                                        name="{{ $name."[]" }}" multiple>
@@ -245,12 +245,12 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                                    min="{{$valueLevel3->mark_range_from}}"
                                                                    max="{{$valueLevel3->mark_range_to}}"
                                                                    id="{{ "child_".$valueLevel1->id}}"
-                                                                   class="form-control  {{ $role['name'] }}">
+                                                                   class="form-control {{ $role['name'] }} input-evaluation-form">
                                                         </td>
                                                     @else
                                                         <td>
                                                             <input type="number" disabled="true"
-                                                                   class="form-control {{ $role['name'] }}"
+                                                                   class="form-control {{ $role['name'] }}  input-evaluation-form"
                                                                    value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
                                                         </td>
                                                     @endif
@@ -282,12 +282,12 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                            max="{{$valueLevel1->mark_range_to}}"
                                                            topic="totalTopic"
                                                            readonly
-                                                           class="form-control {{ $role['name'] }}">
+                                                           class="form-control {{ $role['name'] }}  input-evaluation-form">
                                                 </td>
                                             @else
                                                 <td>
                                                     <input type="number" disabled="true"
-                                                           class="form-control {{ $role['name'] }}"
+                                                           class="form-control {{ $role['name'] }}  input-evaluation-form"
                                                            value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
                                                 </td>
                                             @endif
@@ -304,7 +304,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                         @endphp
                                         @if($role['name'] == $user->Role->name  AND $currentRoleCanMark->id == $role['userRole'])
                                             <td><input type="text"
-                                                       class="form-control {{ $role['name'] }}"
+                                                       class="form-control {{ $role['name'] }}  input-evaluation-form"
                                                        required
                                                        value="{{ $arrTotalScore[$role['userRole']] }}"
                                                        name="totalScoreOfForm"
@@ -315,7 +315,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                         @else
                                             <td><input type="number" disabled="true"
                                                        value="{{ $arrTotalScore[$role['userRole']] }}"
-                                                       class="form-control {{ $role['name'] }}"></td>
+                                                       class="form-control {{ $role['name'] }}  input-evaluation-form"></td>
                                         @endif
                                     @endforeach
                                 </tr>
@@ -332,7 +332,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 @can('can-mark')
                                     <div align="right" id="button-submit-form">
                                         <button class="btn btn-primary" type="submit">Lưu</button>
-                                        <a class="btn btn-secondary" href="{{route('transcript-show',$evaluationForm->student_id )}}">Hủy</a>
+                                        <a class="btn btn-secondary" href="{{route('transcript-show',$evaluationForm->student_id )}}">Trở lại</a>
                                     </div>
                                 @endcan
                             @endif
@@ -358,7 +358,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
                                 <input type="hidden" class="id" name="id" id="proofId">
                                 {{--khi bấm vào modal. thì chỉ những ng khác k phải là chủ của phiếu mới đc chỉnh sửa file có hợp lệ hay k--}}
-                                @if( $evaluationForm->Student->User->id != $user->id )
+                                @if( $evaluationForm->Student->User->users_id != $user->users_id )
                                 <div class="row">
                                     <div class="col-md-2">
                                         <fieldset class="form-group">

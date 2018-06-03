@@ -23,11 +23,11 @@
                     </div>
                 </div>              
                                  
-                <div class="form-group {{ $errors->has('id') ? ' has-error' : '' }}">
+                <div class="form-group {{ $errors->has('users_id') ? ' has-error' : '' }}">
                     <label class="control-label">MSSV</label>
-                    <input class="form-control" type="text" placeholder="Mã số sinh viên" id="id" name="id" value="{{ old('id') }}" required autofocus>
-                    @if ($errors->has('id'))
-                            <strong>{{ $errors->first('id') }}</strong>
+                    <input class="form-control" type="text" placeholder="Mã số sinh viên" id="users_id" name="users_id" value="{{ old('users_id') }}" required autofocus>
+                    @if ($errors->has('users_id'))
+                            <strong>{{ $errors->first('users_id') }}</strong>
                     @endif
                 </div>
 
