@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'student-edit', 'uses' => 'Student\StudentController@edit']);
 
         Route::post('/import', ['as' => 'student-import', 'uses' => 'Student\StudentController@import']);
+        Route::post('/import-student-list-each-semester', ['as' => 'import-student-list-each-semester', 'uses' => 'Student\StudentController@importStudentListEachSemester']);
     });
 
     Route::group(['prefix' => 'vai-tro'], function () {

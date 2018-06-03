@@ -24,4 +24,8 @@ class Staff extends Model
     public function User(){
         return $this->belongsTo('App\Model\User','user_id','users_id');
     }
+
+    public function StudentListEachSemester(){
+        return $this->hasMany('App\Model\StudentListEachSemester','staff_id','id');
+    }
 }

@@ -23,4 +23,8 @@ class Semester extends Model
         return $this->hasMany('App\Model\MarkTime','semester_id','id');
     }
 
+    public function StudentListEachSemester(){
+        return $this->hasMany('App\Model\StudentListEachSemester','semester_id','id');
+    }
+
 }

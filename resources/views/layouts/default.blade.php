@@ -347,6 +347,36 @@
             filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
         };
     </script>
+
+    {{--<script>--}}
+        {{--$('.app-title').on('click',function () {--}}
+            {{--$(this).parent('.app-content').find('.overlay.custom-overlay').addClass('active');--}}
+            {{--$(this).parents().find('.app-content').addClass('custom-app-content');--}}
+
+        {{--})--}}
+    {{--</script>--}}
+    {{--<style>--}}
+        {{--.app-content .overlay.custom-overlay.active{--}}
+            {{--opacity: 1 !important;--}}
+            {{--z-index: 3 !important;--}}
+        {{--}--}}
+        {{--.custom-app-content:after{--}}
+            {{--position: absolute;--}}
+            {{--content: '';--}}
+            {{--background-color: rgba(255, 255, 255, 0.1);--}}
+            {{--width: 100%;--}}
+            {{--/*min-height: calc(322vh + 20px);*/--}}
+            {{--height: 100%;--}}
+            {{--top: 0;--}}
+            {{--z-index: 2;--}}
+            {{--left: 0;--}}
+        {{--}--}}
+        {{--.app-title{--}}
+            {{--position: relative;--}}
+            {{--z-index: 1;--}}
+        {{--}--}}
+    {{--</style>--}}
+
 @stop
 
 @section('sub-javascript')

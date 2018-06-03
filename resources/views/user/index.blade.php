@@ -50,6 +50,10 @@
                                         id="btn-add-user" type="button"><i class="fa fa-pencil-square-o"
                                                                            aria-hidden="true"></i>Thêm tài khoản
                                 </button>
+                                <button data-toggle="modal" data-target="#importModal" class="btn btn-outline-primary"
+                                        type="button"><i class="fa fa-pencil-square-o"
+                                                         aria-hidden="true"></i> Nhập danh sách sinh viên khóa mới.
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -132,7 +136,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-md-3">Mã</label>
                                         <div class="col-md-8">
-                                            <input class="form-control id" type="text" name="id">
+                                            <input class="form-control users_id" type="text" name="users_id">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -216,6 +220,45 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="importModal" role="dialog">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chọn file excel muốn nhập danh sách...</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="import-student-form">
+                            {!! csrf_field() !!}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-row">
+                                        <label for="fileImport">Chọn file</label>
+                                        <input type="file" multiple class="form-control fileImport" name="fileImport" id="fileImport">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger show-error" style="display: none">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-link="{{ route('import-student-list-each-semester') }}" class="btn btn-primary"
+                                id="btn-import-student" name="btn-import-student" type="button">
+                            Thêm
+                        </button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
 
@@ -228,6 +271,60 @@
 
     <script>
         $(document).ready(function () {
+
+            //            import
+            $("#btn-import-student").click(function (e) {
+                e.preventDefault();
+                $("#importModal").find("p.child-error").remove();
+                var formData = new FormData();
+                var fileImport = document.getElementById('fileImport');
+                var inss = fileImport.files.length;
+                for (var x = 0; x < inss; x++) {
+                    file = fileImport.files[x];
+                    formData.append("fileImport[]",file);
+                }
+                var url = $(this).attr('data-link');
+                $('.form-row').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    // enctype: 'multipart/form-data',
+                    processData: false,
+                    beforeSend: function() {
+                        $("#importModal").find("button#btn-import-student").prop('disabled',true);
+                    },
+                    success: function (result) {
+                        $("#importModal").find("button#btn-import-student").prop('disabled',false);
+                        if (result.status === false) {
+                            //show error list fields
+                            if (result.arrMessages !== undefined) {
+                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                                        $('form#import-student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                    });
+                                });
+                            }
+                            if(result.errors !== undefined){
+                                // console.log(result.errors);
+                                $('#importModal').find('div.alert-danger').show();
+                                $.each(result.errors, function (elementName, arrMessagesEveryElement) {
+                                    $('#importModal').find('div.alert-danger').append("<p class='child-error'>"+arrMessagesEveryElement+ "</p>");
+                                });
+                            }
+                        } else if (result.status === true) {
+                            $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
+                            $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            $('#importModal').on('hidden.bs.modal', function (e) {
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
             $("button.update-user").click(function () {
                 var urlEdit = $(this).attr('data-user-edit-link');
                 var urlUpdate = $(this).attr('data-user-update-link');

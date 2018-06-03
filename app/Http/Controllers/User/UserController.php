@@ -47,7 +47,7 @@ class UserController extends Controller
             'name' => 'required',
             'gender' => 'required',
             'role_id' => 'required',
-            'id' => 'unique:users,id|required|string|size:10',
+            'users_id' => 'unique:users,users_id|required|string|size:10',
 //            'classes_id' => 'sometimes|required'
         ];
         if(!empty($request->email)){
@@ -58,10 +58,10 @@ class UserController extends Controller
             'email.unique' => "Email đã tồn tại",
             'gender.required' => "Vui lòng nhập giới tính",
             'role_id.required' => "Vui lòng chọn vai trò",
-            'id.required' => "Vui lòng nhập ID",
-            'id.size' => "Id có độ dài là 10 kí tự,bắt đầu với 2 chữ cái định danh(CD,DH,...)",
-            'id.string' => "Id phải là một chuỗi",
-            'id.unique' => "Id đã tồn tại",
+            'users_id.required' => "Vui lòng nhập ID",
+            'users_id.size' => "Id có độ dài là 10 kí tự,bắt đầu với 2 chữ cái định danh(CD,DH,...)",
+            'users_id.string' => "Id phải là một chuỗi",
+            'users_id.unique' => "Id đã tồn tại",
 //            'classes_id.required' => "Vui lòng chọn lớp.(Nếu lớp rỗng. vui lòng tạo lớp trước",
         ]);
 
@@ -112,7 +112,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = DB::table('users')
-            ->select('id','name','status','role_id')->where('id',$id)->first();
+            ->select('id','users_id','name','status','role_id')->where('users_id',$id)->first();
         if(empty($user)){
             return response()->json([
                 'status' => false
@@ -133,7 +133,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::where('users_id',$request->id)->first();
+        $user = User::where('users_id',$id)->first();
 
         if (!empty($user)) {
             $user->status = $request->status;

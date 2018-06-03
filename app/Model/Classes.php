@@ -21,4 +21,8 @@ class Classes extends Model
     public function Faculty(){
         return $this->belongsTo('App\Model\Faculty','faculty_id','id');
     }
+
+    public function StudentListEachSemester(){
+        return $this->hasMany('App\Model\StudentListEachSemester','class_id','id');
+    }
 }

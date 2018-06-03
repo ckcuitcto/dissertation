@@ -16,19 +16,19 @@ class CreateStudentListEachSemestersTable extends Migration
         Schema::create('student_list_each_semesters', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('class_id')->unsigned();
-            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
+            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade')->onUpdate('cascade');
 
-            $table->integer('student_id')->unsigned();
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->string('user_id', 10);
+            $table->foreign('user_id')->references('user_id')->on('students')->onDelete('cascade')->onUpdate('cascade');
 
-            $table->integer('monitor_id')->unsigned()->nullable();
-            $table->foreign('monitor_id')->references('id')->on('students')->onDelete('set null');
+            $table->string('monitor_id', 10)->nullable();
+            $table->foreign('monitor_id')->references('user_id')->on('students')->onDelete('cascade')->onUpdate('cascade');
 
-            $table->integer('semester_id')->unsigned()->nullable();
+            $table->integer('semester_id')->unsigned();
 //            $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade');
 
             $table->integer('staff_id')->unsigned()->nullable();
-            $table->foreign('staff_id')->references('id')->on('staff')->onDelete('set null');
+            $table->foreign('staff_id')->references('id')->on('staff')->onDelete('cascade')->onUpdate('cascade');
 
             $table->timestamps();
         });

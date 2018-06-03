@@ -3,7 +3,7 @@
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="fa fa-file-text-o"></i> Danh sách sinh viên</h1>
+                <h1><i class="fa fa-file-text-o"></i> Danh sách sinh viên chấm điểm hiện tại</h1>
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb side">
@@ -14,6 +14,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
+                    <div class="overlay custom-overlay" style="opacity: 0">
+                        <div class="m-loader mr-4">
+                            <svg class="m-circular" viewBox="25 25 50 50">
+                                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/>
+                            </svg>
+                        </div>
+                        <h3 class="l-text">Loading</h3>
+                    </div>
                     <div class="tile-body">
                         <table class="table table-hover table-bordered" id="sampleTable">
                             <thead>
@@ -30,7 +38,7 @@
                             <tbody>
                             @foreach($users as $key => $student)
                                 <tr>
-                                    <td> {{ $key +1 }}</td>
+                                    <td> {{ $student->users_id }}</td>
                                     <td>{{ $student->name }} </td>
                                     <td>{{ $student->Role->display_name }}</td>
                                     <td>{{ $student->Student->Classes->name OR "" }}</td>
@@ -47,6 +55,7 @@
                             @endforeach
                             </tbody>
                         </table>
+                        {{ $users->links('vendor.pagination.bootstrap-4') }}
                         <div class="row">
                             <div class="col-md-6">
                                 {{--<button data-toggle="modal" data-target="#myModal" class="btn btn-primary"--}}
@@ -55,7 +64,7 @@
                                 {{--</button>--}}
                                 <button data-toggle="modal" data-target="#importModal" class="btn btn-outline-primary"
                                         type="button"><i class="fa fa-pencil-square-o"
-                                                         aria-hidden="true"></i>Import dữ liệu
+                                                         aria-hidden="true"></i> Nhập danh sách sinh viên mới.
                                 </button>
                             </div>
                         </div>
@@ -92,7 +101,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button data-link="{{ route('student-import') }}" class="btn btn-primary"
+                        <button data-link="{{ route('import-student-list-each-semester') }}" class="btn btn-primary"
                                 id="btn-import-student" name="btn-import-student" type="button">
                             Thêm
                         </button>
@@ -101,58 +110,6 @@
                 </div>
             </div>
         </div>
-        {{--<div class="modal fade" id="myModal" role="dialog">--}}
-            {{--<div class="modal-dialog modal-md" role="document">--}}
-                {{--<div class="modal-content">--}}
-                    {{--<div class="modal-header">--}}
-                        {{--<h5 class="modal-title">Thêm mới học kì</h5>--}}
-                        {{--<button class="close" type="button" data-dismiss="modal" aria-label="Close"><span--}}
-                                    {{--aria-hidden="true">×</span></button>--}}
-                    {{--</div>--}}
-                    {{--<div class="modal-body">--}}
-                        {{--<form id="student-form">--}}
-                            {{--{!! csrf_field() !!}--}}
-                            {{--<div class="row">--}}
-                                {{--<div class="col-md-12">--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="year">Năm học</label>--}}
-                                        {{--<div class="input-group">--}}
-                                            {{--<input type="text" class="input-sm form-control year_from" id="year_from"--}}
-                                                   {{--name="year_from"/>--}}
-                                            {{--<span class="input-group-addon">to</span>--}}
-                                            {{--<input type="text" class="input-sm form-control year_to" name="year_to"--}}
-                                                   {{--id="year_to"/>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="mark_date">Ngày chấm</label>--}}
-                                        {{--<div class="input-group">--}}
-                                            {{--<input type="text" class="input-sm form-control date_start_to_mark"--}}
-                                                   {{--id="date_start_to_mark" name="date_start_to_mark"/>--}}
-                                            {{--<span class="input-group-addon">to</span>--}}
-                                            {{--<input type="text" class="input-sm form-control date_end_to_mark"--}}
-                                                   {{--id="date_end_to_mark" name="date_end_to_mark"/>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="term">Học kì</label>--}}
-                                        {{--<input type="number" class="form-control term" name="term" id="term"--}}
-                                               {{--placeholder="Học kì">--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</form>--}}
-                        {{--<div class="modal-footer">--}}
-                            {{--<button data-link="{{ route('student-store') }}" class="btn btn-primary"--}}
-                                    {{--id="btn-save-student" name="btn-save-student" type="button">--}}
-                                {{--Thêm--}}
-                            {{--</button>--}}
-                            {{--<button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-        {{--</div>--}}
     </main>
     </div>
 @endsection
@@ -163,22 +120,6 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
-        {{--$('#sampleTable').DataTable({--}}
-            {{--"language": {--}}
-                {{--"lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",--}}
-                {{--"zeroRecords": "Không có bản ghi nào!",--}}
-                {{--"info": "Hiển thị trang _PAGE_ của _PAGES_",--}}
-                {{--"infoEmpty": "Không có bản ghi nào!!!",--}}
-                {{--"infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"--}}
-            {{--},--}}
-            {{--"pageLength": 25,--}}
-            {{--"processing": true,--}}
-            {{--"serverSide": true,--}}
-            {{--"ajax": {--}}
-                {{--url: "{{ route('student') }}",--}}
-                {{--type: "POST",--}}
-            {{--}--}}
-        {{--});--}}
     </script>
 
 
@@ -282,11 +223,6 @@
             $("#btn-import-student").click(function (e) {
                 e.preventDefault();
                 $("#importModal").find("p.child-error").remove();
-                // $.ajaxSetup({
-                //     headers: {
-                //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                //     }
-                // });
                 var formData = new FormData();
                 var fileImport = document.getElementById('fileImport');
                 var inss = fileImport.files.length;
