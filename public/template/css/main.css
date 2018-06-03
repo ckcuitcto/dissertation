@@ -14505,7 +14505,7 @@ be a descendant of the grid when it is being dragged.
 
 .login-content .login-box .login-head {
   margin-top: 0;
-  margin-bottom: 20px;
+  margin-bottom: -3px;
   padding-bottom: 20px;
   border-bottom: 1px solid #ddd;
   text-align: center;

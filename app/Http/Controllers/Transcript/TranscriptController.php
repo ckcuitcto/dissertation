@@ -96,7 +96,7 @@ class TranscriptController extends Controller
                 ])
                 ->groupBy('evaluation_results.marker_id', 'evaluation_forms.id')
                 ->get();
-            
+
             $arrRolesCanMarkWithScore = array();
             foreach ($evaluationForms as $evaluationform) {
                 $scoreListByEvaluationForm = $scoreList->where('evaluationFormId', $evaluationform->id);

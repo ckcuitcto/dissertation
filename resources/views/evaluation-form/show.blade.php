@@ -44,6 +44,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                     <div>- Khoa: {{ $evaluationForm->Student->Classes->Faculty->name OR ""}}</div>
                                     <div>- Niên
                                         khóa: {{ $evaluationForm->Student->academic_year_from . " - " . $evaluationForm->Student->academic_year_to }}</div>
+                                    <div>- Chức vụ: {{ $evaluationForm->Student->User->Role->display_name OR "" }} </div>
                                 </div>
                             </div>
                         </div>

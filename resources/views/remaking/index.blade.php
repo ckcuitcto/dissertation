@@ -1,23 +1,15 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: huynh
- * Date: 30-May-18
- * Time: 11:10 PM
- */
-?>
 @extends('layouts.default')
 
 @section('content')
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="fa fa-laptop"></i> Quản lý tin tức, sự kiện</h1>
+                <h1><i class="fa fa-laptop"></i> Danh sách yêu cầu phúc khảo</h1>
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
-                <li class="breadcrumb-item"> Quản lý tin tức, sự kiện</li>
+                <li class="breadcrumb-item"> Danh sách yêu cầu phúc khảo</li>
             </ul>
         </div>
         <div class="row">
