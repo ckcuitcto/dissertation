@@ -366,11 +366,10 @@ class StudentController extends Controller
                 $semester = null;
                 $classes = null;
                 $monitor = null;
-                for ($i = 4; $i < count($dataFileExcel); $i++) {
-                
-                    if ($i = 4) {
-                        // lấy khoa theo Id
 
+                for ($i = 4; $i < count($dataFileExcel); $i++) {
+                    if ($i == 4) {
+                        // lấy khoa theo Id
                         $facultyName = explode(':', $dataFileExcel[$i][5]);
                         $facultyName = trim($facultyName[1]);
                         $faculty = Faculty::where('name', 'like', "%$facultyName%")->first();
@@ -380,9 +379,12 @@ class StudentController extends Controller
                         }
 
                         // lấy Lớp theo Id
+                        // trường hợp file excel. file thị lớp cột 2. file thì lớp cột 3
                         $className = explode(':', $dataFileExcel[$i][2]);
+                        if(empty($className[0])){
+                            $className = explode(':', $dataFileExcel[$i][3]);
+                        }
                         $className = trim($className[1]);
-//                            var_dump($className);
                         $classes = Classes::where('name', 'like', "%$className%")->first();
 
 
@@ -406,8 +408,10 @@ class StudentController extends Controller
                     } elseif ($i == 5) {
                         //lấy học kì từ học kì và năm học
                         $term = explode(':', $dataFileExcel[$i][2]);
+                        if(empty($term[0])){
+                            $term = explode(':', $dataFileExcel[$i][3]);
+                        }
                         $term = trim($term[1]);
-                        var_dump($term);
 
                         switch ($term) {
                             case "II":
@@ -421,26 +425,19 @@ class StudentController extends Controller
                         $year = explode('-', trim($year[1]));
                         $yearFrom = trim($year[0]);
                         $yearTo = trim($year[1]);
-//                        var_dump($term);
-//                        var_dump($yearFrom);
-//                        var_dump($yearTo);
                         $semester = Semester::where([
-                            ['year_from' => $yearFrom],
-                            ['year_to' => $yearTo],
-                            ['term' => $term],
+                            ['year_from' , $yearFrom],
+                            ['year_to' , $yearTo],
+                            ['term' , $term],
                         ])->first();
                         if (empty($semester)) {
                             $arrError[] = "Học kì $term năm học $yearFrom - $yearTo không tồn tại";
                         }
-                    } elseif (!empty($dataFileExcel[$i][0]) AND $i >= 10 AND !empty($faculty) AND !empty($classes) AND !empty($semester) AND !empty($monitor)) {
-//                        var_dump($faculty);
-//                        var_dump($classes);
-//                        var_dump($semester);
-//                        var_dump($monitor);
-//                        die;
+                    }
+                    elseif (!empty($dataFileExcel[$i][0]) AND $i >= 10 AND !empty($faculty) AND !empty($classes) AND !empty($semester) AND !empty($monitor)) {
                         $arrUser[] = [
                             'class_id' => $classes->id,
-                            'user_id' => $dataFileExcel[$i][2],
+                            'user_id' => $dataFileExcel[$i][1],
                             'semester_id' => $semester->id,
                             'monitor_id' => $monitor->user_id,
                             'staff_id' => $classes->staff_id,
@@ -448,7 +445,8 @@ class StudentController extends Controller
                     }
                 }
             }
-            dd($arrUser);
+//            var_dump($arrError);
+//            dd($arrUser);
             if (empty($arrError)) {
                 StudentListEachSemester::insert($arrUser);
                 return response()->json([
