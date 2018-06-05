@@ -64,7 +64,7 @@
                                 {{--</button>--}}
                                 <button data-toggle="modal" data-target="#importModal" class="btn btn-outline-primary"
                                         type="button"><i class="fa fa-pencil-square-o"
-                                                         aria-hidden="true"></i> Nhập danh sách sinh viên mới.
+                                                         aria-hidden="true"></i> Nhập danh sách sinh viên mới...
                                 </button>
                             </div>
                         </div>

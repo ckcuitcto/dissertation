@@ -235,7 +235,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-row">
-                                        <label for="fileImport">Chọn file</label>
+                                        <label for="fileImport">Chọn file excel</label>
                                         <input type="file" multiple class="form-control fileImport" name="fileImport" id="fileImport">
                                     </div>
                                 </div>
@@ -250,7 +250,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button data-link="{{ route('import-student-list-each-semester') }}" class="btn btn-primary"
+                        <button data-link="{{ route('student-import') }}" class="btn btn-primary"
                                 id="btn-import-student" name="btn-import-student" type="button">
                             Thêm
                         </button>

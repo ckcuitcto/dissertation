@@ -168,35 +168,18 @@
                     @if($authCheck)<a class="app-menu__item" href="{{ route('personal-information-show',$user->users_id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="app-menu__label">&nbsp; Thông tin cá nhân</span></a>
                     @endif</li>
 
-            {{-- <li>
-                    @if($authCheck)
-                    <a class="app-menu__item" href="{{ route('personal-information-show',$user->id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i>&nbsp; Thông tin cá nhân</a> --}}
-                {{--<a class="app-menu__item" data-toggle="treeview">--}}
-                {{-- <a class="app-menu__item" href="#" data-toggle="treeview">
-                    <i class="app-menu__icon fa fa-user-circle-o"></i></i><span class="app-menu__label">Thông tin cá nhân</span>
-                    <i class="treeview-indicator fa fa-angle-right"></i>
-                </a> --}}
-                {{-- @endif --}}
-                {{-- <ul class="treeview-menu">
-                    @if($authCheck)
-                    <li>
-                        <a class="treeview-item" href="{{ route('personal-information-show',$user->id) }}"><i class="icon fa fa-circle-o"></i>Thông tin cá nhân</a>
-                    </li>
-                    @endif
-                </ul> --}}
-
-            {{-- </li> --}}
-
             @can('proofs-list')
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                    
-                    <ul class="treeview-menu">
-                        <li><a class="treeview-item" href="{{ route('proof') }}"><i
-                                        class="icon fa fa-circle-o"></i> Danh sách minh chứng</a></li>
-                    </ul>
-            </li>
+                @if($user->Role->weight <= ROLE_COVANHOCTAP)
+                <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                                class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span><i
+                                class="treeview-indicator fa fa-angle-right"></i></a>
+
+                        <ul class="treeview-menu">
+                            <li><a class="treeview-item" href="{{ route('proof') }}"><i
+                                            class="icon fa fa-circle-o"></i> Danh sách minh chứng</a></li>
+                        </ul>
+                </li>
+                @endif
             @endcan
 
             @can('can-change-news')
@@ -222,7 +205,7 @@
                     </li>
                     @endcan
                     @can('student-list')
-                    <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> Sinh viên</a></li>
+                    <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> DS Sinh viên đánh giá</a></li>
                     @endcan
                     {{--<li><a class="treeview-item" href="{{ route('departmentlist') }}"><i--}}
                                     {{--class="icon fa fa-circle-o"></i> Phòng ban</a></li>--}}
@@ -270,12 +253,13 @@
             </li>
             @endcan
 
+            @can('manage-user')
             <li><a class="app-menu__item" href="{{ route('user') }}">
                     <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
                             class="app-menu__label">Quản lí tài khoản </span>
                 </a>
             </li>
-
+            @endcan
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>

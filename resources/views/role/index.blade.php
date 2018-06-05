@@ -133,7 +133,7 @@
                                             <tr>
                                                 <th scope="row">{{ $i+1 }}</th>
                                                 <td>{{ $permissions[$i]->display_name }}</td>
-                                                <td>{{ $permissions->count() }}</td>
+                                                <td>{{ $permissions[$i]->description }}</td>
                                                 <td>
                                                     <div class="toggle">
                                                         <label>

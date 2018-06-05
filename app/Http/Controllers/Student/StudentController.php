@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Model\Classes;
 use App\Model\EvaluationForm;
 use App\Model\Faculty;
+use App\Model\FileImport;
 use     App\Model\Role;
 use App\Model\Semester;
 use App\Model\Student;
@@ -30,8 +31,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-
-        $users = User::where('role_id', '<=', ROLE_BANCANSULOP)->paginate(25);
+//        $users = User::where('role_id', '<=', ROLE_BANCANSULOP)->paginate(25);
+        $users = User::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','users.users_id')->select('users.*')->orderBy('student_list_each_semesters.id')->paginate(25);
 
         return view('student.index', compact('users'));
     }
@@ -179,6 +180,7 @@ class StudentController extends Controller
                     ], 200);
                 }
             }
+            $arrFileName= array();
             foreach ($arrFile as $file) {
 
                 config(['excel.import.startRow' => 1]);
@@ -188,7 +190,7 @@ class StudentController extends Controller
                     $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                 }
                 $file->move('upload/student/', $fileName);
-
+                $arrFileName[] = $fileName;
                 $arrUser = array();
                 $arrUpdateStudent = array();
                 $arrKey = array();
@@ -254,19 +256,28 @@ class StudentController extends Controller
                         }
                     }
                 }
-                // create user
-//                var_dump($arrError);
-//                die;
             }
+            $userLogin = Auth::user();
             if (empty($arrError)) {
                 if (!empty($arrUser)) {
+
                     User::insert($arrUser);
                     for ($i = 0; $i < count($arrKey); $i++) {
                         Student::updateOrCreate(
                             $arrKey[$i], $arrUpdateStudent[$i]
                         );
                     }
-                    $this->addEvaluationFormAfterInportStudent($arrKey, $arrUpdateStudent);
+
+                    for($i = 0 ; $i< count($arrFile); $i++){
+                        $arrFileImport[] = [
+                            'file_path' => $arrFileName[$i],
+                            'file_name' => $arrFile[$i]->getClientOriginalName(),
+                            'status' => 'Thành công',
+                            'staff_id' => $userLogin->Staff->id
+                        ];
+                    }
+                    FileImport::insert($arrFileImport);
+
                     return response()->json([
                         'status' => true
                     ], 200);
@@ -280,6 +291,16 @@ class StudentController extends Controller
                     ], 200);
                 }
             } else {
+                for($i = 0 ; $i< count($arrFile); $i++){
+                    $arrFileImport[] = [
+                        'file_path' => $arrFileName[$i],
+                        'file_name' => $arrFile[$i]->getClientOriginalName(),
+                        'status' => 'Thành công',
+                        'staff_id' => $userLogin->Staff->id
+                    ];
+                }
+                FileImport::insert($arrFileImport);
+
                 return response()->json([
                     'status' => false,
                     'errors' => $arrError
@@ -288,41 +309,6 @@ class StudentController extends Controller
         }
     }
 
-    private function addEvaluationFormAfterInportStudent($arrKey = array(), $arrStudent = array())
-    {
-
-        $arrEvaluationForm = array();
-        for ($i = 0; $i < count($arrKey); $i++) {
-            // lấy ra id sinh viên
-            $student = Student::where('user_id', '=', $arrKey[$i]['user_id'])->select('id')->first();
-
-            // vào từng sinh viên. lấy ra danh sách học kì của sinh viên đó.
-            //ví dụ sinh viên khóa 2014- 2018. thì vào bảng học kì. lấy học kì nào có year_from >= 2014 và year_to <= 2018.lấy ra tất cả học kì trong khoảng đó.
-            // sau khi có học kì sẽ thêm từng form vào học kì
-
-            //để tránh sinh viên nào cũng phải truy vấn sql. thì kiểm tra xem khóa của sinh viên trước và sinh viên sau
-            // nếu giống thì lấy của sinh viên trước luôn. khỏi truy vấn
-            if ($i != 0) {
-                if (!($arrStudent[$i]['academic_year_from'] == $arrStudent[$i - 1]['academic_year_from'] AND $arrStudent[$i]['academic_year_to'] == $arrStudent[$i - 1]['academic_year_to'])) {
-                    $semesters = Semester::where('year_from', '>=', $arrStudent[$i]['academic_year_from'])
-                        ->where('year_to', '<=', $arrStudent[$i]['academic_year_to'])->get();
-                }
-            } else {
-                $semesters = Semester::where([
-                    ['year_from', '>=', $arrStudent[$i]['academic_year_from']],
-                    ['year_to', '<=', $arrStudent[$i]['academic_year_to']]
-                ])->get();
-            }
-
-            foreach ($semesters as $value) {
-                $arrEvaluationForm[] = [
-                    'semester_id' => $value->id,
-                    'student_id' => $student->id
-                ];
-            }
-        }
-        EvaluationForm::insert($arrEvaluationForm);
-    }
 
     public function importStudentListEachSemester(Request $request)
     {
@@ -354,19 +340,23 @@ class StudentController extends Controller
             $arrUser = array();
             $arrError = array();
 
+            $arrFileName = array();
+
+            $semesterId = null;
             foreach ($arrFile as $file) {
                 $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                 while (File::exists("upload/student/" . $fileName)) {
                     $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                 }
                 $file->move('upload/student/', $fileName);
+                $arrFileName[] = $fileName;
                 $dataFileExcel = \Maatwebsite\Excel\Facades\Excel::load("upload/student/" . $fileName, function ($reader) {
                 })->noHeading()->get();
 
-                $semester = null;
+
                 $classes = null;
                 $monitor = null;
-
+                $semester = null;
                 for ($i = 4; $i < count($dataFileExcel); $i++) {
                     if ($i == 4) {
                         // lấy khoa theo Id
@@ -425,16 +415,18 @@ class StudentController extends Controller
                         $year = explode('-', trim($year[1]));
                         $yearFrom = trim($year[0]);
                         $yearTo = trim($year[1]);
+
                         $semester = Semester::where([
                             ['year_from' , $yearFrom],
                             ['year_to' , $yearTo],
                             ['term' , $term],
                         ])->first();
+                        $semesterId = $semester->id;
                         if (empty($semester)) {
                             $arrError[] = "Học kì $term năm học $yearFrom - $yearTo không tồn tại";
                         }
                     }
-                    elseif (!empty($dataFileExcel[$i][0]) AND $i >= 10 AND !empty($faculty) AND !empty($classes) AND !empty($semester) AND !empty($monitor)) {
+                    elseif (!empty($dataFileExcel[$i][1]) AND !empty($dataFileExcel[$i][0]) AND $i >= 10 AND !empty($faculty) AND !empty($classes) AND !empty($semester) AND !empty($monitor)) {
                         $arrUser[] = [
                             'class_id' => $classes->id,
                             'user_id' => $dataFileExcel[$i][1],
@@ -445,19 +437,58 @@ class StudentController extends Controller
                     }
                 }
             }
-//            var_dump($arrError);
-//            dd($arrUser);
+
+            $arrFileImport = array();
+            $userLogin = Auth::user();
             if (empty($arrError)) {
+
                 StudentListEachSemester::insert($arrUser);
+                for($i = 0 ; $i< count($arrFile); $i++){
+                    $arrFileImport[] = [
+                        'file_path' => $arrFileName[$i],
+                        'file_name' => $arrFile[$i]->getClientOriginalName(),
+                        'status' => 'Thành công',
+                        'staff_id' => $userLogin->Staff->id
+                    ];
+                }
+                FileImport::insert($arrFileImport);
+                $this->addEvaluationFormAfterInportStudent($semesterId);
                 return response()->json([
                     'status' => true,
                 ], 200);
             } else {
+                StudentListEachSemester::insert($arrUser);
+                for($i = 0 ; $i< count($arrFile); $i++){
+                    $arrFileImport[] = [
+                        'file_path' => $arrFileName[$i],
+                        'file_name' => $arrFile[$i]->getClientOriginalName(),
+                        'status' => 'Thất bại',
+                        'staff_id' => $userLogin->Staff->id
+                    ];
+                }
+                FileImport::insert($arrFileImport);
+
                 return response()->json([
                     'status' => false,
                     'errors' => $arrError
                 ], 200);
             }
         }
+    }
+
+    private function addEvaluationFormAfterInportStudent($semesterId)
+    {
+        // lấy ra sinh viên
+        $students = Student::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','students.user_id')
+            ->where('semester_id',$semesterId)->select('students.*')->get();
+
+        $arrEvaluationForm = array();
+        foreach ($students as $value) {
+            $arrEvaluationForm[] = [
+                'semester_id' => $semesterId,
+                'student_id' => $value->id
+            ];
+        }
+        EvaluationForm::insert($arrEvaluationForm);
     }
 }

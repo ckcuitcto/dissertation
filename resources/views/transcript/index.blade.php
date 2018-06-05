@@ -14,7 +14,6 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
-
                     <div class="tile-body">
                         <table class="table table-hover table-bordered" id="sampleTable">
                             <thead>
@@ -31,7 +30,7 @@
                             @if($students != false)
                             @foreach($students as $key => $student)
                                 <tr>
-                                    <td> {{ $key +1 }}</td>
+                                    <td> {{ $student->user_id }}</td>
                                     <td>
                                         <a href="{{route('transcript-show',$student->id )}}"> {{ $student->User->name }} </a>
                                     </td>
@@ -45,6 +44,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {{ $students->links('vendor.pagination.bootstrap-4') }}
                 </div>
             </div>
         </div>

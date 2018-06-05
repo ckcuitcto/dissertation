@@ -19,7 +19,7 @@ class Controller extends BaseController
     {
         if ($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
         {
-            $students = Student::all();
+            $students = Student::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','students.user_id')->select('students.*')->paginate(50);
             return $students;
         } elseif ($user->Role->weight >= ROLE_BANCHUNHIEMKHOA) {
             // neeus laf ban chu nhiem khoa thi lay cung khoa
@@ -58,7 +58,7 @@ class Controller extends BaseController
             $userIds[$key] = [$value->users_id];
         }
         if (!empty($userIds)) {
-            $students = Student::whereIn('user_id', $userIds)->get();
+            $students = Student::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','students.user_id')->select('students.*')->whereIn('students.user_id', $userIds)->paginate(50);
             return $students;
         }
         return false;

@@ -71,8 +71,8 @@ class ClassController extends Controller
     {
         $class = Classes::find($id);
         $staff = DB::table('staff as s')
-            ->leftJoin('users as u','s.user_id','u.id')
-            ->select('u.id', 'u.name')
+            ->leftJoin('users as u','s.user_id','u.users_id')
+            ->select('u.users_id', 'u.name','s.id')
             ->where('u.faculty_id',$class->Faculty->id)
             ->orderBy('u.name')
             ->get();
@@ -117,7 +117,6 @@ class ClassController extends Controller
         }else{
             $class = Classes::find($id);
             $class->name = $request->name;
-            $class->faculty_id = $request->faculty_id;
             $class->staff_id = $request->staff_id;
             $class->save();
             return response()->json([
