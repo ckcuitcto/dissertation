@@ -13,21 +13,21 @@ class StaffSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'id' => 'CTSV000001',
+                'users_id' => 'CTSV000001',
                 'name' => 'Phòng CTSV 1',
                 'email' => 'CTSV000001@gmail1.com',
                 'password' => bcrypt('CTSV000001'),
                 'role_id' => 5,
                 'faculty_id' => null
             ],[
-                'id' => 'CTSV000002',
+                'users_id' => 'CTSV000002',
                 'name' => 'Phòng CTSV 2',
                 'email' => 'CTSV000002@gmail1.com',
                 'password' => bcrypt('CTSV000002'),
                 'role_id' => 5,
                 'faculty_id' => null
             ],[
-                'id' => 'BCMK000001',
+                'users_id' => 'BCMK000001',
                 'name' => 'Ban chủ nhiệm Khoa IT 1',
                 'email' => 'BCMK000001@gmail1.com',
                 'password' => bcrypt('BCMK000001'),
@@ -35,7 +35,7 @@ class StaffSeeder extends Seeder
                 'faculty_id' => 1
             ],          
             [
-                'id' => 'BCMK000002',
+                'users_id' => 'BCMK000002',
                 'name' => 'Ban chủ nhiệm Khoa QTKD 1',
                 'email' => 'BCMK000002@gmail1.com',
                 'password' => bcrypt('BCMK000002'),
@@ -43,7 +43,7 @@ class StaffSeeder extends Seeder
                 'faculty_id' => 2
             ],          
             [
-                'id' => 'BCMK000003',
+                'users_id' => 'BCMK000003',
                 'name' => 'Ban chủ nhiệm Khoa Cơ Khí 1',
                 'email' => 'BCMK000003@gmail1.com',
                 'password' => bcrypt('BCMK000003'),
@@ -51,7 +51,7 @@ class StaffSeeder extends Seeder
                 'faculty_id' => 6
             ],
             [
-                'id' => 'GVIT000001',
+                'users_id' => 'GVIT000001',
                 'name' => 'CVHT Khoa IT 1',
                 'email' => 'GVIT000001@gmail.com',
                 'password' => bcrypt('GVIT000001'),
@@ -59,7 +59,7 @@ class StaffSeeder extends Seeder
                 'faculty_id' => 1
             ],
             [
-                'id' => 'GVIT000002',
+                'users_id' => 'GVIT000002',
                 'name' => 'CVHT Khoa IT 2',
                 'email' => 'GVIT000002@gmail1.com',
                 'password' => bcrypt('GVIT000002'),
@@ -67,14 +67,14 @@ class StaffSeeder extends Seeder
                 'faculty_id' => 1
             ],
             [
-                'id' => 'GVQT000001',
+                'users_id' => 'GVQT000001',
                 'name' => 'CVHT Khoa QTKD 1',
                 'email' => 'GVQT000001@gmail1.com',
                 'password' => bcrypt('GVQT000001'),
                 'role_id' => 3,
                 'faculty_id' => 2
             ],[
-                'id' => 'GVCK000001',
+                'users_id' => 'GVCK000001',
                 'name' => 'CVHT Khoa Cơ Khí 1',
                 'email' => 'GVCK000001@gmail1.com',
                 'password' => bcrypt('GVCK000001'),

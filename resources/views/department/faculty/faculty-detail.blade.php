@@ -1,4 +1,4 @@
-@extends('layouts.default')
+    @extends('layouts.default')
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -42,10 +42,10 @@
                             </thead>
                             <tbody>
                             @foreach($faculty->classes as $class)
-                                <tr style="color:white">
+                                <tr>
                                     <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a></td>
                                     <td>{{ count($class->Students) }}</td>
-                                    <td>
+                                    <td style="color:white">
                                         <a data-id="{{$class->id}}" id="class-edit"
                                            data-edit-link="{{route('class-edit',$class->id)}}"
                                            data-update-link="{{route('class-update',$class->id)}}" class="btn btn-primary">

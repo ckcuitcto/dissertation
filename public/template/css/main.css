@@ -80,7 +80,9 @@ body {
 [tabindex="-1"]:focus {
   outline: 0 !important;
 }
-
+.app-content .form-control .input-evaluation-form{
+  width: 110%;
+}
 hr {
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
@@ -14841,4 +14843,12 @@ div.show-error {
 
 td.detail-evaluation-form {
   padding: 0px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }

@@ -7,6 +7,7 @@ use App\Model\News;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Validator;
 
 class NewsController extends Controller
@@ -29,7 +30,18 @@ class NewsController extends Controller
 
     public function index()
     {
-        $newsList = News::all();
+        $userLogin = Auth::user();
+        if ($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
+        {
+            $newsList = News::all();
+        } elseif ($userLogin->Role->weight == ROLE_BANCHUNHIEMKHOA OR $userLogin->Role->weight == ROLE_COVANHOCTAP ) {
+            // neeus laf ban chu nhiem khoa thi lay cung khoa
+            $newsList = DB::table('users')
+                ->leftJoin('staff', 'users.users_id', '=', 'staff.user_id')
+                ->rightJoin('news', 'news.created_by', '=', 'staff.id')
+                ->where('users.faculty_id', $userLogin->faculty_id)
+                ->select('news.*')->get();
+        }
         return view('news.index', compact('newsList'));
     }
 
@@ -62,7 +74,13 @@ class NewsController extends Controller
     {
         $news = News::find($id);
         if(!empty($news)){
-            $faculties = Faculty::all();
+            $userLogin = Auth::user();
+            if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
+                $faculties = Faculty::all()->toArray();
+                $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
+            }else{
+                $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
+            }
             return view('news.edit', compact('faculties','news'));
         }
         return redirect()->back();

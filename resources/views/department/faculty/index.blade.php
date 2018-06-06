@@ -205,6 +205,14 @@
                 });
             });
 
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $('#myModal').find("input[type=text],input[type=number],input[type=hidden], select").val('').prop('disabled',false).prop('readonly',false);
+                $('.text-red').html('');
+                $('span.messageErrors').remove();
+                $('#myModal').find(".modal-title").text('Thêm mới khoa');
+                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
+                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").attr('data-link', "{{ route('faculty-store') }}");
+            });
         });
     </script>
 @endsection

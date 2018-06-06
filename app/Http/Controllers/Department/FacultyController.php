@@ -98,26 +98,33 @@ class FacultyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,
-            ['name' => 'required|min:6'],
-            ['name.required' => "Vui lòng nhập tên Khoa",
-                'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
-                'name.unique' => 'Tên khoa đã tồn tại'
-            ]
-        );
-
-        $faculty = Faculty::find($id);
-        if (!empty($faculty)) {
-            $faculty->name = $request->name;
-            $faculty->save();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:6|unique:faculties,name,'.$id.',id',
+        ],[
+            'name.required' => "Vui lòng nhập tên Khoa",
+            'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
+            'name.unique' => 'Tên khoa đã tồn tại'
+        ]);
+        if ($validator->fails()) {
             return response()->json([
-                'faculty' => $faculty,
-                'status' => true
+                'status' => false,
+                'arrMessages' => $validator->errors()
             ], 200);
+        } else {
+            $faculty = Faculty::find($id);
+            if (!empty($faculty)) {
+                $faculty->name = $request->name;
+                $faculty->save();
+                return response()->json([
+                    'faculty' => $faculty,
+                    'status' => true
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => false
+                ], 200);
+            }
         }
-        return response()->json([
-            'status' => false
-        ], 200);
 
     }
 

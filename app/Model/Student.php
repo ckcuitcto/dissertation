@@ -37,6 +37,14 @@ class Student extends Model
     }
 
     public function User(){
-        return $this->belongsTo('App\Model\User','user_id','id');
+        return $this->belongsTo('App\Model\User','user_id','users_id');
+    }
+
+    public function StudentListEachSemester(){
+        return $this->hasMany('App\Model\StudentListEachSemester','user_id','user_id');
+    }
+
+    public function StudentListEachSemesterMonitor(){
+        return $this->hasMany('App\Model\StudentListEachSemester','monitor_id','user_id');
     }
 }

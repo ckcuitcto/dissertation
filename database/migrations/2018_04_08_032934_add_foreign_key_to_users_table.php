@@ -14,15 +14,15 @@ class AddForeignKeyToUsersTable extends Migration
     public function up()
     {
         Schema::table('evaluation_results', function (Blueprint $table) {
-            $table->foreign('marker_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('marker_id')->references('users_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::table('students', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('users_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::table('staff', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('users_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::table('users', function (Blueprint $table) {
