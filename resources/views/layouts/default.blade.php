@@ -103,8 +103,8 @@
                     @endif<i class="fa fa-user fa-lg"></i>
                 </a>
                 <ul class="dropdown-menu settings-menu dropdown-menu-right">
-                    <li><a class="dropdown-item" href="{{ route('permission-list') }}"><i class="fa fa-cog fa-lg"></i> Settings</a>
-                    </li>
+                    {{-- <li><a class="dropdown-item" href="{{ route('permission-list') }}"><i class="fa fa-cog fa-lg"></i> Settings</a>
+                    </li> --}}
                     @if($authCheck)
                     <li><a class="dropdown-item" href="{{ route('personal-information-show',$user->users_id) }}"><i class="fa fa-user fa-lg"></i> Thông tin cá nhân</a>
                     @endif
