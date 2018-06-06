@@ -259,6 +259,11 @@
                             class="app-menu__label">Quản lí tài khoản </span>
                 </a>
             </li>
+            <li><a class="app-menu__item" href="{{ route('files') }}">
+                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                            class="app-menu__label">Quản lí file </span>
+                </a>
+            </li>
             @endcan
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i

@@ -95,7 +95,9 @@
                         <br>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="alert alert-danger show-error" style="display: none">
+                                <div class="alert alert-danger show-error bs-component" style="display: none">
+                                    <ul class="list-group">
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -125,100 +127,103 @@
 
     <script>
         $(document).ready(function () {
-            $("a#update-student").click(function () {
-                var urlEdit = $(this).attr('data-student-edit-link');
-                var urlUpdate = $(this).attr('data-student-update-link');
-                var id = $(this).attr('data-student-id');
-                $('.form-row').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "get",
-                    url: urlEdit,
-                    data: {id: id},
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === true) {
-                            if (result.student !== undefined) {
-                                $.each(result.student, function (elementName, value) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + messageValue)
-                                    $('.' + elementName).val(value);
-//                                    });
-                                });
-                            }
-                        }
-                    }
-                });
-                $('#myModal1').find(".modal-title").text('Sửa thông tin khoa');
-                $('#myModal1').find(".modal-footer > button[name=btn-save-student]").html('Sửa')
-                $('#myModal1').find(".modal-footer > button[name=btn-save-student]").attr('data-link', urlUpdate);
-                $('#myModal1').modal('show');
-            });
+//             $("a#update-student").click(function () {
+//                 var urlEdit = $(this).attr('data-student-edit-link');
+//                 var urlUpdate = $(this).attr('data-student-update-link');
+//                 var id = $(this).attr('data-student-id');
+//                 $('.form-row').find('span.messageErrors').remove();
+//                 $.ajax({
+//                     type: "get",
+//                     url: urlEdit,
+//                     data: {id: id},
+//                     dataType: 'json',
+//                     success: function (result) {
+//                         if (result.status === true) {
+//                             if (result.student !== undefined) {
+//                                 $.each(result.student, function (elementName, value) {
+// //                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+// //                                    alert(elementName + "+ " + messageValue)
+//                                     $('.' + elementName).val(value);
+// //                                    });
+//                                 });
+//                             }
+//                         }
+//                     }
+//                 });
+//                 $('#myModal1').find(".modal-title").text('Sửa thông tin khoa');
+//                 $('#myModal1').find(".modal-footer > button[name=btn-save-student]").html('Sửa')
+//                 $('#myModal1').find(".modal-footer > button[name=btn-save-student]").attr('data-link', urlUpdate);
+//                 $('#myModal1').modal('show');
+//             });
             // lưu
-            $("#btn-save-student").click(function () {
-                var valueForm = $('form#student-form').serialize();
-                var url = $(this).attr('data-link');
-                $('.form-row').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: valueForm,
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
-                                });
-                            }
-                        } else if (result.status === true) {
-                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
-                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
-                            });
-                        }
-                    }
-                });
-            });
+
+            // $("#btn-save-student").click(function () {
+            //     var valueForm = $('form#student-form').serialize();
+            //     var url = $(this).attr('data-link');
+            //     $('.form-row').find('span.messageErrors').remove();
+            //     $.ajax({
+            //         type: "post",
+            //         url: url,
+            //         data: valueForm,
+            //         dataType: 'json',
+            //         success: function (result) {
+            //             if (result.status === false) {
+            //                 //show error list fields
+            //                 if (result.arrMessages !== undefined) {
+            //                     $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+            //                         $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+            //                             $('form#student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+            //                         });
+            //                     });
+            //                 }
+            //             } else if (result.status === true) {
+            //                 $('#myModal').find('.modal-body').html('<p>Thành công</p>');
+            //                 $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+            //                 $('#myModal').on('hidden.bs.modal', function (e) {
+            //                     location.reload();
+            //                 });
+            //             }
+            //         }
+            //     });
+            // });
+
             //delete
-            $('a#destroy-student').click(function () {
-                var id = $(this).attr("data-student-id");
-                var url = $(this).attr('data-student-link');
-                swal({
-                    title: "Bạn chắc chưa?",
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Có, tôi chắc chắn!",
-                    cancelButtonText: "Không, Hủy dùm tôi!",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            cache: false,
-                            data: {"id": id},
-                            success: function (data) {
-                                if (data.status === true) {
-                                    swal("Deleted!", "Đã xóa học kì " + data.student.name, "success");
-                                    $('.sa-confirm-button-container').click(function () {
-                                        location.reload();
-                                    })
-                                } else {
-                                    swal("Cancelled", "Không tìm thấy học kì !!! :)", "error");
-                                }
-                            }
-                        });
-                    } else {
-                        swal("Đã hủy", "Đã hủy xóa học kì:)", "error");
-                    }
-                });
-            });
+            // $('a#destroy-student').click(function () {
+            //     var id = $(this).attr("data-student-id");
+            //     var url = $(this).attr('data-student-link');
+            //     swal({
+            //         title: "Bạn chắc chưa?",
+            //         text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
+            //         type: "warning",
+            //         showCancelButton: true,
+            //         confirmButtonText: "Có, tôi chắc chắn!",
+            //         cancelButtonText: "Không, Hủy dùm tôi!",
+            //         closeOnConfirm: false,
+            //         closeOnCancel: false
+            //     }, function (isConfirm) {
+            //         if (isConfirm) {
+            //             $.ajax({
+            //                 url: url,
+            //                 type: 'GET',
+            //                 cache: false,
+            //                 data: {"id": id},
+            //                 success: function (data) {
+            //                     if (data.status === true) {
+            //                         swal("Deleted!", "Đã xóa học kì " + data.student.name, "success");
+            //                         $('.sa-confirm-button-container').click(function () {
+            //                             location.reload();
+            //                         })
+            //                     } else {
+            //                         swal("Cancelled", "Không tìm thấy học kì !!! :)", "error");
+            //                     }
+            //                 }
+            //             });
+            //         } else {
+            //             swal("Đã hủy", "Đã hủy xóa học kì:)", "error");
+            //         }
+            //     });
+            // });
+
 //            import
             $("#btn-import-student").click(function (e) {
                 e.preventDefault();

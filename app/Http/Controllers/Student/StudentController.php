@@ -442,7 +442,31 @@ class StudentController extends Controller
             $userLogin = Auth::user();
             if (empty($arrError)) {
 
-                StudentListEachSemester::insert($arrUser);
+                // kiểm tra xem có user nào k tồn tại trong DB k? nếu có thì lấy rồi xuất ra thông báo
+                foreach($arrUser as $key => $value){
+                    $userSearch = User::where('users_id', $value['user_id'])->first();
+                    if(empty($userSearch)){
+                        $arrError[] = "MSSV $value[user_id] không tồn tại trong danh sách sinh viên";
+                    }
+                }
+                if(!empty($arrError)){
+                    //vì trên kia đã lưu file. nên cho dù đc hay k thì đều lưu lại lịch sử import
+                    for($i = 0 ; $i< count($arrFile); $i++){
+                        $arrFileImport[] = [
+                            'file_path' => $arrFileName[$i],
+                            'file_name' => $arrFile[$i]->getClientOriginalName(),
+                            'status' => 'Thất bại',
+                            'staff_id' => $userLogin->Staff->id
+                        ];
+                    }
+                    FileImport::insert($arrFileImport);
+                    $arrError = array_merge(['Vui lòng thêm tài khoản cho sinh viên hoặc sửa lại thông tin nếu SV chuyển khoa, sau đó nhập lại File.'],$arrError);
+                    return response()->json([
+                        'status' => false,
+                        'errors' => $arrError
+                    ], 200);
+                }
+
                 for($i = 0 ; $i< count($arrFile); $i++){
                     $arrFileImport[] = [
                         'file_path' => $arrFileName[$i],
@@ -452,6 +476,8 @@ class StudentController extends Controller
                     ];
                 }
                 FileImport::insert($arrFileImport);
+                StudentListEachSemester::insert($arrUser);
+
                 $this->addEvaluationFormAfterInportStudent($semesterId);
                 return response()->json([
                     'status' => true,

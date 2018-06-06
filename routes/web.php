@@ -226,4 +226,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'user-update', 'uses' => 'User\UserController@update']);
 
     });
+
+    Route::group(['prefix' => 'files', 'middleware' => 'can:manage-user'], function () {
+        Route::get('/', ['as' => 'files', 'uses' => 'Import\ImportController@index']);
+
+    });
 });

@@ -15,10 +15,10 @@ class CreateStudentListEachSemestersTable extends Migration
     {
         Schema::create('student_list_each_semesters', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('class_id')->unsigned();
+            $table->integer('class_id')->unsigned()->nullable();
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade')->onUpdate('cascade');
 
-            $table->string('user_id', 10);
+            $table->string('user_id', 10)->nullable();
             $table->foreign('user_id')->references('user_id')->on('students')->onDelete('cascade')->onUpdate('cascade');
 
             $table->string('monitor_id', 10)->nullable();

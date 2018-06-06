@@ -65,8 +65,9 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title"> Thêm tài khoản</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h5 class="modal-title"> Sửa thông tin</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
                         <form id="user-form" method="post" class="form-horizontal">
@@ -76,10 +77,9 @@
                                     <div class="form-group row">
                                         <label class="control-label col-md-3">Mã</label>
                                         <div class="col-md-8">
-                                            <input class="form-control id" type="text" name="id" readonly>
+                                            <input class="form-control users_id" type="text" name="users_id">
                                         </div>
                                     </div>
-
                                     <div class="form-group row">
                                         <label class="control-label col-md-3">Trạng thái</label>
                                         <div class="col-md-8">
@@ -89,13 +89,28 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-3">Email</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control email" type="email" name="email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" id="faculty">
+                                        <label class="control-label col-md-3">Khoa</label>
+                                        <div class="col-md-8">
+                                            <select name="faculty_id" id="faculty_id" class="form-control faculty_id">
+                                                @foreach($faculties as $value)
+                                                    <option value="{{ $value->id }}"> {{ $value->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label col-md-3">Tên</label>
                                         <div class="col-md-8">
-                                            <input class="form-control name" type="text" name="name" readonly
-                                                   placeholder="Enter full name">
+                                            <input class="form-control name" type="text" name="name">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -108,6 +123,32 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-3">Giới tính</label>
+                                        <div class="col-md-8">
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input gender" type="radio" checked
+                                                           name="gender" value="{{ MALE }}">Nam
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input gender" type="radio"
+                                                           value="{{ FEMALE }}"
+                                                           name="gender">Nữ
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" id="classes">
+                                        <label class="control-label col-md-3">Lớp</label>
+                                        <div class="col-md-8">
+                                            <select name="classes_id" id="classes_id" class="form-control classes_id">
+                                            </select>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </form>
@@ -126,7 +167,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title"> Thêm tài khoản</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
                         <form id="user-add-form" method="post" class="form-horizontal">
@@ -193,7 +235,8 @@
                                             </div>
                                             <div class="form-check">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input gender" type="radio" value="{{ FEMALE }}"
+                                                    <input class="form-check-input gender" type="radio"
+                                                           value="{{ FEMALE }}"
                                                            name="gender">Nữ
                                                 </label>
                                             </div>
@@ -211,7 +254,8 @@
                             </div>
                         </form>
                         <div class="modal-footer">
-                            <button data-link="{{ route('user-store') }}" class="btn btn-primary" id="btn-add" name="btn-add" type="button">
+                            <button data-link="{{ route('user-store') }}" class="btn btn-primary" id="btn-add"
+                                    name="btn-add" type="button">
                                 Thêm
                             </button>
                             <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
@@ -236,7 +280,8 @@
                                 <div class="col-md-12">
                                     <div class="form-row">
                                         <label for="fileImport">Chọn file excel</label>
-                                        <input type="file" multiple class="form-control fileImport" name="fileImport" id="fileImport">
+                                        <input type="file" multiple class="form-control fileImport" name="fileImport"
+                                               id="fileImport">
                                     </div>
                                 </div>
                             </div>
@@ -281,7 +326,7 @@
                 var inss = fileImport.files.length;
                 for (var x = 0; x < inss; x++) {
                     file = fileImport.files[x];
-                    formData.append("fileImport[]",file);
+                    formData.append("fileImport[]", file);
                 }
                 var url = $(this).attr('data-link');
                 $('.form-row').find('span.messageErrors').remove();
@@ -293,11 +338,11 @@
                     contentType: false,
                     // enctype: 'multipart/form-data',
                     processData: false,
-                    beforeSend: function() {
-                        $("#importModal").find("button#btn-import-student").prop('disabled',true);
+                    beforeSend: function () {
+                        $("#importModal").find("button#btn-import-student").prop('disabled', true);
                     },
                     success: function (result) {
-                        $("#importModal").find("button#btn-import-student").prop('disabled',false);
+                        $("#importModal").find("button#btn-import-student").prop('disabled', false);
                         if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
@@ -307,11 +352,11 @@
                                     });
                                 });
                             }
-                            if(result.errors !== undefined){
+                            if (result.errors !== undefined) {
                                 // console.log(result.errors);
                                 $('#importModal').find('div.alert-danger').show();
                                 $.each(result.errors, function (elementName, arrMessagesEveryElement) {
-                                    $('#importModal').find('div.alert-danger').append("<p class='child-error'>"+arrMessagesEveryElement+ "</p>");
+                                    $('#importModal').find('div.alert-danger').append("<p class='child-error'>" + arrMessagesEveryElement + "</p>");
                                 });
                             }
                         } else if (result.status === true) {
@@ -340,14 +385,25 @@
                     success: function (result) {
                         if (result.status === true) {
                             if (result.user !== undefined) {
+                                var classId;
                                 $.each(result.user, function (elementName, value) {
+                                    // alert(elementName + '- '+ value);
                                     if (elementName === 'status' || elementName === 'role_id') {
                                         modal.find("select." + elementName).val(value);
-                                    }
-                                    else {
+                                    }else if(elementName === 'faculty_id'){
+                                        modal.find("select." + elementName).val(value);
+                                        getClassByFacultyId('modal-edit-user');
+                                    }else if(elementName === 'classes_id'){
+                                        classId = value;
+                                    }else if(elementName === 'gender'){
+                                        modal.find("."+elementName+"[value="+value+"]").prop('checked',true);
+                                    }else {
                                         modal.find('.' + elementName).val(value);
                                     }
                                 });
+                                setTimeout(function(){
+                                    modal.find("select.classes_id").val(classId);
+                                }, 800);
                             }
                         }
                     }
@@ -419,77 +475,81 @@
             });
 
 
-
-
             // ẩn hiện khi chọn role
-            $('div#modal-add-user').on('change', 'select.role_id', function (e) {
+
+            // $('div#modal-add-user').on('change', 'select.role_id', function (e) {
+            $('select.role_id').change(function (e) {
                 var roleId = $(this).val();
-                if(roleId === "{{ ROLE_PHONGCONGTACSINHVIEN }}" || roleId === "{{ ROLE_ADMIN }}"){
+
+                if (roleId === "{{ ROLE_PHONGCONGTACSINHVIEN }}" || roleId === "{{ ROLE_ADMIN }}") {
                     $("div#faculty").hide();
                     $("div#classes").hide();
-                    $('div#modal-add-user').find("select.faculty_id").prop('disabled',true);
-                    $('div#modal-add-user').find("select.classes_id").prop('disabled',true);
-                }else if(roleId === "{{ ROLE_BANCANSULOP }}" || roleId === "{{ ROLE_SINHVIEN }}"){
+                    // $('div#modal-add-user').find("select.faculty_id").prop('disabled', true);
+                    // $('div#modal-add-user').find("select.classes_id").prop('disabled', true);
+                    $("select.faculty_id").prop('disabled', true);
+                    $("select.classes_id").prop('disabled', true);
+                } else if (roleId === "{{ ROLE_BANCANSULOP }}" || roleId === "{{ ROLE_SINHVIEN }}") {
                     $("div#faculty").show();
                     $("div#classes").show();
-                    $('div#modal-add-user').find("select.faculty_id").prop('disabled',false);
-                    $('div#modal-add-user').find("select.classes_id").prop('disabled',false);
-                }else{
+                    $("select.faculty_id").prop('disabled', false);
+                    $("select.classes_id").prop('disabled', false);
+                } else {
                     $("div#faculty").show();
                     $("div#classes").hide();
-                    $('div#modal-add-user').find("select.faculty_id").prop('disabled',false);
-                    $('div#modal-add-user').find("select.classes_id").prop('disabled',true);
+                    $("select.faculty_id").prop('disabled', false);
+                    $("select.classes_id").prop('disabled', true);
                 }
             });
 
-            $('div#modal-add-user').on('change', 'select.faculty_id', function (e) {
+            // $('div#modal-add-user').on('change', 'select.faculty_id', function (e) {
+            $('select.faculty_id').change(function () {
                 var facultyId = $(this).val();
                 var url = "{{ route('class-get-list-by-faculty') }}";
                 $.ajax({
                     type: "post",
                     url: url,
-                    data: { id: facultyId},
+                    data: {id: facultyId},
                     dataType: 'json',
                     success: function (data) {
-                        $('div#modal-add-user').find("select.classes_id").empty();
+                        $("select.classes_id").empty();
                         $.each(data.classes, function (key, value) {
-                            $('div#modal-add-user').find("select.classes_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                            $("select.classes_id").append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
                     }
                 });
             });
 
-            getClassByFacultyId();
-            function getClassByFacultyId() {
-                var facultyId = $('div#modal-add-user').find('select.faculty_id').val();
+            getClassByFacultyId('modal-add-user');
+
+            function getClassByFacultyId(modal) {
+                var facultyId = $('div#'+modal).find('select.faculty_id').val();
                 var url = "{{ route('class-get-list-by-faculty') }}";
                 $.ajax({
                     type: "post",
                     url: url,
-                    data: { id: facultyId},
+                    data: {id: facultyId},
                     dataType: 'json',
                     success: function (data) {
-                        $('div#modal-add-user').find("select.classes_id").empty();
+                        $('div#'+modal).find("select.classes_id").empty();
                         $.each(data.classes, function (key, value) {
-                            $('div#modal-add-user').find("select.classes_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                            $('div#'+modal).find("select.classes_id").append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
                     }
                 });
             }
         });
 
-        hideAndShowFaculty();
-        function hideAndShowFaculty() {
-            var roleId = $('div#modal-add-user').find('select.role_id').val();
-            if(roleId === "{{ ROLE_PHONGCONGTACSINHVIEN }}" || roleId === "{{ ROLE_ADMIN }}"){
-                $("div#faculty").hide();
-            }else{
-                $("div#faculty").show();
+        hideAndShowFaculty('modal-add-user');
+        hideAndShowFaculty('user-form');
 
+        function hideAndShowFaculty(modal) {
+            var roleId = $('div#'+modal).find('select.role_id').val();
+            if (roleId === "{{ ROLE_PHONGCONGTACSINHVIEN }}" || roleId === "{{ ROLE_ADMIN }}") {
+                $("div#faculty").hide();
+            } else {
+                $("div#faculty").show();
             }
         }
-
-
 
 
     </script>
