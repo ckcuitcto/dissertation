@@ -116,14 +116,14 @@ class SemesterController extends Controller
             $semester->MarkTimes()->createMany($arrRoleMarkTime);
 
             // sau khi tạo mới 1 học kì, sẽ tạo cho mỗi sinh viên 1 form đánh giá
-            $students = Student::all();
-            $arrEvaluationForm = array();
-            foreach ($students as $student) {
-                $arrEvaluationForm[] = [
-                    'student_id' => $student->id
-                ];
-            }
-            $semester->EvaluationForm()->createMany($arrEvaluationForm);
+//            $students = Student::all();
+//            $arrEvaluationForm = array();
+//            foreach ($students as $student) {
+//                $arrEvaluationForm[] = [
+//                    'student_id' => $student->id
+//                ];
+//            }
+//            $semester->EvaluationForm()->createMany($arrEvaluationForm);
 
             return response()->json([
                 'semester' => $semester,

@@ -104,10 +104,17 @@
                                     </a>
                                     {{-- ếu đang trong thời gian phúc khảo và user login = user chủ fomr thì hiện nút phúc khảo --}}
                                     @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_request_re_mark, $evaluationForm->Semester->date_end_to_request_re_mark ) AND $user->users_id == $userLogin->users_id)
-                                    <button data-toggle="modal" id="btn-request-remaking" data-target="#myModal" class="btn btn-primary" data-id-evaluation-form="{{ $evaluationForm->id }}"
+                                        @if(empty($evaluationForm->Remaking))
+                                            <button data-toggle="modal" id="btn-request-remaking" data-target="#myModal" class="btn btn-primary" data-id-evaluation-form="{{ $evaluationForm->id }}"
                                             title="Yêu cầu phúc khảo">
-                                        <i class="fa fa-send" aria-hidden="true" style="color:white"></i>Yêu cầu phúc khảo
-                                    </button>
+                                        <i class="fa fa-send" aria-hidden="true" style="color:white"></i>
+                                            </button>
+                                        @else
+                                            <button  class="btn btn-primary" title="Đã gửi yêu cầu phúc khảo" disabled>
+                                                <i class="fa fa-send" aria-hidden="true" style="color:white"></i>
+                                            </button>
+                                        @endif
+
                                     @endif
                                 </td>
                             </tr>
@@ -115,6 +122,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
 
@@ -131,10 +139,10 @@
                             <input type="hidden" id="evluationFormId" name="formId">
                             {!! csrf_field() !!}
                             <div class="col-md-12">
-                                <h3 class="tile-title">Lý do</h3>
+                                <h3 class="tile-title">Lý do phúc khảo</h3>
                                 <div class="tile-body">
                                     <div class="form-group">
-                                        <textarea class="form-control remarking_reason" rows="4" name="remarking_reason" placeholder="Vui lòng nhập lí do"></textarea>
+                                        <textarea class="form-control remarking_reason" rows="4" name="remarking_reason" placeholder="Vui lòng nhập lí do,sinh viên nêu rõ lí do phúc khảo"></textarea>
                                     </div>
                                 </div>
                             </div>

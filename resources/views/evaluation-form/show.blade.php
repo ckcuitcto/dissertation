@@ -322,7 +322,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 </tr>
                                 <tr>
                                     <td>Xếp loại</td>
-                                    <td colspan="{{ count($listUserMark) }}" style="background-color:gray"></td>
+                                    <td colspan="{{ count($listUserMark) }}" style="background-color:gray"><b>{{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }}</b></td>
                                     <td></td>
                                 </tr>
                                 </tbody>
@@ -359,7 +359,8 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
                                 <input type="hidden" class="id" name="id" id="proofId">
                                 {{--khi bấm vào modal. thì chỉ những ng khác k phải là chủ của phiếu mới đc chỉnh sửa file có hợp lệ hay k--}}
-                                @if( $evaluationForm->Student->User->users_id != $user->users_id )
+                                {{-- và role hiện tại có thể chấm thì ms có thể sửa trạng thái--}}
+                                @if( $evaluationForm->Student->User->users_id != $user->users_id AND $currentRoleCanMark->weight == $user->Role->weight)
                                 <div class="row">
                                     <div class="col-md-2">
                                         <fieldset class="form-group">

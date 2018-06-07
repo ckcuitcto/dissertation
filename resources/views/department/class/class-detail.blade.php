@@ -98,8 +98,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="name">Lớp khoa :</label>
-                                        <input type="hidden" name="id" class="id" id="modal-class-edit">
+                                        <label for="name">Lớp :</label>
+                                        <input type="hidden" name="id" class="id" value="{{ $class->id }}" id="modal-class-edit">
                                         <input class="form-control name" id="name" name="name" type="text" required
                                                value="{{$class->name}}"
                                                aria-describedby="class" placeholder="Nhập tên lớp">
@@ -109,7 +109,7 @@
                                         <label for="staff_id">Cố vấn học tập</label>
                                         <select name="staff_id" id="staff_id" class="staff_id form-control">
                                             @foreach($staff as $value)
-                                                <option {{ ($value->id == $class->Staff->user_id) ? "selected" : "" }} value="{{$value->id}}"> {{ $value->name }}</option>
+                                                <option {{ ($value->users_id == $class->Staff->user_id) ? "selected" : "" }} value="{{$value->id}}"> {{ $value->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -270,16 +270,16 @@
                     data: valueForm,
                     dataType: 'json',
                     success: function (result) {
-                        if (result.status === "fail") {
+                        if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#class-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                        $('form#class-form').find('.' + elementName).parents('.form-group').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
                                     });
                                 });
                             }
-                        } else if (result.status === "success") {
+                        } else if (result.status === true) {
                             $('#modal-edit-class').find('.modal-body').html('<p>Đã sửa thành công</p>');
                             $("#modal-edit-class").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#modal-edit-class').on('hidden.bs.modal', function (e) {

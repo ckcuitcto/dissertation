@@ -28,4 +28,8 @@ class Staff extends Model
     public function StudentListEachSemester(){
         return $this->hasMany('App\Model\StudentListEachSemester','staff_id','id');
     }
+
+    public function FileImports(){
+        return $this->hasMany('App\Model\FileImport','staff_id','id');
+    }
 }

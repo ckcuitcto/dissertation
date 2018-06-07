@@ -20,9 +20,9 @@ class ReMakingController extends Controller
     public function index()
     {
         $userLogin = Auth::user();
-        $userIds = $this->getStudentByRoleUserLogin($userLogin,true);
-
+        $userIds = $this->getStudentByRoleUserLogin($userLogin,FALSE);
         // lấy ra danh sách id của student
+        $arrId = array();
         foreach ($userIds as $key => $value) {
             $arrId[] = $value->id;
         }

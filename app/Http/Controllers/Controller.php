@@ -15,11 +15,15 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function getStudentByRoleUserLogin(User $user)
+    public function getStudentByRoleUserLogin(User $user,$pagination = TRUE)
     {
         if ($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
         {
-            $students = Student::all();
+            if ($pagination == TRUE) {
+                $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')->select('students.*')->paginate(50);
+            }else{
+                $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')->select('students.*')->get();
+            }
             return $students;
         } elseif ($user->Role->weight >= ROLE_BANCHUNHIEMKHOA) {
             // neeus laf ban chu nhiem khoa thi lay cung khoa
@@ -54,11 +58,16 @@ class Controller extends BaseController
                 ->where('students.class_id', $user->Student->class_id)
                 ->select('users.users_id')->get()->toArray();
         }
-        foreach ($arrUserId as $key => $value) {
+
+        foreach ($arrUserId as $key => $value){
             $userIds[$key] = [$value->users_id];
         }
         if (!empty($userIds)) {
-            $students = Student::whereIn('user_id', $userIds)->get();
+            if ($pagination == TRUE) {
+                $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')->select('students.*')->whereIn('students.user_id', $userIds)->paginate(50);
+            }else{
+                $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')->select('students.*')->whereIn('students.user_id', $userIds)->get();
+            }
             return $students;
         }
         return false;

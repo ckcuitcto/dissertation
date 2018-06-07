@@ -25,6 +25,6 @@ class EvaluationForm extends Model
     }
 
     public function Remaking(){
-        return $this->hasMany('App\Model\Remaking','evaluation_form_id','id');
+        return $this->hasOne('App\Model\Remaking','evaluation_form_id','id');
     }
 }

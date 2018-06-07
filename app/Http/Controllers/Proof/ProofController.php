@@ -35,7 +35,7 @@ class ProofController extends Controller
         $userLogin = Auth::user();
         // nếu role vào k phải là học sinh
         if($userLogin->Role->weight >= ROLE_COVANHOCTAP) {
-            return redirect()->back();
+            return view('errors.403');
         }
 
         // xác định role để lấy thời gian chấm.

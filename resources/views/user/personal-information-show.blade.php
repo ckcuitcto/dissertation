@@ -27,8 +27,7 @@
                         @else
                             <img id="imageChange" style="width: 100%;" class="user-image" src="{{ asset('image/avatar_default.jpg') }}" title="Click vào đây ảnh để đổi ảnh đại diện">
                         @endif
-                        <input type='file' id="avatar" class="avatar" name="avatar" disabled style="display: none;"/>
-
+                        <input type='file' id="avatar" class="avatar can-edit" name="avatar" disabled style="display: none;"/>
                         <div class="alert alert-primary" role="alert">
 
                         {{--</div>--}}
@@ -128,7 +127,9 @@
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <label>Địa chỉ</label>
-                            <textarea class="form-control address can-edit" rows="3" id="address" name="address" value="{{$user->address OR ""}}" disabled></textarea>
+                            <textarea class="form-control address can-edit" rows="3" id="address" name="address" value="{{$user->address OR ""}}" disabled >
+                                {{ $user->address }}
+                            </textarea>
                             {{-- <input class="form-control address" id="address" type="text" name="address" value="{{$user->address OR ""}}" disabled> --}}
                         </div>
                     </div>
@@ -267,6 +268,7 @@
                             });
                             $(".button-edit").hide();
                             $("input").prop('disabled',true);
+                            $("textarea").prop('disabled',true);
                             $("a#btn-update-inform").show();
                         }
                     }

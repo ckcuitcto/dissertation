@@ -111,6 +111,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'manage-remaking',
                 'display_name' => 'Quản lí phúc khảo',
                 'description' => 'Xem danh sách, trả lời yêu cầu phúc khảo'
+            ],[
+                'name' => 'manage-class',
+                'display_name' => 'Quản lí lớp',
+                'description' => 'Quản lí lớp'
             ],
         ]);
     }

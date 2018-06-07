@@ -21,8 +21,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/home', 'Home\HomeController@index')->name('home');   
 
-    Route::group(['prefix' => 'khoa', 'middleware' => 'can:manage-faculty'], function () {
-        Route::get('/', ['as' => 'faculty', 'uses' => 'Department\FacultyController@index']);
+    Route::group(['prefix' => 'khoa', 'middleware' => 'can:faculty-list'], function () {
+        Route::get('/', ['as' => 'faculty', 'uses' => 'Department\FacultyController@index'])->middleware('can:faculty-change');
         Route::get('/{id}', ['as' => 'faculty-detail', 'uses' => 'Department\FacultyController@show']);
 
         Route::post('/store', ['as' => 'faculty-store', 'uses' => 'Department\FacultyController@store'])->middleware('can:faculty-change');
@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::group(['prefix' => 'lop'], function () {
+    Route::group(['prefix' => 'lop','middleware' => 'can:manage-class'], function () {
         Route::get('/{id}', ['as' => 'class-detail', 'uses' => 'Department\ClassController@show']);
 
         Route::post('/store', ['as' => 'class-store', 'uses' => 'Department\ClassController@store']);
@@ -67,7 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/import-student-list-each-semester', ['as' => 'import-student-list-each-semester', 'uses' => 'Student\StudentController@importStudentListEachSemester']);
     });
 
-    Route::group(['prefix' => 'vai-tro'], function () {
+    Route::group(['prefix' => 'vai-tro','middleware' => 'can:manager-role'], function () {
         // danh sach role
         Route::get('/', ['as' => 'role-list', 'uses' => 'Role\RoleController@index']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
 //        });
     });
 
-    Route::group(['prefix' => 'quyen'], function () {
+    Route::group(['prefix' => 'quyen','middleware' => 'can:permission-role'], function () {
         // danh sach role
         Route::get('/', ['as' => 'permission-list', 'uses' => 'Permission\PermissionController@index']);
 
@@ -100,7 +100,7 @@ Route::group(['middleware' => 'auth'], function () {
 //        });
     });
 
-    Route::group(['prefix' => 'hoc-ki'], function () {
+    Route::group(['prefix' => 'hoc-ki','middleware' => 'can:semester-change'], function () {
         // danh sach
         Route::get('/', ['as' => 'semester-list', 'uses' => 'Semester\SemesterController@index']);
         // vao xem chi tiet role, se co cac danh sach user thuoc role o day
@@ -115,7 +115,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'bang-diem'], function () {
-        Route::get('/danh-sach', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index']);
+        Route::get('/danh-sach', ['as' => 'transcript', 'uses' => 'Transcript\TranscriptController@index'])->middleware('can:can-list-student-transcript');
 
         Route::get('/{id}', ['as' => 'transcript-show', 'uses' => 'Transcript\TranscriptController@show']);
 
@@ -147,7 +147,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'phuc-khao'], function () {
-        Route::get('/', ['as' => 'remaking', 'uses' => 'Evaluation\ReMakingController@index']);
+        Route::get('/', ['as' => 'remaking', 'uses' => 'Evaluation\ReMakingController@index'])->middleware('can:manage-remaking');
 
         Route::post('/store', ['as' => 'remaking-store', 'uses' => 'Evaluation\ReMakingController@store']);
 
@@ -184,7 +184,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/store', ['as' => 'comment-store', 'uses' => 'Comment\CommentController@store'])->middleware('can:comment-add');
 
-        Route::post('/reply/{id}', ['as' => 'comment-reply', 'uses' => 'Comment\CommentController@reply']);
+        Route::post('/reply/{id}', ['as' => 'comment-reply', 'uses' => 'Comment\CommentController@reply'])->middleware('can:comment-reply');
         Route::get('/show/{id}', ['as' => 'comment-show', 'uses' => 'Comment\CommentController@show']);
 
         Route::get('/destroy/{id}', ['as' => 'comment-destroy', 'uses' => 'Comment\CommentController@destroy'])->middleware('can:comment-delete');
@@ -195,11 +195,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'tin-tuc'], function () {
 
-        Route::get('/', ['as' => 'news', 'uses' => 'News\NewsController@index']);    
+        Route::get('/', ['as' => 'news', 'uses' => 'News\NewsController@index'])->middleware('can:can-change-news');
         
         Route::post('/store', ['as' => 'news-store', 'uses' => 'News\NewsController@store'])->middleware('can:can-change-news');
         Route::get('/create', ['as' => 'news-create', 'uses' => 'News\NewsController@create'])->middleware('can:can-change-news');
-
 
         // hiển thi jchi tiết sẽ là cái này
         Route::get('/{title}-{id}', ['as' => 'news-show', 'uses' => 'News\NewsController@show']);
@@ -221,11 +220,15 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/store', ['as' => 'user-store', 'uses' => 'User\UserController@store']);
         Route::get('/destroy/{id}', ['as' => 'user-destroy', 'uses' => 'User\UserController@destroy']);
-
         // hien thi form
         Route::get('/edit/{id}', ['as' => 'user-edit', 'uses' => 'User\UserController@edit']);
         //update
         Route::post('/update/{id}', ['as' => 'user-update', 'uses' => 'User\UserController@update']);
+
+    });
+
+    Route::group(['prefix' => 'files', 'middleware' => 'can:manage-user'], function () {
+        Route::get('/', ['as' => 'files', 'uses' => 'Import\ImportController@index']);
 
     });
 });

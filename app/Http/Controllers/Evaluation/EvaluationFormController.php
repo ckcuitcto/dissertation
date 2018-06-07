@@ -160,14 +160,19 @@ class EvaluationFormController extends Controller
             // nếu đã hết thời gian chấm => k có user nào có thể chấm. thì kiểm tra xem có đang trong thời gian chấm phcú khảo k?
             // nếu có thì gán vào role có thể phúc khảo.
             // tạm thời sẽ gán vào role là role cua co van hoc tap
+            //form nào đã yêu cầu phúc khảo thì mới đc phép chấm
             if (empty($currentRoleCanMark)) {
+
                 if($this->checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark))
                 {
-                $currentRoleCanMark = Role::whereHas('permissions', function ($query) {
-                    $query->where('name', 'like', '%can-mark%');
-                })->where('weight',ROLE_COVANHOCTAP)->first();
+                    if(!empty($evaluationForm->Remaking)) {
+                        // nếu form này có tồn tại remaking => đã yêu cầu phcú khảo. cho chấm lại
+                        $currentRoleCanMark = Role::whereHas('permissions', function ($query) {
+                            $query->where('name', 'like', '%can-mark%');
+                        })->where('weight', ROLE_COVANHOCTAP)->first();
+                    }
                 }
-                else{
+                if (empty($currentRoleCanMark)) {
                         // nếu hết thời gian chấm => k có role nào còn chấm
                         // và cũng k trong thời gian phúc khảo
                         // => gán quyền chấm cho admin => k được gì nhưng để bỏ qua lỗi
