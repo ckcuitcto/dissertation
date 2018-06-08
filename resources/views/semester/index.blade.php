@@ -72,7 +72,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-row">
-                                        <label for="year">Năm học</label>
+                                        <label for="year">Năm học (*)</label>
                                         <div class="input-group">
                                             <input type="year" class="input-sm form-control year_from" id="year_from"
                                                    name="year_from" />
@@ -81,7 +81,7 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <label for="mark_date">Ngày chấm</label>
+                                        <label for="mark_date">Ngày chấm (*)</label>
                                         <div class="input-group">
                                             <input type="text" class="input-sm form-control date_start_to_mark"
                                                    id="date_start_to_mark" name="date_start_to_mark"/>
@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <label for="mark_date">Thời gian khiếu nại</label>
+                                        <label for="mark_date">Thời gian khiếu nại (*)</label>
                                         <div class="input-group">
                                             <input type="text" class="input-sm form-control date_start_to_request_re_mark"
                                                    id="date_start_to_request_re_mark" name="date_start_to_request_re_mark"/>
@@ -101,7 +101,7 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <label for="mark_date">Thời gian chấm lại khiếu nại</label>
+                                        <label for="mark_date">Thời gian chấm lại khiếu nại (*)</label>
                                         <div class="input-group">
                                             <input type="text" class="input-sm form-control date_start_to_re_mark"
                                                    id="date_start_to_re_mark" name="date_start_to_re_mark"/>
@@ -111,14 +111,14 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <label for="term">Học kì</label>
+                                        <label for="term">Học kì (*)</label>
                                         <input type="number" class="form-control term" name="term" id="term" max="3" min="1" placeholder="Học kì">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     @foreach($rolesCanMark as $key => $role)
                                         <div class="form-row">
-                                            <label for="mark_date">Thời gian chấm của {{ $role->display_name }}</label>
+                                            <label for="mark_date">Thời gian chấm của {{ $role->display_name }} (*)</label>
                                             <div class="input-group">
                                                 <input type="text"
                                                        class="input-sm form-control {{ 'date_start_to_mark_'.$role->id }}"
@@ -131,7 +131,14 @@
                                                        name="{{ 'date_end_to_mark_'.$role->id }}"/>
                                             </div>
                                         </div>
+                                        
                                     @endforeach
+                                    <br><br>
+                                    <div>
+                                        <label for="">
+                                            (*) Yêu cầu nhập đầy đủ và chính xác thông tin ở các ô
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </form>

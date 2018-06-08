@@ -56,8 +56,13 @@ class SemesterController extends Controller
         foreach ($rolesCanMark as $role) {
             $dateEnd = "date_end_to_mark_" . $role->id;
             $dateStart = "date_start_to_mark_" . $role->id;
-            // $arrValidatorRole[$dateEnd] = "after:" . $dateStart;
 
+             $arrValidatorRole[$dateEnd] = "required";
+             $arrValidatorRole[$dateStart] = "required";
+
+            $arrValidatorRoleMessage[$dateEnd . ".required"] = " Bắt buộc nhập";
+            $arrValidatorRoleMessage[$dateStart . ".required"] = "Bắt buộc nhập";
+            // $arrValidatorRole[$dateEnd] = "after:" . $dateStart;
             // $arrValidatorRoleMessage[$dateEnd . ".after"] = "Ngày kết thúc phải > ngày bắt đầu";
         }
         $arrValidatorRole['year_from'] = "required";
@@ -199,6 +204,13 @@ class SemesterController extends Controller
         foreach ($rolesCanMark as $role) {
             $dateEnd = "date_end_to_mark_" . $role->id;
             $dateStart = "date_start_to_mark_" . $role->id;
+
+            $arrValidatorRole[$dateEnd] = "required";
+            $arrValidatorRole[$dateStart] = "required";
+
+           $arrValidatorRoleMessage[$dateEnd . ".required"] = " Bắt buộc nhập. ";
+           $arrValidatorRoleMessage[$dateStart . ".required"] = "Bắt buộc nhập. ";
+
 //            $arrValidatorRole[$dateEnd] = "required|before:" . $dateStart;
             // $arrValidatorRole[$dateEnd] = "required";
 

@@ -168,5 +168,5 @@ class CommentController extends Controller
             'status' => false
         ], 200);
     }
-    // mỗi chức năng đều chia ra controllẻ riêng nên chắc đủ hàm r. k cần tạo thêm
+    // mỗi chức năng đều chia ra controller riêng
 }

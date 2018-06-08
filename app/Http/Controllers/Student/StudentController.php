@@ -421,9 +421,11 @@ class StudentController extends Controller
                             ['year_to' , $yearTo],
                             ['term' , $term],
                         ])->first();
-                        $semesterId = $semester->id;
+                        
                         if (empty($semester)) {
                             $arrError[] = "Học kì $term năm học $yearFrom - $yearTo không tồn tại";
+                        }else{
+                            $semesterId = $semester->id;
                         }
                     }
                     elseif (!empty($dataFileExcel[$i][1]) AND !empty($dataFileExcel[$i][0]) AND $i >= 10 AND !empty($faculty) AND !empty($classes) AND !empty($semester) AND !empty($monitor)) {
