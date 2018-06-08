@@ -7,8 +7,10 @@ use App\Model\Role;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -19,10 +21,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(25);
         $roles = Role::all();
         $faculties = Faculty::all();
-        return view('user.index',compact('users','roles','faculties'));
+        return view('user.index',compact('roles','faculties'));
     }
 
     /**
@@ -111,8 +112,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = DB::table('users')
-            ->join('students', 'users.users_id', '=', 'students.user_id')
+        $user = User::where('users_id',$id)->first();
+        if(!empty($user->Student->user_id)){
+            $user = DB::table('users')
+            ->leftJoin('students', 'users.users_id', '=', 'students.user_id')
             ->select(
                 'users.role_id','users.faculty_id',
                 'users.id','users.users_id',
@@ -120,8 +123,19 @@ class UserController extends Controller
                 'users.gender','users.status',
                 'students.class_id as classes_id','users.email'
             )
-            ->where('users_id',$id)->first();
-
+            ->where('users.users_id',$id)->first();
+        }elseif(!empty($user->Staff->user_id)){
+            $user = DB::table('users')
+            ->leftJoin('staff', 'users.users_id', '=', 'staff.user_id')
+            ->select(
+                'users.role_id','users.faculty_id',
+                'users.id','users.users_id',
+                'users.name','users.status',
+                'users.gender','users.status',
+                'users.email'
+            )
+            ->where('users.users_id',$id)->first();
+        }
         if(empty($user)){
             return response()->json([
                 'status' => false
@@ -147,20 +161,27 @@ class UserController extends Controller
             'gender' => 'required',
             'role_id' => 'required',
             'users_id' => 'required|string|size:10|unique:users,users_id,'.$id.',users_id',
-//            'classes_id' => 'sometimes|required'
+            'classes_id' => 'sometimes|required|exists:classes,id',
+            'faculty_id' => 'sometimes|required|exists:faculties,id'
         ];
         if(!empty($request->email)){
-            $arrRule['email'] = 'unique:users,email';
+            $arrRule['email'] = 'required|email|unique:users,email,'.$id.',users_id';
         }
         $validator = Validator::make($request->all(), $arrRule,[
             'name.required' => "Vui lòng nhập tên",
             'email.unique' => "Email đã tồn tại",
+            'email.email' => "Email không hợp lệ",
             'gender.required' => "Vui lòng chọn giới tính",
             'role_id.required' => "Vui lòng chọn vai trò",
             'users_id.required' => "Vui lòng nhập ID",
             'users_id.size' => "Id có độ dài là 10 kí tự,bắt đầu với 2 chữ cái định danh(CD,DH,...)",
             'users_id.string' => "Id phải là một chuỗi",
             'users_id.unique' => "Id đã tồn tại",
+            'classes_id.required' => "Vui lòng chọn lớp",
+            'classes_id.exists' => "Lớp không tồn tại",
+            'faculty_id.required' => "Vui lòng chọn lớp",
+            'faculty_id.exists' => "Khoa không tồn tại",
+
 //            'classes_id.required' => "Vui lòng chọn lớp.(Nếu lớp rỗng. vui lòng tạo lớp trước",
         ]);
 
@@ -201,5 +222,30 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function ajaxGetUsers(Request $request){
+        $user = Auth::user();
+        $options['all'] = 'all';
+        $students = $this->getStudentByRoleUserLogin($user,$options);
+        return DataTables::of($students)
+//            $a = "<button data-user-id=\"{{$user->users_id}}\" class=\"btn update-user btn-primary\"
+//                                                data-user-edit-link=\"{{route('user-edit',$user->users_id)}}\"
+//                                                data-user-update-link=\"{{route('user-update',$user->users_id)}}\">
+//                                            <i class=\"fa fa-lg fa-edit\" aria-hidden=\"true\"> </i>Sửa
+//                                        </button>"
+            ->editColumn('status', function ($student){
+                $displayStatus = $this->getDisplayStatusUser($student->status);
+                return $displayStatus;
+            })
+            ->addColumn('action', function ($student) {
+                $dataUserEditLink = route('user-edit',$student->users_id);
+                $dataUserUpdateLink = route('user-update',$student->users_id);
+                $dataUserId = $student->users_id;
+                return '<button class="btn update-user btn-primary" data-user-id="'.$dataUserId.'" data-user-edit-link="'.$dataUserEditLink.'" 
+                    data-user-update-link="'.$dataUserUpdateLink.'"> <i class="fa fa-lg fa-edit" aria-hidden="true">Sửa</i>
+                    </button>';
+            })
+            ->make(true);
     }
 }

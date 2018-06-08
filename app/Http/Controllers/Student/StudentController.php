@@ -19,8 +19,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Excel;
 use Validator;
+use Yajra\DataTables\DataTables;
 
-//use Excel;
 
 class StudentController extends Controller
 {
@@ -516,5 +516,11 @@ class StudentController extends Controller
             ];
         }
         EvaluationForm::insert($arrEvaluationForm);
+    }
+
+    public function ajaxGetUsers(Request $request){
+        $user = Auth::user();
+        $students = $this->getStudentByRoleUserLogin($user);
+        return DataTables::of($students)->make(true);
     }
 }
