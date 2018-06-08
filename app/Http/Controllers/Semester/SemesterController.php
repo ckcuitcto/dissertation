@@ -80,6 +80,12 @@ class SemesterController extends Controller
             $semester = new Semester();
             $semester->year_from = $request->year_from;
             $semester->year_to = $request->year_to;
+            if (!empty($request->date_start)) {
+                $semester->date_start = Carbon::createFromFormat('d/m/Y', $request->date_start);
+            }
+            if (!empty($request->date_end)) {
+                $semester->date_end = Carbon::createFromFormat('d/m/Y', $request->date_end);
+            }
             if (!empty($request->date_start_to_re_mark)) {
                 $semester->date_start_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_re_mark);
             }
@@ -156,6 +162,13 @@ class SemesterController extends Controller
         $markTimeBySemester = MarkTime::where('semester_id',$id)->get();
         $semester->date_start_to_mark = Carbon::parse($semester->date_start_to_mark)->format('d/m/Y');
         $semester->date_end_to_mark = Carbon::parse($semester->date_end_to_mark)->format('d/m/Y');
+
+        if (!empty($semester->date_start)) {
+            $semester->date_start = Carbon::parse($semester->date_start)->format('d/m/Y');
+        }
+        if (!empty($semester->date_end)) {
+            $semester->date_end = Carbon::parse($semester->date_end)->format('d/m/Y');
+        }
 
         if (!empty($semester->date_start_to_re_mark)) {
             $semester->date_start_to_re_mark = Carbon::parse($semester->date_start_to_re_mark)->format('d/m/Y');
@@ -245,6 +258,13 @@ class SemesterController extends Controller
             }
             if (!empty($request->date_start_to_request_re_mark)) {
                 $semester->date_start_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_request_re_mark);
+            }
+
+            if (!empty($request->date_start)) {
+                $semester->date_start = Carbon::createFromFormat('d/m/Y', $request->date_start);
+            }
+            if (!empty($request->date_end)) {
+                $semester->date_end = Carbon::createFromFormat('d/m/Y', $request->date_end);
             }
             $semester->term = $request->term;
             $semester->save();

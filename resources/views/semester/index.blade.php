@@ -81,7 +81,19 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <label for="mark_date">Ngày chấm</label>
+                                        <label for="">Thời gian của học kì</label>
+                                        <div class="input-group">
+                                            {{--<label for="date_start">Thời gian của học kì</label>--}}
+                                            <input type="text" class="input-sm form-control date_start"
+                                                   id="date_start" name="date_start"/>
+                                            <span class="input-group-addon">to</span>
+                                            {{--<label for="date_end">Thời gian của học kì</label>--}}
+                                            <input type="text" class="input-sm form-control date_end"
+                                                   id="date_end" name="date_end"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Ngày chấm</label>
                                         <div class="input-group">
                                             <input type="text" class="input-sm form-control date_start_to_mark"
                                                    id="date_start_to_mark" name="date_start_to_mark"/>
@@ -91,7 +103,7 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <label for="mark_date">Thời gian khiếu nại</label>
+                                        <label for="">Thời gian khiếu nại</label>
                                         <div class="input-group">
                                             <input type="text" class="input-sm form-control date_start_to_request_re_mark"
                                                    id="date_start_to_request_re_mark" name="date_start_to_request_re_mark"/>
@@ -101,7 +113,7 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <label for="mark_date">Thời gian chấm lại khiếu nại</label>
+                                        <label for="">Thời gian chấm lại khiếu nại</label>
                                         <div class="input-group">
                                             <input type="text" class="input-sm form-control date_start_to_re_mark"
                                                    id="date_start_to_re_mark" name="date_start_to_re_mark"/>
@@ -171,7 +183,7 @@
             language: "vi",
             orientation: "bottom right",
             autoclose: true,
-            toggleActive: true,
+            toggleActive: true
 
         });
         $("input#year_to").datepicker({
@@ -181,6 +193,26 @@
             todayBtn: "linked",
             clearBtn: true,
             language: "vi",
+            orientation: "bottom right",
+            autoclose: true,
+            toggleActive: true
+        });
+        $('input#date_start').datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            todayHighlight: true,
+            orientation: "bottom right",
+            autoclose: true,
+            toggleActive: true
+        });
+        $('input#date_end').datepicker({
+            todayBtn: "linked",
+            language: "vi",
+            format: "dd/mm/yyyy",
+            clearBtn: true,
+            todayHighlight: true,
             orientation: "bottom right",
             autoclose: true,
             toggleActive: true

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Model\News;
 use App\Model\Semester;
@@ -34,7 +35,7 @@ class HomeController extends Controller
             $newsList = News::where( 'faculty_id','=',$userLogin->faculty_id)->orWhere('faculty_id','=',null)->orderBy('id','DESC')->limit(6)->get();
         }
 
-        $timeList = Semester::orderBy('id','desc')->first();
+        $timeList = $this->getCurrentSemester();
         return view('home.home', compact('newsList','timeList'));
     }
 

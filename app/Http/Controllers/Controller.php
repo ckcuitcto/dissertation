@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Semester;
 use App\Model\Student;
 use App\Model\User;
 use Carbon\Carbon;
@@ -10,67 +11,114 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\EloquentDataTable;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function getStudentByRoleUserLogin(User $user,$pagination = TRUE)
+    protected $dataTable;
+
+    public function dataTable($query)
     {
-        if ($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
-        {
-            if ($pagination == TRUE) {
-                $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')->select('students.*')->paginate(50);
-            }else{
-                $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')->select('students.*')->get();
+        return new EloquentDataTable($query);
+    }
+
+    protected function getCurrentSemester()
+    {
+        $semester = Semester::where('date_start', '<=', Carbon::now()->format('Y/m/d'))->orderBy('id', 'desc')->first();
+        return $semester;
+    }
+
+    public function getStudentByRoleUserLogin(User $user, $options = array())
+    {
+        if(empty($options)) {
+            $semester = $this->getCurrentSemester();
+            if ($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
+            {
+                $arrUserId = DB::table('users')
+                    ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                    ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                    ->select('users.users_id')->get()->toArray();
+            } elseif ($user->Role->weight >= ROLE_BANCHUNHIEMKHOA) {
+                // neeus laf ban chu nhiem khoa thi lay cung khoa
+                $arrUserId = DB::table('users')
+                    ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                    ->where('users.faculty_id', $user->faculty_id)
+                    ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                    ->select('users.users_id')->get()->toArray();
+            } elseif ($user->Role->weight >= ROLE_COVANHOCTAP) {
+                // neeus laf ban co van hoc tap thi lay cac sinh vien thuoc cac lop ma ng nay lam co  van
+                // lấy danh sách các lớp mà ng này làm cố vấn
+                $arrClassId = [];
+                foreach ($user->Staff->Classes as $class) {
+                    $arrClassId[] = $class->id;
+                }
+                $arrUserId = DB::table('users')
+                    ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                    ->leftJoin('students', 'students.user_id', '=', 'users.users_id')
+                    ->where('users.faculty_id', $user->faculty_id)
+                    ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                    ->whereIn('students.class_id', $arrClassId)
+                    ->select('users.users_id')->get()->toArray();
+
+            } else if ($user->Role->weight >= ROLE_BANCANSULOP) //ban can su lop, thì lấy user thuộc lop
+            {
+                $arrUserId = DB::table('users')
+                    ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                    ->leftJoin('students', 'students.user_id', '=', 'users.users_id')
+                    ->where('users.faculty_id', $user->faculty_id)
+                    ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                    ->where('students.class_id', $user->Student->class_id)
+                    ->select('users.users_id')->get()->toArray();
             }
+            foreach ($arrUserId as $key => $value) {
+                $userIds[$key] = [$value->users_id];
+            }
+            if (!empty($userIds)) {
+                $students = DB::table('student_list_each_semesters')
+                    ->rightJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
+                    ->rightJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
+                    ->rightJoin('users', 'users.users_id', '=', 'students.user_id')
+                    ->rightJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
+                    ->rightJoin('roles', 'roles.id', '=', 'users.role_id')
+                    ->whereIn('users.users_id', $userIds)
+                    ->where('student_list_each_semesters.semester_id', $semester->id)
+                    ->select(
+                        'users.users_id',
+                        'users.name as userName',
+                        'roles.display_name',
+                        'classes.name as className',
+                        'faculties.name as facultyName',
+                        'students.academic_year_from',
+                        'students.academic_year_to',
+                        'students.id',
+                        'users.status'
+//                    DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic")
+                    );
+                return $students;
+            }
+            return false;
+        }elseif(!empty($options['all'])){
+            $students = DB::table('users')
+                ->leftJoin('students', 'users.users_id', '=', 'students.user_id')
+                ->leftJoin('classes', 'classes.id', '=', 'students.class_id')
+                ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
+                ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
+                ->select(
+                    'users.users_id',
+                    'users.name as userName',
+                    'roles.display_name',
+                    'classes.name as className',
+                    'faculties.name as facultyName',
+                    'students.academic_year_from',
+                    'students.academic_year_to',
+                    'students.id',
+                    'users.status'
+//                    DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic")
+                );
             return $students;
-        } elseif ($user->Role->weight >= ROLE_BANCHUNHIEMKHOA) {
-            // neeus laf ban chu nhiem khoa thi lay cung khoa
-            $arrUserId = DB::table('users')
-                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
-                ->where('users.faculty_id', $user->faculty_id)
-                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
-                ->select('users.users_id')->get()->toArray();
-        } elseif ($user->Role->weight >= ROLE_COVANHOCTAP) {
-            // neeus laf ban co van hoc tap thi lay cac sinh vien thuoc cac lop ma ng nay lam co  van
-
-            // lấy danh sách các lớp mà ng này làm cố vấn
-            $arrClassId = [];
-            foreach ($user->Staff->Classes as $class) {
-                $arrClassId[] = $class->id;
-            }
-            $arrUserId = DB::table('users')
-                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
-                ->leftJoin('students', 'students.user_id', '=', 'users.users_id')
-                ->where('users.faculty_id', $user->faculty_id)
-                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
-                ->whereIn('students.class_id', $arrClassId)
-                ->select('users.users_id')->get()->toArray();
-
-        } else if ($user->Role->weight >= ROLE_BANCANSULOP) //ban can su lop, thì lấy user thuộc lop
-        {
-            $arrUserId = DB::table('users')
-                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
-                ->leftJoin('students', 'students.user_id', '=', 'users.users_id')
-                ->where('users.faculty_id', $user->faculty_id)
-                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
-                ->where('students.class_id', $user->Student->class_id)
-                ->select('users.users_id')->get()->toArray();
         }
-
-        foreach ($arrUserId as $key => $value){
-            $userIds[$key] = [$value->users_id];
-        }
-        if (!empty($userIds)) {
-            if ($pagination == TRUE) {
-                $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')->select('students.*')->whereIn('students.user_id', $userIds)->paginate(50);
-            }else{
-                $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')->select('students.*')->whereIn('students.user_id', $userIds)->get();
-            }
-            return $students;
-        }
-        return false;
     }
 
     public function formatDate($date)

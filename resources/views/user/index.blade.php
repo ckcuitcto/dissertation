@@ -15,7 +15,7 @@
             <div class="col-md-12">
                 <div class="tile">
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-hover table-bordered" id="table-users">
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -25,25 +25,25 @@
                                 <th>Tác vụ</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @foreach($users as $user)
-                                <tr>
-                                    <td>{{ $user->users_id }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->Role->display_name }}</td>
-                                    <td>{{ \App\Http\Controllers\Controller::getDisplayStatusUser($user->status) }}</td>
-                                    <td>
-                                        <button data-user-id="{{$user->users_id}}" class="btn update-user btn-primary"
-                                                data-user-edit-link="{{route('user-edit',$user->users_id)}}"
-                                                data-user-update-link="{{route('user-update',$user->users_id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>Sửa
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
+                            {{--<tbody>--}}
+                            {{--@foreach($users as $user)--}}
+                                {{--<tr>--}}
+                                    {{--<td>{{ $user->users_id }}</td>--}}
+                                    {{--<td>{{ $user->name }}</td>--}}
+                                    {{--<td>{{ $user->Role->display_name }}</td>--}}
+                                    {{--<td>{{ \App\Http\Controllers\Controller::getDisplayStatusUser($user->status) }}</td>--}}
+                                    {{--<td>--}}
+                                        {{--<button data-user-id="{{$user->users_id}}" class="btn update-user btn-primary"--}}
+                                                {{--data-user-edit-link="{{route('user-edit',$user->users_id)}}"--}}
+                                                {{--data-user-update-link="{{route('user-update',$user->users_id)}}">--}}
+                                            {{--<i class="fa fa-lg fa-edit" aria-hidden="true"> </i>Sửa--}}
+                                        {{--</button>--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
+                            {{--@endforeach--}}
+                            {{--</tbody>--}}
                         </table>
-                        {{ $users->links('vendor.pagination.bootstrap-4') }}
+                        {{--{{ $users->links('vendor.pagination.bootstrap-4') }}--}}
                         <div class="row">
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#modal-add-user" class="btn btn-primary"
@@ -317,8 +317,37 @@
     <script>
         $(document).ready(function () {
 
+            $('#table-users').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{{ route('ajax-user-get-users') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": {
+                        "_token": "{{ csrf_token() }}"
+                    }
+                },
+                "columns": [
+                    {data: "users_id", name: "users.users_id"},
+                    {data: "userName", name: "users.name"},
+                    {data: "display_name", name: "roles.display_name"},
+                    {data: "status", name: "users.status"},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    // "zeroRecords": "Không có bản ghi nào!",
+                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 25
+            });
+
             //            import
-            $("#btn-import-student").click(function (e) {
+            // $("#btn-import-student").click(function (e) {
+            $('body').on('click', '#btn-import-student', function (e) {
                 e.preventDefault();
                 $("#importModal").find("p.child-error").remove();
                 var formData = new FormData();
@@ -370,7 +399,8 @@
                 });
             });
 
-            $("button.update-user").click(function () {
+            // $("button.update-user").click(function () {
+            $('body').on('click', 'button.update-user', function (e) {
                 var urlEdit = $(this).attr('data-user-edit-link');
                 var urlUpdate = $(this).attr('data-user-update-link');
                 var id = $(this).attr('data-user-id');
@@ -381,6 +411,7 @@
                     type: "get",
                     url: urlEdit,
                     cache: false,
+                    data: {id:id},
                     dataType: 'json',
                     success: function (result) {
                         if (result.status === true) {
@@ -401,6 +432,7 @@
                                         modal.find('.' + elementName).val(value);
                                     }
                                 });
+                                hideAndShowFaculty('modal-edit-user');
                                 setTimeout(function(){
                                     modal.find("select.classes_id").val(classId);
                                 }, 800);
@@ -413,8 +445,10 @@
                 modal.find(".modal-footer > button[name=btn-save-user]").attr('data-link', urlUpdate);
                 modal.modal('show');
             });
-            $("#btn-save-user").click(function () {
-                var valueForm = $('form#user-form').serialize();
+            // $("#btn-save-user").click(function () {
+            $('body').on('click', '#btn-save-user', function (e) {
+
+                    var valueForm = $('form#user-form').serialize();
                 var url = $(this).attr('data-link');
                 $('#modal-edit-user').find('span.messageErrors').remove();
 
@@ -444,8 +478,10 @@
                 });
             });
 
-            $("button#btn-add").click(function () {
-                var valueForm = $('form#user-add-form').serialize();
+            // $("button#btn-add").click(function () {
+            $('body').on('click', 'button#btn-add', function (e) {
+
+                    var valueForm = $('form#user-add-form').serialize();
                 var url = $(this).attr('data-link');
                 $('form#user-add-form').find('span.messageErrors').remove();
                 $.ajax({
@@ -519,6 +555,13 @@
                 });
             });
 
+            $('#modal-edit-user').on('hidden.bs.modal', function (e) {
+                // hideAndShowFaculty('modal-edit-user');
+                $('#modal-edit-user').find("input[type=text],input[type=number],input[type=year],input[type=hidden], select").val('');
+                $('.text-red').html('');
+                $('span.messageErrors').remove();
+            });
+
             getClassByFacultyId('modal-add-user');
 
             function getClassByFacultyId(modal) {
@@ -540,14 +583,19 @@
         });
 
         hideAndShowFaculty('modal-add-user');
-        hideAndShowFaculty('user-form');
+        hideAndShowFaculty('modal-edit-user');
 
         function hideAndShowFaculty(modal) {
             var roleId = $('div#'+modal).find('select.role_id').val();
             if (roleId === "{{ ROLE_PHONGCONGTACSINHVIEN }}" || roleId === "{{ ROLE_ADMIN }}") {
-                $("div#faculty").hide();
-            } else {
-                $("div#faculty").show();
+                $('div#'+modal).find("div#faculty").hide();
+                $('div#'+modal).find("div#classes").hide();
+            } else if (roleId === "{{ ROLE_BANCHUNHIEMKHOA }}" || roleId === "{{ ROLE_COVANHOCTAP }}") {
+                $('div#'+modal).find("div#faculty").show();
+                $('div#'+modal).find("div#classes").hide();
+            }else{
+                $('div#'+modal).find("div#faculty").show();
+                $('div#'+modal).find("div#classes").show();
             }
         }
 
