@@ -373,7 +373,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 <tr>
                                     <td>Xếp loại</td>
                                     <td colspan="{{ count($listUserMark) }}" style="background-color:gray"></td>
-                                    <td><b>{{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }}</b></td>
+                                    <td align="center"><b>{{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }}</b></td>
                                 </tr>
                                 </tbody>
                             </table>

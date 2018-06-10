@@ -67,6 +67,14 @@ class StaffSeeder extends Seeder
                 'faculty_id' => 1
             ],
             [
+                'users_id' => 'GVIT000003',
+                'name' => 'CVHT Khoa IT 3',
+                'email' => 'GVIT000003@gmail1.com',
+                'password' => bcrypt('GVIT000003'),
+                'role_id' => 3,
+                'faculty_id' => 1
+            ],
+            [
                 'users_id' => 'GVQT000001',
                 'name' => 'CVHT Khoa QTKD 1',
                 'email' => 'GVQT000001@gmail1.com',

@@ -24,7 +24,7 @@
                                 <small class="form-text text-muted" id="emailHelp"></small>
                                 @if ($errors->has('title'))
                                     <span class="help-block">
-                                            <strong>{{ $errors->first('title') }}</strong>
+                                            <strong style="color:red">{{ $errors->first('title') }}</strong>
                                         </span>
                                 @endif
                             </div>
@@ -33,7 +33,7 @@
                                 <textarea class="form-control" id="content" name="content" rows="5"></textarea>
                                 @if ($errors->has('content'))
                                     <span class="help-block">
-                                            <strong>{{ $errors->first('content') }}</strong>
+                                            <strong style="color:red">{{ $errors->first('content') }}</strong>
                                         </span>
                                 @endif
                             </div>

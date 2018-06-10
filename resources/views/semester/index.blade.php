@@ -130,7 +130,7 @@
                                 <div class="col-md-6">
                                     @foreach($rolesCanMark as $key => $role)
                                         <div class="form-row">
-                                            <label for="mark_date">Thời gian chấm của {{ $role->display_name }}</label>
+                                            <label for="mark_date">Thời gian chấm của {{ $role->display_name }} (*)</label>
                                             <div class="input-group">
                                                 <input type="text"
                                                        class="input-sm form-control {{ 'date_start_to_mark_'.$role->id }}"
@@ -143,7 +143,9 @@
                                                        name="{{ 'date_end_to_mark_'.$role->id }}"/>
                                             </div>
                                         </div>
+                                        
                                     @endforeach
+                                    
                                 </div>
                             </div>
                         </form>
