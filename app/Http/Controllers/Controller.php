@@ -317,4 +317,20 @@ class Controller extends BaseController
         //$str = str_replace(" ", "-", str_replace("&*#39;","",$str));
         return $str;
     }
+
+    public function checkRank1($score){
+        if($score >= EXCELLENT){
+            return "Xuất sắc";
+        }elseif($score >= VERY_GOOD ) {
+            return "Tốt";
+        }elseif($score >= GOOD ) {
+            return "Khá";
+        }elseif($score >= AVERAGE ) {
+            return "Trung bình";
+        }elseif($score >= POOR ) {
+            return "Yếu";
+        }elseif($score >= BAD ) {
+            return "Kém";
+        }
+    }
 }

@@ -341,6 +341,9 @@ class StudentController extends Controller
 
             $arrFileName = array();
 
+            $arrSemester = [];
+            // lưu lại id các học kì nếu trong các file import có file ở các học kì khác nhau
+            // key là tên file, value là id học kì
             $semesterId = null;
             foreach ($arrFile as $file) {
                 $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
@@ -355,6 +358,7 @@ class StudentController extends Controller
                 $classes = null;
                 $monitor = null;
                 $semester = null;
+
                 for ($i = 4; $i < count($dataFileExcel); $i++) {
                     if ($i == 4) {
                         // lấy khoa theo Id
@@ -424,6 +428,7 @@ class StudentController extends Controller
                             $arrError[] = "Học kì $term năm học $yearFrom - $yearTo không tồn tại";
                         }else{
                             $semesterId = $semester->id;
+                            $arrSemester[$fileName] = $semesterId;
                         }
                     }
                     elseif (!empty($dataFileExcel[$i][1]) AND !empty($dataFileExcel[$i][0]) AND $i >= 10 AND !empty($faculty) AND !empty($classes) AND !empty($semester) AND !empty($monitor)) {
@@ -445,7 +450,9 @@ class StudentController extends Controller
                 foreach($arrUser as $key => $value){
                     $userSearch = User::where('users_id', $value['user_id'])->first();
                     if(empty($userSearch)){
-                        $arrError[] = "MSSV $value[user_id] không tồn tại trong danh sách sinh viên";
+                        $classOfUserSearch = Classes::find($value['class_id']);
+                        $className = $classOfUserSearch->name;
+                        $arrError[] = "MSSV $value[user_id], lớp $className không tồn tại trong danh sách sinh viên";
                     }
                 }
                 if(!empty($arrError)){
@@ -462,26 +469,51 @@ class StudentController extends Controller
                 }else{
                     //nếu k có lỗi. di chuyển file qua thư mục mới.
                     for($i = 0 ; $i< count($arrFile); $i++){
-
-                        if (!file_exists(public_path().'/'.STUDENT_LIST_EACH_SEMESTER_PATH.$semesterId)) {
-                            mkdir(public_path().'/'.STUDENT_LIST_EACH_SEMESTER_PATH.$semesterId, 0777, true);
+                        $semesterIdByFileName = $arrSemester[$arrFileName[$i]];
+                        //kiểm tra xem folder có tên = id học kì đa có chưa. chưa có thì tạo.
+                        if (!file_exists(public_path().'/'.STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName)) {
+                            mkdir(public_path().'/'.STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName, 0777, true);
                         }
-                        if(File::move(STUDENT_PATH.$arrFileName[$i],STUDENT_LIST_EACH_SEMESTER_PATH.$semesterId."/".$arrFile[$i]->getClientOriginalName())) {
+
+                        //nếu file giống và học kì giông đã tồn tại thì xóa r tạo mới.
+                        if(file_exists(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName())){
+                            unlink(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName());
+                        }
+
+                        // di chuyển và xóa file cũ
+                        if(File::move(STUDENT_PATH.$arrFileName[$i],STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName())) {
                             if (file_exists(STUDENT_PATH . $arrFileName[$i])) {
                                 unlink(STUDENT_PATH . $arrFileName[$i]);
                             }
                         }
                         $arrFileImport[] = [
-                            'file_path' => $semesterId."/".$arrFile[$i]->getClientOriginalName(),
+                            'file_path' => $semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName(),
                             'file_name' => $arrFile[$i]->getClientOriginalName(),
                             'status' => 'Thành công',
-                            'staff_id' => $userLogin->Staff->id
+                            'staff_id' => $userLogin->Staff->id,
+                            'semester_id' => $semesterIdByFileName
                         ];
                     }
                     FileImport::insert($arrFileImport);
-                    StudentListEachSemester::insert($arrUser);
 
-                    $this->addEvaluationFormAfterInportStudent($semesterId);
+                    // lúc đầu là làm sẽ insert vào hết. nhưng giờ sửa lại. để lỡ mà insert 2 lần
+                    // thì danh sách sinh veien mỗi học kì sẽ k bị lặp
+                    // cũng như có thể update lại thông tin của ban sán sự lớp cũng như cố vấn học tập
+                    foreach ($arrUser as $value) {
+                        StudentListEachSemester::updateOrCreate(
+                            [
+                                'user_id' => $value['user_id'],
+                                'semester_id' => $value['semester_id']
+                            ],
+                            [
+                                'class_id' => $value['class_id'],
+                                'semester_id' => $value['semester_id'],
+                                'monitor_id' => $value['monitor_id'],
+                            ]
+                        );
+                    }
+//                    StudentListEachSemester::insert($arrUser);
+                    $this->addEvaluationFormAfterInportStudent($semesterIdByFileName);
                     return response()->json([
                         'status' => true,
                     ], 200);
@@ -505,14 +537,14 @@ class StudentController extends Controller
         $students = Student::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','students.user_id')
             ->where('semester_id',$semesterId)->select('students.*')->get();
 
-        $arrEvaluationForm = array();
+        //làm v đễ lỡ mà có r thì k bị trùng
         foreach ($students as $value) {
-            $arrEvaluationForm[] = [
+            $arrEvaluationForm = [
                 'semester_id' => $semesterId,
                 'student_id' => $value->id
             ];
+            EvaluationForm::updateOrCreate($arrEvaluationForm);
         }
-        EvaluationForm::insert($arrEvaluationForm);
     }
 
     public function ajaxGetUsers(Request $request){
