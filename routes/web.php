@@ -63,6 +63,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/edit/{id}', ['as' => 'student-edit', 'uses' => 'Student\StudentController@edit']);
 
+        Route::post('/get-users', ['as' => 'ajax-student-get-users', 'uses' => 'Student\StudentController@ajaxGetUsers']);
+
         Route::post('/import', ['as' => 'student-import', 'uses' => 'Student\StudentController@import']);
         Route::post('/import-student-list-each-semester', ['as' => 'import-student-list-each-semester', 'uses' => 'Student\StudentController@importStudentListEachSemester']);
     });
@@ -125,6 +127,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/edit/{id}', ['as' => 'transcript-edit', 'uses' => 'Transcript\TranscriptController@edit']);
         Route::post('/update/{id}', ['as' => 'transcript-update', 'uses' => 'Transcript\TranscriptController@update']);
+
+        Route::post('/get-users', ['as' => 'ajax-transcript-get-users', 'uses' => 'Transcript\TranscriptController@ajaxGetUsers']);
 
     });
 
@@ -224,6 +228,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'user-edit', 'uses' => 'User\UserController@edit']);
         //update
         Route::post('/update/{id}', ['as' => 'user-update', 'uses' => 'User\UserController@update']);
+
+        Route::post('/get-users', ['as' => 'ajax-user-get-users', 'uses' => 'User\UserController@ajaxGetUsers']);
 
     });
 

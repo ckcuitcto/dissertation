@@ -15,36 +15,22 @@
             <div class="col-md-12">
                 <div class="tile">
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        <table class="table table-hover table-bordered" id="students">
                             <thead>
                             <tr>
-                                <th>STT</th>
+                                <th>MSSV</th>
                                 <th>Tên</th>
                                 <th>Chức vụ</th>
                                 <th>Lớp</th>
                                 <th>Khoa</th>
                                 <th>Khóa</th>
+                                <th>Khóa</th>
+                                <th></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @if($students != false)
-                            @foreach($students as $key => $student)
-                                <tr>
-                                    <td> {{ $student->user_id }}</td>
-                                    <td>
-                                        <a href="{{route('transcript-show',$student->id )}}"> {{ $student->User->name }} </a>
-                                    </td>
-                                    <td>{{ $student->User->Role->display_name }}</td>
-                                    <td>{{ $student->Classes->name or "" }}</td>
-                                    <td>{{ $student->User->Faculty->name or "" }}</td>
-                                    <td> {{ $student->academic_year_from  ." - ". $student->academic_year_to }}</td>
-                                </tr>
-                            @endforeach
-                            @endisset
-                            </tbody>
+                            {{--<a href="{{route('transcript-show',".$student->id." )}}">  $student->User->name }} </a>--}}
                         </table>
                     </div>
-                    {{ $students->links('vendor.pagination.bootstrap-4') }}
                 </div>
             </div>
         </div>
@@ -58,5 +44,36 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-
+    <script>
+        $('#students').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{{ route('ajax-transcript-get-users') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": {
+                    "_token": "{{ csrf_token() }}"
+                }
+            },
+            "columns": [
+                {data: "users_id", name: "users.users_id"},
+                {data: "userName", name: "users.name"},
+                {data: "display_name", name: "roles.display_name"},
+                {data: "className", name: "classes.name"},
+                {data: "facultyName", name: "faculties.name"},
+                {data: "academic_year_from", name: "students.academic_year_from"},
+                {data: "academic_year_to", name: "students.academic_year_to"},
+                {data: 'action', name: 'action', orderable: false, searchable: false}
+            ],
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                // "zeroRecords": "Không có bản ghi nào!",
+                // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+            },
+            "pageLength": 25
+        });
+    </script>
 @endsection

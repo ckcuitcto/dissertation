@@ -23,45 +23,21 @@
                         <h3 class="l-text">Loading</h3>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        <table class="table table-hover table-bordered" id="students">
                             <thead>
                             <tr>
-                                <th>STT</th>
+                                <th>MSSV</th>
                                 <th>Tên</th>
                                 <th>Chức vụ</th>
                                 <th>Lớp</th>
                                 <th>Khoa</th>
                                 <th>Khóa</th>
-                                {{--<th></th>--}}
+                                <th>Khóa</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @foreach($users as $key => $student)
-                                <tr>
-                                    <td> {{ $student->users_id }}</td>
-                                    <td>{{ $student->name }} </td>
-                                    <td>{{ $student->Role->display_name }}</td>
-                                    <td>{{ $student->Student->Classes->name OR "" }}</td>
-                                    <td>{{ $student->Faculty->name }}</td>
-                                    <td> {{ $student->Student->academic_year_from  ." - ". $student->Student->academic_year_to }}</td>
-                                    {{--<td>--}}
-                                        {{--<a data-student-id="{{$student->id}}" id="update-student"--}}
-                                           {{--data-student-edit-link="{{route('student-edit',$student->id)}}"--}}
-                                           {{--data-student-update-link="{{route('student-update',$student->id)}}">--}}
-                                            {{--<i class="fa fa-lg fa-edit" aria-hidden="true"> </i>--}}
-                                        {{--</a>--}}
-                                    {{--</td>--}}
-                                </tr>
-                            @endforeach
-                            </tbody>
                         </table>
-                        {{ $users->links('vendor.pagination.bootstrap-4') }}
                         <div class="row">
                             <div class="col-md-6">
-                                {{--<button data-toggle="modal" data-target="#myModal" class="btn btn-primary"--}}
-                                        {{--id="btnAddstudent" type="button"><i class="fa fa-pencil-square-o"--}}
-                                                                            {{--aria-hidden="true"></i>Thêm--}}
-                                {{--</button>--}}
                                 <button data-toggle="modal" data-target="#importModal" class="btn btn-outline-primary"
                                         type="button"><i class="fa fa-pencil-square-o"
                                                          aria-hidden="true"></i> Nhập danh sách sinh viên mới...
@@ -126,103 +102,37 @@
 
 
     <script>
+        $('#students').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{{ route('ajax-student-get-users') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": {
+                    "_token": "{{ csrf_token() }}"
+                }
+            },
+            "columns": [
+                {data: "users_id", name: "users.users_id"},
+                {data: "userName", name: "users.name"},
+                {data: "display_name", name: "roles.display_name"},
+                {data: "className", name: "classes.name"},
+                {data: "facultyName", name: "faculties.name"},
+                {data: "academic_year_from", name: "students.academic_year_from"},
+                {data: "academic_year_to", name: "students.academic_year_to"}
+            ],
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                // "zeroRecords": "Không có bản ghi nào!",
+                // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+            },
+            "pageLength": 25
+        });
+
         $(document).ready(function () {
-//             $("a#update-student").click(function () {
-//                 var urlEdit = $(this).attr('data-student-edit-link');
-//                 var urlUpdate = $(this).attr('data-student-update-link');
-//                 var id = $(this).attr('data-student-id');
-//                 $('.form-row').find('span.messageErrors').remove();
-//                 $.ajax({
-//                     type: "get",
-//                     url: urlEdit,
-//                     data: {id: id},
-//                     dataType: 'json',
-//                     success: function (result) {
-//                         if (result.status === true) {
-//                             if (result.student !== undefined) {
-//                                 $.each(result.student, function (elementName, value) {
-// //                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-// //                                    alert(elementName + "+ " + messageValue)
-//                                     $('.' + elementName).val(value);
-// //                                    });
-//                                 });
-//                             }
-//                         }
-//                     }
-//                 });
-//                 $('#myModal1').find(".modal-title").text('Sửa thông tin khoa');
-//                 $('#myModal1').find(".modal-footer > button[name=btn-save-student]").html('Sửa')
-//                 $('#myModal1').find(".modal-footer > button[name=btn-save-student]").attr('data-link', urlUpdate);
-//                 $('#myModal1').modal('show');
-//             });
-            // lưu
-
-            // $("#btn-save-student").click(function () {
-            //     var valueForm = $('form#student-form').serialize();
-            //     var url = $(this).attr('data-link');
-            //     $('.form-row').find('span.messageErrors').remove();
-            //     $.ajax({
-            //         type: "post",
-            //         url: url,
-            //         data: valueForm,
-            //         dataType: 'json',
-            //         success: function (result) {
-            //             if (result.status === false) {
-            //                 //show error list fields
-            //                 if (result.arrMessages !== undefined) {
-            //                     $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-            //                         $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-            //                             $('form#student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-            //                         });
-            //                     });
-            //                 }
-            //             } else if (result.status === true) {
-            //                 $('#myModal').find('.modal-body').html('<p>Thành công</p>');
-            //                 $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-            //                 $('#myModal').on('hidden.bs.modal', function (e) {
-            //                     location.reload();
-            //                 });
-            //             }
-            //         }
-            //     });
-            // });
-
-            //delete
-            // $('a#destroy-student').click(function () {
-            //     var id = $(this).attr("data-student-id");
-            //     var url = $(this).attr('data-student-link');
-            //     swal({
-            //         title: "Bạn chắc chưa?",
-            //         text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
-            //         type: "warning",
-            //         showCancelButton: true,
-            //         confirmButtonText: "Có, tôi chắc chắn!",
-            //         cancelButtonText: "Không, Hủy dùm tôi!",
-            //         closeOnConfirm: false,
-            //         closeOnCancel: false
-            //     }, function (isConfirm) {
-            //         if (isConfirm) {
-            //             $.ajax({
-            //                 url: url,
-            //                 type: 'GET',
-            //                 cache: false,
-            //                 data: {"id": id},
-            //                 success: function (data) {
-            //                     if (data.status === true) {
-            //                         swal("Deleted!", "Đã xóa học kì " + data.student.name, "success");
-            //                         $('.sa-confirm-button-container').click(function () {
-            //                             location.reload();
-            //                         })
-            //                     } else {
-            //                         swal("Cancelled", "Không tìm thấy học kì !!! :)", "error");
-            //                     }
-            //                 }
-            //             });
-            //         } else {
-            //             swal("Đã hủy", "Đã hủy xóa học kì:)", "error");
-            //         }
-            //     });
-            // });
 
 //            import
             $("#btn-import-student").click(function (e) {

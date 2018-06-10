@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class TranscriptController extends Controller
 {
@@ -23,10 +24,7 @@ class TranscriptController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $students = $this->getStudentByRoleUserLogin($user);
-
-        return view('transcript.index', compact('students'));
+        return view('transcript.index');
     }
 
     /**
@@ -196,5 +194,15 @@ class TranscriptController extends Controller
             $total += $score;
         }
         return $total;
+    }
+
+    public function ajaxGetUsers(Request $request){
+        $user = Auth::user();
+        $students = $this->getStudentByRoleUserLogin($user);
+        return DataTables::of($students)
+        ->addColumn('action', function ($student) {
+            return '<a title="View" href="'.route('transcript-show',$student->id).'" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
+        })
+        ->make(true);
     }
 }

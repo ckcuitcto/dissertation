@@ -66,12 +66,19 @@ class SemesterController extends Controller
             // $arrValidatorRoleMessage[$dateEnd . ".after"] = "Ngày kết thúc phải > ngày bắt đầu";
         }
         $arrValidatorRole['year_from'] = "required";
+        
+        $arrValidatorRole['date_start'] = "required";
+        $arrValidatorRole['date_end'] = "required";
+
         // $arrValidatorRole['year_to'] = "required|after:year_from";
         $arrValidatorRole['term'] = "required";
         $arrValidatorRoleMessage['year_from.required'] = 'Bắt buộc nhập. ';
         $arrValidatorRoleMessage['year_to.required'] = 'Bắt buộc nhập. ';
         // $arrValidatorRoleMessage['year_to.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
         $arrValidatorRoleMessage['term.required'] = 'Bắt buộc nhập học kì';
+
+        $arrValidatorRoleMessage['date_start.required'] = 'Bắt buộc nhập thời gian bắt đầu';
+        $arrValidatorRoleMessage['date_end.required'] = 'Bắt buộc nhập thời gian kết thúc';
        
         $validator = Validator::make($request->all(), $arrValidatorRole, $arrValidatorRoleMessage);
 
@@ -85,6 +92,12 @@ class SemesterController extends Controller
             $semester = new Semester();
             $semester->year_from = $request->year_from;
             $semester->year_to = $request->year_to;
+            if (!empty($request->date_start)) {
+                $semester->date_start = Carbon::createFromFormat('d/m/Y', $request->date_start);
+            }
+            if (!empty($request->date_end)) {
+                $semester->date_end = Carbon::createFromFormat('d/m/Y', $request->date_end);
+            }
             if (!empty($request->date_start_to_re_mark)) {
                 $semester->date_start_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_re_mark);
             }
@@ -162,6 +175,13 @@ class SemesterController extends Controller
         $semester->date_start_to_mark = Carbon::parse($semester->date_start_to_mark)->format('d/m/Y');
         $semester->date_end_to_mark = Carbon::parse($semester->date_end_to_mark)->format('d/m/Y');
 
+        if (!empty($semester->date_start)) {
+            $semester->date_start = Carbon::parse($semester->date_start)->format('d/m/Y');
+        }
+        if (!empty($semester->date_end)) {
+            $semester->date_end = Carbon::parse($semester->date_end)->format('d/m/Y');
+        }
+
         if (!empty($semester->date_start_to_re_mark)) {
             $semester->date_start_to_re_mark = Carbon::parse($semester->date_start_to_re_mark)->format('d/m/Y');
         }
@@ -218,14 +238,19 @@ class SemesterController extends Controller
             // $arrValidatorRoleMessage[$dateEnd . ".required"] = "Bắt buộc nhập";
         }
 
+        $arrValidatorRole['date_start'] = "required";
+        $arrValidatorRole['date_end'] = "required";
        $arrValidatorRole['year_from'] = "sometimes|required";
        $arrValidatorRole['year_from'] = "sometimes|required";
+
        $arrValidatorRole['term'] = "required";
 //        $arrValidatorRole['year_to'] = "required|after:year_from";
        $arrValidatorRoleMessage['year_from.required'] = 'Bắt buộc nhập. ';
        $arrValidatorRoleMessage['year_to.required'] = 'Bắt buộc nhập. ';
 //        $arrValidatorRoleMessage['year_to.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
-        $arrValidatorRoleMessage['term.required'] = 'Bắt buộc nhập học kì';     
+        $arrValidatorRoleMessage['term.required'] = 'Bắt buộc nhập học kì';    
+        $arrValidatorRoleMessage['date_start.required'] = 'Bắt buộc nhập thời gian bắt đầu';
+        $arrValidatorRoleMessage['date_end.required'] = 'Bắt buộc nhập thời gian kết thúc'; 
 
         $validator = Validator::make($request->all(), $arrValidatorRole, $arrValidatorRoleMessage);
 
@@ -257,6 +282,13 @@ class SemesterController extends Controller
             }
             if (!empty($request->date_start_to_request_re_mark)) {
                 $semester->date_start_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_request_re_mark);
+            }
+
+            if (!empty($request->date_start)) {
+                $semester->date_start = Carbon::createFromFormat('d/m/Y', $request->date_start);
+            }
+            if (!empty($request->date_end)) {
+                $semester->date_end = Carbon::createFromFormat('d/m/Y', $request->date_end);
             }
             $semester->term = $request->term;
             $semester->save();
