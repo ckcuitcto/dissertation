@@ -127,9 +127,7 @@
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <label>Địa chỉ</label>
-                            <textarea class="form-control address can-edit" rows="3" id="address" name="address" value="{{$user->address OR ""}}" disabled >
-                                {{ $user->address }}
-                            </textarea>
+                            <textarea class="form-control address can-edit" rows="3" id="address" name="address" value="{{$user->address OR ""}}" disabled >{!! $user->address !!}</textarea>
                             {{-- <input class="form-control address" id="address" type="text" name="address" value="{{$user->address OR ""}}" disabled> --}}
                         </div>
                     </div>

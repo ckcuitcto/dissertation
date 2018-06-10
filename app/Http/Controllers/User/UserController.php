@@ -229,11 +229,6 @@ class UserController extends Controller
         $options['all'] = 'all';
         $students = $this->getStudentByRoleUserLogin($user,$options);
         return DataTables::of($students)
-//            $a = "<button data-user-id=\"{{$user->users_id}}\" class=\"btn update-user btn-primary\"
-//                                                data-user-edit-link=\"{{route('user-edit',$user->users_id)}}\"
-//                                                data-user-update-link=\"{{route('user-update',$user->users_id)}}\">
-//                                            <i class=\"fa fa-lg fa-edit\" aria-hidden=\"true\"> </i>Sửa
-//                                        </button>"
             ->editColumn('status', function ($student){
                 $displayStatus = $this->getDisplayStatusUser($student->status);
                 return $displayStatus;

@@ -1,4 +1,9 @@
-    @extends('layouts.default')
+@extends('layouts.default')
+
+@section('title')
+    STU| Thong Tin Khoa {{ $faculty->name }}
+@endsection
+
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -32,41 +37,60 @@
                         </div>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
-                            <thead>
-                            <tr>
-                                <th>Lớp</th>
-                                <th>Số lượng sinh viên</th>
-                                <th>Tác vụ</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($faculty->classes as $class)
+                        <form id="class-form-export" action="{{route('export-file')}}" method="post">
+                            {{ csrf_field() }}
+                            <table class="table table-hover table-bordered" id="sampleTable">
+                                <thead>
                                 <tr>
-                                    <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a></td>
-                                    <td>{{ count($class->Students) }}</td>
-                                    <td style="color:white">
-                                        <a data-id="{{$class->id}}" id="class-edit"
-                                           data-edit-link="{{route('class-edit',$class->id)}}"
-                                           data-update-link="{{route('class-update',$class->id)}}" class="btn btn-primary">
-                                            <i class="fa fa-lg fa-edit " aria-hidden="true"> </i> Sửa
-                                        </a>
-                                        @if(!count($class->Students)>0)
-                                            <a data-id="{{$class->id}}" id="class-destroy"
-                                               data-link="{{route('class-destroy',$class->id)}}" class="btn btn-danger">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
-                                            </a>
-                                        @endif
-                                    </td>
+                                    <th>Lớp</th>
+                                    <th>Số lượng sinh viên</th>
+                                    <th>Tác vụ</th>
+                                    <th>Xuất file báo cáo chấm điểm</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach($faculty->classes as $class)
+                                    <tr>
+                                        <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a>
+                                        </td>
+                                        <td>{{ count($class->Students) }}</td>
+                                        <td style="color:white">
+                                            <a data-id="{{$class->id}}" id="class-edit"
+                                               data-edit-link="{{route('class-edit',$class->id)}}"
+                                               data-update-link="{{route('class-update',$class->id)}}"
+                                               class="btn btn-primary">
+                                                <i class="fa fa-lg fa-edit " aria-hidden="true"> </i> Sửa
+                                            </a>
+                                            @if(!count($class->Students)>0)
+                                                <a data-id="{{$class->id}}" id="class-destroy"
+                                                   data-link="{{route('class-destroy',$class->id)}}"
+                                                   class="btn btn-danger">
+                                                    <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="animated-checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="classes[]"
+                                                           value="{{ $class->id }}"><span class="label-text"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </form>
                         <div class="row">
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
                                         id="btn-add-class" type="button"><i class="fa fa-pencil-square-o"
                                                                             aria-hidden="true"></i>Thêm
+                                </button>
+                                <button class="btn btn-info" id="btnExport" type="button" data-link="{{route('export-file')}}">
+                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                    Xuất File
                                 </button>
                             </div>
                         </div>
@@ -103,7 +127,7 @@
                                                 required aria-describedby="staff">
                                             @if($faculty->Users->where('role_id','=', ROLE_COVANHOCTAP))
                                                 @foreach($faculty->Users->where('role_id','>','2') as $value)
-{{--                                                    @php var_dump($value->Staff); @endphp--}}
+                                                    {{--                                                    @php var_dump($value->Staff); @endphp--}}
                                                     <option value="{{ $value->Staff->id }}"> {{ $value->Staff->id . "|". $value->name }}  </option>
                                                 @endforeach
                                             @else
@@ -140,6 +164,10 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $('body').on('click', 'button#btnExport', function (e) {
+                $("form#class-form-export").submit();
+            });
             $('div.alert-success').delay(2000).slideUp();
 
             $("a#class-edit").click(function () {

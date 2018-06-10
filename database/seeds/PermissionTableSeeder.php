@@ -115,6 +115,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'manage-class',
                 'display_name' => 'Quản lí lớp',
                 'description' => 'Quản lí lớp'
+            ],[
+                'name' => 'export-file',
+                'display_name' => 'Xuất file',
+                'description' => 'Xuất file báo cáo'
             ],
         ]);
     }

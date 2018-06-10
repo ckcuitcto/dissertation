@@ -56,7 +56,6 @@ class TranscriptController extends Controller
      */
     public function show($id)
     {
-//        dd(Semester::orderBy('id','desc')->first());
         $student = Student::find($id);
         if (!empty($student)) {
             $user = User::where('users_id', $student->user_id)->first();
@@ -64,16 +63,14 @@ class TranscriptController extends Controller
             $evaluationForms = EvaluationForm::where('student_id', $id)->get();
 
             $userLogin = Auth::user();
+
             foreach ($evaluationForms as $value) {
                 $this->authorize($value, 'view');
             }
-
             $rolesCanMark = Role::whereHas('permissions', function ($query) {
                 $query->where('name', 'like', '%can-mark%');
             })->select('id', 'name', 'display_name', 'weight')->orderBy('id')->get()->toArray();
-//            echo "<pre> ";
-//            print_r($rolesCanMark);
-//            echo "</pre>";
+
             // danh  sách user chấm điểm + role + total
             $scoreList = DB::table('evaluation_results')
                 ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')

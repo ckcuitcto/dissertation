@@ -121,6 +121,99 @@ class Controller extends BaseController
         }
     }
 
+    public function getStudentByRoleUserLoginNotUseDataTable(User $user,$pagination = TRUE,$options = array())
+    {
+        $semester = $this->getCurrentSemester();
+        //mặc định là lấy tất cả sinh viên hiện tại
+        //nếu có option all thì lấy tất cả sinh viên tỏng danh sách
+        if ($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
+        {
+            if(!empty($options['all'])){
+                if ($pagination == TRUE) {
+                    $students = Student::paginate(50);
+                }else{
+                    $students = Student::all();
+                }
+            }else{
+                if ($pagination == TRUE) {
+                    $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')
+                        ->where('student_list_each_semesters.semester_id',$semester->id)
+                        ->select('students.*')
+                        ->paginate(50);
+                }else{
+                    $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')
+                        ->where('student_list_each_semesters.semester_id',$semester->id)
+                        ->select('students.*')
+                        ->get();
+                }
+            }
+            return $students;
+        } elseif ($user->Role->weight >= ROLE_BANCHUNHIEMKHOA) {
+            // neeus laf ban chu nhiem khoa thi lay cung khoa
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->select('users.users_id')->get()->toArray();
+        } elseif ($user->Role->weight >= ROLE_COVANHOCTAP) {
+            // neeus laf ban co van hoc tap thi lay cac sinh vien thuoc cac lop ma ng nay lam co  van
+            // lấy danh sách các lớp mà ng này làm cố vấn
+            $arrClassId = [];
+            foreach ($user->Staff->Classes as $class) {
+                $arrClassId[] = $class->id;
+            }
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                ->leftJoin('students', 'students.user_id', '=', 'users.users_id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->whereIn('students.class_id', $arrClassId)
+                ->select('users.users_id')->get()->toArray();
+        } else if ($user->Role->weight >= ROLE_BANCANSULOP) //ban can su lop, thì lấy user thuộc lop
+        {
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                ->leftJoin('students', 'students.user_id', '=', 'users.users_id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->where('students.class_id', $user->Student->class_id)
+                ->select('users.users_id')->get()->toArray();
+        }
+        foreach ($arrUserId as $key => $value){
+            $userIds[$key] = [$value->users_id];
+        }
+
+        //nếu có options only-get-id thì rettủn về mảng user;
+        if(($options['only-get-id'])){
+            return $userIds;
+        }
+        if (!empty($userIds)) {
+            if(!empty($options['all'])){
+                if ($pagination == TRUE) {
+                    $students = Student::whereIn('user_id', $userIds)->paginate(50);
+                }else{
+                    $students = Student::whereIn('user_id', $userIds)->get();
+                }
+            }else{
+                if ($pagination == TRUE) {
+                    $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')
+                        ->select('students.*')
+                        ->whereIn('students.user_id', $userIds)
+                        ->where('student_list_each_semesters.semester_id',$semester->id)
+                        ->paginate(50);
+                }else{
+                    $students = Student::rightJoin('student_list_each_semesters', 'student_list_each_semesters.user_id', '=', 'students.user_id')
+                        ->where('student_list_each_semesters.semester_id',$semester->id)
+                        ->select('students.*')
+                        ->whereIn('students.user_id', $userIds)->get();
+                }
+            }
+
+            return $students;
+        }
+        return false;
+    }
+
     public function formatDate($date)
     {
         return Carbon::createFromFormat('d/m/Y', $date);

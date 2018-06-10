@@ -425,18 +425,6 @@
 
         });
     </script>
-
-    {{--<script>--}}
-
-           {{--$('.form-row .input-sm.form-control').on('click', function () {--}}
-               {{--$(this).addClass('active')--}}
-           {{--})--}}
-    {{--</script>--}}
-    {{--<style>--}}
-        {{--.datepicker-days{--}}
-            {{--display: none !important;--}}
-        {{--}--}}
-    {{--</style>--}}
 @endsection
 
 

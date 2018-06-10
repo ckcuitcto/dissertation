@@ -24,9 +24,6 @@ class Student extends Model
         return $this->hasMany('App\Model\Proof','created_by','id');
     }
 
-    public function NotificationStudents(){
-        return $this->hasMany('App\Model\NotificationStudent','student_id','id');
-    }
 
     public function EvaluationForms(){
         return $this->hasMany('App\Model\EvaluationForm','student_id','id');

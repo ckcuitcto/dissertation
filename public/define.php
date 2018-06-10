@@ -43,3 +43,7 @@ define('STUDENT_GRADUATE',4); // tốt nghiệp
 
 define('MALE',1);
 define('FEMALE',2);
+
+define('STUDENT_PATH','upload/student_tmp/');
+define('STUDENT_PATH_STORE','upload/student/');
+define('STUDENT_LIST_EACH_SEMESTER_PATH','upload/student_list_each_semester/');

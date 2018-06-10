@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNotificationStudentsTable extends Migration
+class CreateNotificationUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateNotificationStudentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('notification_students', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
-            $table->integer('student_id')->unsigned();
-            $table->integer('notification_id')->unsigned()->nullable();
+        Schema::create('notification_users', function (Blueprint $table) {
+            $table->bigIncrements('id')->unsigned();
+            $table->string('user_id', 10)->nullable();
+            $table->integer('notification_id')->unsigned();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateNotificationStudentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notification_students');
+        Schema::dropIfExists('notification_users');
     }
 }

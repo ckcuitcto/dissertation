@@ -142,11 +142,25 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                 {{ $valueLevel2->mark_range_display OR "" }}
                                             </td>
                                             @isset($valueLevel2->mark_range_display)
+                                                {{--chạy từng role và lấy điẻm ra của từng role--}}
+                                                {{-- nếu role hiện tại chưa chấm điểm ($isMark = false) --}}
+                                                {{-- thì khi vòng lặp chạy đến role = role của user đang đăng nhập--}}
+                                                {{-- thì $role[userId] sẽ bị rỗng => k có điểm--}}
+                                                {{--nên ta phải thay $role[userId] này = userId của user đang đăng nhập.--}}
+                                                {{-- thì lúc đó evaluationResult mới nhận diện ra đc user và hiện ra đeiẻm--}}
                                                 @foreach($listUserMark as $role)
                                                     @php
                                                         $name= "score".$valueLevel2->id;
-                                                        $keyResult = $valueLevel2->id."_".$role['userId'];
-
+                                                        $keyResult = $valueLevel2->id."_";
+                                                        if($role['userRole'] == $user->role_id){
+                                                            if($isMark){
+                                                                $keyResult .= $role['userId'];
+                                                            }else{
+                                                                $keyResult .= $user->users_id;
+                                                            }
+                                                        }else{
+                                                            $keyResult .= $role['userId'];
+                                                        }
                                                     @endphp
                                                     {{-- nếu role của user đang đăng nhập = với role của input và đang trong thời gian có thể chấm thì mới đc nhập--}}
                                                     {{-- các input còn lại sẽ bị ẩn đi --}}
@@ -159,9 +173,9 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                                    class="form-control {{ $role['name'] }} input-evaluation-form">
                                                         </td>
                                                     @else
-                                                        <td>
-                                                            <input type="number" disabled="true" class="form-control input-evaluation-form"
-                                                                   {{ $role['name'] }} value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                        <td style="text-align: center">
+                                                            {{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}
+                                                            {{--<input type="text" disabled="true" class="form-control input-evaluation-form  {{ $role['name'] }}" value="">--}}
                                                         </td>
                                                     @endif
                                                 @endforeach
@@ -238,7 +252,17 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                 @foreach($listUserMark as $role)
                                                     @php
                                                         $name= "score".$valueLevel3->id;
-                                                        $keyResult = $valueLevel3->id."_".$role['userId'];
+                                                        $keyResult = $valueLevel3->id."_";
+                                                        if($role['userRole'] == $user->role_id){
+                                                            if($isMark){
+                                                                $keyResult .= $role['userId'];
+                                                            }else{
+                                                                $keyResult .= $user->users_id;
+                                                            }
+                                                        }else{
+                                                            $keyResult .= $role['userId'];
+                                                        }
+                                                        //$keyResult = $valueLevel3->id."_".$role['userId'];
                                                     @endphp
                                                     @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{ $name }}"
@@ -249,10 +273,11 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                                    class="form-control {{ $role['name'] }} input-evaluation-form">
                                                         </td>
                                                     @else
-                                                        <td>
-                                                            <input type="number" disabled="true"
-                                                                   class="form-control {{ $role['name'] }}  input-evaluation-form"
-                                                                   value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                        <td style="text-align: center">
+                                                            {{--<input type="text" disabled="true"--}}
+                                                                   {{--class="form-control {{ $role['name'] }}  input-evaluation-form"--}}
+                                                                   {{--value="">--}}
+                                                            {{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}
                                                         </td>
                                                     @endif
                                                 @endforeach
@@ -266,7 +291,18 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                         @foreach($listUserMark as $role)
                                             @php
                                                 $name= "score".$valueLevel1->id;
-                                                $keyResult = $valueLevel1->id."_".$role['userId'];
+                                                //$keyResult = $valueLevel1->id."_".$role['userId'];
+                                                $keyResult = $valueLevel1->id."_";
+                                                if($role['userRole'] == $user->role_id){
+                                                    if($isMark){
+                                                        $keyResult .= $role['userId'];
+                                                    }else{
+                                                        $keyResult .= $user->users_id;
+                                                    }
+                                                }else{
+                                                    $keyResult .= $role['userId'];
+                                                }
+
                                                 if(!empty($evaluationResults[$keyResult]['marker_score'])){
                                                     $arrTotalScore[$role['userRole']] += $evaluationResults[$keyResult]['marker_score'];
                                                 }else{
@@ -286,10 +322,11 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                            class="form-control {{ $role['name'] }}  input-evaluation-form">
                                                 </td>
                                             @else
-                                                <td>
-                                                    <input type="number" disabled="true"
-                                                           class="form-control {{ $role['name'] }}  input-evaluation-form"
-                                                           value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}">
+                                                <td style="text-align: center">
+                                                {{--<input type="text" disabled="true"--}}
+                                                           {{--class="form-control {{ $role['name'] }}  input-evaluation-form"--}}
+                                                           {{--value="">--}}
+                                                    {{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}
                                                 </td>
                                             @endif
                                         @endforeach
@@ -301,10 +338,20 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                     @foreach($listUserMark as $role)
                                         @php
                                             $name= "score".$valueLevel1->id;
-                                            $keyResult = $valueLevel1->id."_".$role['userId'];
+                                            //$keyResult = $valueLevel1->id."_".$role['userId'];
+                                            $keyResult = $valueLevel1->id."_";
+                                            if($role['userRole'] == $user->role_id){
+                                                if($isMark){
+                                                    $keyResult .= $role['userId'];
+                                                }else{
+                                                    $keyResult .= $user->users_id;
+                                                }
+                                            }else{
+                                                $keyResult .= $role['userId'];
+                                            }
                                         @endphp
                                         @if($role['name'] == $user->Role->name  AND $currentRoleCanMark->id == $role['userRole'])
-                                            <td><input type="text"
+                                            <td><input type="number"
                                                        class="form-control {{ $role['name'] }}  input-evaluation-form"
                                                        required
                                                        value="{{ $arrTotalScore[$role['userRole']] }}"
@@ -314,9 +361,12 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                 >
                                             </td>
                                         @else
-                                            <td><input type="number" disabled="true"
-                                                       value="{{ $arrTotalScore[$role['userRole']] }}"
-                                                       class="form-control {{ $role['name'] }}  input-evaluation-form"></td>
+                                            <td style="text-align: center">
+                                                {{--<input type="text" disabled="true"--}}
+                                                       {{--value=""--}}
+                                                       {{--class="form-control {{ $role['name'] }}  input-evaluation-form">--}}
+                                                {{ $arrTotalScore[$role['userRole']] }}
+                                            </td>
                                         @endif
                                     @endforeach
                                 </tr>
@@ -332,12 +382,15 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                             @if($currentRoleCanMark->weight == $user->Role->weight)
                                 @can('can-mark')
                                     <div align="right" id="button-submit-form">
-                                        <button class="btn btn-primary" type="submit">Lưu</button>
                                         <a class="btn btn-secondary" href="{{route('transcript-show',$evaluationForm->student_id )}}">Trở lại</a>
+                                        <button class="btn btn-primary" type="submit">Lưu</button>
                                     </div>
                                 @endcan
                             @endif
-                            <input type="hidden" name="remakingId" value="{{ $remaking->id OR "" }}">
+                            @if(!empty($remaking))
+                                <input type="hidden" name="remakingId" value="{{ $remaking->id }}">
+                                <input type="hidden" name="is">
+                            @endif
                         </form>
                     </div>
                 </div>
@@ -402,44 +455,6 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                 </div>
             </div>
         </div>
-        {{--@isset($remaking)--}}
-            {{--<div class="modal fade" id="myModalRemaking" role="dialog">--}}
-                {{--<div class="modal-dialog modal-lg" role="document">--}}
-                    {{--<div class="modal-content">--}}
-                        {{--<div class="modal-header">--}}
-                            {{--<h5 class="modal-title">Nội dung phúc khảo</h5>--}}
-                            {{--<button class="close" type="button" data-dismiss="modal" aria-label="Close"><span--}}
-                                        {{--aria-hidden="true">×</span></button>--}}
-                        {{--</div>--}}
-                        {{--<div class="modal-body">--}}
-                            {{--<form id="remarking-form">--}}
-                                {{--{!! csrf_field() !!}--}}
-                                {{--<div class="col-md-12">--}}
-                                    {{--<h3 class="tile-title">Lý do</h3>--}}
-                                    {{--<div class="tile-body">--}}
-                                        {{--<div class="form-group">--}}
-                                            {{--<textarea class="form-control remarking_reason" rows="4" name="remarking_reason" disabled=""> {!! $remaking->remarking_reason !!} </textarea>--}}
-                                        {{--</div>--}}
-                                        {{--<div class="form-group">--}}
-                                            {{--<textarea class="form-control remarking_reply" rows="4" name="remarking_reply" placeholder="Trả lời phúc khảo"></textarea>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                            {{--</form>--}}
-                            {{--<div class="modal-footer">--}}
-                                {{--<button data-link="{{ route('remaking-update',$remaking->id) }}" class="btn btn-primary"--}}
-                                        {{--id="btn-send-remaking" name="btn-send-remaking" type="button">--}}
-                                    {{--<i class="fa fa-fw fa-lg fa-check-circle"></i>Gửi--}}
-                                {{--</button>--}}
-                                {{--<button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">--}}
-                                    {{--<i class="fa fa-fw fa-lg fa-times-circle"></i>Đóng--}}
-                                {{--</button>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-        {{--@endisset--}}
     </main>
 @endsection
 @section('sub-javascript')
@@ -457,6 +472,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                     $('button').attr('disabled', true);
                 @endif
             @endif
+
 
             $('.proof').change(function (e) {
                 var urlCheckFile = "{{ route('evaluation-form-upload') }}";
@@ -593,35 +609,6 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                 $('#myModal').find("#note").html('');
             });
 
-            // $("button#btn-send-remaking").click(function () {
-            //     var valueForm = $('form#remarking-form').serialize();
-            //     var url = $(this).attr('data-link');
-            //     $('.form-group').find('span.messageErrors').remove();
-            //     $.ajax({
-            //         type: "post",
-            //         url: url,
-            //         data: valueForm,
-            //         dataType: 'json',
-            //         success: function (result) {
-            //             if (result.status === false) {
-            //                 //show error list fields
-            //                 if (result.arrMessages !== undefined) {
-            //                     $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-            //                         $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-            //                             $('form#remarking-form').find('.' + elementName).parents('.form-group').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-            //                         });
-            //                     });
-            //                 }
-            //             } else if (result.status === true) {
-            //                 $('div#myModal').find('.modal-body').html('<p>Gửi yêu cầu phúc khảo thành công</p>');
-            //                 $("div#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-            //                 $('div#myModal').on('hidden.bs.modal', function (e) {
-            //                     location.reload();
-            //                 });
-            //             }
-            //         }
-            //     });
-            // });
         });
     </script>
 @endsection

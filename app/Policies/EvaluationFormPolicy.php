@@ -39,7 +39,7 @@ class EvaluationFormPolicy
             // nếu là ban cán sự lớp thì phhải cùng lớp
             return $user->Student->Classes->id == $evaluationForm->Student->Classes->id;
         }elseif($user->Student->id == $evaluationForm->student_id){
-            // nếu là ính viên thì phải là chủ form
+            // nếu là sính viên thì phải là chủ form
             return true;
         }
         return false;

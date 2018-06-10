@@ -448,7 +448,7 @@
             // $("#btn-save-user").click(function () {
             $('body').on('click', '#btn-save-user', function (e) {
 
-                    var valueForm = $('form#user-form').serialize();
+                var valueForm = $('form#user-form').serialize();
                 var url = $(this).attr('data-link');
                 $('#modal-edit-user').find('span.messageErrors').remove();
 
@@ -481,7 +481,7 @@
             // $("button#btn-add").click(function () {
             $('body').on('click', 'button#btn-add', function (e) {
 
-                    var valueForm = $('form#user-add-form').serialize();
+                var valueForm = $('form#user-add-form').serialize();
                 var url = $(this).attr('data-link');
                 $('form#user-add-form').find('span.messageErrors').remove();
                 $.ajax({

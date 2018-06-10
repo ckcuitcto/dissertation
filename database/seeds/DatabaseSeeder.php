@@ -24,19 +24,22 @@ class DatabaseSeeder extends Seeder
 
         $this->call(Classes::class);
 
-        $this->call(StudentSeeder::class);
+        //giờ đã có dữ liệu, k cần chạy
+//        $this->call(StudentSeeder::class);
 
         $this->call(EvaluationCriteria::class);
 
         // k dc gi ca. vi k co semester
 //        $this->call(EvaluationForm::class);
 
-        $this->call(CreateEvaluationFormForStudents::class);
+        //giờ đã có dữ liệu, k cần chạy
+//        $this->call(CreateEvaluationFormForStudents::class);
 
         // thời gian chấm thì yêu cầu học kì. nên cũng bỏ qua. cái này tạo học kì xong r gọi riêng hoặc tự tạo = tay
 //        $this->call(MarkTime::class);
 
-        $this->call(UpdateStudent::class);
+        //giờ đã có dữ liệu, k cần chạy
+//        $this->call(UpdateStudent::class);
 
     }
 }

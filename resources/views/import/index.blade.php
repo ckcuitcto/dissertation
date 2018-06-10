@@ -29,7 +29,13 @@
                         @foreach($imports as $key => $value)
                             <tr>
                                 <th>{{  $value->id }}</th>
-                                <td><a href="{{ asset('upload/student/'.$value->file_path) }}"> {{$value->file_name}}</a></td>
+                                <td>
+                                    @if(file_exists(STUDENT_PATH_STORE.$value->file_path))
+                                        <a href="{{ asset(STUDENT_PATH_STORE.$value->file_path) }}"> {{$value->file_name}}</a>
+                                    @else
+                                        <a href="{{ asset(STUDENT_LIST_EACH_SEMESTER_PATH.$value->file_path) }}"> {{$value->file_name}}</a>
+                                    @endif
+                                </td>
                                 <td>{{ $value->created_at }}</td>
                                 <td>{{ $value->Staff->User->name }}</td>
                                 <td>{{ $value->status }}</td>

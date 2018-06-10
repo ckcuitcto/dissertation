@@ -49,6 +49,10 @@ class User extends Authenticatable
         return $this->belongsTo('App\Model\Faculty','faculty_id','id');
     }
 
+    public function Notifications(){
+        return $this->belongsToMany('App\Model\Notification','notification_users','user_id','notification_id')->withTimestamps();
+    }
+
     public function hasPermission(Permission $permission){
         //contains dung để kiểm tra xem nó có chứa permission k
         // ep kiểu boolean

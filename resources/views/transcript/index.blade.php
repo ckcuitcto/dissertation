@@ -28,7 +28,6 @@
                                 <th></th>
                             </tr>
                             </thead>
-                            {{--<a href="{{route('transcript-show',".$student->id." )}}">  $student->User->name }} </a>--}}
                         </table>
                     </div>
                 </div>

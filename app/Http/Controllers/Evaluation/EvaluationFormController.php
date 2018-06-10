@@ -86,6 +86,24 @@ class EvaluationFormController extends Controller
                 unset($evaluationResultsTmp[$key]);
             }
 
+            //KIỂM TRA XEM. NẾU NGƯỜI ĐANG CHẤM HIỆN TẠI CHƯA CHẤM ĐIỂM CHO FORM. NGƯỜI NÀY PHẢI KHÁC ROLE SINH VIÊN.
+            // THÌ SẼ SET ĐIỂM CHO CÁC Ô INPUT = ĐIỂM CỦA NGƯỜI CHẤM TRƯỚC ĐÓ
+            $evaluationResultsOfCurrentUserLogin = EvaluationResult::where('evaluation_form_id', $id)->where('marker_id',$user->users_id)->get()->toArray();
+            if(empty($evaluationResultsOfCurrentUserLogin)){
+                $evaluationResultsOfCurrentUserLoginTmp = array();
+                foreach($evaluationResults as $key => $val){
+                    $keyResult = $val['evaluation_criteria_id'] . "_" . $user->users_id;
+                    $val['marker_id'] = $user->users_id;
+                    $evaluationResultsOfCurrentUserLoginTmp[$keyResult] = $val;
+                }
+                $evaluationResults = array_merge($evaluationResults,$evaluationResultsOfCurrentUserLoginTmp);
+
+                // đánh dấu là role này chưa chấm. để qua bên kia kiẻm tra
+                $isMark = false;
+            }else{
+                $isMark = true;
+            }
+
             //lấy ra danh sách các role có thể chấm điểm để hiển thị các ô input
             $rolesCanMark = Role::whereHas('permissions', function ($query) {
                 $query->where('name', 'like', '%can-mark%');
@@ -186,13 +204,16 @@ class EvaluationFormController extends Controller
                 'created_by' => $evaluationForm->Student->id
             ])->get();
 
-
             if(!empty($request->remaking_id)){
+
                 $remaking = Remaking::find($request->remaking_id);
+                //nếu là phương thức post. nghĩa là từ form submit lên. kiểm rta rồi chuyến đến trang remaking
+                //nếu là phương thức get. thì chuyển đến trang chấm
                 if(empty($remaking)){
                     return redirect()->back();
-                }else{
-                    return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark','proofs','remaking'));
+                }
+                else{
+                    return view('evaluation-form.show', compact('isMark','evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark','proofs','remaking'));
                 }
             }
             /// evaluationForm : form đang đánh giá,
@@ -203,7 +224,7 @@ class EvaluationFormController extends Controller
             /// currentRoleCanMark : xác định role có thể chấm ở thời điểm hiện tại
             /// proofs. danh sách minh chứng của user.
             ///
-            return view('evaluation-form.show', compact('evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark','proofs'));
+            return view('evaluation-form.show', compact('isMark','evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark','proofs'));
         }
         return redirect()->back();
     }
@@ -304,10 +325,12 @@ class EvaluationFormController extends Controller
             $semester->Proofs()->createMany($arrProof);
         }
 
-        // lưu lại điểm cũ vào remaking
+        // lưu lại điểm cũ vào remaking nếu phúc khảo. sau đó chuyển vê trang remaking
         if(!empty($remaking)){
             $remaking->update(['old_score' => json_encode($arrScoreOld)]);
+            return redirect()->route('remaking','user_id='.$remaking->EvaluationForm->Student->user_id);
         }
+
 
         return redirect()->back()->with(['flash_message' => 'Chấm điểm thành công']);
 

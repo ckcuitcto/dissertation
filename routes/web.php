@@ -161,6 +161,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/update/{id}', ['as' => 'remaking-update', 'uses' => 'Evaluation\ReMakingController@update']);
 
+        Route::post('/get-remakings', ['as' => 'ajax-remakings', 'uses' => 'Evaluation\ReMakingController@ajaxGetRemakings']);
+
     });
 
 
@@ -235,6 +237,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'files', 'middleware' => 'can:manage-user'], function () {
         Route::get('/', ['as' => 'files', 'uses' => 'Import\ImportController@index']);
+    });
 
+    Route::group(['prefix' => 'xuat', 'middleware' => 'can:export-file'], function () {
+        Route::post('/', ['as' => 'export-file', 'uses' => 'Export\ExportController@export']);
     });
 });
