@@ -383,7 +383,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 @can('can-mark')
                                     <div align="right" id="button-submit-form">
                                         <a class="btn btn-secondary" href="{{route('transcript-show',$evaluationForm->student_id )}}">Trở lại</a>
-                                        <button class="btn btn-primary" type="submit">Lưu</button>
+                                        <button class="btn btn-primary" type="submit">Lưu kết quả</button>
                                     </div>
                                 @endcan
                             @endif

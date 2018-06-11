@@ -17,13 +17,12 @@
                 
                 <div class="tile">          
                     <div class="jumbotron">
-                        <h1 class="display-4" align="center">{{ $news->title}}</h1>
-                        <hr class="my-4">
-                        {{-- <p class="lead">
-                            <img src="http://placeimg.com/1180/400/any">
-                        </p> --}}
-                        {{-- <hr class="my-4"> --}}
+                        <h2 align="center">{{ $news->title}}</h2>              
+                        <p style="color:tomato;text-transform:uppercase;white-space:pre">{{$news->Staff->user_id}}</p>
+                        <p>{{$news->Faculty->name}} &nbsp; <i class="fa fa-clock-o" aria-hidden="true"></i> {{$news->created_at}}</p>
+                        <hr class="my-4">                        
                         <p>{!! $news->content !!}</p>
+                        <p align="right">Trường đại học Công nghệ Sài Gòn</p>
                     </div>                       
                 </div>
             </div>

@@ -51,27 +51,21 @@
             </div>
         </div>
 
-        <div class="row mb-4">
+        <div class="row">
             @if(!empty($newsList))
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title"><i class="fa fa-bell" aria-hidden="true"></i> &nbsp;Tin tức</h3>
-                    <div class="card-columns">
                     @foreach($newsList as $news)
-                    
-                        <div class="card text-white bg-info mb-3">
-                        <div class="card-header"><h5>{{$news->title}}</h5></div>
-                        <div class="card-body">
-                          {{-- <h5 class="card-title">Info card title</h5> --}}
-                          <p class="card-text">{!! str_limit($news->content,255) !!}</p>
-                          <a href="{{ route('news-show',[ str_slug($news->title),$news->id]) }}">
-                            <p style="color:white;float:right">Xem thêm >></p>
-                          </a>
-                        </div>
-                    </div> 
-                     
-                    @endforeach     
-                    </div>            
+                    <div class="card mb-2" style="background-color:#66d6b8;color:white">
+                            <div class="card-header">
+                                <div>{{$news->title}}</div>
+                                <a href="{{ route('news-show',[ str_slug($news->title),$news->id]) }}">
+                                    <p style="float:right">Xem thêm >></p>
+                                </a>
+                            </div>                            
+                    </div>
+                    @endforeach
                 </div>
             </div>
             @endif
@@ -79,14 +73,21 @@
             <div class="col-md-6">
                 <div class="tile">
                     <h3 class="tile-title"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> &nbsp;Thời gian đánh giá điểm rèn luyện</h3>                   
-                    <div class="card text-white bg-warning mb-3">
+                    <div class="card mb-3">
                         <div class="card-header">
                             <div>Đánh giá điểm rèn luyện học kỳ {{$timeList->term}} năm học {{$timeList->year_to}}</div>
                         </div>
                         <div class="card-body">
                           {{-- <h5 class="card-title">Warning card title</h5> --}}
-                          <p class="card-text">Ngày bắt đầu {{$timeList->date_start_to_mark}}</p>
-                          <p class="card-text">Ngày kết thúc {{$timeList->date_end_to_mark}}</p>
+                            <p class="card-text"> {{$timeList->date_start_to_mark}} - {{$timeList->date_end_to_mark}}
+                                Thời gian đánh giá điểm rèn luyện.
+                            </p>
+                            <p class="card-text"> {{$timeList->date_start_to_request_re_mark}} - {{$timeList->date_end_to_request_re_mark}}
+                                Thời gian khiếu nại
+                            </p>
+                            <p class="card-text"> {{$timeList->date_start_to_re_mark}} - {{$timeList->date_end_to_re_mark}}
+                                Thời gian chấm lại khiếu nại
+                            </p>
                         </div>
                     </div>
                     
