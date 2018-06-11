@@ -27,4 +27,7 @@ class Semester extends Model
         return $this->hasMany('App\Model\StudentListEachSemester','semester_id','id');
     }
 
+    public function FileImports(){
+        return $this->hasMany('App\Model\FileImport','semester_id','id');
+    }
 }

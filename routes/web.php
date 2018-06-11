@@ -240,6 +240,6 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'xuat', 'middleware' => 'can:export-file'], function () {
-        Route::post('/', ['as' => 'export-file', 'uses' => 'Export\ExportController@export']);
+        Route::post('/', ['as' => 'export-file', 'uses' => 'Export\ExportController@exportVer2']);
     });
 });
