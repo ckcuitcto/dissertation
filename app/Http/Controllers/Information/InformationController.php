@@ -39,13 +39,16 @@ class InformationController extends Controller
 
     public function update($id, Request $request){
 
+        $time = strtotime("-13 year", time());
+        $date = date("d/m/Y", $time);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|unique:users,email,'.$id.',users_id',
             'gender' => 'required',
             'address' => 'required',
             'phone_number' => 'required|numeric|phone',
-            'birthday' => 'required|date_format:d/m/Y'
+            'birthday' => 'required|date_format:d/m/Y|before:'.$date
         ],[
             'name.required' => "Vui lòng nhập tên",
             'email.required' => "Vui lòng nhập email",
@@ -57,6 +60,7 @@ class InformationController extends Controller
             'phone_number.phone' => "Số điện thoại không đúng định dạng",
             'birthday.required' => 'Vui lòng nhập ngày sinh',
             'birthday.date_format' => 'Ngày sinh không đúng định dạng. VD:24/08/1996',
+            'birthday.before' => 'Bạn chưa đủ 13 tuổi?',
 
         ]);
         if ($validator->fails()) {

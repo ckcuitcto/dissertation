@@ -30,6 +30,11 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
         </div>
         <div class="row">
             <div class="col-md-12">
+                @if(Session::has('flash_message_success'))
+                    <div class="alert alert-success">
+                        {!! Session::get('flash_message_success') !!}
+                    </div>
+                @endif
                 <div class="tile">
                     <div class="tile-body">
                         <div class="tile user-settings">
@@ -80,7 +85,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                 <td class='detail-evaluation-form'>
                                                     {{ $valueLevel2->content }}
                                                     @isset($valueLevel2->proof)
-                                                    @if( $evaluationForm->Student->User->users_id == $user->users_id AND $user->Role->name == $currentRoleCanMark->name)
+                                                        @if( $evaluationForm->Student->User->users_id == $user->users_id AND $user->Role->name == $currentRoleCanMark->name)
                                                             @php $name= "proof".$valueLevel2->id; @endphp
                                                             <input type="file" class="proof" id="{{$valueLevel2->id}}"
                                                                    name="{{ $name."[]" }}" multiple>
@@ -409,7 +414,14 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                             </div>
                             <div class="modal-body">
                                 <div id="iframe-view-file"></div>
-                                {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
+                                @if( $evaluationForm->Student->User->users_id == $user->users_id)
+                                    <div class="row">
+                                        <div class="col-md-12 alert-danger alert">
+                                            <textarea class="form-control note" disabled name="note" id="note" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                @endif
+                                <iframe id="frame-view-file" class="doc"></iframe>
                                 <input type="hidden" class="id" name="id" id="proofId">
                                 {{--khi bấm vào modal. thì chỉ những ng khác k phải là chủ của phiếu mới đc chỉnh sửa file có hợp lệ hay k--}}
                                 {{-- và role hiện tại có thể chấm thì ms có thể sửa trạng thái--}}

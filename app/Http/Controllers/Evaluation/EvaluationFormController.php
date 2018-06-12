@@ -207,8 +207,6 @@ class EvaluationFormController extends Controller
             if(!empty($request->remaking_id)){
 
                 $remaking = Remaking::find($request->remaking_id);
-                //nếu là phương thức post. nghĩa là từ form submit lên. kiểm rta rồi chuyến đến trang remaking
-                //nếu là phương thức get. thì chuyển đến trang chấm
                 if(empty($remaking)){
                     return redirect()->back();
                 }
@@ -332,7 +330,7 @@ class EvaluationFormController extends Controller
         }
 
 
-        return redirect()->back()->with(['flash_message' => 'Chấm điểm thành công']);
+        return redirect()->back()->with(['flash_message_success' => 'Chấm điểm thành công']);
 
     }
 
