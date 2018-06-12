@@ -45,7 +45,7 @@
                                     <th>Lớp</th>
                                     <th>Số lượng sinh viên</th>
                                     <th>Tác vụ</th>
-                                    <th>Xuất file báo cáo chấm điểm</th>
+                                    <th>Xuất file đánh giá điểm rèn luyện</th>
                                 </tr>
                                 </thead>
                                 <tbody>

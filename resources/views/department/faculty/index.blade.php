@@ -22,7 +22,7 @@
                                     <th>Khoa</th>
                                     <th>Số lượng lớp</th>
                                     <th>Tác vụ</th>
-                                    <th>Xuất file báo x chấm điểm</th>
+                                    <th>Xuất file đánh giá điểm rèn luyện</th>
                                 </tr>
                                 </thead>
                                 <tbody>

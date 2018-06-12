@@ -80,7 +80,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                 <td class='detail-evaluation-form'>
                                                     {{ $valueLevel2->content }}
                                                     @isset($valueLevel2->proof)
-                                                        @if( $evaluationForm->Student->User->users_id == $user->users_id )
+                                                    @if( $evaluationForm->Student->User->users_id == $user->users_id AND $user->Role->name == $currentRoleCanMark->name)
                                                             @php $name= "proof".$valueLevel2->id; @endphp
                                                             <input type="file" class="proof" id="{{$valueLevel2->id}}"
                                                                    name="{{ $name."[]" }}" multiple>
@@ -111,7 +111,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                 <td>
                                                     {{ $valueLevel2->content }}
                                                     @isset($valueLevel2->proof)
-                                                        @if( $evaluationForm->Student->User->users_id == $user->users_id )
+                                                    @if( $evaluationForm->Student->User->users_id == $user->users_id AND $user->Role->name == $currentRoleCanMark->name)
                                                             @php $name= "proof".$valueLevel2->id; @endphp
                                                             <input type="file" class="proof" id="{{$valueLevel2->id}}"
                                                                    name="{{ $name."[]" }}" multiple>
@@ -189,7 +189,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                         {{-- nếu có tồn tại minh chứng cho tiêu chí thì sẽ hiện ra form input--}}
                                                         @isset($valueLevel3->proof)
                                                             {{-- để hiện form input thì thêm 1 điều khiện là user phải là chủ form.--}}
-                                                            @if( $evaluationForm->Student->User->users_id == $user->users_id )
+                                                            @if( $evaluationForm->Student->User->users_id == $user->users_id AND $user->Role->name == $currentRoleCanMark->name)
                                                                 @php $name= "proof".$valueLevel3->id; @endphp
                                                                 <input type="file" class="proof" id="{{$valueLevel3->id}}"
                                                                        name="{{ $name."[]" }}" multiple>
@@ -221,7 +221,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                                     <td>
                                                         {{ $valueLevel3->content }}
                                                         @isset($valueLevel3->proof)
-                                                            @if( $evaluationForm->Student->User->users_id == $user->users_id )
+                                                        @if( $evaluationForm->Student->User->users_id == $user->users_id AND $user->Role->name == $currentRoleCanMark->name)
                                                                 @php $name= "proof".$valueLevel3->id; @endphp
                                                                 <input type="file" class="proof" id="{{$valueLevel3->id}} "
                                                                        name="{{ $name."[]" }}" multiple>
