@@ -50,7 +50,9 @@ class User extends Authenticatable
     }
 
     public function Notifications(){
-        return $this->belongsToMany('App\Model\Notification','notification_users','user_id','notification_id')->withTimestamps();
+        return $this->belongsToMany('App\Model\Notification','notification_users','user_id','notification_id')
+            ->withPivot('status')
+            ->withTimestamps();
     }
 
     public function hasPermission(Permission $permission){

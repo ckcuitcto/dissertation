@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Proof;
 
 use App\Model\MarkTime;
+use App\Model\Notification;
 use App\Model\Proof;
 use App\Model\Semester;
 use App\Http\Controllers\Controller;
+use App\Model\Student;
 use App\Model\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,7 +53,7 @@ class ProofController extends Controller
             ->select('evaluation_criterias.content','evaluation_criterias.detail','proofs.*','semesters.year_from','semesters.year_to','semesters.term','mark_times.mark_time_start','mark_times.mark_time_end')
             ->where([
                 ['proofs.created_by','=', $userLogin->Student->id],
-                ['mark_times.role_id','=', ROLE_SINHVIEN ]
+                ['mark_times.role_id','=', $userLogin->Role->id ]
             ])
             ->orderBy('proofs.id')
             ->get();
@@ -152,6 +154,8 @@ class ProofController extends Controller
 
     public function updateValidProofFile(Request $request, $id){
 
+        // = 0 là k hợp lệ
+        // 1 là hợp lệ
         if($request->valid == 0) {
             $validator = Validator::make($request->all(), [
                 'note' => 'required',
@@ -168,9 +172,40 @@ class ProofController extends Controller
 
         $proof = Proof::find($id);
         if(!empty($proof)){
+
+            //nếu sửa đổi trạng thái minh chứng thì tạo thông báo gửi đến sinh viên, cố vấn học tập, phòng CTSV
+            // nếu thay đổi trạng thái thì mới tạo thông báo
+            if($proof->valid != $request->valid){
+                $student = Student::find($proof->created_by); // sinh viên chủ của minh chứng
+                if(!empty($student)){
+                    $notifications = new Notification();
+                    $title = "Sửa trạng thái minh chứng của sinh viên: <b>".$student->User->users_id."-".$student->User->name ."</b> thuộc lớp: ".$student->Classes->name;
+                    $notifications->title = $title;
+                    $notifications->created_by = Auth::user()->Staff->id;
+                    if($request->valid != 0){
+                        $notifications->content = $title. " từ $proof->valid thành $request->valid . Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!";
+                    }else{
+                        $notifications->content = $title. " từ $proof->valid thành $request->valid .Với nội dung:$request->note. Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!";
+                    }
+
+                    //danh sách Id của các user sẽ tạo thông báo.
+                    $arrUserId[] = $student->User->users_id; // sinh viên\
+                    // nếu người sửa trnạg thái minh chứng là CVHT thì chỉ tạo 1 thông báo
+                    if(Auth::user()->users_id != $student->Classes->Staff->User->users_id){
+                        $arrUserId[] = Auth::user()->users_id;
+                        $arrUserId[] = $student->Classes->Staff->User->users_id;
+                    }else{
+                        $arrUserId[] = Auth::user()->users_id;
+                    }
+
+                    $notifications->save();
+                    $notifications->Users()->attach($arrUserId);
+                }
+            }
             $proof->valid = $request->valid;
             $proof->note = $request->note;
             $proof->save();
+
             return response()->json([
                 'proof' => $proof,
                 'status' => true

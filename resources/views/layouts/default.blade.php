@@ -25,10 +25,11 @@
                 {{--<button class="app-search__button"><i class="fa fa-search"></i></button>--}}
             {{--</li>--}}
             <!--Notification Menu-->
+            {{--@if($authCheck)--}}
             {{--<li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown"--}}
                                     {{--aria-label="Show notifications"><i class="fa fa-bell-o fa-lg"></i></a>--}}
                 {{--<ul class="app-notification dropdown-menu dropdown-menu-right">--}}
-                    {{--<li class="app-notification__title">You have 4 new notifications.</li>--}}
+{{--                    <li class="app-notification__title">Bạn có {{ count($notifications) }} thông báo</li>--}}
                     {{--<div class="app-notification__content">--}}
                         {{--<li><a class="app-notification__item" href="javascript:;"><span--}}
                                         {{--class="app-notification__icon"><span class="fa-stack fa-lg"><i--}}
@@ -90,9 +91,10 @@
                     {{--<li class="app-notification__footer"><a href="#">See all notifications.</a></li>--}}
                 {{--</ul>--}}
             {{--</li>--}}
-            {{--<li class="nav-item active">--}}
+            {{--@endif--}}
+            <li class="nav-item active">
 
-            {{--</li>--}}
+            </li>
             <!-- User Menu-->
 
             <li class="dropdown">
@@ -336,36 +338,6 @@
             filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
         };
     </script>
-
-    {{--<script>--}}
-        {{--$('.app-title').on('click',function () {--}}
-            {{--$(this).parent('.app-content').find('.overlay.custom-overlay').addClass('active');--}}
-            {{--$(this).parents().find('.app-content').addClass('custom-app-content');--}}
-
-        {{--})--}}
-    {{--</script>--}}
-    {{--<style>--}}
-        {{--.app-content .overlay.custom-overlay.active{--}}
-            {{--opacity: 1 !important;--}}
-            {{--z-index: 3 !important;--}}
-        {{--}--}}
-        {{--.custom-app-content:after{--}}
-            {{--position: absolute;--}}
-            {{--content: '';--}}
-            {{--background-color: rgba(255, 255, 255, 0.1);--}}
-            {{--width: 100%;--}}
-            {{--/*min-height: calc(322vh + 20px);*/--}}
-            {{--height: 100%;--}}
-            {{--top: 0;--}}
-            {{--z-index: 2;--}}
-            {{--left: 0;--}}
-        {{--}--}}
-        {{--.app-title{--}}
-            {{--position: relative;--}}
-            {{--z-index: 1;--}}
-        {{--}--}}
-    {{--</style>--}}
-
 @stop
 
 @section('sub-javascript')

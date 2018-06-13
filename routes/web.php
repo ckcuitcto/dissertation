@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
 
         Route::post('/get-list-by-faculty', ['as' => 'class-get-list-by-faculty', 'uses' => 'Department\ClassController@getListClassByFaculty']);
+        Route::post('/get-list-by-faculty-none', ['as' => 'class-get-list-by-faculty-none', 'uses' => 'Department\ClassController@getListClassByFacultyAddAll']);
 
     });
 

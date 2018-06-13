@@ -16,6 +16,8 @@ class Notification extends Model
 
     public function Users()
     {
-        return $this->belongsToMany('App\Model\User', 'notification_users', 'notification_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany('App\Model\User', 'notification_users', 'notification_id', 'user_id')
+            ->withPivot('status')
+            ->withTimestamps();
     }
 }

@@ -41,6 +41,11 @@ class ClassController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:classes,name',
+            'staff_id' => 'required',
+        ],[
+            'name.required' => 'Bắt buộc nhập tên lớp',
+            'name.unique' => 'Tên lớp đã bị trùng',
+            'staff_id.required' => 'Bắt buộc chọn cố vấn học tập',
         ]);
 
         if ($validator->fails()) {
@@ -105,8 +110,20 @@ class ClassController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:classes,name',
+            'staff_id' => 'required',
+        ],[
+            'name.required' => 'Bắt buộc nhập tên lớp',
+            'name.unique' => 'Tên lớp đã bị trùng',
+            'staff_id.required' => 'Bắt buộc chọn cố vấn học tập',
+        ]);
+
+        $validator = Validator::make($request->all(), [
             'name' => 'required|min:6',
             'staff_id' => 'required'
+        ],[
+            'name.required' => 'Bắt buộc nhập tên lớp',
+            'staff_id.required' => 'Bắt buộc chọn cố vấn học tập',
         ]);
 
         if ($validator->fails()) {
@@ -150,6 +167,17 @@ class ClassController extends Controller
     public function getListClassByFaculty(Request $request){
         $id = $request->id;
         $classes = Classes::where('faculty_id', $id)->select('id','name')->get()->toArray();
+        return response()->json([
+            'classes' => $classes
+        ],200);
+    }
+
+    public function getListClassByFacultyAddAll(Request $request){
+        $id = $request->id;
+
+        $classes = Classes::where('faculty_id', $id)->select('id','name')->get()->toArray();
+        $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
+
         return response()->json([
             'classes' => $classes
         ],200);

@@ -413,7 +413,9 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                             </div>
                             <div class="modal-body">
-                                <div id="iframe-view-file"></div>
+                                <div id="iframe-view-file">
+                                    <iframe id="frame-view-file" class="doc"></iframe>
+                                </div>
                                 @if( $evaluationForm->Student->User->users_id == $user->users_id)
                                     <div class="row">
                                         <div class="col-md-12 alert-danger alert">
@@ -421,7 +423,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                         </div>
                                     </div>
                                 @endif
-                                <iframe id="frame-view-file" class="doc"></iframe>
+
                                 <input type="hidden" class="id" name="id" id="proofId">
                                 {{--khi bấm vào modal. thì chỉ những ng khác k phải là chủ của phiếu mới đc chỉnh sửa file có hợp lệ hay k--}}
                                 {{-- và role hiện tại có thể chấm thì ms có thể sửa trạng thái--}}
@@ -475,6 +477,8 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
     <script type="text/javascript" src="{{ asset('js//evaluationForm.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $('div.alert-success').delay(2000).slideUp();
 
             //nếu quá hạn thì k thể chấm điểm
             // nhưng nếu đang trong thời gian phúc khảo thì vẫn cho chấm

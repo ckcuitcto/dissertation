@@ -12,8 +12,40 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 custom-quanly-taikhoan">
+                {{--<div class="tile">--}}
+
+                {{--</div>--}}
                 <div class="tile">
+                    <div class="tile-body">
+                        <form class="row" role="form" id="search-form" method="post">
+                            {!! csrf_field() !!}
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Học kì</label>
+                                <select class="form-control semester_id" name="semester_id" id="semester_id">
+                                    @foreach($semesters as $value)
+                                        <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Khoa</label>
+                                <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
+                                    @foreach($faculties as $value)
+                                        <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Lớp</label>
+                                <select class="form-control class_id" name="class_id" id="class_id">
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4 align-self-end">
+                                <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-search"></i>Tìm kiếm</button>
+                            </div>
+                        </form>
+                    </div>
                     <div class="tile-body">
                         <table class="table table-hover table-bordered" id="students">
                             <thead>
@@ -24,10 +56,17 @@
                                 <th>Lớp</th>
                                 <th>Khoa</th>
                                 <th>Khóa</th>
-                                <th>Khóa</th>
                                 <th></th>
                             </tr>
                             </thead>
+                            <tfoot>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -44,35 +83,77 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
     <script>
-        $('#students').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                "url": "{{ route('ajax-transcript-get-users') }}",
-                "dataType": "json",
-                "type": "POST",
-                "data": {
-                    "_token": "{{ csrf_token() }}"
-                }
-            },
-            "columns": [
-                {data: "users_id", name: "users.users_id"},
-                {data: "userName", name: "users.name"},
-                {data: "display_name", name: "roles.display_name"},
-                {data: "className", name: "classes.name"},
-                {data: "facultyName", name: "faculties.name"},
-                {data: "academic_year_from", name: "students.academic_year_from"},
-                {data: "academic_year_to", name: "students.academic_year_to"},
-                {data: 'action', name: 'action', orderable: false, searchable: false}
-            ],
-            "language": {
-                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                // "zeroRecords": "Không có bản ghi nào!",
-                // "info": "Hiển thị trang _PAGE_ của _PAGES_",
-                "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
-            },
-            "pageLength": 25
+        $(document).ready(function () {
+            var oTable = $('#students').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{{ route('ajax-transcript-get-users') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": function (d) {
+                        d.faculty_id = $('select[name=faculty_id]').val();
+                        d.class_id = $('select[name=class_id]').val();
+                        d.semester_id = $('select[name=semester_id]').val();
+                        d._token = "{{ csrf_token() }}";
+                    },
+                },
+                "columns": [
+                    {data: "users_id", name: "users.users_id"},
+                    {data: "userName", name: "users.name"},
+                    {data: "display_name", name: "roles.display_name"},
+                    {data: "className", name: "classes.name"},
+                    {data: "facultyName", name: "faculties.name"},
+                    {data: "academic", name: "students.academic_year_from"},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search(val ? val : '', true, false).draw();
+                            });
+                    });
+                },
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    // "zeroRecords": "Không có bản ghi nào!",
+                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 10,
+            });
+
+            $('#search-form').on('submit', function(e) {
+                oTable.draw();
+                e.preventDefault();
+            });
+
+            $('select.faculty_id').change(function () {
+                var facultyId = $(this).val();
+                var url = "{{ route('class-get-list-by-faculty-none') }}";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {id: facultyId},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("select.class_id").empty();
+                        $.each(data.classes, function (key, value) {
+                            $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection
+<style>
+    .custom-quanly-taikhoan table.dataTable{
+        width: 100% !important;
+    }
+</style>

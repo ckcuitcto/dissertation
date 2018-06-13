@@ -77,11 +77,11 @@ class Controller extends BaseController
             }
             if (!empty($userIds)) {
                 $students = DB::table('student_list_each_semesters')
-                    ->rightJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
-                    ->rightJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
-                    ->rightJoin('users', 'users.users_id', '=', 'students.user_id')
-                    ->rightJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
-                    ->rightJoin('roles', 'roles.id', '=', 'users.role_id')
+                    ->leftJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
+                    ->leftJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
+                    ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+                    ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
+                    ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
                     ->whereIn('users.users_id', $userIds)
                     ->where('student_list_each_semesters.semester_id', $semester->id)
                     ->select(
@@ -92,9 +92,14 @@ class Controller extends BaseController
                         'faculties.name as facultyName',
                         'students.academic_year_from',
                         'students.academic_year_to',
+                        DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic"),
                         'students.id',
-                        'users.status'
-//                    DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic")
+                        'users.status',
+                        'students.id as studentId',
+                        'users.faculty_id',
+                        'students.class_id',
+                        'roles.id as role_id',
+                        'student_list_each_semesters.semester_id as semesterId'
                     );
                 return $students;
             }
@@ -113,8 +118,11 @@ class Controller extends BaseController
                     'faculties.name as facultyName',
                     'students.academic_year_from',
                     'students.academic_year_to',
+                    DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic"),
                     'students.id',
-                    'users.status'
+                    'users.status',
+                    'users.faculty_id',
+                    'students.class_id'
 //                    DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic")
                 );
             return $students;

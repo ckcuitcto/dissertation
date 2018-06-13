@@ -225,7 +225,7 @@
             });
 
             $('#myModal').on('hidden.bs.modal', function (e) {
-                $("input[type=text],input[type=number], select").val('');
+                $("input[type=text],input[type=number],input[type=hidden], select").val('').prop('disabled',false);
                 $('.text-red').html('');
                 $('.form-group').find('span.messageErrors').remove();
             });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transcript;
 use App\Model\EvaluationCriteria;
 use App\Model\EvaluationForm;
 use App\Model\EvaluationResult;
+use App\Model\Faculty;
 use App\Model\Role;
 use App\Model\Semester;
 use App\Model\Student;
@@ -24,7 +25,18 @@ class TranscriptController extends Controller
      */
     public function index()
     {
-        return view('transcript.index');
+        $userLogin = Auth::user();
+
+        $currentSemester = $this->getCurrentSemester();
+        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+
+        if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
+            $faculties = Faculty::all()->toArray();
+            $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
+        }else{
+            $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
+        }
+        return view('transcript.index',compact('faculties','semesters','currentSemester'));
     }
 
     /**
@@ -193,13 +205,51 @@ class TranscriptController extends Controller
         return $total;
     }
 
-    public function ajaxGetUsers(Request $request){
+    public function ajaxGetUsers(Request $request)
+    {
         $user = Auth::user();
         $students = $this->getStudentByRoleUserLogin($user);
-        return DataTables::of($students)
-        ->addColumn('action', function ($student) {
-            return '<a title="View" href="'.route('transcript-show',$student->id).'" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
-        })
-        ->make(true);
+        $dataTables = DataTables::of($students)
+            ->addColumn('action', function ($student) use ($user) {
+                $linkView = '<a title="View" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
+                $result = DB::table('evaluation_forms')
+                    ->leftJoin('evaluation_results', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
+                    ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
+                    ->where([
+                        ['evaluation_forms.semester_id', $student->semesterId],
+                        ['evaluation_forms.student_id', $student->studentId],
+                        ['evaluation_results.marker_id', $user->users_id],
+                        ['evaluation_criterias.level', 1],
+                    ])
+                    ->select(DB::raw('SUM(evaluation_results.marker_score) as score'))->first();
+                if ($result->score) {
+                    $score = $result->score;
+                    $iconMarked = '<button class="btn btn-success"><i class="fa fa-check"></i>' . $score . ' đ</button>';
+                    $linkView = $linkView . ' ' . $iconMarked;
+                }
+                return $linkView;
+            })
+            ->filter(function ($student) use ($request) {
+                $faculty = $request->has('faculty_id');
+                $facultyValue = $request->get('faculty_id');
+
+                if (!empty($faculty) AND $facultyValue != 0) {
+                    $student->where('users.faculty_id', '=', $facultyValue);
+
+                    $class = $request->has('class_id');
+                    $classValue = $request->get('class_id');
+                    if (!empty($class) AND $classValue != 0) {
+                        $student->where('students.class_id','=', $classValue);
+                    }
+                }
+
+                $semester = $request->has('semester_id');
+                $semesterValue = $request->get('semester_id');
+                if (!empty($semester) AND $semesterValue != 0) {
+                    $student->where('student_list_each_semesters.semester_id', '=', $semesterValue);
+                }
+            })
+            ->make(true);
+        return $dataTables;
     }
 }

@@ -39,13 +39,19 @@
                     <div class="tile-body">
                         <form id="class-form-export" action="{{route('export-file')}}" method="post">
                             {{ csrf_field() }}
-                            <table class="table table-hover table-bordered" id="sampleTable">
+                            <table class="table table-hover table-bordered" id="facultyTable">
                                 <thead>
                                 <tr>
                                     <th>Lớp</th>
                                     <th>Số lượng sinh viên</th>
+                                    <th class="nosort">
+                                        <div class="animated-checkbox">
+                                            <label>
+                                                <input type="checkbox" name="checkAll"><span class="label-text">Xuất file đánh giá điểm rèn luyện</span>
+                                            </label>
+                                        </div>
+                                    </th>
                                     <th>Tác vụ</th>
-                                    <th>Xuất file đánh giá điểm rèn luyện</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -54,6 +60,14 @@
                                         <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a>
                                         </td>
                                         <td>{{ count($class->Students) }}</td>
+                                        <td>
+                                            <div class="animated-checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="classes[]" class="checkboxClasses"
+                                                           value="{{ $class->id }}"><span class="label-text"></span>
+                                                </label>
+                                            </div>
+                                        </td>
                                         <td style="color:white">
                                             <a data-id="{{$class->id}}" id="class-edit"
                                                data-edit-link="{{route('class-edit',$class->id)}}"
@@ -68,14 +82,6 @@
                                                     <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
                                                 </a>
                                             @endif
-                                        </td>
-                                        <td>
-                                            <div class="animated-checkbox">
-                                                <label>
-                                                    <input type="checkbox" name="classes[]"
-                                                           value="{{ $class->id }}"><span class="label-text"></span>
-                                                </label>
-                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -165,12 +171,52 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
+            $('body').on('click', 'input[name=checkAll]', function (e) {
+                if($(this).is(':checked')){
+                    $("input.checkboxClasses").prop('checked', true);
+                }else{
+                    $("input.checkboxClasses").prop('checked', false);
+                }
+            });
+
+            $('body').on('change', "input.checkboxClasses", function (e) {
+                $("input[name=checkAll]").prop('checked',false);
+
+            });
+
+            var table = $('#facultyTable').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+            },
+            "pageLength": 25,
+            "columnDefs": [
+                { "orderable": false, "targets": 3 }
+            ]
+            });
+
             $('body').on('click', 'button#btnExport', function (e) {
-                $("form#class-form-export").submit();
+                var boxes = $('input.checkboxClasses:checked');
+
+                if(boxes.length == 0){
+                    $.notify({
+                        title: "Vui lòng chọn lớp !!!!!!",
+                        message: ":(",
+                        icon: 'fa fa-exclamation-triangle'
+                    },{
+                        type: "warning"
+                    });
+                }else{
+                        $("form#class-form-export").submit();
+                }
             });
             $('div.alert-success').delay(2000).slideUp();
 
-            $("a#class-edit").click(function () {
+
+            $('body').on('click', 'a#class-edit', function (e) {
                 var urlEdit = $(this).attr('data-edit-link');
                 var urlUpdate = $(this).attr('data-update-link');
                 var id = $(this).attr('data-id');
@@ -199,7 +245,8 @@
                 $('#myModal').modal('show');
             });
 
-            $("#btn-save-class").click(function () {
+            $('body').on('click', '#btn-save-class', function (e) {
+            // $("#btn-save-class").click(function () {
 //                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
 //                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
                 var valueForm = $('form#class-form').serialize();
@@ -237,7 +284,8 @@
                 });
             });
 
-            $('a#class-destroy').click(function () {
+            $('body').on('click', 'a#class-destroy', function (e) {
+            // $('a#class-destroy').click(function () {
                 var id = $(this).attr("data-id");
                 var url = $(this).attr('data-link');
                 swal({

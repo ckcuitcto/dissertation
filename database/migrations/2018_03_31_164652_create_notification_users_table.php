@@ -17,6 +17,7 @@ class CreateNotificationUsersTable extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->string('user_id', 10)->nullable();
             $table->integer('notification_id')->unsigned();
+            $table->enum('status',['Đã xem','Chưa xem'])->default('Chưa xem');
             $table->timestamps();
         });
     }

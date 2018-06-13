@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if(Auth::check()){
+            $userLogin = Auth::user();
+            $notifications = $userLogin->Notifications()->wherePivot('status','Chưa xem')->get();
+            view()->share('notifications', $notifications);
+        }
+
+
         Schema::defaultStringLength(191);
 
         Validator::extend('phone', function($attribute, $value, $parameters, $validator) {

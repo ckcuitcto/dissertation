@@ -12,8 +12,37 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
+                    <div class="tile-body">
+                        <form class="row" role="form" id="search-form" method="post">
+                            {!! csrf_field() !!}
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Role</label>
+                                <select class="form-control search_role_id" name="search_role_id" id="search_role_id">
+                                    @foreach($rolesForSelectSearch as $value)
+                                        <option value="{{ $value['id'] }}">{{ $value['display_name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Khoa</label>
+                                <select class="form-control search_faculty_id" name="search_faculty_id" id="search_faculty_id">
+                                    @foreach($facultiesForSelectSearch as $value)
+                                        <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Lớp</label>
+                                <select class="form-control search_class_id" name="search_class_id" id="search_class_id">
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3 align-self-end">
+                                <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-search"></i>Tìm kiếm</button>
+                            </div>
+                        </form>
+                    </div>
                     <div class="tile-body">
                         <table class="table table-hover table-bordered" id="table-users">
                             <thead>
@@ -25,23 +54,12 @@
                                 <th>Tác vụ</th>
                             </tr>
                             </thead>
-                            {{--<tbody>--}}
-                            {{--@foreach($users as $user)--}}
-                                {{--<tr>--}}
-                                    {{--<td>{{ $user->users_id }}</td>--}}
-                                    {{--<td>{{ $user->name }}</td>--}}
-                                    {{--<td>{{ $user->Role->display_name }}</td>--}}
-                                    {{--<td>{{ \App\Http\Controllers\Controller::getDisplayStatusUser($user->status) }}</td>--}}
-                                    {{--<td>--}}
-                                        {{--<button data-user-id="{{$user->users_id}}" class="btn update-user btn-primary"--}}
-                                                {{--data-user-edit-link="{{route('user-edit',$user->users_id)}}"--}}
-                                                {{--data-user-update-link="{{route('user-update',$user->users_id)}}">--}}
-                                            {{--<i class="fa fa-lg fa-edit" aria-hidden="true"> </i>Sửa--}}
-                                        {{--</button>--}}
-                                    {{--</td>--}}
-                                {{--</tr>--}}
-                            {{--@endforeach--}}
-                            {{--</tbody>--}}
+                            <tfoot>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tfoot>
                         </table>
                         {{--{{ $users->links('vendor.pagination.bootstrap-4') }}--}}
                         <div class="row">
@@ -264,7 +282,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="importModal" role="dialog">
             <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
@@ -317,16 +334,19 @@
     <script>
         $(document).ready(function () {
 
-            $('#table-users').DataTable({
+            var oTable = $('#table-users').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
                     "url": "{{ route('ajax-user-get-users') }}",
                     "dataType": "json",
                     "type": "POST",
-                    "data": {
-                        "_token": "{{ csrf_token() }}"
-                    }
+                    "data": function (d) {
+                        d.faculty_id = $('select[name=search_faculty_id]').val();
+                        d.class_id = $('select[name=search_class_id]').val();
+                        d.role_id = $('select[name=search_role_id]').val();
+                        d._token = "{{ csrf_token() }}";
+                    },
                 },
                 "columns": [
                     {data: "users_id", name: "users.users_id"},
@@ -335,6 +355,17 @@
                     {data: "status", name: "users.status"},
                     {data: 'action', name: 'action', orderable: false, searchable: false}
                 ],
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search(val ? val : '', true, false).draw();
+                            });
+                    });
+                },
                 "language": {
                     "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
                     // "zeroRecords": "Không có bản ghi nào!",
@@ -343,6 +374,28 @@
                     "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
                 },
                 "pageLength": 25
+            });
+
+            $('#search-form').on('submit', function(e) {
+                oTable.draw();
+                e.preventDefault();
+            });
+
+            $('select.search_faculty_id').change(function () {
+                var facultyId = $(this).val();
+                var url = "{{ route('class-get-list-by-faculty-none') }}";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {id: facultyId},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("select.search_class_id").empty();
+                        $.each(data.classes, function (key, value) {
+                            $("select.search_class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
             });
 
             //            import
