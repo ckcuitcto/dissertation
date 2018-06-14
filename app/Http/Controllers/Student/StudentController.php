@@ -258,6 +258,7 @@ class StudentController extends Controller
                 }
             }
             $userLogin = Auth::user();
+
             if (empty($arrError)) {
                 if (!empty($arrUser)) {
                     for($i = 0 ; $i< count($arrFile); $i++){
