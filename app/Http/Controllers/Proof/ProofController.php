@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Proof;
 
+use App\Model\EvaluationCriteria;
 use App\Model\MarkTime;
 use App\Model\Notification;
 use App\Model\Proof;
@@ -34,7 +35,7 @@ class ProofController extends Controller
 
     public function index()
     {
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
         // nếu role vào k phải là học sinh
         if($userLogin->Role->weight >= ROLE_COVANHOCTAP) {
             return view('errors.403');
@@ -178,14 +179,24 @@ class ProofController extends Controller
             if($proof->valid != $request->valid){
                 $student = Student::find($proof->created_by); // sinh viên chủ của minh chứng
                 if(!empty($student)){
+
+                    $semester = Semester::find($proof->semester_id);
+                    $evaluationCriterias = EvaluationCriteria::find($proof->evaluation_criteria_id);
+
                     $notifications = new Notification();
                     $title = "Sửa trạng thái minh chứng của sinh viên: <b>".$student->User->users_id."-".$student->User->name ."</b> thuộc lớp: ".$student->Classes->name;
                     $notifications->title = $title;
                     $notifications->created_by = Auth::user()->Staff->id;
                     if($request->valid != 0){
-                        $notifications->content = $title. " từ $proof->valid thành $request->valid . Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!";
+                        $notifications->content = $title. " từ $proof->valid thành $request->valid của tiêu chí $evaluationCriterias->content .<br>
+                         Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!<br>
+                         <b>Học kì $semester->term Năm học $semester->year_from - $semester->year_to.</b> <br>
+                         ";
                     }else{
-                        $notifications->content = $title. " từ $proof->valid thành $request->valid .Với nội dung:$request->note. Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!";
+                        $notifications->content = $title. " từ $proof->valid thành $request->valid của tiêu chí $evaluationCriterias->content .Với nội dung:<b>$request->note.</b> 
+                        Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!<br>
+                         <b>Học kì $semester->term Năm học $semester->year_from - $semester->year_to.</b> <br>
+                        ";
                     }
 
                     //danh sách Id của các user sẽ tạo thông báo.

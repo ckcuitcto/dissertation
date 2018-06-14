@@ -12,11 +12,6 @@
         }
     @endphp
 
-@php
-$user = \Illuminate\Support\Facades\Auth::user();
-$authCheck = \Illuminate\Support\Facades\Auth::check();
-@endphp
-
     <main class="app-content">
         <div class="app-title">
             <div>
@@ -427,7 +422,9 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 <input type="hidden" class="id" name="id" id="proofId">
                                 {{--khi bấm vào modal. thì chỉ những ng khác k phải là chủ của phiếu mới đc chỉnh sửa file có hợp lệ hay k--}}
                                 {{-- và role hiện tại có thể chấm thì ms có thể sửa trạng thái--}}
-                                @if( $evaluationForm->Student->User->users_id != $user->users_id AND $currentRoleCanMark->weight == $user->Role->weight)
+{{--                                @if( $evaluationForm->Student->User->users_id != $user->users_id)--}}
+{{--                                @if( $evaluationForm->Student->User->users_id != $user->users_id AND $currentRoleCanMark->weight == $user->Role->weight)--}}
+                                @if( $evaluationForm->Student->User->users_id != $user->users_id AND ROLE_COVANHOCTAP <= $user->Role->weight)
                                 <div class="row">
                                     <div class="col-md-2">
                                         <fieldset class="form-group">
@@ -557,6 +554,9 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                     } else if(value == 0) {
                                         $('form#proof-form').find('#invalid').attr('checked', true);
                                         $("form#proof-form").find('#textarea-note').show();
+                                    }else{
+                                        $('form#proof-form').find('#valid').attr('checked', true);
+                                        $("form#proof-form").find('#textarea-note').hide();
                                     }
                                 } else
                                 {

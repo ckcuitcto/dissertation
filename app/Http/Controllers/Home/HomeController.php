@@ -28,7 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
         if($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN ){
             $newsList = News::all();
         }else{

@@ -25,7 +25,7 @@ class TranscriptController extends Controller
      */
     public function index()
     {
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
 
         $currentSemester = $this->getCurrentSemester();
         $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
@@ -74,7 +74,7 @@ class TranscriptController extends Controller
 
             $evaluationForms = EvaluationForm::where('student_id', $id)->get();
 
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
 
             foreach ($evaluationForms as $value) {
                 $this->authorize($value, 'view');
@@ -207,7 +207,7 @@ class TranscriptController extends Controller
 
     public function ajaxGetUsers(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->getUserLogin();
         $students = $this->getStudentByRoleUserLogin($user);
         $dataTables = DataTables::of($students)
             ->addColumn('action', function ($student) use ($user) {

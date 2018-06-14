@@ -110,20 +110,12 @@ class ClassController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:classes,name',
-            'staff_id' => 'required',
-        ],[
-            'name.required' => 'Bắt buộc nhập tên lớp',
-            'name.unique' => 'Tên lớp đã bị trùng',
-            'staff_id.required' => 'Bắt buộc chọn cố vấn học tập',
-        ]);
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:6',
+            'name' => 'required|min:6|unique:classes,name,'.$id.',id',
             'staff_id' => 'required'
         ],[
             'name.required' => 'Bắt buộc nhập tên lớp',
             'staff_id.required' => 'Bắt buộc chọn cố vấn học tập',
+            'name.unique' => 'Tên lớp đã tồn tại',
         ]);
 
         if ($validator->fails()) {

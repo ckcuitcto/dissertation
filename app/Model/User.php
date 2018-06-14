@@ -50,8 +50,8 @@ class User extends Authenticatable
     }
 
     public function Notifications(){
-        return $this->belongsToMany('App\Model\Notification','notification_users','user_id','notification_id')
-            ->withPivot('status')
+        return $this->belongsToMany('App\Model\Notification','notification_users','users_id','notification_id')
+//            ->withPivot('status')
             ->withTimestamps();
     }
 

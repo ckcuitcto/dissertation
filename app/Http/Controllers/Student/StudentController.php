@@ -257,7 +257,7 @@ class StudentController extends Controller
                     }
                 }
             }
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
             if (empty($arrError)) {
                 if (!empty($arrUser)) {
                     for($i = 0 ; $i< count($arrFile); $i++){
@@ -444,7 +444,7 @@ class StudentController extends Controller
             }
 
             $arrFileImport = array();
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
             if (empty($arrError)) {
                 // kiểm tra xem có user nào k tồn tại trong DB k? nếu có thì lấy rồi xuất ra thông báo
                 foreach($arrUser as $key => $value){
@@ -548,7 +548,7 @@ class StudentController extends Controller
     }
 
     public function ajaxGetUsers(Request $request){
-        $user = Auth::user();
+        $user = $this->getUserLogin();
         $students = $this->getStudentByRoleUserLogin($user);
         return DataTables::of($students)->make(true);
     }
