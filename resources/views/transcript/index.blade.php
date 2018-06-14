@@ -41,7 +41,7 @@
                                 <select class="form-control class_id" name="class_id" id="class_id">
                                 </select>
                             </div>
-                            <div class="form-group col-md-4 align-self-end">
+                            <div class="form-group col-md-3 align-self-end">
                                 <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-search"></i>Tìm kiếm</button>
                             </div>
                         </form>
@@ -85,6 +85,9 @@
     <script>
         $(document).ready(function () {
             var oTable = $('#students').DataTable({
+                dom: "<'row'<'col-xs-12'<'col-xs-6'l>>r>"+
+                "<'row'<'col-xs-12't>>"+
+                "<'row'<'col-xs-12'<'col-xs-6'i><'col-xs-6'p>>>",
                 "processing": true,
                 "serverSide": true,
                 "ajax": {

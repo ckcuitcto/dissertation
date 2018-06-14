@@ -248,8 +248,15 @@ class TranscriptController extends Controller
                 if (!empty($semester) AND $semesterValue != 0) {
                     $student->where('student_list_each_semesters.semester_id', '=', $semesterValue);
                 }
-            })
-            ->make(true);
-        return $dataTables;
+            });
+
+//        if ($keyword = $request->get('search')['value']) {
+            // override users.name global search
+//            $dataTables->filterColumn('users.faculty_id', 'where', '=', "%$keyword%");
+
+            // override users.id global search - demo for concat
+//            $dataTables->filterColumn('students.class_id', 'where', "=", "%$keyword%");
+//        }
+        return $dataTables->make(true);
     }
 }

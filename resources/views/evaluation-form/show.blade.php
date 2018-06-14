@@ -413,8 +413,8 @@
                                 </div>
                                 @if( $evaluationForm->Student->User->users_id == $user->users_id)
                                     <div class="row">
-                                        <div class="col-md-12 alert-danger alert">
-                                            <textarea class="form-control note" disabled name="note" id="note" rows="3"></textarea>
+                                        <div class="col-md-12">
+                                            <p class="note-for-student" style="color:red;"></p>
                                         </div>
                                     </div>
                                 @endif
@@ -558,8 +558,11 @@
                                         $('form#proof-form').find('#valid').attr('checked', true);
                                         $("form#proof-form").find('#textarea-note').hide();
                                     }
-                                } else
-                                {
+                                } else if(elementName === 'note'){
+                                    if(data.proof.valid === 0){
+                                        $('form#proof-form').find('p.note-for-student').html(value);
+                                    }
+                                }else {
                                     $('form#proof-form').find('.' + elementName).val(value);
                                 }
                             });
@@ -621,6 +624,7 @@
             $('#myModal').on('hidden.bs.modal', function (e) {
                 $('#myModal').find('div#iframe-view-file').html('');
                 $('#myModal').find("input[type=text],input[type=number], select").val('');
+                $('form#proof-form').find('p.note-for-student').html('');
                 $('span.messageErrors').remove();
                 $('#myModal').find("#note").html('');
             });
