@@ -257,6 +257,7 @@ class StudentController extends Controller
                     }
                 }
             }
+
             $userLogin = $this->getUserLogin();
             if (empty($arrError)) {
                 if (!empty($arrUser)) {
