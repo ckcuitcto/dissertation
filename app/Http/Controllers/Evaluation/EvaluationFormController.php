@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Evaluation;
 
+use App\Http\Requests\EvaluationFormRequest;
 use App\Model\EvaluationCriteria;
 use App\Model\EvaluationForm;
 use App\Http\Controllers\Controller;
@@ -247,6 +248,14 @@ class EvaluationFormController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $arrRules = array();
+        $evaluationCriterias = EvaluationCriteria::whereIn('id',ARRAY_EVALUATION_CRITERIAS_VALIDATE)->get();
+        foreach($evaluationCriterias as $key => $value){
+            $arrRules["score$value->id"]  = "required|between:$value->mark_range_from,$value->mark_range_to|numeric";
+        }
+        $arrRules['totalScoreOfForm'] = "required|numeric|between:0,100";
+        $this->validate($request,$arrRules);
+
         $evaluationFormId = $id;
         $evaluationForm = EvaluationForm::find($evaluationFormId);
         $userLogin = $this->getUserLogin();
@@ -313,7 +322,7 @@ class EvaluationFormController extends Controller
                 }
             }
         }
-//        dd($arrEvaluationResult);
+
         $evaluationForm->EvaluationResults()->createMany($arrEvaluationResult);
         $evaluationForm->total = $request->totalScoreOfForm;
         $evaluationForm->save();
@@ -391,6 +400,39 @@ class EvaluationFormController extends Controller
         }elseif($score >= BAD ) {
             return "Kém";
         }
+    }
+
+    public function checkInput(Request $request){
+
+        $evaluationCriteria = EvaluationCriteria::find($request->ecId);
+        if(!empty($evaluationCriteria)){
+            if( $evaluationCriteria->mark_range_from <= $request->value AND $request->value <= $evaluationCriteria->mark_range_to ){
+                return response()->json([
+                    'status' => true,
+                ], 200);
+            }else{
+                $score = null;
+                //nếu điểm chấm < điểm min => điểm chấm = điểm min
+                if($request->value < $evaluationCriteria->mark_range_from ) {
+                    $score = $evaluationCriteria->mark_range_from;
+
+                    //nếu điểm chấm > điểm max => điểm chấm = điểm max
+                } elseif($request->value > $evaluationCriteria->mark_range_to ){
+                    $score = $evaluationCriteria->mark_range_to;
+                }
+                // nếu điểm k hợp lệ. thì kiểm tra. nếu điểm nhập gần min thì set = min. nếu gần max thì set = max
+                return response()->json([
+                    'status' => false,
+                    'score' => $score,
+                    'message' => "Khoảng điểm của tiêu chí này là từ $evaluationCriteria->mark_range_from -> $evaluationCriteria->mark_range_to",
+                ], 200);
+            }
+        }
+        // nếu k tìm thấy tiêu chí thì trả về điểm = 0;
+        return response()->json([
+            'score' => 0,
+            'message' => 'Vui lòng không chỉnh sửa code'
+        ], 200);
     }
 
 }

@@ -149,6 +149,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Evaluation\EvaluationFormController@getProofById']);
 
+        Route::post('/kiem-tra-nhap', ['as' => 'evaluation-form-check-input', 'uses' => 'Evaluation\EvaluationFormController@checkInput']);
+
     });
 
     Route::group(['prefix' => 'phuc-khao'], function () {

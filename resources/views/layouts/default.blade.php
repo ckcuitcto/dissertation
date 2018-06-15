@@ -110,7 +110,7 @@
                     @endcan
                     @if($authCheck)
                         @if($userLogin->Role->id == 1 OR $userLogin->Role->id == 2)
-                        <li><a class="treeview-item" href="{{route('transcript-show',$userLogin->Student->id )}}"><i class="icon fa fa-circle-o"></i> Tổng
+                        <li><a class="treeview-item" href="{{route('transcript-show',$userLogin->Student->id )}}"><i class="icon fa fa-circle-o"></i>
                                 Điểm Cá Nhân</a>
                         </li>
                         @endif
@@ -264,12 +264,12 @@
 @stop
 
 @section('javascript')
-    <script src="{{ URL::asset('template/js/jquery-3.2.1.min.js') }}"></script>
-    <script src="{{ URL::asset('template/js/popper.min.js') }}"></script>
-    <script src="{{ URL::asset('template/js/bootstrap.min.js') }}"></script>
-    <script src="{{ URL::asset('template/js/main.js') }}"></script>
-    <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
-    <script src="{{ URL::asset('js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('template/js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ asset('template/js/popper.min.js') }}"></script>
+    <script src="{{ asset('template/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('template/js/main.js') }}"></script>
+    <script src="{{ asset('template/js/plugins/pace.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>

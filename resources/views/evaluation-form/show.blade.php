@@ -166,6 +166,7 @@
                                                     {{-- các input còn lại sẽ bị ẩn đi --}}
                                                     @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{$name}}"
+                                                                   ec="{{ $valueLevel2->id }}"
                                                                    value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                                    min="{{$valueLevel2->mark_range_from}}"
                                                                    max="{{$valueLevel2->mark_range_to}}"
@@ -266,6 +267,7 @@
                                                     @endphp
                                                     @if($role['name'] == $user->Role->name AND $currentRoleCanMark->id == $role['userRole'])
                                                         <td><input required type="number" name="{{ $name }}"
+                                                                   ec="{{ $valueLevel3->id }}"
                                                                    value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                                    min="{{$valueLevel3->mark_range_from}}"
                                                                    max="{{$valueLevel3->mark_range_to}}"
@@ -274,9 +276,6 @@
                                                         </td>
                                                     @else
                                                         <td style="text-align: center">
-                                                            {{--<input type="text" disabled="true"--}}
-                                                                   {{--class="form-control {{ $role['name'] }}  input-evaluation-form"--}}
-                                                                   {{--value="">--}}
                                                             {{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}
                                                         </td>
                                                     @endif
@@ -311,8 +310,8 @@
                                             @endphp
                                             @if($role['name'] == $user->Role->name  AND $currentRoleCanMark->id == $role['userRole'])
                                                 <td>
-                                                    <input type="number"
-                                                           name="{{ $name }}" required
+                                                    <input type="number" name="{{ $name }}" required
+                                                           ec="{{ $valueLevel1->id }}"
                                                            id="{{ "total_".$valueLevel1->id}}"
                                                            value="{{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}"
                                                            min="{{$valueLevel1->mark_range_from}}"
@@ -323,9 +322,6 @@
                                                 </td>
                                             @else
                                                 <td style="text-align: center">
-                                                {{--<input type="text" disabled="true"--}}
-                                                           {{--class="form-control {{ $role['name'] }}  input-evaluation-form"--}}
-                                                           {{--value="">--}}
                                                     {{ $evaluationResults[$keyResult]['marker_score'] OR 0 }}
                                                 </td>
                                             @endif
@@ -362,9 +358,6 @@
                                             </td>
                                         @else
                                             <td style="text-align: center">
-                                                {{--<input type="text" disabled="true"--}}
-                                                       {{--value=""--}}
-                                                       {{--class="form-control {{ $role['name'] }}  input-evaluation-form">--}}
                                                 {{ $arrTotalScore[$role['userRole']] }}
                                             </td>
                                         @endif
@@ -471,9 +464,56 @@
 @section('sub-javascript')
     <script type="text/javascript" src=" {{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src=" {{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js//evaluationForm.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $("input.input-evaluation-form").change(function (e) {
+                var thisInput = $(this);
+
+                var url = "{{ route('evaluation-form-check-input')}}";
+                var ecId = thisInput.attr('ec');
+
+                if(thisInput.val() === ""){
+                    $(this).val(0);
+                }
+                var value = $(this).val();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {value:value,ecId :ecId },
+                    cache: false,
+                    success: function (result) {
+                        if (result.status === true) {
+                            // thisInput.addClass("is-valid");
+                            // thisInput.removeClass("is-invalid");
+                        }else if(result.status === false){
+                            // thisInput.removeClass("is-valid");
+                            // thisInput.addClass("is-invalid");
+                            thisInput.val(result.score).change();
+
+                            $.notify({
+                                title: "Lưu ý: ",
+                                message: result.message,
+                                icon: 'fa fa-exclamation-triangle'
+                            },{
+                                type: "danger"
+                            });
+                        }else{
+                            $.notify({
+                                title: "CẢNH BÁO !!!",
+                                message: result.message,
+                                icon: 'fa fa-exclamation-triangle'
+                            },{
+                                type: "danger"
+                            });
+                            setTimeout(function(){
+                                location.reload();
+                            }, 1500);
+                        }
+                    }
+                });
+            });
+
 
             $('div.alert-success').delay(2000).slideUp();
 
@@ -631,4 +671,5 @@
 
         });
     </script>
+    <script type="text/javascript" src="{{ asset('js//evaluationForm.js') }}"></script>
 @endsection
