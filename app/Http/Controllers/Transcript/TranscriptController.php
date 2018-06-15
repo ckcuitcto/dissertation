@@ -25,7 +25,7 @@ class TranscriptController extends Controller
      */
     public function index()
     {
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
 
         $currentSemester = $this->getCurrentSemester();
         $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
@@ -74,7 +74,7 @@ class TranscriptController extends Controller
 
             $evaluationForms = EvaluationForm::where('student_id', $id)->get();
 
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
 
             foreach ($evaluationForms as $value) {
                 $this->authorize($value, 'view');
@@ -207,7 +207,7 @@ class TranscriptController extends Controller
 
     public function ajaxGetUsers(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->getUserLogin();
         $students = $this->getStudentByRoleUserLogin($user);
         $dataTables = DataTables::of($students)
             ->addColumn('action', function ($student) use ($user) {
@@ -248,8 +248,15 @@ class TranscriptController extends Controller
                 if (!empty($semester) AND $semesterValue != 0) {
                     $student->where('student_list_each_semesters.semester_id', '=', $semesterValue);
                 }
-            })
-            ->make(true);
-        return $dataTables;
+            });
+
+//        if ($keyword = $request->get('search')['value']) {
+            // override users.name global search
+//            $dataTables->filterColumn('users.faculty_id', 'where', '=', "%$keyword%");
+
+            // override users.id global search - demo for concat
+//            $dataTables->filterColumn('students.class_id', 'where', "=", "%$keyword%");
+//        }
+        return $dataTables->make(true);
     }
 }

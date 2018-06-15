@@ -219,6 +219,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
 
+    Route::group(['prefix' => 'thong-bao'], function () {
+        Route::get('/', ['as' => 'notifications', 'uses' => 'Notification\NotificationController@index']);
+
+        Route::get('/show/{id}', ['as' => 'notifications-show', 'uses' => 'Notification\NotificationController@show']);
+
+    });
+
     Route::group(['prefix' => 'tai-khoan', 'middleware' => 'can:manage-user'], function () {
 
         Route::get('/', ['as' => 'user', 'uses' => 'User\UserController@index']);

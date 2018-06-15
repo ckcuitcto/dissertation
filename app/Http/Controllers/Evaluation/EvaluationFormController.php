@@ -37,16 +37,16 @@ class EvaluationFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($semesterId)
-    {
+//    public function create($semesterId)
+//    {
 //        $user = Auth::user();
 //
 //        $form = new EvaluationForm();
 //        $form->student_id = $user->Student->id;
 //        $form->semester_id = $semesterId;
 //        $form->save();
-        return view('evaluation-form.index', compact('form', 'user'));
-    }
+//        return view('evaluation-form.index', compact('form', 'user'));
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -72,7 +72,7 @@ class EvaluationFormController extends Controller
             // phân quyền quan trọng. chỉ nhân viên ở khoa nào ms đc xem ở khoa đó.
             $this->authorize($evaluationForm, 'view');
 
-            $user = Auth::user();
+            $user = $this->getUserLogin();
 
             $evaluationCriterias = EvaluationCriteria::where('level', 1)->get();
 
@@ -249,7 +249,7 @@ class EvaluationFormController extends Controller
     {
         $evaluationFormId = $id;
         $evaluationForm = EvaluationForm::find($evaluationFormId);
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
 
         // lưu điểm đánh giá
         $arrEvaluationResult = array();

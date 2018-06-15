@@ -20,8 +20,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $user =
-            Auth::user();
+        $user = $this->getUserLogin();
         $comment = DB::table('comments')
             ->leftJoin('students', 'students.id', '=', 'comments.created_by')
             ->leftJoin('users', 'students.user_id', '=', 'users.users_id')
@@ -31,7 +30,7 @@ class CommentController extends Controller
         {
             //  lấy hết. k cần điều kiện gì
         }else{
-            $facultyId = Auth::user()->Faculty->id;
+            $facultyId = $this->getUserLogin()->Faculty->id;
             $comment->where('users.faculty_id', $facultyId);
             if ($user->Role->id >= ROLE_BANCHUNHIEMKHOA) // chu nhiem khoa thì lấy user thuộc khoa giống
             {
@@ -59,7 +58,7 @@ class CommentController extends Controller
     // ít dùng. vì ta dùng jquery để hiển thị ra rồi.
     public function create()
     {
-        $user = Auth::user();
+        $user = $this->getUserLogin();
         if($user->Role->weight >= ROLE_COVANHOCTAP){
             return view('errors.403');
         }
@@ -75,7 +74,7 @@ class CommentController extends Controller
     // hàm này để lưuu thông tin khi tạo mới. 
     public function store(Request $request)
     {
-        $user = Auth::user();
+        $user = $this->getUserLogin();
         if($user->Role->weight >= ROLE_COVANHOCTAP){
             return view('errors.403');
         }
@@ -92,7 +91,7 @@ class CommentController extends Controller
         );
 
         $comment = new Comment;
-        $comment->created_by = Auth::user()->Student->id;
+        $comment->created_by = $this->getUserLogin()->Student->id;
         $comment->title = $request->title;
         $comment->content = $request->content;
         $comment->save();

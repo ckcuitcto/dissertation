@@ -12,11 +12,6 @@
         }
     @endphp
 
-@php
-$user = \Illuminate\Support\Facades\Auth::user();
-$authCheck = \Illuminate\Support\Facades\Auth::check();
-@endphp
-
     <main class="app-content">
         <div class="app-title">
             <div>
@@ -418,8 +413,8 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 </div>
                                 @if( $evaluationForm->Student->User->users_id == $user->users_id)
                                     <div class="row">
-                                        <div class="col-md-12 alert-danger alert">
-                                            <textarea class="form-control note" disabled name="note" id="note" rows="3"></textarea>
+                                        <div class="col-md-12">
+                                            <p class="note-for-student" style="color:red;"></p>
                                         </div>
                                     </div>
                                 @endif
@@ -427,7 +422,9 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                 <input type="hidden" class="id" name="id" id="proofId">
                                 {{--khi bấm vào modal. thì chỉ những ng khác k phải là chủ của phiếu mới đc chỉnh sửa file có hợp lệ hay k--}}
                                 {{-- và role hiện tại có thể chấm thì ms có thể sửa trạng thái--}}
-                                @if( $evaluationForm->Student->User->users_id != $user->users_id AND $currentRoleCanMark->weight == $user->Role->weight)
+{{--                                @if( $evaluationForm->Student->User->users_id != $user->users_id)--}}
+{{--                                @if( $evaluationForm->Student->User->users_id != $user->users_id AND $currentRoleCanMark->weight == $user->Role->weight)--}}
+                                @if( $evaluationForm->Student->User->users_id != $user->users_id AND ROLE_COVANHOCTAP <= $user->Role->weight)
                                 <div class="row">
                                     <div class="col-md-2">
                                         <fieldset class="form-group">
@@ -557,9 +554,15 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
                                     } else if(value == 0) {
                                         $('form#proof-form').find('#invalid').attr('checked', true);
                                         $("form#proof-form").find('#textarea-note').show();
+                                    }else{
+                                        $('form#proof-form').find('#valid').attr('checked', true);
+                                        $("form#proof-form").find('#textarea-note').hide();
                                     }
-                                } else
-                                {
+                                } else if(elementName === 'note'){
+                                    if(data.proof.valid === 0){
+                                        $('form#proof-form').find('p.note-for-student').html(value);
+                                    }
+                                }else {
                                     $('form#proof-form').find('.' + elementName).val(value);
                                 }
                             });
@@ -621,6 +624,7 @@ $authCheck = \Illuminate\Support\Facades\Auth::check();
             $('#myModal').on('hidden.bs.modal', function (e) {
                 $('#myModal').find('div#iframe-view-file').html('');
                 $('#myModal').find("input[type=text],input[type=number], select").val('');
+                $('form#proof-form').find('p.note-for-student').html('');
                 $('span.messageErrors').remove();
                 $('#myModal').find("#note").html('');
             });

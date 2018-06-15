@@ -13,7 +13,7 @@ class InformationController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
+        $user = $this->getUserLogin();
         $students = $this->getStudentByRoleUserLogin($user);
 
         return view('user.personal-information-list', compact('students'));
@@ -23,7 +23,7 @@ class InformationController extends Controller
     {
         $user = User::where('users_id',$id)->first();
         if(!empty($user)) {
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
             if($user->users_id != $userLogin->users_id){
                 return view('errors.403');
             }

@@ -80,7 +80,7 @@
                                 <td>
                                     <a class="btn btn-primary"
                                        href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
-                                        <i class="fa fa-eye" aria-hidden="true" style="color:white"></i>Xem
+                                        <i class="fa fa-edit" aria-hidden="true" style="color:white"></i>Xem
                                     </a>
                                     {{-- ếu đang trong thời gian phúc khảo và user login = user chủ fomr thì hiện nút phúc khảo --}}
                                     @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_request_re_mark, $evaluationForm->Semester->date_end_to_request_re_mark ) AND $user->users_id == $userLogin->users_id)

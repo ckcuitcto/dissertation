@@ -23,7 +23,7 @@ class CreateForeignKey extends Migration
         });
 
         Schema::table('notification_users', function (Blueprint $table) {
-            $table->foreign('user_id')->references('users_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('users_id')->references('users_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('notification_id')->references('id')->on('notifications')->onDelete('cascade')->onUpdate('cascade');
         });
 

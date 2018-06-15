@@ -91,14 +91,14 @@ class StaffSeeder extends Seeder
             ],[
                 'users_id' => 'ADMINDUCCC',
                 'name' => 'A D M I N',
-                'email' => 'thducit@gmail.com@gmail1.com',
+                'email' => 'thducit@gmail.com',
                 'password' => bcrypt('ADMINDUCCC'),
                 'role_id' => 6,
                 'faculty_id' => null
             ],[
                 'users_id' => 'ADMINHANNN',
                 'name' => 'A D M I N',
-                'email' => 'tnghanit@gmail.com@gmail1.com',
+                'email' => 'tnghanit@gmail.com',
                 'password' => bcrypt('ADMINHANNN'),
                 'role_id' => 6,
                 'faculty_id' => null
