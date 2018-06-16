@@ -6,11 +6,28 @@
                 <h1><i class="fa fa-home fa-lg" aria-hidden="true"></i> Trang chủ</h1>
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
-            <ul class="app-breadcrumb breadcrumb">
+            {{-- <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item">Trang chủ</li>
-            </ul>
+            </ul> --}}
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                {{-- <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button> --}}
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                  <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html">Phòng đào tạo</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html">Phòng Công tác sinh viên</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html">Văn phòng khoa CNTT</a>
+                  </div>
+                </div>
+            </nav>
+
         </div>
+
+        
 
         <div class="row">
             <div class="col-md-6 col-lg-3">
@@ -24,7 +41,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <a href="http://daotao1.stu.edu.vn/Default.aspx?page=xemdiemthi" style="text-decoration: none;">
-                    <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
+                    <div class="widget-small info coloured-icon"><i class="icon fa fa-graduation-cap fa-3x"></i>
                         <div class="info">
                             <h4>Điểm Học Kỳ</h4>
                         </div>
@@ -57,7 +74,7 @@
                 <div class="tile">
                     <h3 class="tile-title"><i class="fa fa-bell" aria-hidden="true"></i> &nbsp;Tin tức</h3>
                     @foreach($newsList as $news)
-                    <div class="card mb-2" style="background-color:#66d6b8;color:white">
+                    <div class="card mb-2">
                             <div class="card-header">
                                 <div>{{$news->title}}</div>
                                 <a href="{{ route('news-show',[ str_slug($news->title),$news->id]) }}">

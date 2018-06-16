@@ -121,18 +121,7 @@
                     </li>
                     @endcan
                 </ul>
-            </li>
-            <li>
-                    @if($authCheck)<a class="app-menu__item" href="{{ route('personal-information-show',$userLogin->users_id) }}">
-                        <i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="app-menu__label">&nbsp; Thông tin cá nhân</span>
-                        </a>
-                    @endif
-            </li>
-            <li>
-                    <a class="app-menu__item" href="{{ route('notifications') }}">
-                        <i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="app-menu__label">&nbsp; Thông báo</span>
-                    </a>
-            </li>
+            </li>           
 
             @can('proofs-list')
                 @if($userLogin->Role->weight <= ROLE_COVANHOCTAP)
@@ -148,14 +137,42 @@
                 @endif
             @endcan
 
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
+                class="treeview-indicator fa fa-angle-right"></i></a>
+                @can('comment-add')
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
+                                        class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
+                    </ul>
+                @endcan
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
+                                    class="icon fa fa-circle-o"></i>
+                            Danh sách ý kiến</a></li>
+                </ul>
+            </li>
+
+
             @can('can-change-news')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Tin tức</span><i
+                            class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label"> Tin tức</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     {{--<li><a class="treeview-item" href="{{ route('notification') }}"><i class="icon fa fa-circle-o"></i>--}}
                             {{--Thông Báo</a></li>--}}
-                    <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Sự Kiện, Thông báo</a></li>
+                    <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Tin tức, sự kiện</a></li>
+                </ul>
+            </li>
+            @endcan
+            
+            @can('semester-change')
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                            class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Học kì</span><i
+                            class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" href="{{ route('semester-list') }}"><i class="icon fa fa-circle-o"></i>Danh
+                            sách học kì </a></li>
                 </ul>
             </li>
             @endcan
@@ -163,7 +180,7 @@
             @can(array('faculty-list','student-list'))
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-cogs"></i><span
-                            class="app-menu__label">Quản lí Khoa,Phòng ban</span><i
+                            class="app-menu__label">Quản lí Khoa - Sinh viên</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
                     @can('faculty-list')
@@ -179,21 +196,18 @@
             </li>
             @endif
 
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                @can('comment-add')
-                    <ul class="treeview-menu">
-                        <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
-                                        class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
-                    </ul>
-                @endcan
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
-                                    class="icon fa fa-circle-o"></i>
-                            Danh sách ý kiến</a></li>
-                </ul>
+            @can('manage-user')
+            <li><a class="app-menu__item" href="{{ route('user') }}">
+                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                            class="app-menu__label">Quản lí tài khoản </span>
+                </a>
             </li>
+            <li><a class="app-menu__item" href="{{ route('files') }}">
+                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                            class="app-menu__label">Quản lí file </span>
+                </a>
+            </li>
+            @endcan
 
             @can('user-rights')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
@@ -207,58 +221,7 @@
                 </ul>
             </li>
             @endcan
-
-            @can('semester-change')
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Học kì</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('semester-list') }}"><i class="icon fa fa-circle-o"></i>Danh
-                            sách học kì </a></li>
-                </ul>
-            </li>
-            @endcan
-
-            @can('manage-user')
-            <li><a class="app-menu__item" href="{{ route('user') }}">
-                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
-                            class="app-menu__label">Quản lí tài khoản </span>
-                </a>
-            </li>
-            <li><a class="app-menu__item" href="{{ route('files') }}">
-                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
-                            class="app-menu__label">Quản lí file </span>
-                </a>
-            </li>
-            @endcan
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=thoikhoabieu"><i
-                                    class="icon fa fa-circle-o"></i> Thời Khóa Biểu</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=xemdiemthi"><i
-                                    class="icon fa fa-circle-o"></i> Điểm Học Kỳ</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=dkmonhoc"><i
-                                    class="icon fa fa-circle-o"></i> Đăng ký môn học</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=xemhocphi"><i
-                                    class="icon fa fa-circle-o"></i> Học Phí</a></li>
-                </ul>
-            </li>
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-bed"></i><span class="app-menu__label">Các Phòng Ban</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html"><i
-                                    class="icon fa fa-circle-o"></i> Phòng Đào Tạo</a></li>
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html"><i
-                                    class="icon fa fa-circle-o"></i> Phòng
-                            Công Tác Sinh Viên</a></li>
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html"><i
-                                    class="icon fa fa-circle-o"></i> Văn Phòng
-                            Khoa</a></li>
-                </ul>
-            </li>
+            
         </ul>
     </aside>
 @stop
