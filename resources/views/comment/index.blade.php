@@ -42,20 +42,33 @@
                                     <td>{!! $cmt->title !!} </td>
                                     <td>{!! $cmt->content !!}</td>
                                     <td>{{ $cmt->created_at }}</td>
-                                    <td align="center">
+                                    <td align="left">
                                     @can('comment-reply')
-                                        <a class="btn btn-primary" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-reply"
+                                        @if(empty($cmt->reply))
+                                        <a title="Phản hồi ý kiến" class="btn btn-primary" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-reply"
                                            data-comment-show-link="{{route('comment-show',$cmt->id)}}"
                                            data-comment-reply-link="{{route('comment-reply',$cmt->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Phản hồi
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
+                                        @else
+                                            <a title="Đã phản hồi ý kiến" class="btn btn-success" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-reply"
+                                               data-comment-show-link="{{route('comment-show',$cmt->id)}}"
+                                               data-comment-reply-link="{{route('comment-reply',$cmt->id)}}">
+                                                <i class="fa fa-lg fa-check" aria-hidden="true"> </i>
+                                            </a>
+                                        @endif
                                     @endcan
                                     @can('comment-delete')
-                                        <a class="btn btn-danger" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-destroy"
+                                        <a title="Xóa" class="btn btn-danger" style="color:white" data-comment-id="{{$cmt->id}}" id="comment-destroy"
                                            data-comment-link="{{route('comment-destroy',$cmt->id)}}">
-                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
+                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                         </a>
                                     @endcan
+                                        <button class="view-comment btn btn-info"
+                                                data-id="{{$cmt->id}}"
+                                                link-view="{{route('comment-show',$cmt->id)}}">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -89,9 +102,7 @@
                                     <div class="form-group">
                                         <label for="email_content">Nội dung</label>
                                         <input type="hidden" name="id" class="id">
-                                        <textarea class="form-control email_content" name="email_content"
-                                                  id="email_content" cols="30" rows="10">
-                                        </textarea>
+                                        <textarea class="form-control email_content" name="email_content" id="email_content" cols="30" rows="10"></textarea>
                                         <p style="color:red; display: none;" class="name"></p>
                                     </div>
                                 </div>
@@ -103,6 +114,26 @@
                             </button>
                             <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalViewComment" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Xem chi tiết ý kiến</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Tiêu đề</h5>
+                        <p class="title"></p>
+                        <h5>Nội dung ý kiến</h5>
+                        <p class="content"></p>
+                        <h5>Nội dung ý kiến đã phản hồi</h5>
+                        <p class="reply"></p>
                     </div>
                 </div>
             </div>
@@ -141,7 +172,9 @@
 //                                    alert(elementName + "+ " + value);
                                     if (elementName === 'title' || elementName === 'content') {
                                         $('.' + elementName).html(value);
-                                    } else {
+                                    } else if(elementName === 'reply') {
+                                        $('.email_content').html(value);
+                                    }else{
                                         $('.' + elementName).val(value);
                                     }
 //                                    });
@@ -177,9 +210,9 @@
                         } else if (result.status === true) {
                             $('#myModal').find('.modal-body').html('<p>Thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-//                            $('#myModal').on('hidden.bs.modal', function (e) {
-//                                location.reload();
-//                            });
+                           $('#myModal').on('hidden.bs.modal', function (e) {
+                               location.reload();
+                           });
                         }
                     }
                 });
@@ -221,7 +254,36 @@
                 });
             });
 
-            CKEDITOR.replace('email_content');
+            $('body').on('click', 'button.view-comment', function (e) {
+                var url = $(this).attr('link-view');
+                var id = $(this).attr('data-id');
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status === true) {
+                            if (result.comment !== undefined) {
+                                $.each(result.comment, function (elementName, value) {
+                                    $("div#modalViewComment").find('p.' + elementName).append(value);
+                                });
+                            }
+                        }
+                    }
+                });
+                $('#modalViewComment').modal('show');
+            });
+
+            $('div#modalViewComment').on('hidden.bs.modal', function (e) {
+                $('div#modalViewComment').find("p").html('');
+            });
+
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $('#myModal').find("textarea.email_content").html('');
+                $('.text-red').html('');
+                $('span.messageErrors').remove();
+            });
         });
 
     </script>
