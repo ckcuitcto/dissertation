@@ -42,7 +42,7 @@
                                 <div>Khoa: {{ $user->Faculty->name OR "" }}</div>
                             </div>
                             <div class="col-md-3">
-                            <div>Cố vấn học tập: </div>
+                            <div>Cố vấn học tập: {{$user->Student->Classes->Staff->User->name}}</div>
                             <div>Ban cán sự lớp: </div>
                             </div>
                         </div>
