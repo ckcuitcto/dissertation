@@ -42,8 +42,8 @@
                                                data-link-update-proof-file="{{ route('proof-destroy',$proof->id ) }}"
                                                data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}" class="btn btn-primary">
                                                 <i class="fa fa-eye"
-                                                   aria-hidden="true"></i> Xem
-                                            </a>{{ $proof->name }}
+                                                   aria-hidden="true"></i>{{ str_limit($proof->name,20) }}
+                                            </a>
                                         </td>
                                         <td>{{$proof->term}}</td>
                                         <td>{{$proof->year_from. "-".$proof->year_to}}</td>

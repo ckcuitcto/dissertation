@@ -85,9 +85,9 @@
     <script>
         $(document).ready(function () {
             var oTable = $('#students').DataTable({
-                dom: "<'row'<'col-xs-12'<'col-xs-6'l>>r>"+
-                "<'row'<'col-xs-12't>>"+
-                "<'row'<'col-xs-12'<'col-xs-6'i><'col-xs-6'p>>>",
+                // dom: "<'row'<'col-xs-12'<'col-xs-6'l>>r>"+
+                // "<'row'<'col-xs-12't>>"+
+                // "<'row'<'col-xs-12'<'col-xs-6'i><'col-xs-6'p>>>",
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -173,8 +173,3 @@
         });
     </script>
 @endsection
-<style>
-    .custom-quanly-taikhoan table.dataTable{
-        width: 100% !important;
-    }
-</style>
