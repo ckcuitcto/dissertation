@@ -107,10 +107,7 @@ class TranscriptController extends Controller
             $arrRolesCanMarkWithScore = array();
             foreach ($evaluationForms as $evaluationform) {
                 $scoreListByEvaluationForm = $scoreList->where('evaluationFormId', $evaluationform->id);
-//                var_dump($scoreListByEvaluationForm);
 
-//                var_dump($scoreListByEvaluationForm->where('role_id', $value['id'])->first()->totalRoleScore);
-//                die;
                 $arrRolesCanMarkWithScore[$evaluationform->id] = array();
                 foreach ($rolesCanMark as $value) {
                     if (!empty($scoreListByEvaluationForm->where('role_id', $value['id'])->first()->totalRoleScore)) {
@@ -122,7 +119,6 @@ class TranscriptController extends Controller
                     }
                 }
             }
-//            dd($arrRolesCanMarkWithScore);
             return view('transcript.show', compact('user', 'userLogin', 'evaluationForms', 'arrRolesCanMarkWithScore', 'rolesCanMark'));
         }
         return redirect()->back();

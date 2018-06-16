@@ -350,4 +350,33 @@ class Controller extends BaseController
             return "Kém";
         }
     }
+
+    public static function getDisplayStatusEvaluationForm($status)
+    {
+        if($status != -1){
+            $userLogin = Auth::user();
+            $binary = (string)decbin($status);
+            $arrBinary = str_split($binary);
+            if(!empty($arrBinary[$userLogin->Role->weight - 1]) AND $arrBinary[$userLogin->Role->weight - 1] == 1){
+                return "Đã chấm";
+            }else{
+                return "Chưa chấm";
+            }
+        }else{
+            return "Hoàn thành";
+        }
+
+    }
+
+    public function getStatusEvaluationForm($status)
+    {
+        $userLogin = Auth::user();
+        $binary = (string)decbin($status);
+        $arrBinary = str_split($binary);
+        if(!empty($arrBinary[$userLogin->Role->weight - 1]) AND $arrBinary[$userLogin->Role->weight - 1] == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

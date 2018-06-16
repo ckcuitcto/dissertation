@@ -57,7 +57,7 @@
                             <td rowspan="2">Năm Học</td>
                             <td colspan="4">Điểm</td>
                             <td rowspan="2">Xếp Loại</td>
-                            {{--<td rowspan="2">Tình Trạng</td>--}}
+                            <td rowspan="2">Tình Trạng</td>
                             <td rowspan="2">Tác Vụ</td>
 
                         </tr>
@@ -77,6 +77,7 @@
                                 @endforeach
                                 <td> {{ $evaluationForm->total OR 0 }}</td>
                                 <td> {{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }} </td>
+                                <td> {{ \App\Http\Controllers\Controller::getDisplayStatusEvaluationForm($evaluationForm->status) }}</td>
                                 <td>
                                     <a class="btn btn-primary"
                                        href="{{ route('evaluation-form-show',$evaluationForm->id) }}">

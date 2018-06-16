@@ -325,6 +325,25 @@ class EvaluationFormController extends Controller
 
         $evaluationForm->EvaluationResults()->createMany($arrEvaluationResult);
         $evaluationForm->total = $request->totalScoreOfForm;
+
+
+        //cập nhật lại trnagj thái của form
+        // tính  = 1,2,4,8,16.
+
+        // lấy ra số role có thể chấm. so sánh với số người đã chấm trong form
+        // nếu = nhau thì thay đổi status form.  -> RATED
+        $rolesCanMark = Role::whereHas('permissions', function ($query) {
+            $query->where('name', 'like', '%can-mark%');
+        })->get();
+        $arrEvaluationResult = EvaluationResult::where('evaluation_form_id',$evaluationFormId)->groupBy('marker_id')->get();
+        if(count($rolesCanMark) == count($arrEvaluationResult)){
+            $evaluationForm->status = -1;
+        }else{
+            //nếu trả về true nghĩa là user này đã chấm => đã chấm thì k + status lên
+            if($this->getStatusEvaluationForm($evaluationForm->status) == false){
+                $evaluationForm->status += pow('2', $userLogin->Role->weight -1 );
+            }
+        }
         $evaluationForm->save();
 
         if($arrProof) {
@@ -337,7 +356,6 @@ class EvaluationFormController extends Controller
             $remaking->update(['old_score' => json_encode($arrScoreOld)]);
             return redirect()->route('remaking','user_id='.$remaking->EvaluationForm->Student->user_id);
         }
-
 
         return redirect()->back()->with(['flash_message_success' => 'Chấm điểm thành công']);
 

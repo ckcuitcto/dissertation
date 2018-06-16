@@ -152,6 +152,24 @@
                     }
                 });
             });
+
+            getClass();
+            function getClass() {
+                var facultyId = $('select.faculty_id').val();
+                var url = "{{ route('class-get-list-by-faculty-none') }}";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {id: facultyId},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("select.class_id").empty();
+                        $.each(data.classes, function (key, value) {
+                            $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            }
         });
     </script>
 @endsection
