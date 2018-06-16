@@ -20,14 +20,17 @@
                   <div class="navbar-nav">
                     <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html">Phòng đào tạo</a>
                     <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html">Phòng Công tác sinh viên</a>
-                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html">Văn phòng khoa CNTT</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html">Công nghệ thông tin</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/266/khoa-ky-thuat-cong-trinh.html">Kỹ thuật công trình</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/284/khoa-cong-nghe-thuc-pham.html">Công nghệ thực phẩm</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/293/khoa-dien-dien-tu.html">Điện, điện tử</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/294/khoa-co-khi.html">Cơ khí</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/295/khoa-quan-tri-kinh-doanh.html">Quản trị kinh doanh</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/296/khoa-design.html">Design</a>
                   </div>
                 </div>
             </nav>
-
-        </div>
-
-        
+        </div>        
 
         <div class="row">
             <div class="col-md-6 col-lg-3">
@@ -97,7 +100,7 @@
                         <div class="card-body">
                           {{-- <h5 class="card-title">Warning card title</h5> --}}
                             <p class="card-text"> {{$timeList->date_start_to_mark}} - {{$timeList->date_end_to_mark}}
-                                Thời gian đánh giá điểm rèn luyện.
+                                Thời gian đánh giá điểm rèn luyện. <a href="">>> Đánh giá ngay</a>
                             </p>
                             <p class="card-text"> {{$timeList->date_start_to_request_re_mark}} - {{$timeList->date_end_to_request_re_mark}}
                                 Thời gian khiếu nại
