@@ -32,19 +32,23 @@
                 @endif
                 <div class="tile">
                     <div class="tile-body">
-                        <div class="tile user-settings">
+                        <div class="tile user-settings" style="background-color: powderblue;">
                             <h4 class="line-head">Thông tin sinh viên</h4>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div>- Họ và tên: {{ $evaluationForm->Student->User->name }}</div>
                                     <div>- Lớp: {{$evaluationForm->Student->Classes->name OR ""}}</div>
                                     <div>- MSSV: {{ $evaluationForm->Student->user_id OR ""}}</div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div>- Khoa: {{ $evaluationForm->Student->Classes->Faculty->name OR ""}}</div>
                                     <div>- Niên
                                         khóa: {{ $evaluationForm->Student->academic_year_from . " - " . $evaluationForm->Student->academic_year_to }}</div>
                                     <div>- Chức vụ: {{ $evaluationForm->Student->User->Role->display_name OR "" }} </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div>- Cố vấn học tập: {{ $evaluationForm->Student->Classes->Staff->User->name }}</div>
+                                    <div>- Ban cán sự lớp: </div>
                                 </div>
                             </div>
                         </div>
@@ -193,7 +197,7 @@
                                                             @if( $evaluationForm->Student->User->users_id == $user->users_id AND $user->Role->name == $currentRoleCanMark->name)
                                                                 @php $name= "proof".$valueLevel3->id; @endphp
                                                                 <input type="file" class="proof" id="{{$valueLevel3->id}}"
-                                                                       name="{{ $name."[]" }}" multiple>
+                                                                       name="{{ $name."[]" }}" multiple style="background-color:tomato">
                                                             @endif
                                                         @endisset
                                                         @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel3->id)))
