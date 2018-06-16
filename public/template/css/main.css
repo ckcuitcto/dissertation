@@ -14865,3 +14865,15 @@ input[type=number]::-webkit-outer-spin-button {
 .tile-body .table-bordered td{
   line-height: 2.3;
 }
+
+#studentsEachList_filter {
+  display: none;
+}
+
+#studentsTranscript_filter {
+  display: none;
+}
+
+#tableManageUsers_filter {
+  display: none;
+}

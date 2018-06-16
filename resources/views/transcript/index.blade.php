@@ -47,7 +47,7 @@
                         </form>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="students">
+                        <table class="table table-hover table-bordered" id="studentsTranscript">
                             <thead>
                             <tr>
                                 <th>MSSV</th>
@@ -84,7 +84,7 @@
     {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
     <script>
         $(document).ready(function () {
-            var oTable = $('#students').DataTable({
+            var oTable = $('#studentsTranscript').DataTable({
                 // dom: "<'row'<'col-xs-12'<'col-xs-6'l>>r>"+
                 // "<'row'<'col-xs-12't>>"+
                 // "<'row'<'col-xs-12'<'col-xs-6'i><'col-xs-6'p>>>",

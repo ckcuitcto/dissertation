@@ -25,7 +25,7 @@ class CreateStudentListEachSemestersTable extends Migration
             $table->foreign('monitor_id')->references('user_id')->on('students')->onDelete('cascade')->onUpdate('cascade');
 
             $table->integer('semester_id')->unsigned();
-//            $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade');
+            $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade')->onDelete('cascade');
 
             $table->integer('staff_id')->unsigned()->nullable();
             $table->foreign('staff_id')->references('id')->on('staff')->onDelete('cascade')->onUpdate('cascade');

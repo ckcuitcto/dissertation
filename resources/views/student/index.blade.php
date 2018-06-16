@@ -17,13 +17,30 @@
                     <div class="overlay custom-overlay" style="opacity: 0">
                         <div class="m-loader mr-4">
                             <svg class="m-circular" viewBox="25 25 50 50">
-                                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/>
+                                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4"
+                                        stroke-miterlimit="10"/>
                             </svg>
                         </div>
                         <h3 class="l-text">Loading</h3>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="students">
+                        <form class="row" role="form" id="search-form" method="post">
+                            {!! csrf_field() !!}
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Học kì</label>
+                                <select class="form-control semester_id" name="semester_id" id="semester_id">
+                                    @foreach($semesters as $value)
+                                        <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3 align-self-end">
+                                <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-search"></i>Tìm
+                                    kiếm
+                                </button>
+                            </div>
+                        </form>
+                        <table class="table table-hover table-bordered" id="studentsEachList">
                             <thead>
                             <tr>
                                 <th>MSSV</th>
@@ -32,9 +49,18 @@
                                 <th>Lớp</th>
                                 <th>Khoa</th>
                                 <th>Khóa</th>
-                                <th>Khóa</th>
+                                <th>Điểm</th>
                             </tr>
                             </thead>
+                            <tfoot>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            </tfoot>
                         </table>
                         <div class="row">
                             <div class="col-md-6">
@@ -63,7 +89,8 @@
                                 <div class="col-md-12">
                                     <div class="form-row">
                                         <label for="fileImport">Chọn file</label>
-                                        <input type="file" multiple class="form-control fileImport" name="fileImport" id="fileImport">
+                                        <input type="file" multiple class="form-control fileImport" name="fileImport"
+                                               id="fileImport">
                                     </div>
                                 </div>
                             </div>
@@ -102,53 +129,73 @@
 
 
     <script>
-        $('#students').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                "url": "{{ route('ajax-student-get-users') }}",
-                "dataType": "json",
-                "type": "POST",
-                "data": {
-                    "_token": "{{ csrf_token() }}"
-                }
-            },
-            "columns": [
-                {data: "users_id", name: "users.users_id"},
-                {data: "userName", name: "users.name"},
-                {data: "display_name", name: "roles.display_name"},
-                {data: "className", name: "classes.name"},
-                {data: "facultyName", name: "faculties.name"},
-                {data: "academic_year_from", name: "students.academic_year_from"},
-                {data: "academic_year_to", name: "students.academic_year_to"}
-            ],
-            "language": {
-                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                // "zeroRecords": "Không có bản ghi nào!",
-                // "info": "Hiển thị trang _PAGE_ của _PAGES_",
-                "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
-            },
-            "pageLength": 25
-        });
-
         $(document).ready(function () {
+
+            $("div#students_filter").hide();
+
+            var oTable = $('#studentsEachList').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{{ route('ajax-student-get-users') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": function (d) {
+                        d.semester_id = $('select[name=semester_id]').val();
+                        d._token = "{{ csrf_token() }}";
+                    },
+                },
+                "columns": [
+                    {data: "users_id", name: "users.users_id"},
+                    {data: "userName", name: "users.name"},
+                    {data: "display_name", name: "roles.display_name"},
+                    {data: "className", name: "classes.name"},
+                    {data: "facultyName", name: "faculties.name"},
+                    {data: "academic", name: "students.academic_year_from"},
+                    {data: "totalScore", name: "totalScore", searchable: false}
+                ],
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search(val ? val : '', true, false).draw();
+                            });
+                    });
+                },
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    // "zeroRecords": "Không có bản ghi nào!",
+                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 10
+            });
+
+            $('#search-form').on('submit', function (e) {
+                oTable.draw();
+                e.preventDefault();
+            });
+
 
 //            import
             $("#btn-import-student").click(function (e) {
                 e.preventDefault();
                 $('.form-row').find('span.messageErrors').remove();
                 var $fileUpload = $("input[type='file']");
-                if (parseInt($fileUpload.get(0).files.length)>20){
+                if (parseInt($fileUpload.get(0).files.length) > 20) {
                     $('form#import-student-form').find('.fileImport').parents('.form-row').append('<span class="messageErrors" style="color:red">Chỉ được upload tối đa 20 tập tin</span>');
-                }else{
+                } else {
                     $("#importModal").find("p.child-error").remove();
                     var formData = new FormData();
                     var fileImport = document.getElementById('fileImport');
                     var inss = fileImport.files.length;
                     for (var x = 0; x < inss; x++) {
                         file = fileImport.files[x];
-                        formData.append("fileImport[]",file);
+                        formData.append("fileImport[]", file);
                     }
                     var url = $(this).attr('data-link');
                     $('.form-row').find('span.messageErrors').remove();
@@ -160,11 +207,11 @@
                         contentType: false,
                         // enctype: 'multipart/form-data',
                         processData: false,
-                        beforeSend: function() {
-                            $("#importModal").find("button#btn-import-student").prop('disabled',true);
+                        beforeSend: function () {
+                            $("#importModal").find("button#btn-import-student").prop('disabled', true);
                         },
                         success: function (result) {
-                            $("#importModal").find("button#btn-import-student").prop('disabled',false);
+                            $("#importModal").find("button#btn-import-student").prop('disabled', false);
                             if (result.status === false) {
                                 //show error list fields
                                 if (result.arrMessages !== undefined) {
@@ -174,11 +221,11 @@
                                         });
                                     });
                                 }
-                                if(result.errors !== undefined){
+                                if (result.errors !== undefined) {
                                     // console.log(result.errors);
                                     $('#importModal').find('div.alert-danger').show();
                                     $.each(result.errors, function (elementName, arrMessagesEveryElement) {
-                                        $('#importModal').find('div.alert-danger').append("<p class='child-error'>"+arrMessagesEveryElement+ "</p>");
+                                        $('#importModal').find('div.alert-danger').append("<p class='child-error'>" + arrMessagesEveryElement + "</p>");
                                     });
                                 }
                             } else if (result.status === true) {

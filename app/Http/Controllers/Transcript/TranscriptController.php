@@ -243,6 +243,7 @@ class TranscriptController extends Controller
                 $semesterValue = $request->get('semester_id');
                 if (!empty($semester) AND $semesterValue != 0) {
                     $student->where('student_list_each_semesters.semester_id', '=', $semesterValue);
+                    $student->where('evaluation_forms.semester_id', '=', $semesterValue);
                 }
             });
 
