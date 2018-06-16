@@ -30,42 +30,38 @@
         
 
         <div class="row">
-            <div class="col-md-6 col-lg-6">
+            <div class="col-md-6 col-lg-3">
             <a href="http://daotao1.stu.edu.vn/Default.aspx?page=thoikhoabieu" style="text-decoration: none;">
                     <div class="widget-small primary coloured-icon"><i class="icon fa fa-calendar-o fa-3x"></i>
                         <div class="info">
                             <h4>Thời Khóa Biểu</h4>
-                            <p>Xem môn, thời gian học của sinh viên</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-6">
+            <div class="col-md-6 col-lg-3">
                 <a href="http://daotao1.stu.edu.vn/Default.aspx?page=xemdiemthi" style="text-decoration: none;">
                     <div class="widget-small info coloured-icon"><i class="icon fa fa-graduation-cap fa-3x"></i>
                         <div class="info">
                             <h4>Điểm Học Kỳ</h4>
-                            <p>Thông tin điểm từng môn theo học Kỳ</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-6">
+            <div class="col-md-6 col-lg-3">
                 <a href="http://daotao1.stu.edu.vn/Default.aspx?page=dkmonhoc" style="text-decoration: none;">
                     <div class="widget-small warning coloured-icon"><i class="icon fa fa-calendar fa-3x"></i>
                         <div class="info">
                             <h4>Đăng ký môn học</h4>
-                            <p>Đăng ký môn học theo từng học kỳ</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-6">
+            <div class="col-md-6 col-lg-3">
                 <a href="http://daotao1.stu.edu.vn/Default.aspx?page=xemhocphi" style="text-decoration: none;">
                     <div class="widget-small danger coloured-icon"><i class="icon fa fa-money fa-3x"></i>
                         <div class="info">
                             <h4>Học Phí</h4>
-                            <p>Thông tin học phí theo từng học kỳ</p>
                         </div>
                     </div>
                 </a>
@@ -78,7 +74,7 @@
                 <div class="tile">
                     <h3 class="tile-title"><i class="fa fa-bell" aria-hidden="true"></i> &nbsp;Tin tức</h3>
                     @foreach($newsList as $news)
-                    <div class="card mb-2" style="background-color:#66d6b8;color:white">
+                    <div class="card mb-2">
                             <div class="card-header">
                                 <div>{{$news->title}}</div>
                                 <a href="{{ route('news-show',[ str_slug($news->title),$news->id]) }}">
