@@ -27,7 +27,7 @@
             @if($authCheck)
             <li class="dropdown">
                 <a class="app-nav__item" href="#" data-toggle="dropdown"
-                                    aria-label="Show notifications"><i class="fa fa-bell-o fa-lg"></i></a>
+                                    aria-label="Show notifications" style="text-decoration: none;">Thông báo &nbsp;<i class="fa fa-bell-o fa-lg"></i></a>
                 <ul class="app-notification dropdown-menu dropdown-menu-right">
                     <li class="app-notification__title">Bạn có {{ count($notifications) }} thông báo mới</li>
                     <div class="app-notification__content">
@@ -55,7 +55,7 @@
 
             <li class="dropdown">
                 <a class="app-nav__item" href="#" data-toggle="dropdown"
-                                    aria-label="Open Profile Menu">
+                                    aria-label="Open Profile Menu"  style="text-decoration: none;">
                     @if($authCheck)
                         Xin chào {{ $userLogin->name }}&nbsp;&nbsp;
                     @endif<i class="fa fa-user fa-lg"></i>
@@ -153,14 +153,11 @@
                 </ul>
             </li>
 
-
             @can('can-change-news')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label"> Tin tức</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    {{--<li><a class="treeview-item" href="{{ route('notification') }}"><i class="icon fa fa-circle-o"></i>--}}
-                            {{--Thông Báo</a></li>--}}
                     <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Tin tức, sự kiện</a></li>
                 </ul>
             </li>
@@ -190,8 +187,6 @@
                     @can('student-list')
                     <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> DS Sinh viên đánh giá</a></li>
                     @endcan
-                    {{--<li><a class="treeview-item" href="{{ route('departmentlist') }}"><i--}}
-                                    {{--class="icon fa fa-circle-o"></i> Phòng ban</a></li>--}}
                 </ul>
             </li>
             @endif

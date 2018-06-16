@@ -17,7 +17,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="tile">
+                <div class="tile" style="background-color: powderblue;">
                     <h3 class="tile-title">Lưu ý</h3>
                     <div class="tile-body">
                         <div class="row">
@@ -35,11 +35,15 @@
                                     là "_" thì đang đợi bổ sung điểm học tập
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div>Họ và tên: {{ $user->name }}</div>
                                 <div>Lớp: {{ $user->Student->Classes->name OR "" }}</div>
                                 <div>MSSV: {{ $user->users_id }}</div>
                                 <div>Khoa: {{ $user->Faculty->name OR "" }}</div>
+                            </div>
+                            <div class="col-md-3">
+                            <div>Cố vấn học tập: </div>
+                            <div>Ban cán sự lớp: </div>
                             </div>
                         </div>
                     </div>
