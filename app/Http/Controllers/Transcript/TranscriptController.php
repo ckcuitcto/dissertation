@@ -212,7 +212,7 @@ class TranscriptController extends Controller
                     ->leftJoin('evaluation_results', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
                     ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
                     ->where([
-                        ['evaluation_forms.semester_id', $student->semesterId],
+//                        ['evaluation_forms.semester_id', $student->semesterId],
                         ['evaluation_forms.student_id', $student->studentId],
                         ['evaluation_results.marker_id', $user->users_id],
                         ['evaluation_criterias.level', 1],

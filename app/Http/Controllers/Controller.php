@@ -42,7 +42,7 @@ class Controller extends BaseController
     public function getStudentByRoleUserLogin(User $user, $options = array())
     {
         if(empty($options)) {
-            $semester = $this->getCurrentSemester();
+//            $semester = $this->getCurrentSemester();
             if ($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
             {
                 $arrUserId = DB::table('users')
@@ -92,7 +92,7 @@ class Controller extends BaseController
                     ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
                     ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
                     ->whereIn('users.users_id', $userIds)
-                    ->where('student_list_each_semesters.semester_id', $semester->id)
+//                    ->where('student_list_each_semesters.semester_id', $semester->id)
                     ->select(
                         'users.users_id',
                         'users.name as userName',
