@@ -171,11 +171,11 @@
                 </ul>
             </li>
             @endcan
-            <li>
+            {{-- <li>
                 <a class="app-menu__item" href="{{ route('notifications') }}">
                     <i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="app-menu__label">&nbsp; Thông báo</span>
                 </a>
-            </li>
+            </li> --}}
 
             @can(array('faculty-list','student-list'))
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
@@ -234,34 +234,7 @@
                 </a>
             </li>
             @endcan
-            {{-- <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=thoikhoabieu"><i
-                                    class="icon fa fa-circle-o"></i> Thời Khóa Biểu</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=xemdiemthi"><i
-                                    class="icon fa fa-circle-o"></i> Điểm Học Kỳ</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=dkmonhoc"><i
-                                    class="icon fa fa-circle-o"></i> Đăng ký môn học</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=xemhocphi"><i
-                                    class="icon fa fa-circle-o"></i> Học Phí</a></li>
-                </ul>
-            </li> --}}
-            {{-- <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-bed"></i><span class="app-menu__label">Các Phòng Ban</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html"><i
-                                    class="icon fa fa-circle-o"></i> Phòng Đào Tạo</a></li>
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html"><i
-                                    class="icon fa fa-circle-o"></i> Phòng
-                            Công Tác Sinh Viên</a></li>
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html"><i
-                                    class="icon fa fa-circle-o"></i> Văn Phòng
-                            Khoa</a></li>
-                </ul>
-            </li> --}}
+            
         </ul>
     </aside>
 @stop
