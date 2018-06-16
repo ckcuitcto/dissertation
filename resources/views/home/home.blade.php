@@ -6,45 +6,66 @@
                 <h1><i class="fa fa-home fa-lg" aria-hidden="true"></i> Trang chủ</h1>
                 <p>Trường Đại học Công nghệ Sài Gòn</p>
             </div>
-            <ul class="app-breadcrumb breadcrumb">
+            {{-- <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home')}}"><i class="fa fa-home fa-lg"></i></a></li>
                 <li class="breadcrumb-item">Trang chủ</li>
-            </ul>
+            </ul> --}}
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                {{-- <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button> --}}
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                  <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html">Phòng đào tạo</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html">Phòng Công tác sinh viên</a>
+                    <a class="nav-item nav-link" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html">Văn phòng khoa CNTT</a>
+                  </div>
+                </div>
+            </nav>
+
         </div>
 
+        
+
         <div class="row">
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-6">
             <a href="http://daotao1.stu.edu.vn/Default.aspx?page=thoikhoabieu" style="text-decoration: none;">
                     <div class="widget-small primary coloured-icon"><i class="icon fa fa-calendar-o fa-3x"></i>
                         <div class="info">
                             <h4>Thời Khóa Biểu</h4>
+                            <p>Xem môn, thời gian học của sinh viên</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-6">
                 <a href="http://daotao1.stu.edu.vn/Default.aspx?page=xemdiemthi" style="text-decoration: none;">
-                    <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
+                    <div class="widget-small info coloured-icon"><i class="icon fa fa-graduation-cap fa-3x"></i>
                         <div class="info">
                             <h4>Điểm Học Kỳ</h4>
+                            <p>Thông tin điểm từng môn theo học Kỳ</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-6">
                 <a href="http://daotao1.stu.edu.vn/Default.aspx?page=dkmonhoc" style="text-decoration: none;">
                     <div class="widget-small warning coloured-icon"><i class="icon fa fa-calendar fa-3x"></i>
                         <div class="info">
                             <h4>Đăng ký môn học</h4>
+                            <p>Đăng ký môn học theo từng học kỳ</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-6">
                 <a href="http://daotao1.stu.edu.vn/Default.aspx?page=xemhocphi" style="text-decoration: none;">
                     <div class="widget-small danger coloured-icon"><i class="icon fa fa-money fa-3x"></i>
                         <div class="info">
                             <h4>Học Phí</h4>
+                            <p>Thông tin học phí theo từng học kỳ</p>
                         </div>
                     </div>
                 </a>
