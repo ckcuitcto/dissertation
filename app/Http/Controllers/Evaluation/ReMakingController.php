@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Evaluation;
 
 use App\Model\EvaluationForm;
+use App\Model\Notification;
 use App\Model\Remaking;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -135,9 +136,26 @@ class ReMakingController extends Controller
 
         $remaking = Remaking::find($id);
         if (!empty($remaking)) {
+
+            @$userLogin = $this->getUserLogin();
+
             // trạng thía mặc định là đang xử lí
             if(!empty($request->remarking_reply)){
                 $remaking->remarking_reply = $request->remarking_reply;
+
+                $notifications = new Notification();
+                $notifications->title = "Yêu cầu phúc khảo đã được xét duyệt";
+                $notifications->created_by = $userLogin->Staff->id;
+                $link = route('evaluation-form-show',$remaking->EvaluationForm->id);
+                $notifications->content = "
+                <p>$request->remarking_reply</p>
+                <p>Vui lòng xem lại phiếu đánh giá điểm.</p>
+                <p><a href='$link' target='_blank'> Link>> </a></p>
+                ";
+                //danh sách Id của các user sẽ tạo thông báo.
+                $arrUserId[] = $remaking->EvaluationForm->Student->User->users_id; // sinh viên\
+                $notifications->save();
+                $notifications->Users()->attach($arrUserId);
             }
             if(!empty($request->remarking_reason)){
                 $remaking->remarking_reason = $request->remarking_reason;
@@ -145,6 +163,10 @@ class ReMakingController extends Controller
             if(!empty($request->status)){
                 $remaking->status = $request->status;
             }
+
+
+
+
             $remaking->save();
             // lưu thời gian chấm
             return response()->json([
