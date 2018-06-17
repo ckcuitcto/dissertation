@@ -60,7 +60,7 @@ class InformationController extends Controller
             'phone_number.phone' => "Số điện thoại không đúng định dạng",
             'birthday.required' => 'Vui lòng nhập ngày sinh',
             'birthday.date_format' => 'Ngày sinh không đúng định dạng. VD:24/08/1996',
-            'birthday.before' => 'Bạn chưa đủ 13 tuổi?',
+            'birthday.before' => 'Ngày sinh không họp lệ',
 
         ]);
         if ($validator->fails()) {
