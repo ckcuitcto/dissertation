@@ -130,7 +130,7 @@
                     @foreach($newsList as $news)
                     <div class="card mb-2">
                             <div class="card-header">
-                                <div>{{$news->title}}</div>
+                                <p style="color:#009688;">{{$news->title}}<span style="white-space: nowrap;color:grey;font-size:12px"> ( {{$news->created_at}} ) </span></p>
                                 <a href="{{ route('news-show',[ str_slug($news->title),$news->id]) }}">
                                     <p style="float:right">Xem thêm >></p>
                                 </a>
