@@ -209,14 +209,22 @@
                             class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">Phân quyền User</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item active" href="{{ route('role-list') }}"><i class="icon fa fa-circle-o"></i>Danh
+                    <li><a class="treeview-item" href="{{ route('role-list') }}"><i class="icon fa fa-circle-o"></i>Danh
                             sách các nhóm vai trò </a></li>
                     <li><a class="treeview-item" href="{{ route('permission-list') }}"><i
                                     class="icon fa fa-circle-o"></i> Danh sách các quyền</a></li>
                 </ul>
             </li>
             @endcan
-            
+
+            @can('export-file')
+            <li><a class="app-menu__item" href="{{ route('export-file-list') }}">
+                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                            class="app-menu__label">Xuất File </span>
+                </a>
+            </li>
+            @endcan
+
         </ul>
     </aside>
 @stop

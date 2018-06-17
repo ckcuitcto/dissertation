@@ -14877,3 +14877,6 @@ input[type=number]::-webkit-outer-spin-button {
 #tableManageUsers_filter {
   display: none;
 }
+#exportTable_filter {
+  display: none;
+}

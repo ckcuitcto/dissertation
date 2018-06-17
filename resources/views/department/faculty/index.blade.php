@@ -15,62 +15,47 @@
             <div class="col-md-12">
                 <div class="tile">
                     <div class="tile-body">
-                        <form id="faculty-form-export">
-                            <table class="table table-hover table-bordered" id="sampleTable">
-                                <thead>
+                        <table class="table table-hover table-bordered" id="sampleTable">
+                            <thead>
+                            <tr>
+                                <th>Khoa</th>
+                                <th>Số lượng lớp</th>
+                                <th>Tác vụ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($faculties as $faculty)
                                 <tr>
-                                    <th>Khoa</th>
-                                    <th>Số lượng lớp</th>
-                                    <th>Tác vụ</th>
-                                    <th>Xuất file đánh giá điểm rèn luyện</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($faculties as $faculty)
-                                    <tr>
-                                        <td>
-                                            <a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>
-                                        </td>
-                                        <td>{{ count($faculty->classes) }}</td>
-                                        <td style="color:white">
-                                            <a class="btn btn-primary icon-btn" data-faculty-id="{{$faculty->id}}"
-                                               id="faculty-update"
-                                               data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
-                                               data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
-                                                <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
-                                            </a>
-                                            @if(!count($faculty->classes)>0 AND !count($faculty->News)>0)
-                                                <a class="btn btn-danger" data-faculty-id="{{$faculty->id}}"
-                                                   id="faculty-destroy"
-                                                   data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
-                                                    <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                                    <td>
+                                        <a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>
+                                    </td>
+                                    <td>{{ count($faculty->classes) }}</td>
+                                    <td style="color:white">
+                                        <a class="btn btn-primary icon-btn" data-faculty-id="{{$faculty->id}}"
+                                           id="faculty-update"
+                                           data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
+                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                        </a>
+                                        @if(!count($faculty->classes)>0 AND !count($faculty->News)>0)
+                                            <a class="btn btn-danger" data-faculty-id="{{$faculty->id}}"
+                                               id="faculty-destroy"
+                                               data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
+                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
 
-                                                </a>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="animated-checkbox">
-                                                <label>
-                                                    <input type="checkbox" name="faculty[]"
-                                                           value="{{ $faculty->id }}"><span
-                                                            class="label-text"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </form>
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
                                         id="btnAddFaculty" type="button"><i class="fa fa-pencil-square-o"
                                                                             aria-hidden="true"></i>Thêm
-                                </button>
-                                <button class="btn btn-info" id="btnExport" type="button"
-                                        data-link="{{route('export-file')}}">
-                                    <i class="fa fa-file-excel-o" aria-hidden="true"> </i>Xuất File
                                 </button>
                             </div>
                         </div>
@@ -226,28 +211,6 @@
                 $('#myModal').find(".modal-title").text('Thêm mới khoa');
                 $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
                 $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").attr('data-link', "{{ route('faculty-store') }}");
-            });
-
-            $('body').on('click', 'button#btnExport', function (e) {
-                var valueForm = $('form#faculty-form-export').serialize();
-                var url = $(this).attr('data-link');
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: valueForm,
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === true) {
-                            $.notify({
-                                title: "Cập nhật thành công : ",
-                                message: ":D",
-                                icon: 'fa fa-check'
-                            }, {
-                                type: "info"
-                            });
-                        }
-                    }
-                });
             });
         });
     </script>

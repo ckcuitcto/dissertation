@@ -251,5 +251,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'xuat', 'middleware' => 'can:export-file'], function () {
         Route::post('/', ['as' => 'export-file', 'uses' => 'Export\ExportController@exportVer2']);
+
+        Route::get('/danh-sach', ['as' => 'export-file-list', 'uses' => 'Export\ExportController@index']);
+
+        Route::post('/list', ['as' => 'ajax-get-class-export', 'uses' => 'Export\ExportController@ajaxGetClasses']);
+
     });
 });

@@ -44,13 +44,6 @@
                                 <tr>
                                     <th>Lớp</th>
                                     <th>Số lượng sinh viên</th>
-                                    <th class="nosort">
-                                        <div class="animated-checkbox">
-                                            <label>
-                                                <input type="checkbox" name="checkAll"><span class="label-text">Xuất file đánh giá điểm rèn luyện</span>
-                                            </label>
-                                        </div>
-                                    </th>
                                     <th>Tác vụ</th>
                                 </tr>
                                 </thead>
@@ -60,16 +53,6 @@
                                         <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a>
                                         </td>
                                         <td>{{ count($class->Students) }}</td>
-                                        <td>
-                                            @if(count($class->Students) > 0)
-                                            <div class="animated-checkbox">
-                                                <label>
-                                                    <input type="checkbox" name="classes[]" class="checkboxClasses"
-                                                           value="{{ $class->id }}"><span class="label-text"></span>
-                                                </label>
-                                            </div>
-                                            @endif
-                                        </td>
                                         <td style="color:white">
                                             <a data-id="{{$class->id}}" id="class-edit"
                                                data-edit-link="{{route('class-edit',$class->id)}}"
@@ -95,10 +78,6 @@
                                 <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
                                         id="btn-add-class" type="button"><i class="fa fa-pencil-square-o"
                                                                             aria-hidden="true"></i>Thêm
-                                </button>
-                                <button class="btn btn-info" id="btnExport" type="button" data-link="{{route('export-file')}}">
-                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                                    Xuất File
                                 </button>
                             </div>
                         </div>
@@ -200,21 +179,6 @@
             ]
             });
 
-            $('body').on('click', 'button#btnExport', function (e) {
-                var boxes = $('input.checkboxClasses:checked');
-
-                if(boxes.length == 0){
-                    $.notify({
-                        title: "Vui lòng chọn lớp !!!!!!",
-                        message: ":(",
-                        icon: 'fa fa-exclamation-triangle'
-                    },{
-                        type: "warning"
-                    });
-                }else{
-                        $("form#class-form-export").submit();
-                }
-            });
             $('div.alert-success').delay(2000).slideUp();
 
 

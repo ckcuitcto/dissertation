@@ -3,16 +3,218 @@
 namespace App\Http\Controllers\Export;
 
 use App\Model\Classes;
+use App\Model\Faculty;
 use App\Model\FileImport;
+use App\Model\Semester;
+use App\Model\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
+use Yajra\DataTables\DataTables;
 
 class ExportController extends Controller
 {
+
+    public function index(){
+        $userLogin = $this->getUserLogin();
+
+        $currentSemester = $this->getCurrentSemester();
+        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+
+        if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
+            $faculties = Faculty::all()->toArray();
+            $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
+        }else{
+            $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
+        }
+
+        return view('export.index', compact('faculties','semesters','currentSemester'));
+    }
+
+    public function ajaxGetClasses(Request $request)
+    {
+        $user = $this->getUserLogin();
+        $classes = DB::table('student_list_each_semesters')
+            ->leftJoin('students','students.user_id','=','student_list_each_semesters.user_id')
+            ->leftJoin('classes','classes.id','=','student_list_each_semesters.class_id')
+            ->leftJoin('users','users.users_id','=','students.user_id')
+            ->select(
+            DB::raw('count(student_list_each_semesters.user_id) AS count'),
+            'classes.*'
+            )
+            ->groupBy('student_list_each_semesters.class_id');
+
+        $dataTables = DataTables::of($classes)
+            ->addColumn('action', function ($class) {
+                $checkBox = "<div class='animated-checkbox'> <label><input type='checkbox' name='classes[]' class='checkboxClasses' value='$class->id'><span class='label-text'></span></label></div>";
+                return $checkBox;
+            })
+            ->filter(function ($class) use ($request) {
+                $faculty = $request->has('faculty_id');
+                $facultyValue = $request->get('faculty_id');
+
+                if (!empty($faculty) AND $facultyValue != 0) {
+                    $class->where('users.faculty_id', '=', $facultyValue);
+                }
+
+                $semester = $request->has('semester_id');
+                $semesterValue = $request->get('semester_id');
+                if (!empty($semester) AND $semesterValue != 0) {
+                    $class->where('student_list_each_semesters.semester_id', '=', $semesterValue);
+                }
+            });
+        return $dataTables->make(true);
+    }
+
+
+    public function exportVer2(Request $request)
+    {
+
+        if (!empty($request->classes)) {
+            $semesterId = $request->semesterChoose;
+
+            $classes = Classes::whereIn('id', $request->classes)->get();
+            $arrFileName = array();
+            foreach ($classes as $key => $class) {
+                $className2 = $class->name;
+                $className1 = str_replace('-', '_', $class->name);
+
+                $fileImport = FileImport::where('semester_id', $semesterId)
+                    ->where('file_name', 'like', "%$className2%")
+                    ->orWhere('file_name', 'like', "%$className1%")
+                    ->first();
+                $dataFileExcel = Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) {})->noHeading()->get();
+
+                $arrScoreByFile = array(); // mảng này lưu tất cả điểm của sinh viên trong 1 lớp
+                for ($i = 10; $i < count($dataFileExcel); $i++) {
+                    if (!empty($dataFileExcel[$i][0]) AND !empty($dataFileExcel[$i][1])) {
+                        $arrScore = array();
+                        $userId = $dataFileExcel[$i][1];
+//                        $userId = 'DH51400250';
+                        // lấy ra điểm của form
+                        // với kết quả có thời gian chấm trễ nhất. chỉ lấy level1 = tiêu chí
+                        //litmit(4) vì có 5 cái level. nhưng bỏ qua cái đầu tiên nên chỉ lấy 4
+                        $resultLevel1 = DB::table('evaluation_criterias')
+                            ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
+                            ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
+                            ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
+                            ->where([
+                                ['evaluation_criterias.level', 1],
+                                ['students.user_id', $userId],
+                                ['evaluation_forms.semester_id', $semesterId],
+                                ['evaluation_criterias.id', '<>',YTHUCTHAMGIAHOCTAP_ID]
+                            ])
+                            ->select(
+                                'evaluation_results.marker_score',
+                                'evaluation_results.marker_id',
+                                'evaluation_forms.total'
+                            )
+                            ->orderBy('evaluation_results.created_at','DESC')
+                            ->orderBy('evaluation_criterias.id','ASC')
+                            ->limit(4)->get()->toArray();
+                        if(!empty($resultLevel1)){
+                            $markerId = $resultLevel1[0]->marker_id;
+                            $totalScore = $resultLevel1[0]->total;
+                            //id người chấm thì giống nhau. mên lấy id của ngươi ở lv1 đem xuống lv2 luôn
+                            $resultLevel2 = DB::table('evaluation_criterias')
+                                ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
+                                ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
+                                ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
+                                ->where([
+                                    ['evaluation_results.marker_id', $markerId],
+                                    ['evaluation_forms.semester_id', $semesterId],
+                                    ['students.user_id', $userId],
+                                ])
+                                ->whereIn('evaluation_criterias.parent_id',EVALUATION_CRITERIAS_CHILD_PARENT_1)
+                                ->select(
+                                    DB::raw('SUM(evaluation_results.marker_score) as marker_score')
+                                )
+                                ->orderBy('evaluation_criterias.parent_id','ASC')
+                                ->groupBy('evaluation_criterias.parent_id')
+                                ->get()->toArray();
+
+                            $arrScore = array_merge($resultLevel2,$resultLevel1);
+                            $arrScoreTmp = array();
+                            foreach($arrScore as $value){
+                                $arrScoreTmp[] = $value->marker_score;
+                            }
+                            $arrScoreTmp[] = $totalScore;
+                            $arrScoreTmp[] = $this->checkRank1($totalScore);
+                            $arrScoreTmp[] ='';
+                            $arrScore = $arrScoreTmp;
+                        }
+
+                        if(empty($arrScore)){
+                            $arrScore = array('','','','','','','',0,$this->checkRank1(0),'*');
+                        }
+                        $arrScoreByFile[$userId] = $arrScore;
+                        //nếu k có điểm
+                    }
+                }
+
+                //mở file và sửa file, sau đó lưu thahf file mới
+                $arrColumns = array('F','G','H','I','J','K','L','M','N','O');
+                Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) use ($arrScoreByFile,$arrColumns) {
+//                    $reader->sheet("Sheet1", function($sheet) use ($arrScoreByFile, $arrColumns) {
+//                        $arrxx = array();
+//                        foreach ($arrColumns as $value){
+//                            $arrxx[$value] = "General";
+//                        }
+//                        $sheet->setColumnFormat($arrxx);
+//
+//
+//                        for($i=0; $i< count($arrScoreByFile); $i++) {
+//                            $row = $i + 11;
+//                            $arrScore = $arrScoreByFile[$sheet->getCell('B'.$row)->getValue()];
+//
+//                            foreach($arrColumns as $key => $cl){
+//                                $sheet->setCellValue($cl.$row, $arrScore[$key]);
+//                            }
+//                        }
+//                    });
+                    $sheet = $reader->getSheet(0);
+                    for($i=0; $i< count($arrScoreByFile); $i++) {
+                        $row = $i + 11;
+                        $arrScore = $arrScoreByFile[$sheet->getCell('B'.$row)->getValue()];
+
+                        foreach($arrColumns as $key => $cl){
+                            $sheet->setCellValue($cl.$row, $arrScore[$key]);
+                        }
+                    }
+                })->store('xlsx', STUDENT_PATH , true);
+                $arrFileName[] = $fileImport->file_name;
+            }
+        }
+
+        if (!empty($arrFileName)) {
+            $public_dir = public_path();
+            $zip = new ZipArchive();
+            $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
+            foreach ($arrFileName as $file) {
+                if ($zip->open($public_dir . '/'.STUDENT_PATH . $fileZipName, ZipArchive::CREATE) === TRUE) {
+                    $zip->addFile(STUDENT_PATH . $file);
+                }
+            }
+            $zip->close();
+            $headers = array(
+                'Content-Type' => 'application/octet-stream',
+            );
+            $fileToPath = $public_dir . '/'.STUDENT_PATH. $fileZipName;
+            if (file_exists($fileToPath)) {
+                foreach ($arrFileName as $file) {
+                    unlink($public_dir . '/'.STUDENT_PATH . $file);
+                }
+                return response()->download($fileToPath, $fileZipName, $headers)->deleteFileAfterSend(true);
+            } else {
+                return redirect()->back();
+            }
+        } else {
+            return redirect()->back();
+        }
+    }
 
     public function export(Request $request)
     {
@@ -261,145 +463,4 @@ class ExportController extends Controller
         }
     }
 
-    public function exportVer2(Request $request)
-    {
-        if (!empty($request->classes)) {
-//            $semesterId = $request->semesterId;
-            $semesterId = 2; // do chưa làm cái chọn học kì nên tạm thời để v. = 2
-
-            $classes = Classes::whereIn('id', $request->classes)->get();
-            $arrFileName = array();
-            foreach ($classes as $key => $class) {
-                $className2 = $class->name;
-                $className1 = str_replace('-', '_', $class->name);
-
-                $fileImport = FileImport::where('semester_id', $semesterId)
-                    ->where('file_name', 'like', "%$className2%")
-                    ->orWhere('file_name', 'like', "%$className1%")
-                    ->first();
-                $dataFileExcel = Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) {})->noHeading()->get();
-
-                $arrScoreByFile = array(); // mảng này lưu tất cả điểm của sinh viên trong 1 lớp
-                for ($i = 10; $i < count($dataFileExcel); $i++) {
-                    if (!empty($dataFileExcel[$i][0]) AND !empty($dataFileExcel[$i][1])) {
-                        $arrScore = array();
-                        $userId = $dataFileExcel[$i][1];
-//                        $userId = 'DH51400250';
-                        // lấy ra điểm của form
-                        // với kết quả có thời gian chấm trễ nhất. chỉ lấy level1 = tiêu chí
-                        //litmit(4) vì có 5 cái level. nhưng bỏ qua cái đầu tiên nên chỉ lấy 4
-                        $resultLevel1 = DB::table('evaluation_criterias')
-                            ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
-                            ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
-                            ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
-                            ->where([
-                                ['evaluation_criterias.level', 1],
-                                ['students.user_id', $userId],
-                                ['evaluation_forms.semester_id', $semesterId],
-                                ['evaluation_criterias.id', '<>',YTHUCTHAMGIAHOCTAP_ID]
-                            ])
-                            ->select(
-                                'evaluation_results.marker_score',
-                                'evaluation_results.marker_id',
-                                'evaluation_forms.total'
-                            )
-                            ->orderBy('evaluation_results.created_at','DESC')
-                            ->orderBy('evaluation_criterias.id','ASC')
-                            ->limit(4)->get()->toArray();
-                        if(!empty($resultLevel1)){
-                            $markerId = $resultLevel1[0]->marker_id;
-                            $totalScore = $resultLevel1[0]->total;
-                            //id người chấm thì giống nhau. mên lấy id của ngươi ở lv1 đem xuống lv2 luôn
-                            $resultLevel2 = DB::table('evaluation_criterias')
-                                ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
-                                ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
-                                ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
-                                ->where([
-                                    ['evaluation_results.marker_id', $markerId],
-                                    ['evaluation_forms.semester_id', $semesterId],
-                                    ['students.user_id', $userId],
-                                ])
-                                ->whereIn('evaluation_criterias.parent_id',EVALUATION_CRITERIAS_CHILD_PARENT_1)
-                                ->select(
-                                    DB::raw('SUM(evaluation_results.marker_score) as marker_score')
-                                )
-                                ->orderBy('evaluation_criterias.parent_id','ASC')
-                                ->groupBy('evaluation_criterias.parent_id')
-                                ->get()->toArray();
-
-                            $arrScore = array_merge($resultLevel2,$resultLevel1);
-                            $arrScoreTmp = array();
-                            foreach($arrScore as $value){
-                                $arrScoreTmp[] = $value->marker_score;
-                            }
-                            $arrScoreTmp[] = $totalScore;
-                            $arrScoreTmp[] = $this->checkRank1($totalScore);
-                            $arrScoreTmp[] ='';
-                            $arrScore = $arrScoreTmp;
-                        }
-
-                        if(empty($arrScore)){
-                            $arrScore = array('','','','','','','',0,$this->checkRank1(0),'*');
-                        }
-                        $arrScoreByFile[$userId] = $arrScore;
-                        //nếu k có điểm
-                    }
-
-                }
-
-                //mở file và sửa file, sau đó lưu thahf file mới
-                $arrColumns = array('F','G','H','I','J','K','L','M','N','O');
-                Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) use ($arrScoreByFile,$arrColumns) {
-                    $sheet = $reader->getSheet(0);
-//                    $sheet->setFormat(\PHPExcel_Style_NumberFormat::FORMAT_GENERAL);
-//                    $sheet->setColumnFormat(array(
-////                        foreach($arrColumns as $key => $cl) {
-//                            'A2:K2' => \PHPExcel_Style_NumberFormat::FORMAT_GENERAL;
-////                        }
-//                    ));
-
-                    for($i=0; $i< count($arrScoreByFile); $i++) {
-                        $row = $i + 11;
-                        $arrScore = $arrScoreByFile[$sheet->getCell('B'.$row)->getValue()];
-
-//                        var_dump($arrScore);
-                        $arrFormat = array();
-                        foreach($arrColumns as $key => $cl){
-//                            echo $arrScore[$key]."-";
-//                            echo $cl.$row.'------';
-                            $sheet->setCellValue($cl.$row, $arrScore[$key]);
-                        }
-                    }
-//                    $sheet->setColumnFormat($arrFormat);
-                })->store('xlsx', STUDENT_PATH , true);
-                $arrFileName[] = $fileImport->file_name;
-            }
-        }
-
-        if (!empty($arrFileName)) {
-            $public_dir = public_path();
-            $zip = new ZipArchive();
-            $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
-            foreach ($arrFileName as $file) {
-                if ($zip->open($public_dir . '/'.STUDENT_PATH . $fileZipName, ZipArchive::CREATE) === TRUE) {
-                    $zip->addFile(STUDENT_PATH . $file);
-                }
-            }
-            $zip->close();
-            $headers = array(
-                'Content-Type' => 'application/octet-stream',
-            );
-            $fileToPath = $public_dir . '/'.STUDENT_PATH. $fileZipName;
-            if (file_exists($fileToPath)) {
-                foreach ($arrFileName as $file) {
-                    unlink($public_dir . '/'.STUDENT_PATH . $file);
-                }
-                return response()->download($fileToPath, $fileZipName, $headers)->deleteFileAfterSend(true);
-            } else {
-                return redirect()->back();
-            }
-        } else {
-            return redirect()->back();
-        }
-    }
 }
