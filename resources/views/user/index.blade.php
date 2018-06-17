@@ -61,7 +61,6 @@
                                 <th></th>
                             </tfoot>
                         </table>
-                        {{--{{ $users->links('vendor.pagination.bootstrap-4') }}--}}
                         <div class="row">
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#modal-add-user" class="btn btn-primary"

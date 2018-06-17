@@ -167,9 +167,21 @@ class ClassController extends Controller
     public function getListClassByFacultyAddAll(Request $request){
         $id = $request->id;
 
-        $classes = Classes::where('faculty_id', $id)->select('id','name')->get()->toArray();
-        $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
-
+        $userLogin = $this->getUserLogin();
+        if($userLogin->Role->weight > ROLE_BANCHUNHIEMKHOA){
+            $classes = Classes::where('faculty_id', $id)->select('id','name')->get()->toArray();
+            $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
+        }elseif($userLogin->Role->weight == ROLE_COVANHOCTAP){
+            $classes = Classes::where('faculty_id', $id)
+                ->where('staff_id', $userLogin->Staff->id)
+                ->select('id','name')->get()->toArray();
+            $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
+        }elseif($userLogin->Role->weight == ROLE_BANCANSULOP OR $userLogin->Role->weight == ROLE_SINHVIEN){
+            $classes = Classes::where('faculty_id', $id)
+                ->where('id', $userLogin->Student->class_id)
+                ->select('id','name')->get()->toArray();
+            $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
+        }
         return response()->json([
             'classes' => $classes
         ],200);

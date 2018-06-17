@@ -67,7 +67,15 @@
                             </tfoot>
                         </table>
                     </div>
+                    {{--<div class="row">--}}
+                        {{--<div class="col-md-6">--}}
+                            {{--<a href="{{ asset('upload/file_mau/File_mau.xlsx') }}" class="btn btn-outline-success">--}}
+                                {{--<i class="fa fa-download" aria-hidden="true"></i>Tải file mẫu--}}
+                            {{--</a>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                 </div>
+
             </div>
         </div>
     </main>
