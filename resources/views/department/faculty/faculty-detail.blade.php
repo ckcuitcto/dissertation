@@ -61,12 +61,14 @@
                                         </td>
                                         <td>{{ count($class->Students) }}</td>
                                         <td>
+                                            @if(count($class->Students) > 0)
                                             <div class="animated-checkbox">
                                                 <label>
                                                     <input type="checkbox" name="classes[]" class="checkboxClasses"
                                                            value="{{ $class->id }}"><span class="label-text"></span>
                                                 </label>
                                             </div>
+                                            @endif
                                         </td>
                                         <td style="color:white">
                                             <a data-id="{{$class->id}}" id="class-edit"
