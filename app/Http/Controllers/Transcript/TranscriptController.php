@@ -215,9 +215,15 @@ class TranscriptController extends Controller
         $dataTables = DataTables::of($students)
             ->addColumn('action', function ($student) use ($user) {
                 if($student->totalScore != 0){
-                    $linkView = '<a title="Xem điểm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
+                    $linkView = '<a title="Xem phiếu điểm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
                 }else{
                     $linkView = '<a title="Chưa chấm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
+                }
+
+                //nếu ng đang đăng nhập đã chấm thì hiện ra điểm
+                if(!empty($student->totalScore)){
+                    $currentTotal = '<button title="Điểm hiện tại" class="btn btn-outline-success"><i class="fa fa-check"></i>' . $student->totalScore . ' đ</button>';
+                    $linkView = $linkView.' '.$currentTotal;
                 }
 
                 $result = DB::table('evaluation_forms')
@@ -233,7 +239,7 @@ class TranscriptController extends Controller
                 if ($result->score) {
                     $score = $result->score;
                     // nếu điểm sinh viên = 0 => chưa chấm => hiện màu đỏ
-                        $iconMarked = '<button class="btn btn-success"><i class="fa fa-check"></i>' . $score . ' đ</button>';
+                        $iconMarked = '<button title="Điểm bạn chấm" class="btn btn-success"><i class="fa fa-check"></i>' . $score . ' đ</button>';
                     $linkView = $linkView . ' ' . $iconMarked;
                 }
                 return $linkView;

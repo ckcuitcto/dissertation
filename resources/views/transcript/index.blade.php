@@ -52,7 +52,6 @@
                             <tr>
                                 <th>MSSV</th>
                                 <th>Tên</th>
-                                <th>Chức vụ</th>
                                 <th>Lớp</th>
                                 <th>Khoa</th>
                                 <th>Khóa</th>
@@ -60,7 +59,6 @@
                             </tr>
                             </thead>
                             <tfoot>
-                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -88,6 +86,7 @@
                 // dom: "<'row'<'col-xs-12'<'col-xs-6'l>>r>"+
                 // "<'row'<'col-xs-12't>>"+
                 // "<'row'<'col-xs-12'<'col-xs-6'i><'col-xs-6'p>>>",
+                "autoWidth": false,
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -104,7 +103,7 @@
                 "columns": [
                     {data: "users_id", name: "users.users_id"},
                     {data: "userName", name: "users.name"},
-                    {data: "display_name", name: "roles.display_name"},
+                    // {data: "display_name", name: "roles.display_name"},
                     {data: "className", name: "classes.name"},
                     {data: "facultyName", name: "faculties.name"},
                     {data: "academic", name: "students.academic_year_from"},
