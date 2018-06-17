@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div>- Cố vấn học tập: {{ $evaluationForm->Student->Classes->Staff->User->name }}</div>
-                                    <div>- Ban cán sự lớp: </div>
+                                    <div>- Ban cán sự lớp: {{ $monitor->User->name }}</div>
                                 </div>
                             </div>
                         </div>
@@ -478,7 +478,14 @@
                 var ecId = thisInput.attr('ec');
 
                 if(thisInput.val() === ""){
-                    $(this).val(0);
+                    $(this).val(0).change();
+                    $.notify({
+                        title: "Lưu ý: ",
+                        message: "Không được để rỗng",
+                        icon: 'fa fa-exclamation-triangle'
+                    },{
+                        type: "danger"
+                    });
                 }
                 var value = $(this).val();
                 $.ajax({
@@ -511,8 +518,8 @@
                                 type: "danger"
                             });
                             setTimeout(function(){
-                                location.reload();
-                            }, 1500);
+                                location.reload(true);
+                            }, 500);
                         }
                     }
                 });

@@ -9,10 +9,12 @@ use App\Http\Controllers\Controller;
 
 use App\Model\EvaluationResult;
 use App\Model\MarkTime;
+use App\Model\Notification;
 use App\Model\Proof;
 use App\Model\Remaking;
 use App\Model\Role;
 use App\Model\Semester;
+use App\Model\Student;
 use App\Model\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -200,6 +202,13 @@ class EvaluationFormController extends Controller
             }
             $listUserMark = $listUserMarkTmp;
 
+            $monitor = Student::leftJoin('users','students.user_id','=','users.users_id')
+                ->leftJoin('roles','users.role_id','=','roles.id')
+                ->where('class_id',$evaluationForm->Student->class_id)
+                ->where('roles.weight',ROLE_BANCANSULOP)
+                ->first();
+
+
             //danh sách minh chứng
             $proofs = Proof::where([
                 'semester_id' => $evaluationForm->Semester->id,
@@ -212,9 +221,11 @@ class EvaluationFormController extends Controller
                 if (empty($remaking)) {
                     return redirect()->back();
                 } else {
-                    return view('evaluation-form.show', compact('isMark', 'evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark', 'proofs', 'remaking'));
+                    return view('evaluation-form.show', compact('isMark', 'evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark', 'proofs', 'remaking','monitor'));
                 }
             }
+
+
             /// evaluationForm : form đang đánh giá,
             /// $user : đang đăng nhập
             /// evaluationCriterias : cáctiêu chí đánh giá,
@@ -222,8 +233,8 @@ class EvaluationFormController extends Controller
             /// evaluationResults : mảng :key là id tiếu chí + userId ng chấm. value: điểm,...
             /// currentRoleCanMark : xác định role có thể chấm ở thời điểm hiện tại
             /// proofs. danh sách minh chứng của user.
-            ///
-            return view('evaluation-form.show', compact('isMark', 'evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark', 'proofs'));
+            ///$monitor : ban cán sự lớp
+            return view('evaluation-form.show', compact('isMark', 'evaluationForm', 'user', 'evaluationCriterias', 'listUserMark', 'evaluationResults', 'currentRoleCanMark', 'proofs','monitor'));
         }
         return redirect()->back();
     }
