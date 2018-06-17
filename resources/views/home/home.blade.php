@@ -20,13 +20,6 @@
                   <div class="navbar-nav">
                     <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html">Phòng đào tạo</a>
                     <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html">Phòng Công tác sinh viên</a>
-                    <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html">Công nghệ thông tin</a>
-                    <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/266/khoa-ky-thuat-cong-trinh.html">Kỹ thuật công trình</a>
-                    <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/284/khoa-cong-nghe-thuc-pham.html">Công nghệ thực phẩm</a>
-                    <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/293/khoa-dien-dien-tu.html">Điện, điện tử</a>
-                    <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/294/khoa-co-khi.html">Cơ khí</a>
-                    <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/295/khoa-quan-tri-kinh-doanh.html">Quản trị kinh doanh</a>
-                    <a class="nav-item nav-link" target="_blank" href="http://www.stu.edu.vn/vi/296/khoa-design.html">Design</a>
                   </div>
                 </div>
             </nav>
