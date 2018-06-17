@@ -28,7 +28,7 @@
                                 {{--<th>Tên sinh viên</th>--}}
                                 <th>Lớp</th>
                                 <th>Tiêu đề</th>
-                                <th>Nội dung ý kiến</th>
+                                {{-- <th>Nội dung ý kiến</th> --}}
                                 <th>Ngày gửi</th>
                                 <th>Tác vụ</th>
                             </tr>
@@ -40,7 +40,7 @@
                                     {{--                                    <td> {{ $cmt->userName}}</td>--}}
                                     <td>{{ $cmt->className }}</td>
                                     <td>{!! $cmt->title !!} </td>
-                                    <td>{!! $cmt->content !!}</td>
+                                    {{-- <td>{!! $cmt->content !!}</td> --}}
                                     <td>{{ $cmt->created_at }}</td>
                                     <td align="left">
                                     @can('comment-reply')
