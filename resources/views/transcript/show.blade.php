@@ -43,7 +43,7 @@
                             </div>
                             <div class="col-md-3">
                             <div>Cố vấn học tập: {{$user->Student->Classes->Staff->User->name}}</div>
-                            <div>Ban cán sự lớp: </div>
+                            <div>Ban cán sự lớp: {{ $monitor->User->name }}</div>
                             </div>
                         </div>
                     </div>
