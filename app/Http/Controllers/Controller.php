@@ -91,6 +91,7 @@ class Controller extends BaseController
                     ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
                     ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
                     ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
+                    ->leftJoin('evaluation_forms', 'evaluation_forms.student_id', '=', 'students.id')
                     ->whereIn('users.users_id', $userIds)
 //                    ->where('student_list_each_semesters.semester_id', $semester->id)
                     ->select(
@@ -108,8 +109,9 @@ class Controller extends BaseController
                         'users.faculty_id',
                         'students.class_id',
                         'roles.id as role_id',
-                        'student_list_each_semesters.semester_id as semesterId'
-                    );
+                        'student_list_each_semesters.semester_id as semesterId',
+                        'evaluation_forms.total as totalScore'
+                    )->distinct();
                 return $students;
             }
             return false;

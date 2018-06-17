@@ -44,7 +44,7 @@
                         </form>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="table-users">
+                        <table class="table table-hover table-bordered" id="tableManageUsers">
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -72,6 +72,9 @@
                                         type="button"><i class="fa fa-pencil-square-o"
                                                          aria-hidden="true"></i> Nhập danh sách sinh viên khóa mới.
                                 </button>
+                                <a href="{{ asset('upload/file_mau/File_mau.xlsx') }}" class="btn btn-outline-success">
+                                    <i class="fa fa-download" aria-hidden="true"></i>Tải file mẫu
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -351,7 +354,7 @@
 
         $(document).ready(function () {
 
-            var oTable = $('#table-users').DataTable({
+            var oTable = $('#tableManageUsers').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "ajax": {

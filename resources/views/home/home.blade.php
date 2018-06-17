@@ -71,7 +71,6 @@
                     <table class="table table-bordered" style="text-align:center">
                         <tbody>
                         <tr>
-                            <td rowspan="2">STT</td>
                             <td rowspan="2">Học Kỳ</td>
                             <td rowspan="2">Năm Học</td>
                             <td colspan="4">Điểm</td>
@@ -88,7 +87,6 @@
                         </tr>
 
                         <tr>
-                            <td>{{ 1 }}</td>
                             <td>{{ $evaluationForm->Semester->term }}</td>
                             <td>{{ $evaluationForm->Semester->year_from . " - " . $evaluationForm->Semester->year_to }}</td>
                             @foreach($arrRolesCanMarkWithScore as $role)

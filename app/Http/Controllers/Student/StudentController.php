@@ -31,10 +31,10 @@ class StudentController extends Controller
      */
     public function index()
     {
-//        $users = User::where('role_id', '<=', ROLE_BANCANSULOP)->paginate(25);
         $users = User::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','users.users_id')->select('users.*')->orderBy('student_list_each_semesters.id')->paginate(25);
-
-        return view('student.index', compact('users'));
+        $currentSemester = $this->getCurrentSemester();
+        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+        return view('student.index', compact('users','currentSemester','semesters'));
     }
 
     /**
@@ -181,6 +181,10 @@ class StudentController extends Controller
                 }
             }
             $arrFileName= array();
+            $arrUser = array();
+            $arrUpdateStudent = array();
+            $arrKey = array();
+            $arrError = array();
             foreach ($arrFile as $file) {
 
                 config(['excel.import.startRow' => 1]);
@@ -191,10 +195,6 @@ class StudentController extends Controller
                 }
                 $file->move(STUDENT_PATH, $fileName);
                 $arrFileName[] = $fileName;
-                $arrUser = array();
-                $arrUpdateStudent = array();
-                $arrKey = array();
-                $arrError = array();
                 $dataFileExcel = \Maatwebsite\Excel\Facades\Excel::load(STUDENT_PATH . $fileName, function ($reader) {
                 })->get();
                 foreach ($dataFileExcel as $key => $value) {
@@ -261,6 +261,7 @@ class StudentController extends Controller
             $userLogin = $this->getUserLogin();
             if (empty($arrError)) {
                 if (!empty($arrUser)) {
+                    $arrFileImport = array();
                     for($i = 0 ; $i< count($arrFile); $i++){
                         $arrFileImport[] = [
                             'file_path' => $arrFileName[$i],
@@ -268,6 +269,9 @@ class StudentController extends Controller
                             'status' => 'Thành công',
                             'staff_id' => $userLogin->Staff->id
                         ];
+                        if (!file_exists(public_path().'/'.STUDENT_PATH_STORE)) {
+                            mkdir(public_path().'/'.STUDENT_PATH_STORE, 0777, true);
+                        }
 //                        $file->move(STUDENT_PATH, $fileName);
                         File::move(STUDENT_PATH.$arrFileName[$i],STUDENT_PATH_STORE.$arrFileName[$i]);
                     }
@@ -359,11 +363,13 @@ class StudentController extends Controller
                 $classes = null;
                 $monitor = null;
                 $semester = null;
-
                 for ($i = 4; $i < count($dataFileExcel); $i++) {
                     if ($i == 4) {
                         // lấy khoa theo Id
                         $facultyName = explode(':', $dataFileExcel[$i][5]);
+                        if(empty($facultyName[0])){
+                            $facultyName = explode(':', $dataFileExcel[$i][6]);
+                        }
                         $facultyName = trim($facultyName[1]);
                         $faculty = Faculty::where('name', 'like', "%$facultyName%")->first();
 
@@ -405,7 +411,6 @@ class StudentController extends Controller
                             $term = explode(':', $dataFileExcel[$i][3]);
                         }
                         $term = trim($term[1]);
-
                         switch ($term) {
                             case "II":
                                 $term = 2;
@@ -415,6 +420,9 @@ class StudentController extends Controller
                                 break;
                         }
                         $year = explode(':', $dataFileExcel[$i][5]);
+                        if(empty($year[0])){
+                            $year = explode(':', $dataFileExcel[$i][6]);
+                        }
                         $year = explode('-', trim($year[1]));
                         $yearFrom = trim($year[0]);
                         $yearTo = trim($year[1]);
@@ -508,8 +516,8 @@ class StudentController extends Controller
                             ],
                             [
                                 'class_id' => $value['class_id'],
-                                'semester_id' => $value['semester_id'],
                                 'monitor_id' => $value['monitor_id'],
+                                'staff_id' => $value['staff_id'],
                             ]
                         );
                     }
@@ -551,6 +559,24 @@ class StudentController extends Controller
     public function ajaxGetUsers(Request $request){
         $user = $this->getUserLogin();
         $students = $this->getStudentByRoleUserLogin($user);
-        return DataTables::of($students)->make(true);
+        $datatables  = DataTables::of($students)
+        ->filter(function ($student) use ($request) {
+            $semester = $request->has('semester_id');
+            $semesterValue = $request->get('semester_id');
+            if (!empty($semester) AND $semesterValue != 0) {
+                $student->where('student_list_each_semesters.semester_id', '=', $semesterValue);
+                $student->where('evaluation_forms.semester_id', '=', $semesterValue);
+            }
+        });
+
+//        if ($keyword = $request->get('search')['value']) {
+//            // override users.name global search
+//            $datatables->filterColumn('users.name', 'where', 'like', "$keyword%");
+//
+//            // override users.id global search - demo for concat
+//            $datatables->filterColumn('users.id', 'whereRaw', "CONCAT(users.id,'-',users.id) like ? ", ["%$keyword%"]);
+//        }
+
+        return $datatables->make(true);
     }
 }

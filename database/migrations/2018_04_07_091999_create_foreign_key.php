@@ -37,7 +37,7 @@ class CreateForeignKey extends Migration
 
         Schema::table('proofs', function (Blueprint $table) {
             $table->foreign('created_by')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('semester_id')->references('id')->on('semesters')->onUpdate('cascade');
+            $table->foreign('semester_id')->references('id')->on('semesters')->onUpdate('cascade')->onDelete('set null');
         });
 
         Schema::table('evaluation_forms', function (Blueprint $table) {

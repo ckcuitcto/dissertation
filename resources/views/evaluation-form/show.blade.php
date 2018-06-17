@@ -395,7 +395,7 @@
         </div>
 
         <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-lg custom-modal-popup" role="document">
                 <div class="overlay">
                     <form id="proof-form" method="post">
                         {!! csrf_field() !!}
@@ -406,7 +406,7 @@
                             </div>
                             <div class="modal-body">
                                 <div id="iframe-view-file">
-                                    <iframe id="frame-view-file" class="doc"></iframe>
+                                    {{--<iframe id="frame-view-file" class="doc"></iframe>--}}
                                 </div>
                                 @if( $evaluationForm->Student->User->users_id == $user->users_id)
                                     <div class="row">
@@ -588,9 +588,18 @@
                             $("form#proof-form").attr("data-link", urlUpdateProofFile);
                             $.each(data.proof, function (elementName, value) {
                                 if (elementName === 'name') {
+                                    var fileType = value.lastIndexOf(".");
+                                    var type = value.substring(fileType + 1, value.length);
+
+                                    // kiểm tra file. nếu là file pdf thì bỏ vào iframe. nếu là file khác(ảnh) thì bỏ vào img rồi cho lên
                                     var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
-                                    var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
+                                    if(type === "pdf"){
+                                        var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
+                                    }else{
+                                        var contentView = "<img src='"+urlFile+"'> ";
+                                    }
                                     $('div#iframe-view-file').html(contentView);
+
                                 } else if (elementName === 'valid') {
                                     if (value == 1) {
                                         $('form#proof-form').find('#valid').attr('checked', true);
@@ -677,3 +686,8 @@
     </script>
     <script type="text/javascript" src="{{ asset('js//evaluationForm.js') }}"></script>
 @endsection
+
+
+<style>
+
+</style>
