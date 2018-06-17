@@ -119,7 +119,14 @@ class TranscriptController extends Controller
                     }
                 }
             }
-            return view('transcript.show', compact('user', 'userLogin', 'evaluationForms', 'arrRolesCanMarkWithScore', 'rolesCanMark'));
+
+            $monitor = Student::leftJoin('users','students.user_id','=','users.users_id')
+                ->leftJoin('roles','users.role_id','=','roles.id')
+                ->where('class_id',$user->Student->class_id)
+                ->where('roles.weight',ROLE_BANCANSULOP)
+                ->first();
+
+            return view('transcript.show', compact('user', 'userLogin', 'evaluationForms', 'arrRolesCanMarkWithScore', 'rolesCanMark','monitor'));
         }
         return redirect()->back();
     }
@@ -207,7 +214,12 @@ class TranscriptController extends Controller
         $students = $this->getStudentByRoleUserLogin($user);
         $dataTables = DataTables::of($students)
             ->addColumn('action', function ($student) use ($user) {
-                $linkView = '<a title="View" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
+                if($student->totalScore != 0){
+                    $linkView = '<a title="Xem điểm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
+                }else{
+                    $linkView = '<a title="Chưa chấm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
+                }
+
                 $result = DB::table('evaluation_forms')
                     ->leftJoin('evaluation_results', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
                     ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
@@ -220,7 +232,8 @@ class TranscriptController extends Controller
                     ->select(DB::raw('SUM(evaluation_results.marker_score) as score'))->first();
                 if ($result->score) {
                     $score = $result->score;
-                    $iconMarked = '<button class="btn btn-success"><i class="fa fa-check"></i>' . $score . ' đ</button>';
+                    // nếu điểm sinh viên = 0 => chưa chấm => hiện màu đỏ
+                        $iconMarked = '<button class="btn btn-success"><i class="fa fa-check"></i>' . $score . ' đ</button>';
                     $linkView = $linkView . ' ' . $iconMarked;
                 }
                 return $linkView;
