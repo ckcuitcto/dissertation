@@ -62,6 +62,13 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-success" id="createFile">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>Thêm minh chứng
+                                </button>
+                            </div>
+                        </div>
                     </section>
                 </div>
             </div>
