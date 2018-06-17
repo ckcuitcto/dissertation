@@ -255,6 +255,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/danh-sach', ['as' => 'export-file-list', 'uses' => 'Export\ExportController@index']);
 
         Route::post('/list', ['as' => 'ajax-get-class-export', 'uses' => 'Export\ExportController@ajaxGetClasses']);
-
     });
+
+    Route::post('/xuat-danh-sach', ['as' => 'export-users', 'uses' => 'Export\ExportController@exportByUserId'])->middleware('can:export-users');
 });

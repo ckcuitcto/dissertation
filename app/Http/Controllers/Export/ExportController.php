@@ -18,32 +18,33 @@ use Yajra\DataTables\DataTables;
 class ExportController extends Controller
 {
 
-    public function index(){
+    public function index()
+    {
         $userLogin = $this->getUserLogin();
 
         $currentSemester = $this->getCurrentSemester();
-        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+        $semesters = Semester::select('id', DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
 
-        if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
+        if ($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN) {
             $faculties = Faculty::all()->toArray();
-            $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
-        }else{
-            $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
+            $faculties = array_prepend($faculties, array('id' => 0, 'name' => 'Tất cả khoa'));
+        } else {
+            $faculties = Faculty::where('id', $userLogin->Faculty->id)->get()->toArray();
         }
 
-        return view('export.index', compact('faculties','semesters','currentSemester'));
+        return view('export.index', compact('faculties', 'semesters', 'currentSemester'));
     }
 
     public function ajaxGetClasses(Request $request)
     {
         $user = $this->getUserLogin();
         $classes = DB::table('student_list_each_semesters')
-            ->leftJoin('students','students.user_id','=','student_list_each_semesters.user_id')
-            ->leftJoin('classes','classes.id','=','student_list_each_semesters.class_id')
-            ->leftJoin('users','users.users_id','=','students.user_id')
+            ->leftJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
+            ->leftJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
+            ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
             ->select(
-            DB::raw('count(student_list_each_semesters.user_id) AS count'),
-            'classes.*'
+                DB::raw('count(student_list_each_semesters.user_id) AS count'),
+                'classes.*'
             )
             ->groupBy('student_list_each_semesters.class_id');
 
@@ -86,7 +87,8 @@ class ExportController extends Controller
                     ->where('file_name', 'like', "%$className2%")
                     ->orWhere('file_name', 'like', "%$className1%")
                     ->first();
-                $dataFileExcel = Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) {})->noHeading()->get();
+                $dataFileExcel = Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) {
+                })->noHeading()->get();
 
                 $arrScoreByFile = array(); // mảng này lưu tất cả điểm của sinh viên trong 1 lớp
                 for ($i = 10; $i < count($dataFileExcel); $i++) {
@@ -105,17 +107,17 @@ class ExportController extends Controller
                                 ['evaluation_criterias.level', 1],
                                 ['students.user_id', $userId],
                                 ['evaluation_forms.semester_id', $semesterId],
-                                ['evaluation_criterias.id', '<>',YTHUCTHAMGIAHOCTAP_ID]
+                                ['evaluation_criterias.id', '<>', YTHUCTHAMGIAHOCTAP_ID]
                             ])
                             ->select(
                                 'evaluation_results.marker_score',
                                 'evaluation_results.marker_id',
                                 'evaluation_forms.total'
                             )
-                            ->orderBy('evaluation_results.created_at','DESC')
-                            ->orderBy('evaluation_criterias.id','ASC')
+                            ->orderBy('evaluation_results.created_at', 'DESC')
+                            ->orderBy('evaluation_criterias.id', 'ASC')
                             ->limit(4)->get()->toArray();
-                        if(!empty($resultLevel1)){
+                        if (!empty($resultLevel1)) {
                             $markerId = $resultLevel1[0]->marker_id;
                             $totalScore = $resultLevel1[0]->total;
                             //id người chấm thì giống nhau. mên lấy id của ngươi ở lv1 đem xuống lv2 luôn
@@ -128,27 +130,27 @@ class ExportController extends Controller
                                     ['evaluation_forms.semester_id', $semesterId],
                                     ['students.user_id', $userId],
                                 ])
-                                ->whereIn('evaluation_criterias.parent_id',EVALUATION_CRITERIAS_CHILD_PARENT_1)
+                                ->whereIn('evaluation_criterias.parent_id', EVALUATION_CRITERIAS_CHILD_PARENT_1)
                                 ->select(
                                     DB::raw('SUM(evaluation_results.marker_score) as marker_score')
                                 )
-                                ->orderBy('evaluation_criterias.parent_id','ASC')
+                                ->orderBy('evaluation_criterias.parent_id', 'ASC')
                                 ->groupBy('evaluation_criterias.parent_id')
                                 ->get()->toArray();
 
-                            $arrScore = array_merge($resultLevel2,$resultLevel1);
+                            $arrScore = array_merge($resultLevel2, $resultLevel1);
                             $arrScoreTmp = array();
-                            foreach($arrScore as $value){
+                            foreach ($arrScore as $value) {
                                 $arrScoreTmp[] = $value->marker_score;
                             }
                             $arrScoreTmp[] = $totalScore;
                             $arrScoreTmp[] = $this->checkRank1($totalScore);
-                            $arrScoreTmp[] ='';
+                            $arrScoreTmp[] = '';
                             $arrScore = $arrScoreTmp;
                         }
 
-                        if(empty($arrScore)){
-                            $arrScore = array('','','','','','','',0,$this->checkRank1(0),'*');
+                        if (empty($arrScore)) {
+                            $arrScore = array('', '', '', '', '', '', '', 0, $this->checkRank1(0), '*');
                         }
                         $arrScoreByFile[$userId] = $arrScore;
                         //nếu k có điểm
@@ -156,35 +158,18 @@ class ExportController extends Controller
                 }
 
                 //mở file và sửa file, sau đó lưu thahf file mới
-                $arrColumns = array('F','G','H','I','J','K','L','M','N','O');
-                Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) use ($arrScoreByFile,$arrColumns) {
-//                    $reader->sheet("Sheet1", function($sheet) use ($arrScoreByFile, $arrColumns) {
-//                        $arrxx = array();
-//                        foreach ($arrColumns as $value){
-//                            $arrxx[$value] = "General";
-//                        }
-//                        $sheet->setColumnFormat($arrxx);
-//
-//
-//                        for($i=0; $i< count($arrScoreByFile); $i++) {
-//                            $row = $i + 11;
-//                            $arrScore = $arrScoreByFile[$sheet->getCell('B'.$row)->getValue()];
-//
-//                            foreach($arrColumns as $key => $cl){
-//                                $sheet->setCellValue($cl.$row, $arrScore[$key]);
-//                            }
-//                        }
-//                    });
+                $arrColumns = array('F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O');
+                Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) use ($arrScoreByFile, $arrColumns) {
                     $sheet = $reader->getSheet(0);
-                    for($i=0; $i< count($arrScoreByFile); $i++) {
+                    for ($i = 0; $i < count($arrScoreByFile); $i++) {
                         $row = $i + 11;
-                        $arrScore = $arrScoreByFile[$sheet->getCell('B'.$row)->getValue()];
+                        $arrScore = $arrScoreByFile[$sheet->getCell('B' . $row)->getValue()];
 
-                        foreach($arrColumns as $key => $cl){
-                            $sheet->setCellValue($cl.$row, $arrScore[$key]);
+                        foreach ($arrColumns as $key => $cl) {
+                            $sheet->setCellValue($cl . $row, $arrScore[$key]);
                         }
                     }
-                })->store('xlsx', STUDENT_PATH , true);
+                })->store('xlsx', STUDENT_PATH, true);
                 $arrFileName[] = $fileImport->file_name;
             }
         }
@@ -194,7 +179,7 @@ class ExportController extends Controller
             $zip = new ZipArchive();
             $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
             foreach ($arrFileName as $file) {
-                if ($zip->open($public_dir . '/'.STUDENT_PATH . $fileZipName, ZipArchive::CREATE) === TRUE) {
+                if ($zip->open($public_dir . '/' . STUDENT_PATH . $fileZipName, ZipArchive::CREATE) === TRUE) {
                     $zip->addFile(STUDENT_PATH . $file);
                 }
             }
@@ -202,15 +187,222 @@ class ExportController extends Controller
             $headers = array(
                 'Content-Type' => 'application/octet-stream',
             );
-            $fileToPath = $public_dir . '/'.STUDENT_PATH. $fileZipName;
+            $fileToPath = $public_dir . '/' . STUDENT_PATH . $fileZipName;
             if (file_exists($fileToPath)) {
                 foreach ($arrFileName as $file) {
-                    unlink($public_dir . '/'.STUDENT_PATH . $file);
+                    unlink($public_dir . '/' . STUDENT_PATH . $file);
                 }
                 return response()->download($fileToPath, $fileZipName, $headers)->deleteFileAfterSend(true);
             } else {
                 return redirect()->back();
             }
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function exportByUserId(Request $request)
+    {
+
+        $strUserId = $request->strUsersId;
+        $strUserName = $request->strUserName;
+        $strClassName = $request->strClassName;
+        $semesterId = $request->semesterChoose;
+        $facultyId = $request->facultyChoose;
+
+        $arrUserId = explode(',', $strUserId);
+        $arrUserName = explode(',', $strUserName);
+        $arrClassName = explode(',', $strClassName);
+
+        $arrScoreAllUser = array(); // mảng này lưu tất cả điểm của sinh viên
+        for ($i = 0; $i < count($arrUserId); $i++) {
+            $userId = $arrUserId[$i];
+            $arrScore = array(); // tạo mảng mới. để nếu sinh viên sau chưa chấm. sẽ k bị gán giá trị của sv trước
+            // tọa mảng với mssv, tên ,lớp
+            // mảng tách ra từ userName
+            $arrayUserName = explode(' ', $arrUserName[$i]);
+            $lastName = array_pop($arrayUserName); //lấy ra phần tử cuối cùng là tên và tách nó khỏi mảng
+            $firstName = implode(' ',$arrayUserName);
+            $arrUserInfo = array($userId, $firstName,$lastName,$arrClassName[$i]);
+
+            // lấy ra điểm của form
+            // với kết quả có thời gian chấm trễ nhất. chỉ lấy level1 = tiêu chí
+            //litmit(4) vì có 5 cái level. nhưng bỏ qua cái đầu tiên nên chỉ lấy 4
+            $resultLevel1 = DB::table('evaluation_criterias')
+                ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
+                ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
+                ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
+                ->where([
+                    ['evaluation_criterias.level', 1],
+                    ['students.user_id', $userId],
+                    ['evaluation_forms.semester_id', $semesterId],
+                    ['evaluation_criterias.id', '<>', YTHUCTHAMGIAHOCTAP_ID]
+                ])
+                ->select(
+                    'evaluation_results.marker_score',
+                    'evaluation_results.marker_id',
+                    'evaluation_forms.total'
+                )
+                ->orderBy('evaluation_results.created_at', 'DESC')
+                ->orderBy('evaluation_criterias.id', 'ASC')
+                ->limit(4)->get()->toArray();
+            if (!empty($resultLevel1)) {
+                $markerId = $resultLevel1[0]->marker_id;
+                $totalScore = $resultLevel1[0]->total;
+                //id người chấm thì giống nhau. mên lấy id của ngươi ở lv1 đem xuống lv2 luôn
+                $resultLevel2 = DB::table('evaluation_criterias')
+                    ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
+                    ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
+                    ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
+                    ->where([
+                        ['evaluation_results.marker_id', $markerId],
+                        ['evaluation_forms.semester_id', $semesterId],
+                        ['students.user_id', $userId],
+                    ])
+                    ->whereIn('evaluation_criterias.parent_id', EVALUATION_CRITERIAS_CHILD_PARENT_1)
+                    ->select(
+                        DB::raw('SUM(evaluation_results.marker_score) as marker_score')
+                    )
+                    ->orderBy('evaluation_criterias.parent_id', 'ASC')
+                    ->groupBy('evaluation_criterias.parent_id')
+                    ->get()->toArray();
+
+                $arrScore = array_merge($resultLevel2, $resultLevel1);
+
+                $arrScoreTmp = array();
+                foreach ($arrScore as $value) {
+                    $arrScoreTmp[] = $value->marker_score;
+                }
+                $arrScoreTmp[] = $totalScore;
+                $arrScoreTmp[] = $this->checkRank1($totalScore);
+                $arrScoreTmp[] = '';
+
+                $arrScoreTmp = array_merge($arrUserInfo,$arrScoreTmp);
+                $arrScore = $arrScoreTmp;
+            }
+
+            if (empty($arrScore)) {
+                $arrScore = array('', '', '', '', '', '', '', 0, $this->checkRank1(0), '*');
+                $arrScore = array_merge($arrUserInfo,$arrScore);
+            }
+            $arrScoreAllUser[] = $arrScore;
+        }
+
+        $semester = Semester::find($semesterId);
+        if($facultyId == 0){
+            $facultyName = " Tất cả khoa";
+        }else{
+            $facultyName = Faculty::find($facultyId)->name;
+        }
+        //mở file và sửa file, sau đó lưu thanh file mới
+        $arrColumns = array('A','B','C','D','E','F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O');
+        Excel::load(FILE_TEMPLATE . FILE_TONG_HOP_DANH_GIA_REN_LUYEN, function ($reader) use ($arrScoreAllUser,$arrColumns,$semester,$facultyName) {
+//            sheet 0 là lớp. sheet 1 là khoa
+//            $sheet = $reader->getSheet(1);
+            $reader->sheet('khoa', function ($sheet) use ($arrScoreAllUser,$arrColumns,$semester,$facultyName) {
+                for ($i = 0; $i < count($arrScoreAllUser); $i++) {
+                    $row = $i + 14;
+                    $rowValue = array_merge(array($i+1),$arrScoreAllUser[$i]);
+                    $sheet->row($row,$rowValue);
+
+                    $range = "A$row:B$row";
+                    $sheet->setBorder($range, 'thin');
+                    $sheet->cells($range, function ($cells) {
+                        $cells->setFont(array(
+                            'size' => '10',
+                            'bold' => false,
+                        ));
+                        $cells->setAlignment('center');
+                    });
+
+                    $range = "E$row:O$row";
+                    $sheet->setBorder($range, 'thin');
+                    $sheet->cells($range, function ($cells) {
+                        $cells->setFont(array(
+                            'size' => '10',
+                            'bold' => false,
+                        ));
+                        $cells->setAlignment('center');
+                    });
+
+                    $range = "C$row:D$row";
+                    $sheet->setBorder($range, 'thin');
+                    $sheet->cells($range, function ($cells) {
+                        $cells->setFont(array(
+                            'size' => '10',
+                            'bold' => false,
+                        ));
+                        $cells->setAlignment('left');
+                    });
+                }
+
+
+                $sheet->cell('J5', function ($cell){
+                    $day = date("d");
+                    $month = date("m");
+                    $year = date("Y");
+                    $cell->setValue("Tp. Hồ Chí Minh, ngày $day tháng $month năm $year ");
+                });
+
+                $sheet->cell('E8', function ($cell) use ($facultyName){
+                    $cell->setValue("Khoa: $facultyName");
+                });
+                $sheet->cell('F9', function ($cell) use ($semester){
+                    $cell->setValue("Học kỳ: $semester->term");
+                });
+                $sheet->cell('I9', function ($cell) use ($semester){
+                    $cell->setValue("Năm học: $semester->year_from - $semester->year_to ");
+                });
+
+                // xác định row có phần chữ kĩ = số User + 14 + 2(2 dòng khoảng cách ra)
+                $rowSign = count($arrScoreAllUser) + 14 + 1;
+
+                $sheet->mergeCells("A$rowSign:G$rowSign");
+                $sheet->cells("A$rowSign:G$rowSign", function ($cells) {
+                    $cells->setFont(array(
+                        'size' => '11',
+                        'bold' => true,
+                    ));
+                    $cells->setAlignment('center');
+                });
+                $sheet->cell("A$rowSign", function ($cell) {
+                    $cell->setValue("TM. HỘI ĐỒNG CẤP KHOA");
+                });
+
+                $sheet->mergeCells("K$rowSign:O$rowSign");
+                $sheet->cells("K$rowSign:O$rowSign", function ($cells) {
+                    $cells->setFont(array(
+                        'size' => '11',
+                        'bold' => true,
+                    ));
+                    $cells->setAlignment('center');
+                });
+                $sheet->cell("K$rowSign", function ($cell) {
+                    $cell->setValue("Người lập bảng");
+                });
+
+                $rowSign += 1;
+                $sheet->mergeCells("A$rowSign:G$rowSign");
+                $sheet->cells("A$rowSign:G$rowSign", function ($cells) {
+                    $cells->setFont(array(
+                        'size' => '11',
+                        'bold' => true,
+                    ));
+                    $cells->setAlignment('center');
+                });
+                $sheet->cell("A$rowSign", function ($cell) {
+                    $cell->setValue("Chủ tịch");
+                });
+
+            });
+        })->store('xlsx', STUDENT_PATH, true);
+        $public_dir = public_path();
+        $headers = array(
+            'Content-Type' => 'application/octet-stream',
+        );
+        $fileToPath = $public_dir . '/' . STUDENT_PATH . FILE_TONG_HOP_DANH_GIA_REN_LUYEN;
+        if (file_exists($fileToPath)) {
+            return response()->download($fileToPath, FILE_TONG_HOP_DANH_GIA_REN_LUYEN, $headers)->deleteFileAfterSend(true);
         } else {
             return redirect()->back();
         }

@@ -119,6 +119,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'export-file',
                 'display_name' => 'Xuất file',
                 'description' => 'Xuất file báo cáo'
+            ],[
+                'name' => 'export-users',
+                'display_name' => 'Xuất file bảng tổng hợp',
+                'description' => 'Xuất file bảng tổng hợp đánh giá RL của SV'
             ],
         ]);
     }

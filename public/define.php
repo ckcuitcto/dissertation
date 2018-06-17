@@ -57,6 +57,8 @@ define('MARK_STATUS',array(1,2,4,8,16));
 
 define('STUDENT_PATH','upload/student_tmp/');
 define('STUDENT_PATH_STORE','upload/student/');
+define('FILE_TEMPLATE','upload/file_mau/');
+define('FILE_TONG_HOP_DANH_GIA_REN_LUYEN','bang_tong_hop_danh_gia_ren_luyen.xlsx');
 define('STUDENT_LIST_EACH_SEMESTER_PATH','upload/student_list_each_semester/');
 
 define('EVALUATION_CRITERIAS_CHILD_PARENT_1',array(6,7,8));
