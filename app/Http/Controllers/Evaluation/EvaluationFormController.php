@@ -397,24 +397,6 @@ class EvaluationFormController extends Controller
         return $html;
     }
 
-    public function checkFileUpload(Request $request)
-    {
-
-        $arrFile = $request->file('fileUpload');
-        foreach ($arrFile as $file) {
-            if (!in_array($file->getClientOriginalExtension(), FILE_VALID)) {
-                $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ. File hợp lệ: img,jpg,pdf,png,jpeg,bmp "]);
-                return response()->json([
-                    'status' => false,
-                    'arrMessages' => $arrMessage
-                ], 200);
-            }
-        }
-        return response()->json([
-            'status' => true,
-        ], 200);
-    }
-
     public static function checkRank($score)
     {
         if ($score >= EXCELLENT) {

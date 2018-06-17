@@ -55,6 +55,7 @@ define('MARK_STATUS_BANCHUNHIEMKHOA',8);
 define('MARK_STATUS_PHONGCONGTACSINHVIEN',16);
 define('MARK_STATUS',array(1,2,4,8,16));
 
+define('PROOF_PATH','upload/proof/');
 define('STUDENT_PATH','upload/student_tmp/');
 define('STUDENT_PATH_STORE','upload/student/');
 define('FILE_TEMPLATE','upload/file_mau/');

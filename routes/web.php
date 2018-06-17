@@ -145,7 +145,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update'])->middleware('can:can-mark,App\Model\EvaluationForm');
 
         //kiem tra file upload = ajax
-        Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Evaluation\EvaluationFormController@checkFileUpload']);
+        Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Proof\ProofController@checkFileUpload']);
 
         Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Evaluation\EvaluationFormController@getProofById']);
 
@@ -186,6 +186,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update-valid-proof-file/{id}', ['as' => 'update-valid-proof-file', 'uses' => 'Proof\ProofController@updateValidProofFile']);
 
         Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Proof\ProofController@getProofById']);
+
+        Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store']);
     });
 
     Route::group(['prefix' => 'y-kien'], function () {

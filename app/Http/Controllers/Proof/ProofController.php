@@ -47,18 +47,22 @@ class ProofController extends Controller
 
 
         // luôn lấy theo thời gian của sinh viên
-        $proofList = DB::table('proofs')
-            ->leftJoin('evaluation_criterias','proofs.evaluation_criteria_id','=','evaluation_criterias.id')
-            ->leftJoin('semesters','semesters.id','=','proofs.semester_id')
-            ->leftJoin('mark_times','mark_times.semester_id','=','semesters.id')
-            ->select('evaluation_criterias.content','evaluation_criterias.detail','proofs.*','semesters.year_from','semesters.year_to','semesters.term','mark_times.mark_time_start','mark_times.mark_time_end')
-            ->where([
-                ['proofs.created_by','=', $userLogin->Student->id],
-                ['mark_times.role_id','=', $userLogin->Role->id ]
-            ])
-            ->orderBy('proofs.id')
-            ->get();
-        return view('proof.index', compact('proofList'));
+//        $proofList = DB::table('proofs')
+//            ->leftJoin('evaluation_criterias','proofs.evaluation_criteria_id','=','evaluation_criterias.id')
+//            ->leftJoin('semesters','semesters.id','=','proofs.semester_id')
+//            ->leftJoin('mark_times','mark_times.semester_id','=','semesters.id')
+//            ->select('evaluation_criterias.content','evaluation_criterias.detail','proofs.*','semesters.year_from','semesters.year_to','semesters.term','mark_times.mark_time_start','mark_times.mark_time_end')
+//            ->where([
+//                ['proofs.created_by','=', $userLogin->Student->id],
+//                ['mark_times.role_id','=', $userLogin->Role->id ]
+//            ])
+//            ->orderBy('proofs.id')
+//            ->get();
+        $proofList = Proof::where('created_by',$userLogin->Student->id)->get();
+        $evaluationCriterias = EvaluationCriteria::whereNotNull('proof')->get();
+        $semesters = Semester::orderBy('id','DESC')->get();
+
+        return view('proof.index', compact('proofList','evaluationCriterias','semesters'));
     }
 
     public function show($id)
@@ -106,14 +110,24 @@ class ProofController extends Controller
 
     public function store(Request $request)
     {
-       $validator = Validator::make($request->all(),
-           [
-               'name' => 'required'
-           ],
-           [
-               'title.required' => 'Tiêu đề là bắt buộc'
-           ]
-       );
+        $arrRule = array(
+            'fileUpload' => 'required'
+        );
+        $arrMessage = array(
+            'fileUpload.required' => 'Bắt buộc chọn File'
+        );
+
+        if($request->evaluation_criteria != 0){
+            $arrRule['evaluation_criteria'] = 'sometimes|exists:evaluation_criterias,id';
+            $arrMessage['evaluation_criteria.exists'] = 'Tiêu chí không tồn tại';
+        }
+
+        if($request->semester != 0){
+            $arrRule['semester'] = 'sometimes|exists:semesters,id';
+            $arrMessage['semester.exists'] = 'Học kì không tồn tại';
+        }
+
+       $validator = Validator::make($request->all(), $arrRule,$arrMessage);
 
        if ($validator->fails()) {
            return response()->json([
@@ -121,15 +135,29 @@ class ProofController extends Controller
                'arrMessages' => $validator->errors()
            ], 200);
        } else {
+           $userLogin = $this->getUserLogin();
+           foreach ($request->fileUpload as $proof) {
+               $fileName = str_random(13) . "_" . $proof->getClientOriginalName();
+               $fileName = $this->convert_vi_to_en(preg_replace('/\s+/', '', $fileName));
+               while (file_exists(PROOF_PATH . $fileName)) {
+                   $fileName = $this->convert_vi_to_en(str_random(13) . "_" . $fileName);
+               }
+               $proof->move( PROOF_PATH, $fileName);  // lưu file vào thư mục
 
-           $proof = new Proof();
-           $proof->name = $request->name;
-           $proof->semester_id = $request->semester_id;
-           $proof->created_by = Auth::user()->Staff->id;
+               $arrProof[] = [
+                   'name' => $fileName,
+                   'created_by' => $userLogin->Student->id,
+               ];
+               if(!empty($request->semester)){
+                   $arrProof['semester_id'] = $request->semester;
+               }
+               if(!empty($request->evaluation_criteria)){
+                   $arrProof['evaluation_criteria_id'] = $request->evaluation_criteria;
+               }
+           }
+           Proof::insert($arrProof);
 
-           $proof->save();
            return response()->json([
-               'proof' => $proof,
                'status' => true
            ], 200);
        }
@@ -244,5 +272,22 @@ class ProofController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function checkFileUpload(Request $request)
+    {
+        $arrFile = $request->file('fileUpload');
+        foreach ($arrFile as $file) {
+            if (!in_array($file->getClientOriginalExtension(), FILE_VALID)) {
+                $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ. File hợp lệ: img,jpg,pdf,png,jpeg,bmp "]);
+                return response()->json([
+                    'status' => false,
+                    'arrMessages' => $arrMessage
+                ], 200);
+            }
+        }
+        return response()->json([
+            'status' => true,
+        ], 200);
     }
 }
