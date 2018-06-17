@@ -142,7 +142,6 @@
 
             $('body').on('change', "select#semester_id", function (e) {
                 $("input#semesterChoose").val($(this).val());
-
             });
 
             $('body').on('click', 'input[name=checkAll]', function (e) {

@@ -248,7 +248,7 @@
                             $('#myModal').find('.modal-body').html('<p>Thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                                location.reload(true);
                             });
                         }
                     }
