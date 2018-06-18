@@ -329,27 +329,10 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
 
     <script>
-        // $(document).ready(function() {
-        // $(".submit").click(function() {
-        //     $(".submit").addClass("loading");
-        //     setTimeout(function() {
-        //     $(".submit").addClass("hide-loading");
-        //     // For failed icon just replace ".done" with ".failed"
-        //     $(".done").addClass("finish");
-        //     }, 3000);
-        //     setTimeout(function() {
-        //     $(".submit").removeClass("loading");
-        //     $(".submit").removeClass("hide-loading");
-        //     $(".done").removeClass("finish");
-        //     $(".failed").removeClass("finish");
-        //     }, 5000);
-        // })
-        // });
-
 
         $(document).ready(function () {
 
@@ -440,10 +423,10 @@
                     // enctype: 'multipart/form-data',
                     processData: false,
                     beforeSend: function () {
-                        $("#importModal").find("button#btn-import-student").prop('disabled', true);
+                        $('#ajax_loader').show();
                     },
                     success: function (result) {
-                        $("#importModal").find("button#btn-import-student").prop('disabled', false);
+                        $('#ajax_loader').hide();
                         if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
@@ -461,11 +444,21 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
-                            $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#importModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: " Upload Thành công ",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#importModal').modal('hide');
+                            oTable.draw();
+
+                            // $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
+                            // $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            // $('#importModal').on('hidden.bs.modal', function (e) {
+                            //     location.reload();
+                            // });
                         }
                     }
                 });
@@ -540,11 +533,21 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#modal-edit-user').find('.modal-body').html('<p>Thành công</p>');
-                            $('#modal-edit-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#modal-edit-user').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: " Sửa thành công ",
+                                message: "",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#modal-edit-user').modal('hide');
+                            oTable.draw();
+
+                            // $('#modal-edit-user').find('.modal-body').html('<p>Thành công</p>');
+                            // $('#modal-edit-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            // $('#modal-edit-user').on('hidden.bs.modal', function (e) {
+                            //     location.reload();
+                            // });
                         }
                     }
                 });
@@ -561,7 +564,11 @@
                     url: url,
                     data: valueForm,
                     dataType: 'json',
+                    beforeSend: function () {
+                        $('#ajax_loader').show();
+                    },
                     success: function (result) {
+                        $('#ajax_loader').hide();
                         if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
@@ -572,11 +579,21 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#modal-add-user').find('.modal-body').html('<p>Thành công</p>');
-                            $('#modal-add-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#modal-add-user').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: " Thêm thành công",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#modal-add-user').modal('hide');
+                            oTable.draw();
+
+                            // $('#modal-add-user').find('.modal-body').html('<p>Thành công</p>');
+                            // $('#modal-add-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            // $('#modal-add-user').on('hidden.bs.modal', function (e) {
+                            //     location.reload();
+                            // });
                         }
                     }
                 });

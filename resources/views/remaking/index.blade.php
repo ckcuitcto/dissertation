@@ -149,11 +149,20 @@
                             });
                         }
                     } else if (result.status === true) {
-                        $('div#myModal').find('.modal-body').html('<p> Trả lời phúc khảo thành công</p>');
-                        $("div#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                        $('div#myModal').on('hidden.bs.modal', function (e) {
-                            location.reload();
+                        $.notify({
+                            title: "Trả lời phúc khảo thành công ",
+                            message: ":D",
+                            icon: 'fa fa-check'
+                        },{
+                            type: "success"
                         });
+                        $('div#myModal').modal('hide');
+                        oTable.draw();
+                        // $('div#myModal').find('.modal-body').html('<p> Trả lời phúc khảo thành công</p>');
+                        // $("div#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                        // $('div#myModal').on('hidden.bs.modal', function (e) {
+                            // location.reload();
+                        // });
                     }
                 }
             });
@@ -165,7 +174,7 @@
             $('span.messageErrors').remove();
         });
 
-        $('#remaking-table').DataTable({
+        var oTable = $('#remaking-table').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": {
