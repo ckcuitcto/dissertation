@@ -14880,3 +14880,17 @@ input[type=number]::-webkit-outer-spin-button {
 #exportTable_filter {
   display: none;
 }
+
+#ajax_loader {
+  display:    none;
+  position:   fixed;
+  z-index:    9999999;
+  top:        0;
+  left:       0;
+  height:     100%;
+  width:      100%;
+  background: rgba( 255, 255, 255, .8 )
+  url('../../image/ajax-loader.gif')
+  50% 50%
+  no-repeat;
+}
