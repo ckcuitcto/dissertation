@@ -211,6 +211,7 @@ class ReMakingController extends Controller
                 'classes.name as className',
                 'semesters.year_from',
                 'semesters.year_to',
+                DB::raw("CONCAT(semesters.year_from,'-',semesters.year_to) as semesterYear"),
                 'semesters.term',
                 'remakings.status',
                 'remakings.created_at'

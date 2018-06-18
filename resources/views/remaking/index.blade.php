@@ -13,7 +13,7 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12  custom-quanly-taikhoan">
                 <div class="tile">
                     <table id="remaking-table" class="table table-bordered table-hover">
                         <thead>
@@ -23,33 +23,11 @@
                             <th>Lớp</th>
                             <th>Học kì</th>
                             <th>Năm học</th>
-                            <th>Năm học</th>
                             <th>Trạng thái</th>
                             <th>Ngày tạo</th>
                             <th>Tác vụ</th>
                         </tr>
                         </thead>
-                        {{--<tbody>--}}
-                        {{--@foreach($remakings as $key =>  $request)--}}
-                            {{--<tr>--}}
-                                {{--<td>{{ $request->id }}</td>--}}
-                                {{--<td>{{ $request->EvaluationForm->Student->User->name }}</td>--}}
-                                {{--<td>{{ $request->EvaluationForm->Student->Classes->name }}</td>--}}
-                                {{--<td> {{ $request->EvaluationForm->Semester->term }} </td>--}}
-                                {{--<td> {{ $request->EvaluationForm->Semester->year_from."-".$request->EvaluationForm->Semester->year_to }} </td>--}}
-                                {{--<td>{{  \App\Http\Controllers\Controller::getDisplayStatusRemaking($request->status)}}</td>--}}
-                                {{--<td>{{  $request->created_at}}</td>--}}
-                                {{--<td>--}}
-                                    {{--@if($request->status !=  RESOLVED )--}}
-                                        {{--<a class="btn btn-primary"--}}
-                                           {{--href="{{ route('evaluation-form-show',[$request->EvaluationForm->id,'remaking=true&remaking_id='.$request->id]) }}">--}}
-                                            {{--<i class="fa fa-edit" aria-hidden="true" style="color:white"></i> Chấm lại--}}
-                                        {{--</a>--}}
-                                    {{--@endif--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                        {{--@endforeach--}}
-                        {{--</tbody>--}}
                     </table>
                 </div>
             </div>
@@ -203,12 +181,10 @@
                 {data: "userName", name: "users.name"},
                 {data: "className", name: "classes.name"},
                 {data: "term", name: "semesters.term"},
-                {data: "year_from", name: "semesters.year_from"},
-                {data: "year_to", name: "semesters.year_to"},
+                {data: "semesterYear", name: "semesters.year_from"},
                 {data: "status", name: "remakings.status"},
                 {data: "created_at", name: "remakings.created_at"},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
-
             ],
             "language": {
                 "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",

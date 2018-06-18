@@ -12,8 +12,8 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <div class="tile custom-quanly-taikhoan">
+            <div class="col-md-12 custom-quanly-taikhoan">
+                <div class="tile">
                     <div class="overlay custom-overlay" style="opacity: 0">
                         <div class="m-loader mr-4">
                             <svg class="m-circular" viewBox="25 25 50 50">
