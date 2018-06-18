@@ -166,7 +166,7 @@
                                 {{-- <h5 class="card-title">Warning card title</h5> --}}
                                 <p class="card-text"> {{ date('d/m/Y',strtotime($timeList->date_start_to_mark ))}}
                                     -> {{ date('d/m/Y',strtotime($timeList->date_end_to_mark ))}}
-
+                                    Thời gian chấm điểm
                                 </p>
                                 <p class="card-text"> {{ date('d/m/Y',strtotime($timeList->date_start_to_request_re_mark ))}}
                                     -> {{ date('d/m/Y',strtotime($timeList->date_end_to_request_re_mark ))}}

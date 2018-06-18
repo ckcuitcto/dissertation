@@ -69,10 +69,7 @@
                         </form>
                         <div class="row">
                             <div class="col-md-6">
-                                <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
-                                        id="btn-add-class" type="button"><i class="fa fa-pencil-square-o"
-                                                                            aria-hidden="true"></i>Thêm
-                                </button>
+                                
                                 <button class="btn btn-info" id="btnExport" type="button" data-link="{{route('export-file')}}">
                                     <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                                     Xuất File

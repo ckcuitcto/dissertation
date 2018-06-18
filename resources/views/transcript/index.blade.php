@@ -47,7 +47,7 @@
                         </form>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered " id="studentsTranscript">
+                        <table class="table table-hover table-bordered" id="studentsTranscript">
                             <thead>
                             <tr>
                                 <th>MSSV</th>
@@ -66,7 +66,7 @@
                             <th></th>
                             </tfoot>
                         </table>
-                    </div>
+                        </div>
                     <div class="row">
                         <div class="col-md-6">
                             <button class="btn btn-outline-success" id="createFile">

@@ -23,7 +23,7 @@
 
 @section('menuLeft')
 @show
-
+<div id="ajax_loader"></div>
 @yield('content')
 
 @section('javascript')

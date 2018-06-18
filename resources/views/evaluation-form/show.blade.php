@@ -57,6 +57,7 @@
                               enctype="multipart/form-data">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             {{--<input type="hidden" name="evaluationFormId" value="{{ $evaluationForm->id }}">--}}
+                           
                             <table class="table table-hover table-bordered table-responsive">
                                 <tbody>
                                 <tr>
@@ -374,7 +375,7 @@
                                 </tr>
                                 </tbody>
                             </table>
-
+                        
                             {{-- nếu user đang đăg nhập có quyền = quyền user đang có thể chấm thì mới hiện ra nút lưu--}}
                             @if($currentRoleCanMark->weight == $user->Role->weight)
                                 @can('can-mark')
@@ -693,8 +694,5 @@
     </script>
     <script type="text/javascript" src="{{ asset('js//evaluationForm.js') }}"></script>
 @endsection
-
-
 <style>
-
 </style>
