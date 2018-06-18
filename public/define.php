@@ -40,6 +40,8 @@ define('STUDENT_DEFERMENT',2); // bảo lưu
 define('STUDENT_DROP_OUT',3); // bỏ học
 define('STUDENT_GRADUATE',4); // tốt nghiệp
 
+define('DATE_FORMAT_VIEW','d/m/Y');
+define('DATE_FORMAT_DATABASE','Y-m-d');
 
 define('MALE',1);
 define('FEMALE',2);

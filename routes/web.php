@@ -185,7 +185,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/destroy/{id}', ['as' => 'proof-destroy', 'uses' => 'Proof\ProofController@destroy'])->middleware('can:proofs-delete');
         Route::post('/update-valid-proof-file/{id}', ['as' => 'update-valid-proof-file', 'uses' => 'Proof\ProofController@updateValidProofFile']);
 
-        Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Proof\ProofController@getProofById']);
+        Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Proof\ProofController@edit']);
+
+        Route::post('/update/{id}', ['as' => 'proof-update', 'uses' => 'Proof\ProofController@update']);
 
         Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store']);
     });

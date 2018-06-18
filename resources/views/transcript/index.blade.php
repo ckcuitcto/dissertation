@@ -47,7 +47,7 @@
                         </form>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="studentsTranscript">
+                        <table class="table table-hover table-bordered " id="studentsTranscript">
                             <thead>
                             <tr>
                                 <th>MSSV</th>

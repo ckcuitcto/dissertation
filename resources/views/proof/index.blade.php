@@ -42,8 +42,6 @@
                                         <td>
                                             <a style="color:white" data-proof-id="{{$proof->id}}"
                                                id="proof-view-file"
-                                               data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
-                                               data-link-update-proof-file="{{ route('proof-destroy',$proof->id ) }}"
                                                data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}"
                                                class="btn btn-primary">
                                                 <i class="fa fa-eye"
@@ -62,24 +60,46 @@
                                         </td>
                                         <td>{{ ($proof->valid) ? "Hợp lệ" : "Không hợp lệ" }}</td>
                                         <td>
-                                            {{--nếu có học kì. thì phải thuộc thời gian chấm--}}
+                                            {{--nếu có học kì. thì phải thuộc thời gian chấm của role đang login thì mới đuọc xóa, sửa--}}
                                             @isset($proof->Semester)
-                                                @if(\App\Http\Controllers\Proof\ProofController::checkTimeMark($proof->Semester->mark_time_start,$proof->Semester->mark_time_end))
-                                                    <button type="button" class="btn btn-danger"
+                                            @php
+                                                $markTimeOfUserLoginBySemester = $proof->Semester->MarkTimes()->where('role_id',$userLogin->Role->id)->first();
+                                                $marTimeStart = $markTimeOfUserLoginBySemester->mark_time_start;
+                                                $marTimeEnd = $markTimeOfUserLoginBySemester->mark_time_end;
+                                            @endphp
+                                                @if(\App\Http\Controllers\Proof\ProofController::checkTimeMark($marTimeStart,$marTimeEnd))
+                                                    <button title="Xóa" type="button" class="btn btn-danger"
                                                             data-proof-id="{{$proof->id}}" id="proof-destroy"
                                                             data-proof-link="{{route('proof-destroy',$proof->id)}}">
-                                                        <i class="fa fa-lg fa-trash"></i> Xóa
+                                                        <i class="fa fa-lg fa-trash"></i>
+                                                    </button>
+                                                    <button title="Sửa" style="color:white" data-proof-id="{{$proof->id}}"
+                                                       id="proof-view-update-file"
+                                                       data-link-update-proof-file="{{ route('proof-update',$proof->id ) }}"
+                                                       data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}"
+                                                       class="btn btn-primary">
+                                                        <i class="fa fa-edit"
+                                                           aria-hidden="true"></i>
                                                     </button>
                                                 @endif
                                             @endisset
-                                            {{-- nếu k có học kì thì cho xóa--}}
+                                            {{-- nếu k thuộc học kì nào thì cho xóa. Đây là trường hợp thêm trước--}}
                                             @empty($proof->Semester)
-                                                <button type="button" class="btn btn-danger"
+                                                <button title="Xóa" type="button" class="btn btn-danger"
                                                         data-proof-id="{{$proof->id}}" id="proof-destroy"
                                                         data-proof-link="{{route('proof-destroy',$proof->id)}}">
-                                                    <i class="fa fa-lg fa-trash"></i> Xóa
+                                                    <i class="fa fa-lg fa-trash"></i>
+                                                </button>
+                                                <button title="Sửa" style="color:white" data-proof-id="{{$proof->id}}"
+                                                        id="proof-view-update-file"
+                                                        data-link-update-proof-file="{{ route('proof-update',$proof->id ) }}"
+                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}"
+                                                        class="btn btn-primary">
+                                                    <i class="fa fa-edit"
+                                                       aria-hidden="true"></i>
                                                 </button>
                                             @endempty
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -107,7 +127,7 @@
                             <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">×</span></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body body-view-file">
                             <div id="iframe-view-file" class="doc"></div>
                         </div>
                     </div>
@@ -155,18 +175,65 @@
                                 </div>
                             </div>
                         </form>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="alert alert-danger show-error" style="display: none">
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button data-link="{{ route('proof-store') }}" class="btn btn-primary"
                                 id="btn-upload-proof" name="btn-upload-proof" type="button">
                             Thêm
+                        </button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="updateModal" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Sửa minh chứng</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="update-proof-form">
+                            {!! csrf_field() !!}
+                            <div class="row">
+                                <input type="hidden" name="id" class="id">
+                                <div class="col-md-12">
+                                    <div class="form-row">
+                                        <label for="evaluation_criteria_id">Chọn tiêu chí </label>
+                                        <select class="form-control evaluation_criteria_id" name="evaluation_criteria_id"
+                                                id="evaluation_criteria_id">
+                                            <option value="0"> ---Chọn tiêu chí---</option>
+                                            @foreach($evaluationCriterias as $value)
+                                                <option value="{{$value->id}}">{{$value->content}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="semester_id">Chọn học kì</label>
+                                        <select class="form-control semester_id" name="semester_id" id="semester_id">
+                                            <option value="0"> ---Chọn học kì---</option>
+                                            @foreach($semesters as $value)
+                                                <option value="{{$value->id}}">{{ "Học kì $value->term. Năm học $value->year_from - $value->year_to" }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="modal-body body-view-file">
+                                        <div id="iframe-view-file" class="doc"></div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button  class="btn btn-primary"
+                                 id="btn-update-proof" name="btn-update-proof" type="button">
+                            Sửa
                         </button>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
                     </div>
@@ -183,17 +250,13 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
 
-
     <script>
         $(document).ready(function () {
 
             $("a#proof-view-file").click(function (e) {
                 var thisproof = $(this);
-                var name = thisproof.attr('data-proof-file-path');
                 var id = thisproof.attr('data-proof-id');
                 var url = thisproof.attr('data-get-file-link');
-                var urlDeleteProofFile = thisproof.attr('data-link-update-proof-file');
-
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -201,12 +264,20 @@
                     data: {id: id},
                     success: function (data) {
                         if (data.status === true && data.proof !== undefined) {
-                            $("form#proof-form").attr("data-link", urlDeleteProofFile);
+                            // $("form#proof-form").attr("data-link", urlDeleteProofFile);
                             $.each(data.proof, function (elementName, value) {
                                 if (elementName === 'name') {
+                                    var fileType = value.lastIndexOf(".");
+                                    var type = value.substring(fileType + 1, value.length);
+
+                                    // kiểm tra file. nếu là file pdf thì bỏ vào iframe. nếu là file khác(ảnh) thì bỏ vào img rồi cho lên
                                     var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
-                                    var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
-                                    $('div#iframe-view-file').html(contentView);
+                                    if(type === "pdf"){
+                                        var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
+                                    }else{
+                                        var contentView = "<img src='"+urlFile+"'> ";
+                                    }
+                                    $("#myModal").find('div#iframe-view-file').html(contentView);
                                 }
                             });
                             $('#myModal').modal('show');
@@ -215,9 +286,83 @@
                 });
             });
 
+            $("button#proof-view-update-file").click(function (e) {
+                var thisproof = $(this);
+                var id = thisproof.attr('data-proof-id');
+                var url = thisproof.attr('data-get-file-link');
+                var urlUpdate = thisproof.attr('data-link-update-proof-file');
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {id: id},
+                    success: function (data) {
+                        if (data.status === true && data.proof !== undefined) {
+                            // $("form#proof-form").attr("data-link", urlDeleteProofFile);
+                            $.each(data.proof, function (elementName, value) {
+                                if (elementName === 'name') {
+                                    var fileType = value.lastIndexOf(".");
+                                    var type = value.substring(fileType + 1, value.length);
+
+                                    // kiểm tra file. nếu là file pdf thì bỏ vào iframe. nếu là file khác(ảnh) thì bỏ vào img rồi cho lên
+                                    var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
+                                    if (type === "pdf") {
+                                        var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
+                                    } else {
+                                        var contentView = "<img src='" + urlFile + "'> ";
+                                    }
+                                    $("#updateModal").find('div#iframe-view-file').html(contentView);
+                                }else if (elementName === 'semester_id' || elementName === 'evaluation_criteria_id') {
+                                    if(value === null){
+                                        $("#updateModal").find('select.'+elementName).val(0);
+                                    }else{
+                                        $("#updateModal").find('select.'+elementName).val(value);
+                                    }
+                                }else{
+                                    $("#updateModal").find('.'+elementName).val(value);
+                                }
+                            });
+                            $('#updateModal').find("button#btn-update-proof").attr('data-link',urlUpdate);
+                            $('#updateModal').modal('show');
+                        }
+                    }
+                });
+            });
+
+            $("button#btn-update-proof").click(function () {
+                var valueForm = $('form#update-proof-form').serialize();
+                var url = $(this).attr('data-link');
+                $('.form-row').find('span.messageErrors').remove();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: valueForm,
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status === false) {
+                            //show error list fields
+                            if (result.arrMessages !== undefined) {
+                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                                        $('form#update-proof-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                                    });
+                                });
+                            }
+                        } else if (result.status === true) {
+                            $('#updateModal').find('.modal-body').html('<p>Thành công</p>');
+                            $("#updateModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            $('#updateModal').on('hidden.bs.modal', function (e) {
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+            
             $('button#proof-destroy').click(function () {
                 var id = $(this).attr("data-proof-id");
-                var url = $(this).attr('data-proof-link');
+                var url = $(this).attr('data-get-file-link');
+
                 swal({
                     title: "Bạn chắc chưa?",
                     text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",

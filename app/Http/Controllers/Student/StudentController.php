@@ -554,6 +554,25 @@ class StudentController extends Controller
             ];
             EvaluationForm::updateOrCreate($arrEvaluationForm);
         }
+
+        // cập nhật lại. nếu chủ form là ban cán sự thì + status 1.
+        // lấy danh sách tất cả ban cán sự của form
+        $studentList = DB::table('student_list_each_semesters')
+            ->leftJoin('students','student_list_each_semesters.user_id','=','students.user_id')
+            ->leftJoin('users','users.users_id','=','students.user_id')
+            ->leftJoin('roles','roles.id','=','users.role_id')
+            ->where('roles.weight','=',ROLE_BANCANSULOP)
+            ->where('student_list_each_semesters.semester_id','=',$semesterId)
+            ->select('student_list_each_semesters.user_id','students.id')
+            ->get()->toArray();
+        $arrStudentId = array();
+        foreach ($studentList as $value){
+            $arrStudentId[]= $value->id;
+        }
+        // = 1. nghĩa là tính các form của ban cán sự lớp do k chấm ở time sinh viên nên mặc định cho là đã chấm ở time sinh viên
+        EvaluationForm::whereIn('student_id', $arrStudentId)
+            ->where('semester_id', $semesterId)
+            ->update(['status' => 1]);
     }
 
     public function ajaxGetUsers(Request $request){
