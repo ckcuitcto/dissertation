@@ -47,6 +47,7 @@
                         </form>
                     </div>
                     <div class="tile-body">
+                        <div style="overflow:auto">
                         <table class="table table-hover table-bordered" id="studentsTranscript">
                             <thead>
                             <tr>
@@ -66,6 +67,7 @@
                             <th></th>
                             </tfoot>
                         </table>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
