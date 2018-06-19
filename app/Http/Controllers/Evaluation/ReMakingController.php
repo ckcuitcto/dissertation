@@ -190,7 +190,7 @@ class ReMakingController extends Controller
 //    }
 
     public function ajaxGetRemakings(Request $request){
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
 
         $options['all'] = true;
         $options['only-get-id']= true;

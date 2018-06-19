@@ -12,11 +12,10 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
-
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        <table class="table table-hover table-bordered" id="semestersTable">
                             <thead>
                             <tr>
                                 <th>STT</th>
@@ -27,28 +26,6 @@
                                 <th>Tác vụ</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @foreach($semesters as $key => $semester)
-                                <tr>
-                                    <td>{{ $key +1 }}</td>
-                                    <td>{{ $semester->term }} </td>
-                                    <td>{{ $semester->year_from . "-" . $semester->year_to }}</td>
-                                    <td>{{ $semester->date_start_to_mark }}</td>
-                                    <td>{{ $semester->date_end_to_mark }}</td>
-                                    <td style="color:white">
-                                        <a title="Sửa" data-semester-id="{{$semester->id}}" id="update-semester"
-                                           data-semester-edit-link="{{route('semester-edit',$semester->id)}}"
-                                           data-semester-update-link="{{route('semester-update',$semester->id)}}" class="btn btn-primary">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
-                                        </a>
-                                        <a title="Xóa" data-semester-id="{{$semester->id}}" id="destroy-semester"
-                                           data-semester-delete-link="{{route('semester-destroy',$semester->id)}}" class="btn btn-danger">
-                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
                         </table>
                         <div class="row">
                             <div class="col-md-6">
@@ -96,16 +73,16 @@
                                                    id="date_end" name="date_end"/>
                                         </div>
                                     </div>
-                                    <div class="form-row">
-                                        <label for="">Ngày chấm</label>
-                                        <div class="input-group">
-                                            <input type="text" class="input-sm form-control date_start_to_mark"
-                                                   id="date_start_to_mark" name="date_start_to_mark"/>
-                                            <span class="input-group-addon">to</span>
-                                            <input type="text" class="input-sm form-control date_end_to_mark"
-                                                   id="date_end_to_mark" name="date_end_to_mark"/>
-                                        </div>
-                                    </div>
+                                    {{--<div class="form-row">--}}
+                                        {{--<label for="">Ngày chấm</label>--}}
+                                        {{--<div class="input-group">--}}
+                                            {{--<input type="text" class="input-sm form-control date_start_to_mark"--}}
+                                                   {{--id="date_start_to_mark" name="date_start_to_mark"/>--}}
+                                            {{--<span class="input-group-addon">to</span>--}}
+                                            {{--<input type="text" class="input-sm form-control date_end_to_mark"--}}
+                                                   {{--id="date_end_to_mark" name="date_end_to_mark"/>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
                                     <div class="form-row">
                                         <label for="">Thời gian khiếu nại</label>
                                         <div class="input-group">
@@ -174,115 +151,41 @@
     {{--<script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>--}}
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    <!--<script type="text/javascript">$('#sampleTable').DataTable();</script>-->
+    <script type="text/javascript" src="{{ asset('js/semester.js') }}"></script>
 
 
     <script>
+        var oTable = $('#semestersTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                "url": "{{ route('ajax-get-semesters') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": {
+                    "_token": "{{ csrf_token() }}"
+                }
+            },
+            "columns": [
+                {data: "id", name: "id"},
+                {data: "term", name: "term"},
+                {data: "semesterYear", name: "year_from"},
+                {data: "date_start_to_mark", name: "date_start_to_mark"},
+                {data: "date_end_to_mark", name: "date_end_to_mark"},
+                {data: 'action', name: 'action', orderable: false, searchable: false}
+            ],
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                // "zeroRecords": "Không có bản ghi nào!",
+                // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+            },
+            "pageLength": 10
+        });
 
 
-        $("input#year_from").datepicker({
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years",
-            todayBtn: "linked",
-            clearBtn: true,
-            language: "vi",
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-
-        });
-        $("input#year_to").datepicker({
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years",
-            todayBtn: "linked",
-            clearBtn: true,
-            language: "vi",
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
-        $('input#date_start').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-            clearBtn: true,
-            todayHighlight: true,
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
-        $('input#date_end').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-            clearBtn: true,
-            todayHighlight: true,
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
-        $('input#date_start_to_mark').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-            clearBtn: true,
-            todayHighlight: true,
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
-        $('input#date_end_to_mark').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-            clearBtn: true,
-            todayHighlight: true,
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
-        $('input#date_end_to_re_mark').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-            clearBtn: true,
-            todayHighlight: true,
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
-        $('input#date_start_to_re_mark').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-            clearBtn: true,
-            todayHighlight: true,
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
-        $('input#date_start_to_request_re_mark').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-            clearBtn: true,
-            todayHighlight: true,
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
-        $('input#date_end_to_request_re_mark').datepicker({
-            todayBtn: "linked",
-            language: "vi",
-            format: "dd/mm/yyyy",
-            clearBtn: true,
-            todayHighlight: true,
-            orientation: "bottom right",
-            autoclose: true,
-            toggleActive: true
-        });
         @foreach($rolesCanMark as $key => $role)
         $("input#date_start_to_mark_{{$role->id}}").datepicker({
             todayBtn: "linked",
@@ -307,7 +210,7 @@
         @endforeach
 
         $(document).ready(function () {
-            $("a#update-semester").click(function () {
+            $('body').on('click', 'a.update-semester', function (e) {
                 var urlEdit = $(this).attr('data-semester-edit-link');
                 var urlUpdate = $(this).attr('data-semester-update-link');
                 var id = $(this).attr('data-semester-id');
@@ -354,7 +257,7 @@
                 $('#myModal').modal('show');
             });
 
-            $("#btn-save-semester").click(function () {
+            $('body').on('click', '#btn-save-semester', function (e) {
                 var valueForm = $('form#semester-form').serialize();
                 var url = $(this).attr('data-link');
                 $('.form-row').find('span.messageErrors').remove();
@@ -374,17 +277,21 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
-                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: "Thêm học kì thành công",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#myModal').modal('hide');
+                            oTable.draw();
                         }
                     }
                 });
             });
 
-            $('a#destroy-semester').click(function () {
+            $('body').on('click', 'a#destroy-semester', function (e) {
                 var id = $(this).attr("data-semester-id");
                 var url = $(this).attr('data-semester-delete-link');
                 swal({
@@ -405,9 +312,9 @@
                             data: {"id": id},
                             success: function (data) {
                                 if (data.status === true) {
-                                    swal("Deleted!", "Đã xóa học kì " + data.semester.name, "success");
+                                    swal("Deleted! ", "Đã xóa học kì " + data.semester.term + " năm học "+ data.semester.year_from +"-"+ data.semester.year_to, "success");
                                     $('.sa-confirm-button-container').click(function () {
-                                        location.reload();
+                                        oTable.draw();
                                     })
                                 } else {
                                     swal("Cancelled", "Không tìm thấy học kì !!! :)", "error");

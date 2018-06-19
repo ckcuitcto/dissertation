@@ -115,6 +115,9 @@ Route::group(['middleware' => 'auth'], function () {
         // chỉnh sửa
         Route::post('/update/{id}', ['as' => 'semester-update', 'uses' => 'Semester\SemesterController@update'])->middleware('can:semester-change');
         Route::get('/edit/{id}', ['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit'])->middleware('can:semester-change');
+
+        Route::post('/get-semesters', ['as' => 'ajax-get-semesters', 'uses' => 'Semester\SemesterController@ajaxGetSemesters']);
+
     });
 
     Route::group(['prefix' => 'bang-diem'], function () {

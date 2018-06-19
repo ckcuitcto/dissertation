@@ -164,13 +164,10 @@
             @endcan
             
             @can('semester-change')
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Học kì</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('semester-list') }}"><i class="icon fa fa-circle-o"></i>Danh
-                            sách học kì </a></li>
-                </ul>
+            <li><a class="app-menu__item" href="{{ route('semester-list') }}">
+                    <i class="app-menu__icon fa fa-th-list" aria-hidden="true"></i><span
+                            class="app-menu__label">Quản lí học kì </span>
+                </a>
             </li>
             @endcan
 

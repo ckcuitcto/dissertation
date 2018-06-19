@@ -13,7 +13,7 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12  custom-quanly-taikhoan">
+            <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
                     <table id="remaking-table" class="table table-bordered table-hover">
                         <thead>
@@ -158,11 +158,6 @@
                         });
                         $('div#myModal').modal('hide');
                         oTable.draw();
-                        // $('div#myModal').find('.modal-body').html('<p> Trả lời phúc khảo thành công</p>');
-                        // $("div#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                        // $('div#myModal').on('hidden.bs.modal', function (e) {
-                            // location.reload();
-                        // });
                     }
                 }
             });
