@@ -190,6 +190,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'proof-update', 'uses' => 'Proof\ProofController@update']);
 
         Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store']);
+
+        Route::post('/get-proofs', ['as' => 'ajax-get-proofs', 'uses' => 'Proof\ProofController@ajaxGetProofs']);
     });
 
     Route::group(['prefix' => 'y-kien'], function () {
@@ -220,7 +222,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit'])->middleware('can:can-change-news');
 
         Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy'])->middleware('can:can-change-news');
-
     });
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);

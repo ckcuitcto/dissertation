@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
+use Yajra\DataTables\DataTables;
+
 class ProofController extends Controller
 {
     /**
@@ -48,18 +50,8 @@ class ProofController extends Controller
 
 
         // luôn lấy theo thời gian của sinh viên
-//        $proofList = DB::table('proofs')
-//            ->leftJoin('evaluation_criterias','proofs.evaluation_criteria_id','=','evaluation_criterias.id')
-//            ->leftJoin('semesters','semesters.id','=','proofs.semester_id')
-//            ->leftJoin('mark_times','mark_times.semester_id','=','semesters.id')
-//            ->select('evaluation_criterias.content','evaluation_criterias.detail','proofs.*','semesters.year_from','semesters.year_to','semesters.term','mark_times.mark_time_start','mark_times.mark_time_end')
-//            ->where([
-//                ['proofs.created_by','=', $userLogin->Student->id],
-//                ['mark_times.role_id','=', $userLogin->Role->id ]
-//            ])
-//            ->orderBy('proofs.id')
-//            ->get();
-        $proofList = Proof::where('created_by',$userLogin->Student->id)->get();
+//        $proofList = Proof::where('created_by',$userLogin->Student->id)->get();
+
         $evaluationCriterias = EvaluationCriteria::whereNotNull('proof')->get();
 
         // phải lấy các học kì có thời gian kết thúc chấm lớn hơn thời gian hiện tại.
@@ -184,8 +176,6 @@ class ProofController extends Controller
     public function destroy($id)
     {
         $proof = Proof::find($id);
-//        $this->authorize($proof,'delete');
-
         if (!empty($proof)) {
             $proof->delete();
             //sau khi xóa học kì thì cũng xóa form đánh giá
@@ -307,5 +297,79 @@ class ProofController extends Controller
         return response()->json([
             'status' => true,
         ], 200);
+    }
+
+    public function ajaxGetProofs(Request $request){
+        $userLogin = Auth::user();
+
+        $proofs = DB::table('proofs')
+            ->leftJoin('evaluation_criterias','evaluation_criterias.id','=','proofs.evaluation_criteria_id')
+            ->leftJoin('students','students.id','=','proofs.created_by')
+            ->leftJoin('semesters','semesters.id','=','proofs.semester_id')
+            ->where('proofs.created_by', $userLogin->Student->id)
+            ->select(
+                'evaluation_criterias.content',
+                'proofs.id as proofId',
+                'proofs.name as proofName',
+                'proofs.valid',
+                'semesters.year_from',
+                'semesters.year_to',
+                DB::raw("CONCAT(semesters.year_from,'-',semesters.year_to) as semesterYear"),
+                'semesters.term',
+                'semesters.id as semesterId'
+            );
+        return DataTables::of($proofs)
+            ->editColumn('valid', function ($proof){
+                return ($proof->valid) ? "Hợp lệ" : "Không hợp lệ";
+            })
+            ->editColumn('content', function ($proof){
+                return ($proof->content) ? $proof->content : "Chưa chọn tiêu chí";
+            })
+            ->addColumn('action', function ($proof) use ($userLogin) {
+                $linkGetFile = route('evaluation-form-get-file',$proof->proofId); // dung chung
+                $linkViewFile = "<a title='Xem minh chứng' style='color:white;' data-proof-id='$proof->proofId' id='proof-view-file' data-get-file-link='$linkGetFile' class='btn btn-primary'> 
+                   <i class='fa fa-eye' aria-hidden='true'></i></a>";
+                if(!empty($proof->semesterId)){
+                    //nếu có học kì. kiểm tra nếu đang ở học kì hiện tại thì ở ở trong thời gian chấm.
+                    // nếu ở trong học kì sau thì cho sửa thoải mái
+                    $semester = Semester::find($proof->semesterId);
+                    if($semester->id == $this->getCurrentSemester()->id) {
+                        $markTimeOfUserLoginBySemester = $semester->MarkTimes()->where('role_id', $userLogin->Role->id)->first();
+                        $marTimeStart = $markTimeOfUserLoginBySemester->mark_time_start;
+                        $marTimeEnd = $markTimeOfUserLoginBySemester->mark_time_end;
+                        if (self::checkTimeMark($marTimeStart, $marTimeEnd)) {
+                            $linkUpdate = route('proof-update', $proof->proofId);
+                            $linkEditFile = "<button title='Sửa minh chứng' style='color: white;' date-proof-id='$proof->proofId' data-get-file-link='$linkGetFile' id='proof-view-update-file' data-link-update-proof-file='$linkUpdate' class='btn btn-primary'> <i class='fa fa-edit' aria-hidden='true'></i></button>";
+
+                            $linkDelete = route('proof-destroy', $proof->proofId);
+                            $linkDeleteFile = "<button title='Xóa minh chứng' type='button' class='btn btn-danger' data-proof-id='$proof->proofId' id='proof-destroy' data-proof-destroy-link='$linkDelete'><i class='fa fa-trash'></i></button>";
+
+                            return "<p class='bs-component'>$linkViewFile $linkEditFile $linkDeleteFile</p> ";
+                        }
+                    }else{
+                        $linkUpdate = route('proof-update', $proof->proofId);
+                        $linkEditFile = "<button title='Sửa minh chứng' style='color: white;' date-proof-id='$proof->proofId' data-get-file-link='$linkGetFile' id='proof-view-update-file' data-link-update-proof-file='$linkUpdate' class='btn btn-primary'> <i class='fa fa-edit' aria-hidden='true'></i></button>";
+
+                        $linkDelete = route('proof-destroy', $proof->proofId);
+                        $linkDeleteFile = "<button title='Xóa minh chứng' type='button' class='btn btn-danger' data-proof-id='$proof->proofId' id='proof-destroy' data-proof-destroy-link='$linkDelete'><i class='fa fa-trash'></i></button>";
+
+                        return "<p class='bs-component'>$linkViewFile $linkEditFile $linkDeleteFile</p> ";
+                    }
+
+                }elseif (empty($proof->semesterId)){
+                    $linkUpdate = route('proof-update',$proof->proofId);
+                    $linkEditFile = "<button title='Sửa minh chứng' style='color: white;' date-proof-id='$proof->proofId' data-get-file-link='$linkGetFile' id='proof-view-update-file' data-link-update-proof-file='$linkUpdate' class='btn btn-primary'> <i class='fa fa-edit' aria-hidden='true'></i></button>";
+
+                    $linkDelete = route('proof-destroy',$proof->proofId);
+                    $linkDeleteFile = "<button title='Xóa minh chứng' type='button' class='btn btn-danger' data-proof-id='$proof->proofId' id='proof-destroy' data-proof-destroy-link='$linkDelete'><i class='fa fa-trash'></i></button>";
+                    return "<p class='bs-component'>$linkViewFile $linkEditFile $linkDeleteFile</p> ";
+
+                }
+
+
+                return "<p class='bs-component'>$linkViewFile</p> ";
+
+            })
+            ->make(true);
     }
 }

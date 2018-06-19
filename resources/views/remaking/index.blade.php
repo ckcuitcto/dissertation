@@ -177,6 +177,7 @@
         var oTable = $('#remaking-table').DataTable({
             "processing": true,
             "serverSide": true,
+            "autoWidth": false,
             "ajax": {
                 "url": "{{ route('ajax-remakings') }}",
                 "dataType": "json",

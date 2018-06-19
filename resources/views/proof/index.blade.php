@@ -14,96 +14,21 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
                     <section class="invoice">
                         <div class="tile-body">
-                            <table class="table table-hover table-bordered" id="sampleTable">
+                            <table class="table table-hover table-bordered" id="proofsTable">
                                 <thead>
                                 <tr>
-                                    <th>STT</th>
+                                    <th>Id</th>
                                     <th>Tiêu chí</th>
-                                    <th>File</th>
                                     <th>Học kỳ</th>
                                     <th>Năm học</th>
                                     <th>Trạng thái</th>
                                     <th>Tác vụ</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                @foreach($proofList as $key => $proof)
-                                    <tr>
-                                        <td>{{$key+1}}</td>
-                                        <td>
-                                            @isset($proof->EvaluationCriteria)
-                                                {{$proof->EvaluationCriteria->content}}
-                                            @endisset
-                                        </td>
-                                        <td>
-                                            <a style="color:white" data-proof-id="{{$proof->id}}"
-                                               id="proof-view-file"
-                                               data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}"
-                                               class="btn btn-primary">
-                                                <i class="fa fa-eye"
-                                                   aria-hidden="true"></i>{{ str_limit($proof->name,20) }}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            @isset($proof->Semester)
-                                                {{$proof->Semester->term OR ""}}
-                                            @endisset
-                                        </td>
-                                        <td>
-                                            @isset($proof->Semester)
-                                                {{$proof->Semester->year_from. "-".$proof->Semester->year_to}}
-                                            @endisset
-                                        </td>
-                                        <td>{{ ($proof->valid) ? "Hợp lệ" : "Không hợp lệ" }}</td>
-                                        <td>
-                                            {{--nếu có học kì. thì phải thuộc thời gian chấm của role đang login thì mới đuọc xóa, sửa--}}
-                                            @isset($proof->Semester)
-                                            @php
-                                                $markTimeOfUserLoginBySemester = $proof->Semester->MarkTimes()->where('role_id',$userLogin->Role->id)->first();
-                                                $marTimeStart = $markTimeOfUserLoginBySemester->mark_time_start;
-                                                $marTimeEnd = $markTimeOfUserLoginBySemester->mark_time_end;
-                                            @endphp
-                                                @if(\App\Http\Controllers\Proof\ProofController::checkTimeMark($marTimeStart,$marTimeEnd))
-                                                    <button title="Xóa" type="button" class="btn btn-danger"
-                                                            data-proof-id="{{$proof->id}}" id="proof-destroy"
-                                                            data-proof-link="{{route('proof-destroy',$proof->id)}}">
-                                                        <i class="fa fa-lg fa-trash"></i>
-                                                    </button>
-                                                    <button title="Sửa" style="color:white" data-proof-id="{{$proof->id}}"
-                                                       id="proof-view-update-file"
-                                                       data-link-update-proof-file="{{ route('proof-update',$proof->id ) }}"
-                                                       data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}"
-                                                       class="btn btn-primary">
-                                                        <i class="fa fa-edit"
-                                                           aria-hidden="true"></i>
-                                                    </button>
-                                                @endif
-                                            @endisset
-                                            {{-- nếu k thuộc học kì nào thì cho xóa. Đây là trường hợp thêm trước--}}
-                                            @empty($proof->Semester)
-                                                <button title="Xóa" type="button" class="btn btn-danger"
-                                                        data-proof-id="{{$proof->id}}" id="proof-destroy"
-                                                        data-proof-link="{{route('proof-destroy',$proof->id)}}">
-                                                    <i class="fa fa-lg fa-trash"></i>
-                                                </button>
-                                                <button title="Sửa" style="color:white" data-proof-id="{{$proof->id}}"
-                                                        id="proof-view-update-file"
-                                                        data-link-update-proof-file="{{ route('proof-update',$proof->id ) }}"
-                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}"
-                                                        class="btn btn-primary">
-                                                    <i class="fa fa-edit"
-                                                       aria-hidden="true"></i>
-                                                </button>
-                                            @endempty
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
                             </table>
                         </div>
                         <div class="row">
@@ -134,7 +59,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="addModal" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -186,7 +110,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="updateModal" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -244,16 +167,41 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-
     <script>
         $(document).ready(function () {
 
-            $("a#proof-view-file").click(function (e) {
+            var oTable = $('#proofsTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{{ route('ajax-get-proofs') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": {
+                        "_token": "{{ csrf_token() }}"
+                    }
+                },
+                "columns": [
+                    {data: "proofId", name: "proofs.id"},
+                    {data: "content", name: "evaluation_criterias.content"},
+                    {data: "term", name: "semesters.term"},
+                    {data: "semesterYear", name: "semesters.year_from"},
+                    {data: "valid", name: "proofs.valid"},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    // "zeroRecords": "Không có bản ghi nào!",
+                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 10
+            });
+
+            $('body').on('click', 'a#proof-view-file', function (e) {
                 var thisproof = $(this);
                 var id = thisproof.attr('data-proof-id');
                 var url = thisproof.attr('data-get-file-link');
@@ -286,7 +234,8 @@
                 });
             });
 
-            $("button#proof-view-update-file").click(function (e) {
+            $('body').on('click', 'button#proof-view-update-file', function (e) {
+
                 var thisproof = $(this);
                 var id = thisproof.attr('data-proof-id');
                 var url = thisproof.attr('data-get-file-link');
@@ -329,7 +278,7 @@
                 });
             });
 
-            $("button#btn-update-proof").click(function () {
+            $('body').on('click', 'button#btn-update-proof', function (e) {
                 var valueForm = $('form#update-proof-form').serialize();
                 var url = $(this).attr('data-link');
                 $('.form-row').find('span.messageErrors').remove();
@@ -349,19 +298,24 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#updateModal').find('.modal-body').html('<p>Thành công</p>');
-                            $("#updateModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#updateModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
+
+                            $.notify({
+                                title: "Sửa minh chứng thành công",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#updateModal').modal('hide');
+                            oTable.draw();
                         }
                     }
                 });
             });
-            
-            $('button#proof-destroy').click(function () {
+
+            $('body').on('click', 'button#proof-destroy', function (e) {
                 var id = $(this).attr("data-proof-id");
-                var url = $(this).attr('data-get-file-link');
+                var url = $(this).attr('data-proof-destroy-link');
 
                 swal({
                     title: "Bạn chắc chưa?",
@@ -383,7 +337,7 @@
                                 if (data.status === true) {
                                     swal("Deleted!", "Đã xóa file " + data.proof.name, "success");
                                     $('.sa-confirm-button-container').click(function () {
-                                        location.reload();
+                                        oTable.draw();
                                     })
                                 } else {
                                     swal("Cancelled", "Không tìm thấy file !!! :)", "error");
@@ -396,7 +350,8 @@
                 });
             });
 
-            $('input#fileUpload').change(function (e) {
+            $('body').on('change', 'input#fileUpload', function (e) {
+                // $('input#fileUpload').change(function (e) {
                 e.preventDefault();
                 var urlCheckFile = "{{ route('evaluation-form-upload') }}";
                 var formData = new FormData();
@@ -439,8 +394,6 @@
                     file = fileUpload.files[x];
                     formData.append("fileUpload[]", file);
                 }
-                // formData.append("semester",$("form#upload-proof-form").find("#semester").val());
-                // formData.append("evaluation_criteria",$("form#upload-proof-form").find("#evaluation_criteria").val());
                 var url = $(this).attr('data-link');
                 $('.form-row').find('span.messageErrors').remove();
                 $.ajax({
@@ -462,11 +415,15 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#addModal').find('.modal-body').html('<p>Thêm minh chứng thành công</p>');
-                            $("#addModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#addModal').on('hidden.bs.modal', function (e) {
-                                location.reload(true);
+                            $.notify({
+                                title: "Thêm minh chứng thành công",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#addModal').modal('hide');
+                            oTable.draw();
                         }
                     }
                 });
