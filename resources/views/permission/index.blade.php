@@ -16,7 +16,7 @@
                 <div class="tile">
 
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        <table class="table table-hover table-bordered" id="permissionTable">
                             <thead>
                             <tr>
                                 <th>Id</th>
@@ -24,34 +24,8 @@
                                 <th>Tên hiển thị</th>
                                 <th>Miêu tả</th>
                                 <th>Tác vụ</th>
-                                {{-- <th>Xóa</th> --}}
                             </tr>
                             </thead>
-                            <tbody>
-                            @foreach($permissions as $permission)
-                                <tr>
-                                    <td>{{ $permission->id }} </td>
-                                    <td>{{ $permission->name }} </td>
-                                    <td>{{ $permission->display_name }} </td>
-                                    <td>{{ $permission->description }} </td>
-                                    <td style="color:white">
-                                        <a data-permission-id="{{$permission->id}}" id="permission-update"
-                                           data-permission-edit-link="{{route('permission-edit',$permission->id)}}"
-                                           data-permission-update-link="{{route('permission-update',$permission->id)}}" class="btn btn-primary">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Sửa
-                                        </a>
-                                    </td>
-                                    {{-- <td style="color:white">
-                                        @if(!count($permission->Roles)>0)
-                                            <a data-permission-id="{{$permission->id}}" id="permission-destroy"
-                                               data-permission-link="{{route('permission-destroy',$permission->id)}}" class="btn btn-danger">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
-                                            </a>
-                                        @endif
-                                    </td> --}}
-                                </tr>
-                                @endforeach
-                            </tbody>
                         </table>
                         <div class="row">
                             <div class="col-md-6">
@@ -116,17 +90,43 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    <!--<script type="text/javascript">$('#sampleTable').DataTable();</script>-->
-
 
     <script>
         $(document).ready(function () {
 
-            $("a#permission-update").click(function () {
+            var oTable = $('#permissionTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "autoWidth": false,
+                "ajax": {
+                    "url": "{{ route('ajax-get-permissions') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": {
+                        "_token": "{{ csrf_token() }}"
+                    }
+                },
+                "columns": [
+                    {data: "id", name: "id"},
+                    {data: "name", name: "name"},
+                    {data: "display_name", name: "display_name"},
+                    {data: "description", name: "description"},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    // "zeroRecords": "Không có bản ghi nào!",
+                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 25
+            });
+
+            $('body').on('click', 'a.permission-update', function (e) {
+
                 var urlEdit = $(this).attr('data-permission-edit-link');
                 var urlUpdate = $(this).attr('data-permission-update-link');
                 var id = $(this).attr('data-permission-id');
@@ -156,7 +156,8 @@
                 $('#myModal').modal('show');
             });
 
-            $("#btn-save-permission").click(function () {
+            $('body').on('click', '#btn-save-permission', function (e) {
+                // $("#btn-save-permission").click(function () {
                 var valueForm = $('form#permission-form').serialize();
                 var url = $(this).attr('data-link');
                 $('.form-group').find('span.messageErrors').remove();
@@ -171,55 +172,21 @@
                             if (result.arrMessages !== undefined) {
                                 $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
                                     $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + messageValue)
                                         $('form#permission-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
                                     });
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
-                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: "Thành công",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#myModal').modal('hide');
+                            oTable.draw();
                         }
-                    }
-                });
-            });
-
-            $('a#permission-destroy').click(function () {
-                var id = $(this).attr("data-permission-id");
-                var url = $(this).attr('data-permission-link');
-                swal({
-                    title: "Bạn chắc chưa?",
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Có, tôi chắc chắn!",
-                    cancelButtonText: "Không, Hủy dùm tôi!",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            cache: false,
-                            data: {"id": id},
-                            success: function (data) {
-                                if (data.status === true) {
-                                    swal("Deleted!", "Đã xóa quyền " + data.permission.name, "success");
-                                    $('.sa-confirm-button-container').click(function () {
-                                        location.reload();
-                                    })
-                                } else {
-                                    swal("Cancelled", "Không tìm thấy quyền !!! :)", "error");
-                                }
-                            }
-                        });
-                    } else {
-                        swal("Đã hủy", "Đã hủy xóa quyền:)", "error");
                     }
                 });
             });
@@ -229,6 +196,44 @@
                 $('.text-red').html('');
                 $('.form-group').find('span.messageErrors').remove();
             });
+            // $('body').on('click', 'a#permission-destroy', function (e) {
+            //     // $('a#permission-destroy').click(function () {
+            //     var id = $(this).attr("data-permission-id");
+            //     var url = $(this).attr('data-permission-link');
+            //     swal({
+            //         title: "Bạn chắc chưa?",
+            //         text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
+            //         type: "warning",
+            //         showCancelButton: true,
+            //         confirmButtonText: "Có, tôi chắc chắn!",
+            //         cancelButtonText: "Không, Hủy dùm tôi!",
+            //         closeOnConfirm: false,
+            //         closeOnCancel: false
+            //     }, function (isConfirm) {
+            //         if (isConfirm) {
+            //             $.ajax({
+            //                 url: url,
+            //                 type: 'GET',
+            //                 cache: false,
+            //                 data: {"id": id},
+            //                 success: function (data) {
+            //                     if (data.status === true) {
+            //                         swal("Deleted!", "Đã xóa quyền " + data.permission.name, "success");
+            //                         $('.sa-confirm-button-container').click(function () {
+            //                             location.reload();
+            //                         })
+            //                     } else {
+            //                         swal("Cancelled", "Không tìm thấy quyền !!! :)", "error");
+            //                     }
+            //                 }
+            //             });
+            //         } else {
+            //             swal("Đã hủy", "Đã hủy xóa quyền:)", "error");
+            //         }
+            //     });
+            // });
+
+
 
         });
     </script>

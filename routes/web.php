@@ -100,6 +100,9 @@ Route::group(['middleware' => 'auth'], function () {
         // chỉnh sửa role
         Route::post('/update/{id}', ['as' => 'permission-update', 'uses' => 'Permission\PermissionController@update'])->middleware('can:user-rights');
         Route::get('/edit/{id}', ['as' => 'permission-edit', 'uses' => 'Permission\PermissionController@edit'])->middleware('can:user-rights');
+
+        Route::post('/get-permissions', ['as' => 'ajax-get-permissions', 'uses' => 'Permission\PermissionController@ajaxGetPermissions']);
+
 //        });
     });
 

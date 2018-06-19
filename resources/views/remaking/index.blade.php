@@ -125,7 +125,7 @@
             $('#myModal').modal('show');
         });
 
-        $("button#btn-reply-remaking").click(function () {
+        $('body').on('click', 'button#btn-reply-remaking', function (e) {
             var valueForm = $('form#remarking-form').serialize();
             var url = $(this).attr('data-link');
             $('.form-group').find('span.messageErrors').remove();
