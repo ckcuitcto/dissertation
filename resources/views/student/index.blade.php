@@ -12,8 +12,8 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <div class="tile custom-quanly-taikhoan">
+            <div class="col-md-12 custom-quanly-taikhoan">
+                <div class="tile">
                     <div class="overlay custom-overlay" style="opacity: 0">
                         <div class="m-loader mr-4">
                             <svg class="m-circular" viewBox="25 25 50 50">
@@ -120,8 +120,6 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
@@ -208,9 +206,10 @@
                         // enctype: 'multipart/form-data',
                         processData: false,
                         beforeSend: function () {
-                            $("#importModal").find("button#btn-import-student").prop('disabled', true);
+                            $('#ajax_loader').show();
                         },
                         success: function (result) {
+                            $('#ajax_loader').hide();
                             $("#importModal").find("button#btn-import-student").prop('disabled', false);
                             if (result.status === false) {
                                 //show error list fields
@@ -229,11 +228,20 @@
                                     });
                                 }
                             } else if (result.status === true) {
-                                $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
-                                $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                                $('#importModal').on('hidden.bs.modal', function (e) {
-                                    location.reload();
+                                $.notify({
+                                    title: "Upload Thành công ",
+                                    message: ":D",
+                                    icon: 'fa fa-check'
+                                },{
+                                    type: "success"
                                 });
+                                $('div#importModal').modal('hide');
+                                oTable.draw();
+                                // $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
+                                // $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                                // $('#importModal').on('hidden.bs.modal', function (e) {
+                                //     location.reload();
+                                // });
                             }
                         }
                     });

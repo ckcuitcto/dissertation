@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Proof;
 
 use App\Model\EvaluationCriteria;
+use App\Model\EvaluationForm;
 use App\Model\MarkTime;
 use App\Model\Notification;
 use App\Model\Proof;
@@ -60,9 +61,12 @@ class ProofController extends Controller
 //            ->get();
         $proofList = Proof::where('created_by',$userLogin->Student->id)->get();
         $evaluationCriterias = EvaluationCriteria::whereNotNull('proof')->get();
-        $semesters = Semester::orderBy('id','DESC')->get();
 
-        return view('proof.index', compact('proofList','evaluationCriterias','semesters'));
+        // phải lấy các học kì có thời gian kết thúc chấm lớn hơn thời gian hiện tại.
+        // tránh trường hợp sv thêm minh chứng vào các học kì trước.
+        $semesters = Semester::where('date_end_to_mark','>=',Carbon::now()->format(DATE_FORMAT_DATABASE))->orderBy('id','DESC')->get();
+
+        return view('proof.index', compact('proofList','evaluationCriterias','semesters','userLogin'));
     }
 
     public function show($id)
@@ -72,40 +76,52 @@ class ProofController extends Controller
 
     public function edit($id)
     {
-//        $news = News::find($id);
-//        return response()->json([
-//            'news' => $news,
-//            'status' => true
-//        ], 200);
+        $proof = Proof::find($id);
+        return response()->json([
+            'proof' => $proof,
+            'status' => true
+        ],200);
     }
 
     public function update(Request $request, $id)
     {
-//        $validator = Validator::make($request->all(), [
-//            'title' => 'required',
-//            'content' => 'required',
-//        ]);
-//
-//        if ($validator->fails()) {
-//            return response()->json([
-//                'status' => false,
-//                'arrMessages' => $validator->errors()
-//            ], 200);
-//        } else {
-//            $news = News::find($id);
-//            if (!empty($news)) {
-//                $news->title = $request->title;
-//                $news->content = $request->content;
-//                $news->save();
-//                return response()->json([
-//                    'news' => $news,
-//                    'status' => true
-//                ], 200);
-//            }
-//            return response()->json([
-//                'status' => false
-//            ], 200);
-//        }
+        $arrRule = $arrMessage = array();
+        if($request->evaluation_criteria != 0){
+            $arrRule['evaluation_criteria'] = 'sometimes|exists:evaluation_criterias,id';
+            $arrMessage['evaluation_criteria.exists'] = 'Tiêu chí không tồn tại';
+        }
+
+        if($request->semester != 0){
+            $arrRule['semester'] = 'sometimes|exists:semesters,id';
+            $arrMessage['semester.exists'] = 'Học kì không tồn tại';
+        }
+
+        $validator = Validator::make($request->all(), $arrRule,$arrMessage);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ], 200);
+        } else {
+            $proof = Proof::find($id);
+            if (!empty($proof)) {
+                if(!empty($request->semester_id)){
+                    $proof->semester_id = $request->semester_id;
+                }
+                if(!empty($request->evaluation_criteria_id)){
+                    $proof->evaluation_criteria_id  = $request->evaluation_criteria_id;
+                }
+                $proof->save();
+                return response()->json([
+                    'proof' => $proof,
+                    'status' => true
+                ], 200);
+            }
+            return response()->json([
+                'status' => false
+            ], 200);
+        }
     }
 
     public function store(Request $request)
@@ -136,6 +152,7 @@ class ProofController extends Controller
            ], 200);
        } else {
            $userLogin = $this->getUserLogin();
+           $arrProof = array();
            foreach ($request->fileUpload as $proof) {
                $fileName = str_random(13) . "_" . $proof->getClientOriginalName();
                $fileName = $this->convert_vi_to_en(preg_replace('/\s+/', '', $fileName));
@@ -144,16 +161,17 @@ class ProofController extends Controller
                }
                $proof->move( PROOF_PATH, $fileName);  // lưu file vào thư mục
 
-               $arrProof[] = [
+               $proofTmp = [
                    'name' => $fileName,
                    'created_by' => $userLogin->Student->id,
                ];
                if(!empty($request->semester)){
-                   $arrProof['semester_id'] = $request->semester;
+                   $proofTmp['semester_id'] = $request->semester;
                }
                if(!empty($request->evaluation_criteria)){
-                   $arrProof['evaluation_criteria_id'] = $request->evaluation_criteria;
+                   $proofTmp['evaluation_criteria_id'] = $request->evaluation_criteria;
                }
+               $arrProof[] = $proofTmp;
            }
            Proof::insert($arrProof);
 
