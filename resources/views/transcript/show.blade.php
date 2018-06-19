@@ -17,7 +17,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="tile">
+                <div class="tile" style="background-color: powderblue;">
                     <h3 class="tile-title">Lưu ý</h3>
                     <div class="tile-body">
                         <div class="row">
@@ -35,11 +35,15 @@
                                     là "_" thì đang đợi bổ sung điểm học tập
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div>Họ và tên: {{ $user->name }}</div>
                                 <div>Lớp: {{ $user->Student->Classes->name OR "" }}</div>
                                 <div>MSSV: {{ $user->users_id }}</div>
                                 <div>Khoa: {{ $user->Faculty->name OR "" }}</div>
+                            </div>
+                            <div class="col-md-3">
+                            <div>Cố vấn học tập: {{$user->Student->Classes->Staff->User->name}}</div>
+                            <div>Ban cán sự lớp: {{ $monitor->User->name }}</div>
                             </div>
                         </div>
                     </div>
@@ -57,7 +61,7 @@
                             <td rowspan="2">Năm Học</td>
                             <td colspan="4">Điểm</td>
                             <td rowspan="2">Xếp Loại</td>
-                            {{--<td rowspan="2">Tình Trạng</td>--}}
+                            <td rowspan="2">Tình Trạng</td>
                             <td rowspan="2">Tác Vụ</td>
 
                         </tr>
@@ -72,35 +76,16 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $evaluationForm->Semester->term }}</td>
                                 <td>{{ $evaluationForm->Semester->year_from . " - " . $evaluationForm->Semester->year_to }}</td>
-                                 {{--nếu sô kết quả = với số role có thể chấm nghĩa là đã chấm hết. thì hiển thị ra đủ.--}}
-                                {{--@if(count($scoreList->where('evaluationFormId',$evaluationForm->id)) == count($rolesCanMark))--}}
-                                    {{--@foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)--}}
-                                        {{--<td>{{ $value->totalRoleScore }}</td>--}}
-                                    {{--@endforeach--}}
-                                {{--@else--}}
-                                     {{--còn nếu k thì hiển thị ra. còn thiếu bao nhiêu thì for rồi hiển thị ra thẻ td rỗng--}}
-                                    {{--@php--}}
-                                        {{--// tính số người chưa chấm điểm--}}
-                                        {{--$count = count($rolesCanMark) - count($scoreList->where('evaluationFormId',$evaluationForm->id));--}}
-                                    {{--@endphp--}}
-                                     {{--hiển thị điểm ra. được bao nheieu hiển thị bấy nhiêu--}}
-                                    {{--@foreach($scoreList->where('evaluationFormId',$evaluationForm->id) as $value)--}}
-                                        {{--<td>{{ $value->totalRoleScore }}</td>--}}
-                                    {{--@endforeach--}}
-                                     {{--chạy vòng for hiển thị các thẻ td còn thiếu--}}
-                                    {{--@for($i = 0 ; $i < $count ; $i++)--}}
-                                        {{--<td></td>--}}
-                                    {{--@endfor--}}
-                                {{--@endif--}}
                                 @foreach($arrRolesCanMarkWithScore[$evaluationForm->id] as $value)
                                     <td> {{ $value['totalRoleScore'] }}</td>
                                 @endforeach
                                 <td> {{ $evaluationForm->total OR 0 }}</td>
                                 <td> {{ \App\Http\Controllers\Evaluation\EvaluationFormController::checkRank($evaluationForm->total) }} </td>
+                                <td> {{ \App\Http\Controllers\Controller::getDisplayStatusEvaluationForm($evaluationForm->status) }}</td>
                                 <td>
                                     <a class="btn btn-primary"
                                        href="{{ route('evaluation-form-show',$evaluationForm->id) }}">
-                                        <i class="fa fa-eye" aria-hidden="true" style="color:white"></i>Xem
+                                        <i class="fa fa-edit" aria-hidden="true" style="color:white"></i>Xem
                                     </a>
                                     {{-- ếu đang trong thời gian phúc khảo và user login = user chủ fomr thì hiện nút phúc khảo --}}
                                     @if( \App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_request_re_mark, $evaluationForm->Semester->date_end_to_request_re_mark ) AND $user->users_id == $userLogin->users_id)

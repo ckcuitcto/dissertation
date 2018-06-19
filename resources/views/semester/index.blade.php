@@ -36,10 +36,14 @@
                                     <td>{{ $semester->date_start_to_mark }}</td>
                                     <td>{{ $semester->date_end_to_mark }}</td>
                                     <td style="color:white">
-                                        <a data-semester-id="{{$semester->id}}" id="update-semester"
+                                        <a title="Sửa" data-semester-id="{{$semester->id}}" id="update-semester"
                                            data-semester-edit-link="{{route('semester-edit',$semester->id)}}"
                                            data-semester-update-link="{{route('semester-update',$semester->id)}}" class="btn btn-primary">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Sửa
+                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                        </a>
+                                        <a title="Xóa" data-semester-id="{{$semester->id}}" id="destroy-semester"
+                                           data-semester-delete-link="{{route('semester-destroy',$semester->id)}}" class="btn btn-danger">
+                                            <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
                                         </a>
                                     </td>
                                 </tr>
@@ -49,7 +53,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
-                                        id="btnAddsemester" type="button"><i class="fa fa-pencil-square-o"
+                                        id="btnAddsemester" type="button"><i class="fa fa-plus"
                                                                              aria-hidden="true"></i>Thêm
                                 </button>
                             </div>
@@ -130,7 +134,7 @@
                                 <div class="col-md-6">
                                     @foreach($rolesCanMark as $key => $role)
                                         <div class="form-row">
-                                            <label for="mark_date">Thời gian chấm của {{ $role->display_name }} (*)</label>
+                                            <label for="mark_date">Thời gian chấm của {{ $role->display_name }}</label>
                                             <div class="input-group">
                                                 <input type="text"
                                                        class="input-sm form-control {{ 'date_start_to_mark_'.$role->id }}"
@@ -382,7 +386,7 @@
 
             $('a#destroy-semester').click(function () {
                 var id = $(this).attr("data-semester-id");
-                var url = $(this).attr('data-semester-link');
+                var url = $(this).attr('data-semester-delete-link');
                 swal({
                     title: "Bạn chắc chưa?",
                     text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
@@ -427,18 +431,6 @@
 
         });
     </script>
-
-    {{--<script>--}}
-
-           {{--$('.form-row .input-sm.form-control').on('click', function () {--}}
-               {{--$(this).addClass('active')--}}
-           {{--})--}}
-    {{--</script>--}}
-    {{--<style>--}}
-        {{--.datepicker-days{--}}
-            {{--display: none !important;--}}
-        {{--}--}}
-    {{--</style>--}}
 @endsection
 
 

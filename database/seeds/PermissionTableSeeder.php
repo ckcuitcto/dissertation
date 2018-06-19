@@ -115,6 +115,14 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'manage-class',
                 'display_name' => 'Quản lí lớp',
                 'description' => 'Quản lí lớp'
+            ],[
+                'name' => 'export-file',
+                'display_name' => 'Xuất file',
+                'description' => 'Xuất file báo cáo'
+            ],[
+                'name' => 'export-users',
+                'display_name' => 'Xuất file bảng tổng hợp',
+                'description' => 'Xuất file bảng tổng hợp đánh giá RL của SV'
             ],
         ]);
     }

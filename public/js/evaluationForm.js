@@ -12,6 +12,8 @@ $("input#child_1").change(function () {
     var maxScore = $("input#total_1").attr('max');
     if (total > maxScore) {
         total = maxScore;
+    }else if(total < 0){
+        total = 0;
     }
     $("input#total_1").val(total);
     updatetotalScoreOfForm();
@@ -28,6 +30,8 @@ $("input#child_2").change(function () {
     var maxScore = $("input#total_2").attr('max');
     if (total > maxScore) {
         total = maxScore;
+    }else if(total < 0){
+        total = 0;
     }
     $("input#total_2").val(total);
     updatetotalScoreOfForm();
@@ -44,6 +48,8 @@ $("input#child_3").change(function () {
     var maxScore = $("input#total_3").attr('max');
     if (total > maxScore) {
         total = maxScore;
+    }else if(total < 0){
+        total = 0;
     }
     $("input#total_3").val(total);
     updatetotalScoreOfForm();
@@ -60,6 +66,8 @@ $("input#child_4").change(function () {
     var maxScore = $("input#total_4").attr('max');
     if (total > maxScore) {
         total = maxScore;
+    }else if(total < 0){
+        total = 0;
     }
     $("input#total_4").val(total);
     updatetotalScoreOfForm();
@@ -76,6 +84,8 @@ $("input#child_5").change(function () {
     var maxScore = $("input#total_5").attr('max');
     if (total > maxScore) {
         total = maxScore;
+    }else if(total < 0){
+        total = 0;
     }
     $("input#total_5").val(total);
     updatetotalScoreOfForm();
@@ -91,6 +101,8 @@ function updatetotalScoreOfForm() {
 
     if (total > 100) {
         total = 100;
+    }else if(total < 0){
+        total = 0;
     }
     $("input#totalScoreOfForm").val(total);
 }

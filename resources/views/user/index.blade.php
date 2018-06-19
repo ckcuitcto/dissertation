@@ -12,10 +12,39 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="table-users">
+                        <form class="row" role="form" id="search-form" method="post">
+                            {!! csrf_field() !!}
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Role</label>
+                                <select class="form-control search_role_id" name="search_role_id" id="search_role_id">
+                                    @foreach($rolesForSelectSearch as $value)
+                                        <option value="{{ $value['id'] }}">{{ $value['display_name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Khoa</label>
+                                <select class="form-control search_faculty_id" name="search_faculty_id" id="search_faculty_id">
+                                    @foreach($facultiesForSelectSearch as $value)
+                                        <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Lớp</label>
+                                <select class="form-control search_class_id" name="search_class_id" id="search_class_id">
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3 align-self-end">
+                                <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-search"></i>Tìm kiếm</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tile-body">
+                        <table class="table table-hover table-bordered" id="tableManageUsers">
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -25,25 +54,13 @@
                                 <th>Tác vụ</th>
                             </tr>
                             </thead>
-                            {{--<tbody>--}}
-                            {{--@foreach($users as $user)--}}
-                                {{--<tr>--}}
-                                    {{--<td>{{ $user->users_id }}</td>--}}
-                                    {{--<td>{{ $user->name }}</td>--}}
-                                    {{--<td>{{ $user->Role->display_name }}</td>--}}
-                                    {{--<td>{{ \App\Http\Controllers\Controller::getDisplayStatusUser($user->status) }}</td>--}}
-                                    {{--<td>--}}
-                                        {{--<button data-user-id="{{$user->users_id}}" class="btn update-user btn-primary"--}}
-                                                {{--data-user-edit-link="{{route('user-edit',$user->users_id)}}"--}}
-                                                {{--data-user-update-link="{{route('user-update',$user->users_id)}}">--}}
-                                            {{--<i class="fa fa-lg fa-edit" aria-hidden="true"> </i>Sửa--}}
-                                        {{--</button>--}}
-                                    {{--</td>--}}
-                                {{--</tr>--}}
-                            {{--@endforeach--}}
-                            {{--</tbody>--}}
+                            <tfoot>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tfoot>
                         </table>
-                        {{--{{ $users->links('vendor.pagination.bootstrap-4') }}--}}
                         <div class="row">
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#modal-add-user" class="btn btn-primary"
@@ -54,6 +71,9 @@
                                         type="button"><i class="fa fa-pencil-square-o"
                                                          aria-hidden="true"></i> Nhập danh sách sinh viên khóa mới.
                                 </button>
+                                <a href="{{ asset('upload/file_mau/File_mau.xlsx') }}" class="btn btn-outline-success">
+                                    <i class="fa fa-download" aria-hidden="true"></i>Tải file mẫu
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -264,7 +284,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="importModal" role="dialog">
             <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
@@ -310,23 +329,26 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
+    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
 
     <script>
+
         $(document).ready(function () {
 
-            $('#table-users').DataTable({
+            var oTable = $('#tableManageUsers').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
                     "url": "{{ route('ajax-user-get-users') }}",
                     "dataType": "json",
                     "type": "POST",
-                    "data": {
-                        "_token": "{{ csrf_token() }}"
-                    }
+                    "data": function (d) {
+                        d.faculty_id = $('select[name=search_faculty_id]').val();
+                        d.class_id = $('select[name=search_class_id]').val();
+                        d.role_id = $('select[name=search_role_id]').val();
+                        d._token = "{{ csrf_token() }}";
+                    },
                 },
                 "columns": [
                     {data: "users_id", name: "users.users_id"},
@@ -335,6 +357,17 @@
                     {data: "status", name: "users.status"},
                     {data: 'action', name: 'action', orderable: false, searchable: false}
                 ],
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search(val ? val : '', true, false).draw();
+                            });
+                    });
+                },
                 "language": {
                     "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
                     // "zeroRecords": "Không có bản ghi nào!",
@@ -343,6 +376,28 @@
                     "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
                 },
                 "pageLength": 25
+            });
+
+            $('#search-form').on('submit', function(e) {
+                oTable.draw();
+                e.preventDefault();
+            });
+
+            $('select.search_faculty_id').change(function () {
+                var facultyId = $(this).val();
+                var url = "{{ route('class-get-list-by-faculty-none') }}";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {id: facultyId},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("select.search_class_id").empty();
+                        $.each(data.classes, function (key, value) {
+                            $("select.search_class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
             });
 
             //            import
@@ -368,10 +423,10 @@
                     // enctype: 'multipart/form-data',
                     processData: false,
                     beforeSend: function () {
-                        $("#importModal").find("button#btn-import-student").prop('disabled', true);
+                        $('#ajax_loader').show();
                     },
                     success: function (result) {
-                        $("#importModal").find("button#btn-import-student").prop('disabled', false);
+                        $('#ajax_loader').hide();
                         if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
@@ -389,11 +444,21 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
-                            $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#importModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: " Upload Thành công ",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#importModal').modal('hide');
+                            oTable.draw();
+
+                            // $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
+                            // $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            // $('#importModal').on('hidden.bs.modal', function (e) {
+                            //     location.reload();
+                            // });
                         }
                     }
                 });
@@ -448,7 +513,7 @@
             // $("#btn-save-user").click(function () {
             $('body').on('click', '#btn-save-user', function (e) {
 
-                    var valueForm = $('form#user-form').serialize();
+                var valueForm = $('form#user-form').serialize();
                 var url = $(this).attr('data-link');
                 $('#modal-edit-user').find('span.messageErrors').remove();
 
@@ -468,11 +533,21 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#modal-edit-user').find('.modal-body').html('<p>Thành công</p>');
-                            $('#modal-edit-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#modal-edit-user').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: " Sửa thành công ",
+                                message: "",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#modal-edit-user').modal('hide');
+                            oTable.draw();
+
+                            // $('#modal-edit-user').find('.modal-body').html('<p>Thành công</p>');
+                            // $('#modal-edit-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            // $('#modal-edit-user').on('hidden.bs.modal', function (e) {
+                            //     location.reload();
+                            // });
                         }
                     }
                 });
@@ -481,7 +556,7 @@
             // $("button#btn-add").click(function () {
             $('body').on('click', 'button#btn-add', function (e) {
 
-                    var valueForm = $('form#user-add-form').serialize();
+                var valueForm = $('form#user-add-form').serialize();
                 var url = $(this).attr('data-link');
                 $('form#user-add-form').find('span.messageErrors').remove();
                 $.ajax({
@@ -489,7 +564,11 @@
                     url: url,
                     data: valueForm,
                     dataType: 'json',
+                    beforeSend: function () {
+                        $('#ajax_loader').show();
+                    },
                     success: function (result) {
+                        $('#ajax_loader').hide();
                         if (result.status === false) {
                             //show error list fields
                             if (result.arrMessages !== undefined) {
@@ -500,11 +579,21 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#modal-add-user').find('.modal-body').html('<p>Thành công</p>');
-                            $('#modal-add-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#modal-add-user').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: " Thêm thành công",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#modal-add-user').modal('hide');
+                            oTable.draw();
+
+                            // $('#modal-add-user').find('.modal-body').html('<p>Thành công</p>');
+                            // $('#modal-add-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
+                            // $('#modal-add-user').on('hidden.bs.modal', function (e) {
+                            //     location.reload();
+                            // });
                         }
                     }
                 });

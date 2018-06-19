@@ -17,4 +17,8 @@ class Proof extends Model
     public function Semester(){
         return $this->belongsTo('App\Model\Semester','semester_id','id');
     }
+
+    public function EvaluationCriteria(){
+        return $this->belongsTo('App\Model\EvaluationCriteria','evaluation_criteria_id','id');
+    }
 }

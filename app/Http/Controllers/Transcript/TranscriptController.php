@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transcript;
 use App\Model\EvaluationCriteria;
 use App\Model\EvaluationForm;
 use App\Model\EvaluationResult;
+use App\Model\Faculty;
 use App\Model\Role;
 use App\Model\Semester;
 use App\Model\Student;
@@ -24,7 +25,18 @@ class TranscriptController extends Controller
      */
     public function index()
     {
-        return view('transcript.index');
+        $userLogin = $this->getUserLogin();
+
+        $currentSemester = $this->getCurrentSemester();
+        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+
+        if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
+            $faculties = Faculty::all()->toArray();
+            $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
+        }else{
+            $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
+        }
+        return view('transcript.index',compact('faculties','semesters','currentSemester'));
     }
 
     /**
@@ -56,24 +68,21 @@ class TranscriptController extends Controller
      */
     public function show($id)
     {
-//        dd(Semester::orderBy('id','desc')->first());
         $student = Student::find($id);
         if (!empty($student)) {
             $user = User::where('users_id', $student->user_id)->first();
 
             $evaluationForms = EvaluationForm::where('student_id', $id)->get();
 
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
+
             foreach ($evaluationForms as $value) {
                 $this->authorize($value, 'view');
             }
-
             $rolesCanMark = Role::whereHas('permissions', function ($query) {
                 $query->where('name', 'like', '%can-mark%');
             })->select('id', 'name', 'display_name', 'weight')->orderBy('id')->get()->toArray();
-//            echo "<pre> ";
-//            print_r($rolesCanMark);
-//            echo "</pre>";
+
             // danh  sách user chấm điểm + role + total
             $scoreList = DB::table('evaluation_results')
                 ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
@@ -98,10 +107,7 @@ class TranscriptController extends Controller
             $arrRolesCanMarkWithScore = array();
             foreach ($evaluationForms as $evaluationform) {
                 $scoreListByEvaluationForm = $scoreList->where('evaluationFormId', $evaluationform->id);
-//                var_dump($scoreListByEvaluationForm);
 
-//                var_dump($scoreListByEvaluationForm->where('role_id', $value['id'])->first()->totalRoleScore);
-//                die;
                 $arrRolesCanMarkWithScore[$evaluationform->id] = array();
                 foreach ($rolesCanMark as $value) {
                     if (!empty($scoreListByEvaluationForm->where('role_id', $value['id'])->first()->totalRoleScore)) {
@@ -113,8 +119,14 @@ class TranscriptController extends Controller
                     }
                 }
             }
-//            dd($arrRolesCanMarkWithScore);
-            return view('transcript.show', compact('user', 'userLogin', 'evaluationForms', 'arrRolesCanMarkWithScore', 'rolesCanMark'));
+
+            $monitor = Student::leftJoin('users','students.user_id','=','users.users_id')
+                ->leftJoin('roles','users.role_id','=','roles.id')
+                ->where('class_id',$user->Student->class_id)
+                ->where('roles.weight',ROLE_BANCANSULOP)
+                ->first();
+
+            return view('transcript.show', compact('user', 'userLogin', 'evaluationForms', 'arrRolesCanMarkWithScore', 'rolesCanMark','monitor'));
         }
         return redirect()->back();
     }
@@ -196,13 +208,71 @@ class TranscriptController extends Controller
         return $total;
     }
 
-    public function ajaxGetUsers(Request $request){
-        $user = Auth::user();
+    public function ajaxGetUsers(Request $request)
+    {
+        $user = $this->getUserLogin();
         $students = $this->getStudentByRoleUserLogin($user);
-        return DataTables::of($students)
-        ->addColumn('action', function ($student) {
-            return '<a title="View" href="'.route('transcript-show',$student->id).'" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
-        })
-        ->make(true);
+        $dataTables = DataTables::of($students)
+            ->addColumn('action', function ($student) use ($user) {
+                if($student->totalScore != 0){
+                    $linkView = '<a title="Xem phiếu điểm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
+                }else{
+                    $linkView = '<a title="Chưa chấm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
+                }
+
+                //nếu ng đang đăng nhập đã chấm thì hiện ra điểm
+                if(!empty($student->totalScore)){
+                    $currentTotal = '<button title="Điểm hiện tại" class="btn btn-outline-success"><i class="fa fa-check"></i>' . $student->totalScore . ' đ</button>';
+                    $linkView = $linkView.' '.$currentTotal;
+                }
+
+                $result = DB::table('evaluation_forms')
+                    ->leftJoin('evaluation_results', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
+                    ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
+                    ->where([
+//                        ['evaluation_forms.semester_id', $student->semesterId],
+                        ['evaluation_forms.student_id', $student->studentId],
+                        ['evaluation_results.marker_id', $user->users_id],
+                        ['evaluation_criterias.level', 1],
+                    ])
+                    ->select(DB::raw('SUM(evaluation_results.marker_score) as score'))->first();
+                if ($result->score) {
+                    $score = $result->score;
+                    // nếu điểm sinh viên = 0 => chưa chấm => hiện màu đỏ
+                        $iconMarked = '<button title="Điểm bạn chấm" class="btn btn-success"><i class="fa fa-check"></i>' . $score . ' đ</button>';
+                    $linkView = $linkView . ' ' . $iconMarked;
+                }
+                return $linkView;
+            })
+            ->filter(function ($student) use ($request) {
+                $faculty = $request->has('faculty_id');
+                $facultyValue = $request->get('faculty_id');
+
+                if (!empty($faculty) AND $facultyValue != 0) {
+                    $student->where('users.faculty_id', '=', $facultyValue);
+
+                    $class = $request->has('class_id');
+                    $classValue = $request->get('class_id');
+                    if (!empty($class) AND $classValue != 0) {
+                        $student->where('students.class_id','=', $classValue);
+                    }
+                }
+
+                $semester = $request->has('semester_id');
+                $semesterValue = $request->get('semester_id');
+                if (!empty($semester) AND $semesterValue != 0) {
+                    $student->where('student_list_each_semesters.semester_id', '=', $semesterValue);
+                    $student->where('evaluation_forms.semester_id', '=', $semesterValue);
+                }
+            });
+
+//        if ($keyword = $request->get('search')['value']) {
+            // override users.name global search
+//            $dataTables->filterColumn('users.faculty_id', 'where', '=', "%$keyword%");
+
+            // override users.id global search - demo for concat
+//            $dataTables->filterColumn('students.class_id', 'where', "=", "%$keyword%");
+//        }
+        return $dataTables->make(true);
     }
 }

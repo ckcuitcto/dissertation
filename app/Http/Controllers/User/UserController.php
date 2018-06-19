@@ -23,7 +23,13 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $faculties = Faculty::all();
-        return view('user.index',compact('roles','faculties'));
+
+        $facultiesForSelectSearch = Faculty::all()->toArray();
+        $facultiesForSelectSearch = array_prepend($facultiesForSelectSearch,array('id' => 0,'name' => 'Tất cả khoa'));
+
+        $rolesForSelectSearch = Role::all()->toArray();
+        $rolesForSelectSearch = array_prepend($rolesForSelectSearch,array('id' => 0,'display_name' => 'Tất cả Role'));
+        return view('user.index',compact('roles','faculties','facultiesForSelectSearch','rolesForSelectSearch'));
     }
 
     /**
@@ -229,11 +235,6 @@ class UserController extends Controller
         $options['all'] = 'all';
         $students = $this->getStudentByRoleUserLogin($user,$options);
         return DataTables::of($students)
-//            $a = "<button data-user-id=\"{{$user->users_id}}\" class=\"btn update-user btn-primary\"
-//                                                data-user-edit-link=\"{{route('user-edit',$user->users_id)}}\"
-//                                                data-user-update-link=\"{{route('user-update',$user->users_id)}}\">
-//                                            <i class=\"fa fa-lg fa-edit\" aria-hidden=\"true\"> </i>Sửa
-//                                        </button>"
             ->editColumn('status', function ($student){
                 $displayStatus = $this->getDisplayStatusUser($student->status);
                 return $displayStatus;
@@ -245,6 +246,26 @@ class UserController extends Controller
                 return '<button class="btn update-user btn-primary" data-user-id="'.$dataUserId.'" data-user-edit-link="'.$dataUserEditLink.'" 
                     data-user-update-link="'.$dataUserUpdateLink.'"> <i class="fa fa-lg fa-edit" aria-hidden="true">Sửa</i>
                     </button>';
+            })
+            ->filter(function ($student) use ($request) {
+                $faculty = $request->has('faculty_id');
+                $facultyValue = $request->get('faculty_id');
+
+                if (!empty($faculty) AND $facultyValue != 0) {
+                    $student->where('users.faculty_id', '=', $facultyValue);
+
+                    $class = $request->has('class_id');
+                    $classValue = $request->get('class_id');
+                    if (!empty($class) AND $classValue != 0) {
+                        $student->where('students.class_id','=', $classValue);
+                    }
+                }
+
+                $role = $request->has('role_id');
+                $roleValue = $request->get('role_id');
+                if (!empty($role) AND $roleValue != 0) {
+                    $student->where('roles.id', '=', $roleValue);
+                }
             })
             ->make(true);
     }

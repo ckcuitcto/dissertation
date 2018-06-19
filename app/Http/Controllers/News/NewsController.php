@@ -30,7 +30,7 @@ class NewsController extends Controller
 
     public function index()
     {
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
         if ($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
         {
             $newsList = News::all();
@@ -47,7 +47,7 @@ class NewsController extends Controller
 
     public function create()
     {
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
         if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
             $faculties = Faculty::all()->toArray();
             $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
@@ -74,7 +74,7 @@ class NewsController extends Controller
     {
         $news = News::find($id);
         if(!empty($news)){
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
             if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
                 $faculties = Faculty::all()->toArray();
                 $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
@@ -104,7 +104,6 @@ class NewsController extends Controller
             $news->title = $request->title;
             $news->content = $request->news_content;
             $news->faculty_id = $request->faculty_id;
-//            $news->created_by = Auth::user()->Staff->id;
             $news->save();
             return redirect()->route('news')->with('success','Sửa tin tức thành công!');
         }
@@ -129,10 +128,10 @@ class NewsController extends Controller
         if($request->faculty_id) {
             $news->faculty_id = $request->faculty_id;
         }
-        if(!empty(Auth::user()->Staff->id)){
-            $news->created_by =Auth::user()->Staff->id;
+        if(!empty($this->getUserLogin()->Staff->id)){
+            $news->created_by =$this->getUserLogin()->Staff->id;
         }else{
-            $news->created_by =Auth::user()->Student->id;
+            $news->created_by =$this->getUserLogin()->Student->id;
         }
 
         $news->save();

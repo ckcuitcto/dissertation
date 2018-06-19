@@ -25,8 +25,7 @@
                                 <th>Miêu tả</th>
                                 <th>Số người</th>
                                 <th>Quyền</th>
-                                <th>Sửa</th>
-                                <th>Xóa</th>
+                                <th>Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -52,8 +51,6 @@
                                            data-role-update-link="{{route('role-update',$role->id)}}" class="btn btn-primary">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
-                                    </td>
-                                    <td  style="color:white">
                                         @if(!count($role->Users)>0)
                                             <a data-role-id="{{$role->id}}" id="role-destroy"
                                                data-role-link="{{route('role-destroy',$role->id)}}" class="btn btn-danger">
@@ -248,7 +245,7 @@
                             $('#myModal').find('.modal-body').html('<p>Thành công</p>');
                             $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
                             $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                                location.reload(true);
                             });
                         }
                     }

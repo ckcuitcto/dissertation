@@ -26,28 +26,31 @@
                             <tbody>
                             @foreach($faculties as $faculty)
                                 <tr>
-                                    <td><a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>
+                                    <td>
+                                        <a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>
                                     </td>
                                     <td>{{ count($faculty->classes) }}</td>
                                     <td style="color:white">
-                                        <a class="btn btn-primary icon-btn" data-faculty-id="{{$faculty->id}}" id="faculty-update"
+                                        <a class="btn btn-primary icon-btn" data-faculty-id="{{$faculty->id}}"
+                                           id="faculty-update"
                                            data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
-                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}" class="btn btn-primary">
+                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
                                             <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
                                         </a>
                                         @if(!count($faculty->classes)>0 AND !count($faculty->News)>0)
-                                            <a class="btn btn-danger" data-faculty-id="{{$faculty->id}}" id="faculty-destroy"
+                                            <a class="btn btn-danger" data-faculty-id="{{$faculty->id}}"
+                                               id="faculty-destroy"
                                                data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
                                                 <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
 
                                             </a>
                                         @endif
                                     </td>
-
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
@@ -70,7 +73,6 @@
                                     aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
-
                         <form id="faculty-form">
                             {!! csrf_field() !!}
                             <div class="row">
@@ -101,12 +103,9 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-
 
     <script>
         $(document).ready(function () {
@@ -135,7 +134,7 @@
                 });
                 $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
                 $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Sửa')
-                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").attr('data-link',urlUpdate);
+                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');
             });
 
@@ -206,7 +205,7 @@
             });
 
             $('#myModal').on('hidden.bs.modal', function (e) {
-                $('#myModal').find("input[type=text],input[type=number],input[type=hidden], select").val('').prop('disabled',false).prop('readonly',false);
+                $('#myModal').find("input[type=text],input[type=number],input[type=hidden], select").val('').prop('disabled', false).prop('readonly', false);
                 $('.text-red').html('');
                 $('span.messageErrors').remove();
                 $('#myModal').find(".modal-title").text('Thêm mới khoa');

@@ -7,6 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{--<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />--}}
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('template/css/main.css') }}">
     {{--<link href="{{ asset('css/font-css.css') }}" rel="stylesheet">--}}
@@ -22,7 +23,7 @@
 
 @section('menuLeft')
 @show
-
+<div id="ajax_loader"></div>
 @yield('content')
 
 @section('javascript')

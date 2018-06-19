@@ -14852,3 +14852,61 @@ input[type=number]::-webkit-outer-spin-button {
   appearance: none;
   margin: 0;
 }
+ .custom-quanly-taikhoan table.dataTable{
+   width: 100% !important;
+ }
+#proof-form #iframe-view-file img {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.body-view-file #iframe-view-file img {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 450px;
+  object-fit: contain;
+}
+
+.tile-body .table-bordered td{
+  line-height: 2.3;
+}
+
+#studentsEachList_filter {
+  display: none;
+}
+
+#studentsTranscript_filter {
+  display: none;
+}
+
+#tableManageUsers_filter {
+  display: none;
+}
+#exportTable_filter {
+  display: none;
+}
+
+
+.custom-quanly-taikhoan table tr th input {
+    max-width: 100%;
+    width: 100%;
+}
+
+#ajax_loader {
+  display:    none;
+  position:   fixed;
+  z-index:    9999999;
+  top:        0;
+  left:       0;
+  height:     100%;
+  width:      100%;
+  background: rgba( 255, 255, 255, .8 )
+  url('../../image/ajax-loader.gif')
+  50% 50%
+  no-repeat;
+
+}

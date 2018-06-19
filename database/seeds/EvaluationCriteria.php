@@ -21,8 +21,7 @@ class EvaluationCriteria extends Seeder
                 "mark_range_from" => 0, "mark_range_to" => 20, "parent_id" => null, "proof" => null,
                 'level' => '1',
                 'step_html' => null
-            ],
-            [
+            ], [
                 "content" => "II. Ý thức chấp hành nội quy, quy chế, quy định trong nhà trường (0 – 25 điểm)",
                 "mark_range_display" => null,
                 "detail" => null,
@@ -50,9 +49,7 @@ class EvaluationCriteria extends Seeder
                 "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => null, "proof" => null,
                 'level' => '1',
                 'step_html' => null
-            ],
-
-            [
+            ],[
                 "content" => "a.	Ý thức học tập",
                 "mark_range_display" => null,
                 "detail" => null,

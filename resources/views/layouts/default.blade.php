@@ -12,7 +12,6 @@
 
 @section('header')
     @php
-        $user = \Illuminate\Support\Facades\Auth::user();
         $authCheck = \Illuminate\Support\Facades\Auth::check();
     @endphp
     <header class="app-header"><a class="app-header__logo" href="http://www.stu.edu.vn/">STU</a>
@@ -25,88 +24,47 @@
                 {{--<button class="app-search__button"><i class="fa fa-search"></i></button>--}}
             {{--</li>--}}
             <!--Notification Menu-->
-            {{--<li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown"--}}
-                                    {{--aria-label="Show notifications"><i class="fa fa-bell-o fa-lg"></i></a>--}}
-                {{--<ul class="app-notification dropdown-menu dropdown-menu-right">--}}
-                    {{--<li class="app-notification__title">You have 4 new notifications.</li>--}}
-                    {{--<div class="app-notification__content">--}}
-                        {{--<li><a class="app-notification__item" href="javascript:;"><span--}}
-                                        {{--class="app-notification__icon"><span class="fa-stack fa-lg"><i--}}
-                                                {{--class="fa fa-circle fa-stack-2x text-primary"></i><i--}}
-                                                {{--class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>--}}
-                                {{--<div>--}}
-                                    {{--<p class="app-notification__message">Lisa sent you a mail</p>--}}
-                                    {{--<p class="app-notification__meta">2 min ago</p>--}}
-                                {{--</div>--}}
-                            {{--</a></li>--}}
-                        {{--<li><a class="app-notification__item" href="javascript:;"><span--}}
-                                        {{--class="app-notification__icon"><span class="fa-stack fa-lg"><i--}}
-                                                {{--class="fa fa-circle fa-stack-2x text-danger"></i><i--}}
-                                                {{--class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>--}}
-                                {{--<div>--}}
-                                    {{--<p class="app-notification__message">Mail server not working</p>--}}
-                                    {{--<p class="app-notification__meta">5 min ago</p>--}}
-                                {{--</div>--}}
-                            {{--</a></li>--}}
-                        {{--<li><a class="app-notification__item" href="javascript:;"><span--}}
-                                        {{--class="app-notification__icon"><span class="fa-stack fa-lg"><i--}}
-                                                {{--class="fa fa-circle fa-stack-2x text-success"></i><i--}}
-                                                {{--class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>--}}
-                                {{--<div>--}}
-                                    {{--<p class="app-notification__message">Transaction complete</p>--}}
-                                    {{--<p class="app-notification__meta">2 days ago</p>--}}
-                                {{--</div>--}}
-                            {{--</a></li>--}}
-                        {{--<div class="app-notification__content">--}}
-                            {{--<li><a class="app-notification__item" href="javascript:;"><span--}}
-                                            {{--class="app-notification__icon"><span class="fa-stack fa-lg"><i--}}
-                                                    {{--class="fa fa-circle fa-stack-2x text-primary"></i><i--}}
-                                                    {{--class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>--}}
-                                    {{--<div>--}}
-                                        {{--<p class="app-notification__message">Lisa sent you a mail</p>--}}
-                                        {{--<p class="app-notification__meta">2 min ago</p>--}}
-                                    {{--</div>--}}
-                                {{--</a></li>--}}
-                            {{--<li><a class="app-notification__item" href="javascript:;"><span--}}
-                                            {{--class="app-notification__icon"><span class="fa-stack fa-lg"><i--}}
-                                                    {{--class="fa fa-circle fa-stack-2x text-danger"></i><i--}}
-                                                    {{--class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>--}}
-                                    {{--<div>--}}
-                                        {{--<p class="app-notification__message">Mail server not working</p>--}}
-                                        {{--<p class="app-notification__meta">5 min ago</p>--}}
-                                    {{--</div>--}}
-                                {{--</a></li>--}}
-                            {{--<li><a class="app-notification__item" href="javascript:;"><span--}}
-                                            {{--class="app-notification__icon"><span class="fa-stack fa-lg"><i--}}
-                                                    {{--class="fa fa-circle fa-stack-2x text-success"></i><i--}}
-                                                    {{--class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>--}}
-                                    {{--<div>--}}
-                                        {{--<p class="app-notification__message">Transaction complete</p>--}}
-                                        {{--<p class="app-notification__meta">2 days ago</p>--}}
-                                    {{--</div>--}}
-                                {{--</a></li>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                    {{--<li class="app-notification__footer"><a href="#">See all notifications.</a></li>--}}
-                {{--</ul>--}}
-            {{--</li>--}}
-            {{--<li class="nav-item active">--}}
+            @if($authCheck)
+            <li class="dropdown">
+                <a class="app-nav__item" href="#" data-toggle="dropdown"
+                                    aria-label="Show notifications" style="text-decoration: none;">Thông báo &nbsp;<i class="fa fa-bell-o fa-lg">{{ count($notifications) }}</i></a>
+                <ul class="app-notification dropdown-menu dropdown-menu-right">
+                    <li class="app-notification__title">Bạn có {{ count($notifications) }} thông báo mới</li>
+                    <div class="app-notification__content">
+                        @foreach($notifications as $key => $value)
+                        <li><a class="app-notification__item" href="javascript:;"><span
+                                        class="app-notification__icon"><span class="fa-stack fa-lg"><i
+                                                class="fa fa-circle fa-stack-2x text-primary"></i><i
+                                                class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                                <div>
+                                    <p class="app-notification__message">{!!  $value->title  !!}</p>
+                                    <p class="app-notification__meta">{{ date('H:i d/m/y',strtotime($value->created_at)) }}</p>
+                                </div>
+                            </a>
+                        </li>
+                        @endforeach
+                    </div>
+                    <li class="app-notification__footer"><a href="{{ route('notifications') }}">Xem tất cả thông báo.</a></li>
+                </ul>
+            </li>
+            @endif
+            <li class="nav-item active">
 
-            {{--</li>--}}
+            </li>
             <!-- User Menu-->
 
             <li class="dropdown">
                 <a class="app-nav__item" href="#" data-toggle="dropdown"
-                                    aria-label="Open Profile Menu">
+                                    aria-label="Open Profile Menu"  style="text-decoration: none;">
                     @if($authCheck)
-                        Xin chào {{ $user->name }}&nbsp;&nbsp;
+                        Xin chào {{ $userLogin->name }}&nbsp;&nbsp;
                     @endif<i class="fa fa-user fa-lg"></i>
                 </a>
                 <ul class="dropdown-menu settings-menu dropdown-menu-right">
                     {{-- <li><a class="dropdown-item" href="{{ route('permission-list') }}"><i class="fa fa-cog fa-lg"></i> Settings</a>
                     </li> --}}
                     @if($authCheck)
-                    <li><a class="dropdown-item" href="{{ route('personal-information-show',$user->users_id) }}"><i class="fa fa-user fa-lg"></i> Thông tin cá nhân</a>
+                    <li><a class="dropdown-item" href="{{ route('personal-information-show',$userLogin->users_id) }}"><i class="fa fa-user fa-lg"></i> Thông tin cá nhân</a>
                     @endif
                     </li>
 
@@ -151,8 +109,8 @@
                         </li>
                     @endcan
                     @if($authCheck)
-                        @if($user->Role->id == 1 OR $user->Role->id == 2)
-                        <li><a class="treeview-item" href="{{route('transcript-show',$user->Student->id )}}"><i class="icon fa fa-circle-o"></i> Tổng
+                        @if($userLogin->Role->id == 1 OR $userLogin->Role->id == 2)
+                        <li><a class="treeview-item" href="{{route('transcript-show',$userLogin->Student->id )}}"><i class="icon fa fa-circle-o"></i>
                                 Điểm Cá Nhân</a>
                         </li>
                         @endif
@@ -163,13 +121,10 @@
                     </li>
                     @endcan
                 </ul>
-            </li>
-            <li>
-                    @if($authCheck)<a class="app-menu__item" href="{{ route('personal-information-show',$user->users_id) }}"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="app-menu__label">&nbsp; Thông tin cá nhân</span></a>
-                    @endif</li>
+            </li>           
 
             @can('proofs-list')
-                @if($user->Role->weight <= ROLE_COVANHOCTAP)
+                @if($userLogin->Role->weight <= ROLE_COVANHOCTAP)
                 <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                                 class="app-menu__icon fa fa-file-text-o"></i><span class="app-menu__label">Quản lí minh chứng</span><i
                                 class="treeview-indicator fa fa-angle-right"></i></a>
@@ -182,40 +137,9 @@
                 @endif
             @endcan
 
-            @can('can-change-news')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Tin tức</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    {{--<li><a class="treeview-item" href="{{ route('notification') }}"><i class="icon fa fa-circle-o"></i>--}}
-                            {{--Thông Báo</a></li>--}}
-                    <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Sự Kiện, Thông báo</a></li>
-                </ul>
-            </li>
-            @endcan
-
-            @can(array('faculty-list','student-list'))
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-cogs"></i><span
-                            class="app-menu__label">Quản lí Khoa,Phòng ban</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    @can('faculty-list')
-                    <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>
-                    </li>
-                    @endcan
-                    @can('student-list')
-                    <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> DS Sinh viên đánh giá</a></li>
-                    @endcan
-                    {{--<li><a class="treeview-item" href="{{ route('departmentlist') }}"><i--}}
-                                    {{--class="icon fa fa-circle-o"></i> Phòng ban</a></li>--}}
-                </ul>
-            </li>
-            @endif
-
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
+                class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
+                class="treeview-indicator fa fa-angle-right"></i></a>
                 @can('comment-add')
                     <ul class="treeview-menu">
                         <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
@@ -229,19 +153,16 @@
                 </ul>
             </li>
 
-            @can('user-rights')
+            @can('can-change-news')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">Phân quyền User</span><i
+                            class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label"> Tin tức</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item active" href="{{ route('role-list') }}"><i class="icon fa fa-circle-o"></i>Danh
-                            sách các nhóm vai trò </a></li>
-                    <li><a class="treeview-item" href="{{ route('permission-list') }}"><i
-                                    class="icon fa fa-circle-o"></i> Danh sách các quyền</a></li>
+                    <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Tin tức, sự kiện</a></li>
                 </ul>
             </li>
             @endcan
-
+            
             @can('semester-change')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                             class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Học kì</span><i
@@ -252,6 +173,23 @@
                 </ul>
             </li>
             @endcan
+
+            @can(array('faculty-list','student-list'))
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                            class="app-menu__icon fa fa-cogs"></i><span
+                            class="app-menu__label">Quản lí Khoa - Sinh viên</span><i
+                            class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                    @can('faculty-list')
+                    <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>
+                    </li>
+                    @endcan
+                    @can('student-list')
+                    <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> DS Sinh viên đánh giá</a></li>
+                    @endcan
+                </ul>
+            </li>
+            @endif
 
             @can('manage-user')
             <li><a class="app-menu__item" href="{{ route('user') }}">
@@ -265,45 +203,39 @@
                 </a>
             </li>
             @endcan
+
+            @can('user-rights')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Hỗ Trợ Học Vụ</span><i
+                            class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">Phân quyền User</span><i
                             class="treeview-indicator fa fa-angle-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=thoikhoabieu"><i
-                                    class="icon fa fa-circle-o"></i> Thời Khóa Biểu</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=xemdiemthi"><i
-                                    class="icon fa fa-circle-o"></i> Điểm Học Kỳ</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=dkmonhoc"><i
-                                    class="icon fa fa-circle-o"></i> Đăng ký môn học</a></li>
-                    <li><a class="treeview-item" href="http://daotao1.stu.edu.vn/Default.aspx?page=xemhocphi"><i
-                                    class="icon fa fa-circle-o"></i> Học Phí</a></li>
+                    <li><a class="treeview-item" href="{{ route('role-list') }}"><i class="icon fa fa-circle-o"></i>Danh
+                            sách các nhóm vai trò </a></li>
+                    <li><a class="treeview-item" href="{{ route('permission-list') }}"><i
+                                    class="icon fa fa-circle-o"></i> Danh sách các quyền</a></li>
                 </ul>
             </li>
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-bed"></i><span class="app-menu__label">Các Phòng Ban</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html"><i
-                                    class="icon fa fa-circle-o"></i> Phòng Đào Tạo</a></li>
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html"><i
-                                    class="icon fa fa-circle-o"></i> Phòng
-                            Công Tác Sinh Viên</a></li>
-                    <li><a class="treeview-item" href="http://www.stu.edu.vn/vi/265/khoa-cong-nghe-thong-tin.html"><i
-                                    class="icon fa fa-circle-o"></i> Văn Phòng
-                            Khoa</a></li>
-                </ul>
+            @endcan
+
+            @can('export-file')
+            <li><a class="app-menu__item" href="{{ route('export-file-list') }}">
+                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                            class="app-menu__label">Xuất File </span>
+                </a>
             </li>
+            @endcan
+
         </ul>
     </aside>
 @stop
 
 @section('javascript')
-    <script src="{{ URL::asset('template/js/jquery-3.2.1.min.js') }}"></script>
-    <script src="{{ URL::asset('template/js/popper.min.js') }}"></script>
-    <script src="{{ URL::asset('template/js/bootstrap.min.js') }}"></script>
-    <script src="{{ URL::asset('template/js/main.js') }}"></script>
-    <script src="{{ URL::asset('template/js/plugins/pace.min.js') }}"></script>
-    <script src="{{ URL::asset('js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('template/js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ asset('template/js/popper.min.js') }}"></script>
+    <script src="{{ asset('template/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('template/js/main.js') }}"></script>
+    <script src="{{ asset('template/js/plugins/pace.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
@@ -336,36 +268,6 @@
             filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
         };
     </script>
-
-    {{--<script>--}}
-        {{--$('.app-title').on('click',function () {--}}
-            {{--$(this).parent('.app-content').find('.overlay.custom-overlay').addClass('active');--}}
-            {{--$(this).parents().find('.app-content').addClass('custom-app-content');--}}
-
-        {{--})--}}
-    {{--</script>--}}
-    {{--<style>--}}
-        {{--.app-content .overlay.custom-overlay.active{--}}
-            {{--opacity: 1 !important;--}}
-            {{--z-index: 3 !important;--}}
-        {{--}--}}
-        {{--.custom-app-content:after{--}}
-            {{--position: absolute;--}}
-            {{--content: '';--}}
-            {{--background-color: rgba(255, 255, 255, 0.1);--}}
-            {{--width: 100%;--}}
-            {{--/*min-height: calc(322vh + 20px);*/--}}
-            {{--height: 100%;--}}
-            {{--top: 0;--}}
-            {{--z-index: 2;--}}
-            {{--left: 0;--}}
-        {{--}--}}
-        {{--.app-title{--}}
-            {{--position: relative;--}}
-            {{--z-index: 1;--}}
-        {{--}--}}
-    {{--</style>--}}
-
 @stop
 
 @section('sub-javascript')

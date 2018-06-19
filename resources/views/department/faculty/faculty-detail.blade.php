@@ -1,4 +1,9 @@
-    @extends('layouts.default')
+@extends('layouts.default')
+
+@section('title')
+    STU| Thong Tin Khoa {{ $faculty->name }}
+@endsection
+
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -32,36 +37,42 @@
                         </div>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
-                            <thead>
-                            <tr>
-                                <th>Lớp</th>
-                                <th>Số lượng sinh viên</th>
-                                <th>Tác vụ</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($faculty->classes as $class)
+                        <form id="class-form-export" action="{{route('export-file')}}" method="post">
+                            {{ csrf_field() }}
+                            <table class="table table-hover table-bordered" id="facultyTable">
+                                <thead>
                                 <tr>
-                                    <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a></td>
-                                    <td>{{ count($class->Students) }}</td>
-                                    <td style="color:white">
-                                        <a data-id="{{$class->id}}" id="class-edit"
-                                           data-edit-link="{{route('class-edit',$class->id)}}"
-                                           data-update-link="{{route('class-update',$class->id)}}" class="btn btn-primary">
-                                            <i class="fa fa-lg fa-edit " aria-hidden="true"> </i> Sửa
-                                        </a>
-                                        @if(!count($class->Students)>0)
-                                            <a data-id="{{$class->id}}" id="class-destroy"
-                                               data-link="{{route('class-destroy',$class->id)}}" class="btn btn-danger">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
-                                            </a>
-                                        @endif
-                                    </td>
+                                    <th>Lớp</th>
+                                    <th>Số lượng sinh viên</th>
+                                    <th>Tác vụ</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach($faculty->classes as $class)
+                                    <tr>
+                                        <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a>
+                                        </td>
+                                        <td>{{ count($class->Students) }}</td>
+                                        <td style="color:white">
+                                            <a data-id="{{$class->id}}" id="class-edit"
+                                               data-edit-link="{{route('class-edit',$class->id)}}"
+                                               data-update-link="{{route('class-update',$class->id)}}"
+                                               class="btn btn-primary">
+                                                <i class="fa fa-lg fa-edit " aria-hidden="true"> </i> Sửa
+                                            </a>
+                                            @if(!count($class->Students)>0)
+                                                <a data-id="{{$class->id}}" id="class-destroy"
+                                                   data-link="{{route('class-destroy',$class->id)}}"
+                                                   class="btn btn-danger">
+                                                    <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
+                                                </a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </form>
                         <div class="row">
                             <div class="col-md-6">
                                 <button data-toggle="modal" data-target="#myModal" class="btn btn-primary"
@@ -103,7 +114,7 @@
                                                 required aria-describedby="staff">
                                             @if($faculty->Users->where('role_id','=', ROLE_COVANHOCTAP))
                                                 @foreach($faculty->Users->where('role_id','>','2') as $value)
-{{--                                                    @php var_dump($value->Staff); @endphp--}}
+                                                    {{--                                                    @php var_dump($value->Staff); @endphp--}}
                                                     <option value="{{ $value->Staff->id }}"> {{ $value->Staff->id . "|". $value->name }}  </option>
                                                 @endforeach
                                             @else
@@ -140,9 +151,38 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $('body').on('click', 'input[name=checkAll]', function (e) {
+                if($(this).is(':checked')){
+                    $("input.checkboxClasses").prop('checked', true);
+                }else{
+                    $("input.checkboxClasses").prop('checked', false);
+                }
+            });
+
+            $('body').on('change', "input.checkboxClasses", function (e) {
+                $("input[name=checkAll]").prop('checked',false);
+
+            });
+
+            var table = $('#facultyTable').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+            },
+            "pageLength": 25,
+            "columnDefs": [
+                { "orderable": false, "targets": 3 }
+            ]
+            });
+
             $('div.alert-success').delay(2000).slideUp();
 
-            $("a#class-edit").click(function () {
+
+            $('body').on('click', 'a#class-edit', function (e) {
                 var urlEdit = $(this).attr('data-edit-link');
                 var urlUpdate = $(this).attr('data-update-link');
                 var id = $(this).attr('data-id');
@@ -171,7 +211,8 @@
                 $('#myModal').modal('show');
             });
 
-            $("#btn-save-class").click(function () {
+            $('body').on('click', '#btn-save-class', function (e) {
+            // $("#btn-save-class").click(function () {
 //                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
 //                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
                 var valueForm = $('form#class-form').serialize();
@@ -209,7 +250,8 @@
                 });
             });
 
-            $('a#class-destroy').click(function () {
+            $('body').on('click', 'a#class-destroy', function (e) {
+            // $('a#class-destroy').click(function () {
                 var id = $(this).attr("data-id");
                 var url = $(this).attr('data-link');
                 swal({

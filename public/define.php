@@ -40,6 +40,31 @@ define('STUDENT_DEFERMENT',2); // bảo lưu
 define('STUDENT_DROP_OUT',3); // bỏ học
 define('STUDENT_GRADUATE',4); // tốt nghiệp
 
+define('DATE_FORMAT_VIEW','d/m/Y');
+define('DATE_FORMAT_DATABASE','Y-m-d');
 
 define('MALE',1);
 define('FEMALE',2);
+
+// trạng thái chấm điểm trong form
+// VD: khi = ROLE_SINHVIÊN. nghĩa là sinh viên đã chấm.
+// = 0 là chưa chấm.
+// -1 là hoàn thành
+define('MARK_STATUS_STUDENT',1);
+define('MARK_STATUS_BANCANSULOP',2);
+define('MARK_STATUS_COVANHOCTAP',4);
+define('MARK_STATUS_BANCHUNHIEMKHOA',8);
+define('MARK_STATUS_PHONGCONGTACSINHVIEN',16);
+define('MARK_STATUS',array(1,2,4,8,16));
+
+define('PROOF_PATH','upload/proof/');
+define('STUDENT_PATH','upload/student_tmp/');
+define('STUDENT_PATH_STORE','upload/student/');
+define('FILE_TEMPLATE','upload/file_mau/');
+define('FILE_TONG_HOP_DANH_GIA_REN_LUYEN','bang_tong_hop_danh_gia_ren_luyen.xlsx');
+define('STUDENT_LIST_EACH_SEMESTER_PATH','upload/student_list_each_semester/');
+
+define('EVALUATION_CRITERIAS_CHILD_PARENT_1',array(6,7,8));
+define('YTHUCTHAMGIAHOCTAP_ID',1);
+
+define('ARRAY_EVALUATION_CRITERIAS_VALIDATE',array(11,12,13,14,15,16,17,18,1,22,23,19,20,21,2,25,26,24,27,28,29,3,30,31,32,33,34,35,4,36,37,38,5));

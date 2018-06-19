@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Proof;
 
+use App\Model\EvaluationCriteria;
+use App\Model\EvaluationForm;
 use App\Model\MarkTime;
+use App\Model\Notification;
 use App\Model\Proof;
 use App\Model\Semester;
 use App\Http\Controllers\Controller;
+use App\Model\Student;
 use App\Model\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -32,7 +36,7 @@ class ProofController extends Controller
 
     public function index()
     {
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
         // nếu role vào k phải là học sinh
         if($userLogin->Role->weight >= ROLE_COVANHOCTAP) {
             return view('errors.403');
@@ -44,18 +48,25 @@ class ProofController extends Controller
 
 
         // luôn lấy theo thời gian của sinh viên
-        $proofList = DB::table('proofs')
-            ->leftJoin('evaluation_criterias','proofs.evaluation_criteria_id','=','evaluation_criterias.id')
-            ->leftJoin('semesters','semesters.id','=','proofs.semester_id')
-            ->leftJoin('mark_times','mark_times.semester_id','=','semesters.id')
-            ->select('evaluation_criterias.content','evaluation_criterias.detail','proofs.*','semesters.year_from','semesters.year_to','semesters.term','mark_times.mark_time_start','mark_times.mark_time_end')
-            ->where([
-                ['proofs.created_by','=', $userLogin->Student->id],
-                ['mark_times.role_id','=', ROLE_SINHVIEN ]
-            ])
-            ->orderBy('proofs.id')
-            ->get();
-        return view('proof.index', compact('proofList'));
+//        $proofList = DB::table('proofs')
+//            ->leftJoin('evaluation_criterias','proofs.evaluation_criteria_id','=','evaluation_criterias.id')
+//            ->leftJoin('semesters','semesters.id','=','proofs.semester_id')
+//            ->leftJoin('mark_times','mark_times.semester_id','=','semesters.id')
+//            ->select('evaluation_criterias.content','evaluation_criterias.detail','proofs.*','semesters.year_from','semesters.year_to','semesters.term','mark_times.mark_time_start','mark_times.mark_time_end')
+//            ->where([
+//                ['proofs.created_by','=', $userLogin->Student->id],
+//                ['mark_times.role_id','=', $userLogin->Role->id ]
+//            ])
+//            ->orderBy('proofs.id')
+//            ->get();
+        $proofList = Proof::where('created_by',$userLogin->Student->id)->get();
+        $evaluationCriterias = EvaluationCriteria::whereNotNull('proof')->get();
+
+        // phải lấy các học kì có thời gian kết thúc chấm lớn hơn thời gian hiện tại.
+        // tránh trường hợp sv thêm minh chứng vào các học kì trước.
+        $semesters = Semester::where('date_end_to_mark','>=',Carbon::now()->format(DATE_FORMAT_DATABASE))->orderBy('id','DESC')->get();
+
+        return view('proof.index', compact('proofList','evaluationCriterias','semesters','userLogin'));
     }
 
     public function show($id)
@@ -65,52 +76,74 @@ class ProofController extends Controller
 
     public function edit($id)
     {
-//        $news = News::find($id);
-//        return response()->json([
-//            'news' => $news,
-//            'status' => true
-//        ], 200);
+        $proof = Proof::find($id);
+        return response()->json([
+            'proof' => $proof,
+            'status' => true
+        ],200);
     }
 
     public function update(Request $request, $id)
     {
-//        $validator = Validator::make($request->all(), [
-//            'title' => 'required',
-//            'content' => 'required',
-//        ]);
-//
-//        if ($validator->fails()) {
-//            return response()->json([
-//                'status' => false,
-//                'arrMessages' => $validator->errors()
-//            ], 200);
-//        } else {
-//            $news = News::find($id);
-//            if (!empty($news)) {
-//                $news->title = $request->title;
-//                $news->content = $request->content;
-//                $news->save();
-//                return response()->json([
-//                    'news' => $news,
-//                    'status' => true
-//                ], 200);
-//            }
-//            return response()->json([
-//                'status' => false
-//            ], 200);
-//        }
+        $arrRule = $arrMessage = array();
+        if($request->evaluation_criteria != 0){
+            $arrRule['evaluation_criteria'] = 'sometimes|exists:evaluation_criterias,id';
+            $arrMessage['evaluation_criteria.exists'] = 'Tiêu chí không tồn tại';
+        }
+
+        if($request->semester != 0){
+            $arrRule['semester'] = 'sometimes|exists:semesters,id';
+            $arrMessage['semester.exists'] = 'Học kì không tồn tại';
+        }
+
+        $validator = Validator::make($request->all(), $arrRule,$arrMessage);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ], 200);
+        } else {
+            $proof = Proof::find($id);
+            if (!empty($proof)) {
+                if(!empty($request->semester_id)){
+                    $proof->semester_id = $request->semester_id;
+                }
+                if(!empty($request->evaluation_criteria_id)){
+                    $proof->evaluation_criteria_id  = $request->evaluation_criteria_id;
+                }
+                $proof->save();
+                return response()->json([
+                    'proof' => $proof,
+                    'status' => true
+                ], 200);
+            }
+            return response()->json([
+                'status' => false
+            ], 200);
+        }
     }
 
     public function store(Request $request)
     {
-       $validator = Validator::make($request->all(),
-           [
-               'name' => 'required'
-           ],
-           [
-               'title.required' => 'Tiêu đề là bắt buộc'
-           ]
-       );
+        $arrRule = array(
+            'fileUpload' => 'required'
+        );
+        $arrMessage = array(
+            'fileUpload.required' => 'Bắt buộc chọn File'
+        );
+
+        if($request->evaluation_criteria != 0){
+            $arrRule['evaluation_criteria'] = 'sometimes|exists:evaluation_criterias,id';
+            $arrMessage['evaluation_criteria.exists'] = 'Tiêu chí không tồn tại';
+        }
+
+        if($request->semester != 0){
+            $arrRule['semester'] = 'sometimes|exists:semesters,id';
+            $arrMessage['semester.exists'] = 'Học kì không tồn tại';
+        }
+
+       $validator = Validator::make($request->all(), $arrRule,$arrMessage);
 
        if ($validator->fails()) {
            return response()->json([
@@ -118,15 +151,31 @@ class ProofController extends Controller
                'arrMessages' => $validator->errors()
            ], 200);
        } else {
+           $userLogin = $this->getUserLogin();
+           $arrProof = array();
+           foreach ($request->fileUpload as $proof) {
+               $fileName = str_random(13) . "_" . $proof->getClientOriginalName();
+               $fileName = $this->convert_vi_to_en(preg_replace('/\s+/', '', $fileName));
+               while (file_exists(PROOF_PATH . $fileName)) {
+                   $fileName = $this->convert_vi_to_en(str_random(13) . "_" . $fileName);
+               }
+               $proof->move( PROOF_PATH, $fileName);  // lưu file vào thư mục
 
-           $proof = new Proof();
-           $proof->name = $request->name;
-           $proof->semester_id = $request->semester_id;
-           $proof->created_by = Auth::user()->Staff->id;
+               $proofTmp = [
+                   'name' => $fileName,
+                   'created_by' => $userLogin->Student->id,
+               ];
+               if(!empty($request->semester)){
+                   $proofTmp['semester_id'] = $request->semester;
+               }
+               if(!empty($request->evaluation_criteria)){
+                   $proofTmp['evaluation_criteria_id'] = $request->evaluation_criteria;
+               }
+               $arrProof[] = $proofTmp;
+           }
+           Proof::insert($arrProof);
 
-           $proof->save();
            return response()->json([
-               'proof' => $proof,
                'status' => true
            ], 200);
        }
@@ -152,6 +201,8 @@ class ProofController extends Controller
 
     public function updateValidProofFile(Request $request, $id){
 
+        // = 0 là k hợp lệ
+        // 1 là hợp lệ
         if($request->valid == 0) {
             $validator = Validator::make($request->all(), [
                 'note' => 'required',
@@ -168,9 +219,50 @@ class ProofController extends Controller
 
         $proof = Proof::find($id);
         if(!empty($proof)){
+
+            //nếu sửa đổi trạng thái minh chứng thì tạo thông báo gửi đến sinh viên, cố vấn học tập, phòng CTSV
+            // nếu thay đổi trạng thái thì mới tạo thông báo
+            if($proof->valid != $request->valid){
+                $student = Student::find($proof->created_by); // sinh viên chủ của minh chứng
+                if(!empty($student)){
+
+                    $semester = Semester::find($proof->semester_id);
+                    $evaluationCriterias = EvaluationCriteria::find($proof->evaluation_criteria_id);
+
+                    $notifications = new Notification();
+                    $title = "Sửa trạng thái minh chứng của sinh viên: <b>".$student->User->users_id."-".$student->User->name ."</b> thuộc lớp: ".$student->Classes->name;
+                    $notifications->title = $title;
+                    $notifications->created_by = Auth::user()->Staff->id;
+                    if($request->valid != 0){
+                        $notifications->content = $title. " từ $proof->valid thành $request->valid của tiêu chí $evaluationCriterias->content .<br>
+                         Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!<br>
+                         <b>Học kì $semester->term Năm học $semester->year_from - $semester->year_to.</b> <br>
+                         ";
+                    }else{
+                        $notifications->content = $title. " từ $proof->valid thành $request->valid của tiêu chí $evaluationCriterias->content .Với nội dung:<b>$request->note.</b> 
+                        Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!<br>
+                         <b>Học kì $semester->term Năm học $semester->year_from - $semester->year_to.</b> <br>
+                        ";
+                    }
+
+                    //danh sách Id của các user sẽ tạo thông báo.
+                    $arrUserId[] = $student->User->users_id; // sinh viên\
+                    // nếu người sửa trnạg thái minh chứng là CVHT thì chỉ tạo 1 thông báo
+                    if(Auth::user()->users_id != $student->Classes->Staff->User->users_id){
+                        $arrUserId[] = Auth::user()->users_id;
+                        $arrUserId[] = $student->Classes->Staff->User->users_id;
+                    }else{
+                        $arrUserId[] = Auth::user()->users_id;
+                    }
+
+                    $notifications->save();
+                    $notifications->Users()->attach($arrUserId);
+                }
+            }
             $proof->valid = $request->valid;
             $proof->note = $request->note;
             $proof->save();
+
             return response()->json([
                 'proof' => $proof,
                 'status' => true
@@ -198,5 +290,22 @@ class ProofController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function checkFileUpload(Request $request)
+    {
+        $arrFile = $request->file('fileUpload');
+        foreach ($arrFile as $file) {
+            if (!in_array($file->getClientOriginalExtension(), FILE_VALID)) {
+                $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ. File hợp lệ: img,jpg,pdf,png,jpeg,bmp "]);
+                return response()->json([
+                    'status' => false,
+                    'arrMessages' => $arrMessage
+                ], 200);
+            }
+        }
+        return response()->json([
+            'status' => true,
+        ], 200);
     }
 }

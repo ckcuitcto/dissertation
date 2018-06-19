@@ -13,7 +13,7 @@ class InformationController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
+        $user = $this->getUserLogin();
         $students = $this->getStudentByRoleUserLogin($user);
 
         return view('user.personal-information-list', compact('students'));
@@ -23,7 +23,7 @@ class InformationController extends Controller
     {
         $user = User::where('users_id',$id)->first();
         if(!empty($user)) {
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
             if($user->users_id != $userLogin->users_id){
                 return view('errors.403');
             }
@@ -39,13 +39,16 @@ class InformationController extends Controller
 
     public function update($id, Request $request){
 
+        $time = strtotime("-13 year", time());
+        $date = date("d/m/Y", $time);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|unique:users,email,'.$id.',users_id',
             'gender' => 'required',
             'address' => 'required',
             'phone_number' => 'required|numeric|phone',
-            'birthday' => 'required|date_format:d/m/Y'
+            'birthday' => 'required|date_format:d/m/Y|before:'.$date
         ],[
             'name.required' => "Vui lòng nhập tên",
             'email.required' => "Vui lòng nhập email",
@@ -57,6 +60,7 @@ class InformationController extends Controller
             'phone_number.phone' => "Số điện thoại không đúng định dạng",
             'birthday.required' => 'Vui lòng nhập ngày sinh',
             'birthday.date_format' => 'Ngày sinh không đúng định dạng. VD:24/08/1996',
+            'birthday.before' => 'Ngày sinh không họp lệ',
 
         ]);
         if ($validator->fails()) {

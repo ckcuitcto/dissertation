@@ -88,7 +88,21 @@ class StaffSeeder extends Seeder
                 'password' => bcrypt('GVCK000001'),
                 'role_id' => 3,
                 'faculty_id' => 6
-            ]
+            ],[
+                'users_id' => 'ADMINDUCCC',
+                'name' => 'A D M I N',
+                'email' => 'thducit@gmail.com',
+                'password' => bcrypt('ADMINDUCCC'),
+                'role_id' => 6,
+                'faculty_id' => null
+            ],[
+                'users_id' => 'ADMINHANNN',
+                'name' => 'A D M I N',
+                'email' => 'tnghanit@gmail.com',
+                'password' => bcrypt('ADMINHANNN'),
+                'role_id' => 6,
+                'faculty_id' => null
+            ],
         ]);
     }
 }

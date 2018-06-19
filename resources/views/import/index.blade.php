@@ -20,7 +20,6 @@
                         <tr>
                             <th>ID</th>
                             <th>Tên file</th>
-                            <th>Ngày nhập</th>
                             <th>Người nhập</th>
                             <th>Trạng thái</th>
                         </tr>
@@ -29,8 +28,15 @@
                         @foreach($imports as $key => $value)
                             <tr>
                                 <th>{{  $value->id }}</th>
-                                <td><a href="{{ asset('upload/student/'.$value->file_path) }}"> {{$value->file_name}}</a></td>
-                                <td>{{ $value->created_at }}</td>
+                                <td>
+                                    @if(file_exists(STUDENT_PATH_STORE.$value->file_path))
+                                        <a href="{{ asset(STUDENT_PATH_STORE.$value->file_path) }}"> {{$value->file_name}}</a>
+                                    @elseif(file_exists(STUDENT_LIST_EACH_SEMESTER_PATH.$value->file_path))
+                                        <a href="{{ asset(STUDENT_LIST_EACH_SEMESTER_PATH.$value->file_path) }}"> {{$value->file_name}}</a>
+                                    @else
+                                        {{ $value->file_name }}
+                                    @endif
+                                </td>
                                 <td>{{ $value->Staff->User->name }}</td>
                                 <td>{{ $value->status }}</td>
 

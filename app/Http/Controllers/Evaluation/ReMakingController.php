@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Evaluation;
 
 use App\Model\EvaluationForm;
+use App\Model\Notification;
 use App\Model\Remaking;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\DataTables;
 
 class ReMakingController extends Controller
 {
@@ -17,19 +19,13 @@ class ReMakingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $userLogin = Auth::user();
-        $userIds = $this->getStudentByRoleUserLogin($userLogin,FALSE);
-        // lấy ra danh sách id của student
-        $arrId = array();
-        foreach ($userIds as $key => $value) {
-            $arrId[] = $value->id;
+        $userId = null;
+        if($request->user_id){
+            $userId = $request->user_id;
         }
-        $remakings = Remaking::join('evaluation_forms','remakings.evaluation_form_id','=','evaluation_forms.id')
-//            ->join('students','students.id','=','evaluation_forms.student_id')
-            ->whereIn('evaluation_forms.student_id', $arrId)->select('remakings.*')->get();
-        return view('remaking.index', compact('remakings'));
+        return view('remaking.index',compact('remakings','userId'));
     }
 
     /**
@@ -100,7 +96,16 @@ class ReMakingController extends Controller
      */
     public function edit($id)
     {
-        //
+        $remaking = Remaking::find($id);
+        if(empty($remaking)){
+            return response()->json([
+                'status' => false
+            ],200);
+        }
+        return response()->json([
+            'remaking' => $remaking,
+            'status' => true
+        ],200);
     }
 
     /**
@@ -113,9 +118,13 @@ class ReMakingController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'remarking_reply' => 'required'
+            'remarking_reply' => 'sometimes|required',
+            'remarking_reason' => 'sometimes|required',
+            'status' => 'sometimes|required'
         ], [
-            'remarking_reply.required' => 'Trả lời bắt buộc nhập'
+            'remarking_reply.required' => 'Trả lời bắt buộc nhập',
+            'remarking_reason.required' => 'Trả lời bắt buộc nhập',
+            'status.required' => 'Trả lời bắt buộc nhập'
         ]);
 
         if ($validator->fails()) {
@@ -128,11 +137,37 @@ class ReMakingController extends Controller
         $remaking = Remaking::find($id);
         if (!empty($remaking)) {
 
+            @$userLogin = $this->getUserLogin();
+
             // trạng thía mặc định là đang xử lí
-            $remaking->update([
-                'remarking_reply' => $request->remarking_reply,
-                'status' => RESOLVED,
-            ]);
+            if(!empty($request->remarking_reply)){
+                $remaking->remarking_reply = $request->remarking_reply;
+
+                $notifications = new Notification();
+                $notifications->title = "Yêu cầu phúc khảo đã được xét duyệt";
+                $notifications->created_by = $userLogin->Staff->id;
+                $link = route('evaluation-form-show',$remaking->EvaluationForm->id);
+                $notifications->content = "
+                <p>$request->remarking_reply</p>
+                <p>Vui lòng xem lại phiếu đánh giá điểm.</p>
+                <p><a href='$link' target='_blank'> Link>> </a></p>
+                ";
+                //danh sách Id của các user sẽ tạo thông báo.
+                $arrUserId[] = $remaking->EvaluationForm->Student->User->users_id; // sinh viên\
+                $notifications->save();
+                $notifications->Users()->attach($arrUserId);
+            }
+            if(!empty($request->remarking_reason)){
+                $remaking->remarking_reason = $request->remarking_reason;
+            }
+            if(!empty($request->status)){
+                $remaking->status = $request->status;
+            }
+
+
+
+
+            $remaking->save();
             // lưu thời gian chấm
             return response()->json([
                 'status' => true
@@ -153,4 +188,63 @@ class ReMakingController extends Controller
 //    {
 //        //
 //    }
+
+    public function ajaxGetRemakings(Request $request){
+        $userLogin = Auth::user();
+
+        $options['all'] = true;
+        $options['only-get-id']= true;
+        $userIds = $this->getStudentByRoleUserLoginNotUseDataTable($userLogin,FALSE,$options);
+
+        $remakings = DB::table('remakings')
+            ->leftJoin('evaluation_forms','remakings.evaluation_form_id','=','evaluation_forms.id')
+            ->leftJoin('students','students.id','=','evaluation_forms.student_id')
+            ->leftJoin('users','users.users_id','=','students.user_id')
+            ->leftJoin('classes','classes.id','=','students.class_id')
+            ->leftJoin('semesters','semesters.id','=','evaluation_forms.semester_id')
+            ->whereIn('students.user_id', $userIds)
+            ->select(
+                'remakings.id',
+                'evaluation_forms.id as evaluationFormId',
+                'students.user_id as userId',
+                'users.name as userName',
+                'classes.name as className',
+                'semesters.year_from',
+                'semesters.year_to',
+                DB::raw("CONCAT(semesters.year_from,'-',semesters.year_to) as semesterYear"),
+                'semesters.term',
+                'remakings.status',
+                'remakings.created_at'
+            );
+
+        return DataTables::of($remakings)
+        ->editColumn('status', function ($remaking){
+            $displayStatus = $this->getDisplayStatusRemaking($remaking->status);
+            return $displayStatus;
+        })
+        ->addColumn('action', function ($remaking) {
+            $remakingId = $remaking->id;
+            $linkEdit = route('remaking-edit',$remakingId);
+            $linkUpdate = route('remaking-update',$remakingId);
+
+            $linkButton = "<a style='color:white' id='btn-reply-remaking-show' class='btn btn-success' 
+                                data-remaking-edit-link='$linkEdit'
+                                data-remaking-update-link='$linkUpdate'
+                                data-remaking-id='$remakingId'
+                                 title='Trả lời sau khi phúc khảo'>
+                                <i class='fa fa-reply' aria-hidden='true'></i>Trả lời
+                                </a>";
+
+            if($remaking->status != RESOLVED){
+                $evaluationFormId = $remaking->evaluationFormId;
+                $route = route('evaluation-form-show',[$evaluationFormId,'remaking=true&remaking_id='.$remakingId]);
+                $linkRemark = "<a class='btn btn-info' href='".$route."'><i class='fa fa-edit' aria-hidden='true' style='color:white'></i>Chấm lại </a>";
+                return "<p class='bs-component'>$linkRemark $linkButton </p>";
+            }else{
+                return "<p class='bs-component'>$linkButton </p>";
+
+            }
+        })
+        ->make(true);
+    }
 }

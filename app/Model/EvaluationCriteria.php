@@ -19,4 +19,8 @@ class EvaluationCriteria extends Model
         return $this->hasMany('App\Model\EvaluationResult','evaluation_criteria_id','id');
     }
 
+    public function Proof(){
+        return $this->hasMany('App\Model\Proof','evaluation_criteria_id','id');
+    }
+
 }

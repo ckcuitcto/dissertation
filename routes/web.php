@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
 
         Route::post('/get-list-by-faculty', ['as' => 'class-get-list-by-faculty', 'uses' => 'Department\ClassController@getListClassByFaculty']);
+        Route::post('/get-list-by-faculty-none', ['as' => 'class-get-list-by-faculty-none', 'uses' => 'Department\ClassController@getListClassByFacultyAddAll']);
 
     });
 
@@ -144,9 +145,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'evaluation-form-update', 'uses' => 'Evaluation\EvaluationFormController@update'])->middleware('can:can-mark,App\Model\EvaluationForm');
 
         //kiem tra file upload = ajax
-        Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Evaluation\EvaluationFormController@checkFileUpload']);
+        Route::post('/upload', ['as' => 'evaluation-form-upload', 'uses' => 'Proof\ProofController@checkFileUpload']);
 
         Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Evaluation\EvaluationFormController@getProofById']);
+
+        Route::post('/kiem-tra-nhap', ['as' => 'evaluation-form-check-input', 'uses' => 'Evaluation\EvaluationFormController@checkInput']);
 
     });
 
@@ -160,6 +163,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'remaking-edit', 'uses' => 'Evaluation\ReMakingController@edit']);
 
         Route::post('/update/{id}', ['as' => 'remaking-update', 'uses' => 'Evaluation\ReMakingController@update']);
+
+        Route::post('/get-remakings', ['as' => 'ajax-remakings', 'uses' => 'Evaluation\ReMakingController@ajaxGetRemakings']);
 
     });
 
@@ -180,7 +185,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/destroy/{id}', ['as' => 'proof-destroy', 'uses' => 'Proof\ProofController@destroy'])->middleware('can:proofs-delete');
         Route::post('/update-valid-proof-file/{id}', ['as' => 'update-valid-proof-file', 'uses' => 'Proof\ProofController@updateValidProofFile']);
 
-        Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Proof\ProofController@getProofById']);
+        Route::post('/get-file/{id}', ['as' => 'evaluation-form-get-file', 'uses' => 'Proof\ProofController@edit']);
+
+        Route::post('/update/{id}', ['as' => 'proof-update', 'uses' => 'Proof\ProofController@update']);
+
+        Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store']);
     });
 
     Route::group(['prefix' => 'y-kien'], function () {
@@ -216,6 +225,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
 
+    Route::group(['prefix' => 'thong-bao'], function () {
+        Route::get('/', ['as' => 'notifications', 'uses' => 'Notification\NotificationController@index']);
+
+        Route::get('/show/{id}', ['as' => 'notifications-show', 'uses' => 'Notification\NotificationController@show']);
+
+    });
+
     Route::group(['prefix' => 'tai-khoan', 'middleware' => 'can:manage-user'], function () {
 
         Route::get('/', ['as' => 'user', 'uses' => 'User\UserController@index']);
@@ -235,6 +251,15 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'files', 'middleware' => 'can:manage-user'], function () {
         Route::get('/', ['as' => 'files', 'uses' => 'Import\ImportController@index']);
-
     });
+
+    Route::group(['prefix' => 'xuat', 'middleware' => 'can:export-file'], function () {
+        Route::post('/', ['as' => 'export-file', 'uses' => 'Export\ExportController@exportVer2']);
+
+        Route::get('/danh-sach', ['as' => 'export-file-list', 'uses' => 'Export\ExportController@index']);
+
+        Route::post('/list', ['as' => 'ajax-get-class-export', 'uses' => 'Export\ExportController@ajaxGetClasses']);
+    });
+
+    Route::post('/xuat-danh-sach', ['as' => 'export-users', 'uses' => 'Export\ExportController@exportByUserId'])->middleware('can:export-users');
 });

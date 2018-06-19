@@ -127,9 +127,7 @@
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <label>Địa chỉ</label>
-                            <textarea class="form-control address can-edit" rows="3" id="address" name="address" value="{{$user->address OR ""}}" disabled >
-                                {{ $user->address }}
-                            </textarea>
+                            <textarea class="form-control address can-edit" rows="3" id="address" name="address" value="{{$user->address OR ""}}" disabled >{!! $user->address !!}</textarea>
                             {{-- <input class="form-control address" id="address" type="text" name="address" value="{{$user->address OR ""}}" disabled> --}}
                         </div>
                     </div>
@@ -188,46 +186,6 @@
                 $('span.messageErrors').remove();
             });
 
-            // $("#btn-save-inform").click(function(e){
-            //     e.preventDefault();
-            //
-            //     // var valueForm = $('form#form-update-infomation').serialize();
-            //     var url = $(this).attr('data-link');
-            //
-            //     // var formData = new FormData();
-            //     // var fileUpload = $("#avatar");
-            //     // var file = this.files;
-            //     // formData.append('fileUpload', file);
-            //
-            //     var formData = new FormData(this);
-            //     console.log(formData);
-            //
-            //     $('.form-row').find('span.messageErrors').remove();
-            //     $.ajax({
-            //         type: "post",
-            //         url: url,
-            //         data: formData,
-            //         dataType: 'json',
-            //         cache: false,
-            //         contentType: false,
-            //         processData: false,
-            //         success: function (result) {
-            //             if (result.status === false) {
-            //                 //show error list fields
-            //                 if (result.arrMessages !== undefined) {
-            //                     $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-            //                         $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-            //                             $('form#form-update-infomation').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-            //                         });
-            //                     });
-            //                 }
-            //             } else if (result.status === true) {
-            //                 alert(1);
-            //             }
-            //         }
-            //     });
-            //
-            // });
 
             $("form#form-update-infomation").submit(function (e) {
                 e.preventDefault();

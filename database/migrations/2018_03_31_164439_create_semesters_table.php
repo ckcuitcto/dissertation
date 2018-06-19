@@ -17,6 +17,8 @@ class CreateSemestersTable extends Migration
             $table->increments('id')->unsigned();
             $table->integer('year_from');
             $table->integer('year_to');
+            $table->date('date_start')->nullable(); // thời gian bắt đầu học kì
+            $table->date('date_end')->nullable(); // tohiwf gian kết thúc học kì
             $table->integer('term');
             $table->date('date_start_to_mark');
             $table->date('date_end_to_mark');
@@ -27,8 +29,7 @@ class CreateSemestersTable extends Migration
             $table->date('date_end_to_re_mark')->nullable();
 
 
-            $table->date('date_start')->nullable(); // thời gian bắt đầu học kì
-            $table->date('date_end')->nullable(); // tohiwf gian kết thúc học kì
+
             $table->timestamps();
         });
     }

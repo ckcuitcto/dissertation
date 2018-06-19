@@ -14,7 +14,10 @@ class Notification extends Model
         return $this->belongsTo('App\Model\Staff','created_by','id');
     }
 
-    public function NotificationStudents(){
-        return $this->hasMany('App\Model\NotificationStudent','notification_id','id');
+    public function Users()
+    {
+        return $this->belongsToMany('App\Model\User', 'notification_users', 'notification_id', 'users_id')
+//            ->withPivot('status')
+            ->withTimestamps();
     }
 }

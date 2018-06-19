@@ -31,10 +31,10 @@ class StudentController extends Controller
      */
     public function index()
     {
-//        $users = User::where('role_id', '<=', ROLE_BANCANSULOP)->paginate(25);
         $users = User::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','users.users_id')->select('users.*')->orderBy('student_list_each_semesters.id')->paginate(25);
-
-        return view('student.index', compact('users'));
+        $currentSemester = $this->getCurrentSemester();
+        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+        return view('student.index', compact('users','currentSemester','semesters'));
     }
 
     /**
@@ -181,21 +181,21 @@ class StudentController extends Controller
                 }
             }
             $arrFileName= array();
+            $arrUser = array();
+            $arrUpdateStudent = array();
+            $arrKey = array();
+            $arrError = array();
             foreach ($arrFile as $file) {
 
                 config(['excel.import.startRow' => 1]);
 
                 $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
-                while (File::exists("upload/student/" . $fileName)) {
+                while (File::exists(STUDENT_PATH . $fileName)) {
                     $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                 }
-                $file->move('upload/student/', $fileName);
+                $file->move(STUDENT_PATH, $fileName);
                 $arrFileName[] = $fileName;
-                $arrUser = array();
-                $arrUpdateStudent = array();
-                $arrKey = array();
-                $arrError = array();
-                $dataFileExcel = \Maatwebsite\Excel\Facades\Excel::load("upload/student/" . $fileName, function ($reader) {
+                $dataFileExcel = \Maatwebsite\Excel\Facades\Excel::load(STUDENT_PATH . $fileName, function ($reader) {
                 })->get();
                 foreach ($dataFileExcel as $key => $value) {
                     //nếu cả tất cả giá trị đều null. thì bỏ qua.
@@ -257,9 +257,25 @@ class StudentController extends Controller
                     }
                 }
             }
-            $userLogin = Auth::user();
+
+            $userLogin = $this->getUserLogin();
             if (empty($arrError)) {
                 if (!empty($arrUser)) {
+                    $arrFileImport = array();
+                    for($i = 0 ; $i< count($arrFile); $i++){
+                        $arrFileImport[] = [
+                            'file_path' => $arrFileName[$i],
+                            'file_name' => $arrFile[$i]->getClientOriginalName(),
+                            'status' => 'Thành công',
+                            'staff_id' => $userLogin->Staff->id
+                        ];
+                        if (!file_exists(public_path().'/'.STUDENT_PATH_STORE)) {
+                            mkdir(public_path().'/'.STUDENT_PATH_STORE, 0777, true);
+                        }
+//                        $file->move(STUDENT_PATH, $fileName);
+                        File::move(STUDENT_PATH.$arrFileName[$i],STUDENT_PATH_STORE.$arrFileName[$i]);
+                    }
+                    FileImport::insert($arrFileImport);
 
                     User::insert($arrUser);
                     for ($i = 0; $i < count($arrKey); $i++) {
@@ -268,20 +284,14 @@ class StudentController extends Controller
                         );
                     }
 
-                    for($i = 0 ; $i< count($arrFile); $i++){
-                        $arrFileImport[] = [
-                            'file_path' => $arrFileName[$i],
-                            'file_name' => $arrFile[$i]->getClientOriginalName(),
-                            'status' => 'Thành công',
-                            'staff_id' => $userLogin->Staff->id
-                        ];
-                    }
-                    FileImport::insert($arrFileImport);
-
                     return response()->json([
                         'status' => true
                     ], 200);
                 } else {
+                    for($i = 0 ; $i< count($arrFile); $i++){
+                        unlink(STUDENT_PATH.$arrFileName[$i]);
+                    }
+
                     $arrError[] = [
                         'error' => 'File Lỗi'
                     ];
@@ -291,16 +301,10 @@ class StudentController extends Controller
                     ], 200);
                 }
             } else {
-                for($i = 0 ; $i< count($arrFile); $i++){
-                    $arrFileImport[] = [
-                        'file_path' => $arrFileName[$i],
-                        'file_name' => $arrFile[$i]->getClientOriginalName(),
-                        'status' => 'Thành công',
-                        'staff_id' => $userLogin->Staff->id
-                    ];
-                }
-                FileImport::insert($arrFileImport);
 
+                for($i = 0 ; $i< count($arrFile); $i++){
+                    unlink(STUDENT_PATH.$arrFileName[$i]);
+                }
                 return response()->json([
                     'status' => false,
                     'errors' => $arrError
@@ -342,17 +346,19 @@ class StudentController extends Controller
 
             $arrFileName = array();
 
+            $arrSemester = [];
+            // lưu lại id các học kì nếu trong các file import có file ở các học kì khác nhau
+            // key là tên file, value là id học kì
             $semesterId = null;
             foreach ($arrFile as $file) {
                 $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
-                while (File::exists("upload/student/" . $fileName)) {
+                while (File::exists(STUDENT_PATH . $fileName)) {
                     $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
                 }
-                $file->move('upload/student/', $fileName);
+                $file->move(STUDENT_PATH, $fileName);
                 $arrFileName[] = $fileName;
-                $dataFileExcel = \Maatwebsite\Excel\Facades\Excel::load("upload/student/" . $fileName, function ($reader) {
+                $dataFileExcel = \Maatwebsite\Excel\Facades\Excel::load(STUDENT_PATH . $fileName, function ($reader) {
                 })->noHeading()->get();
-
 
                 $classes = null;
                 $monitor = null;
@@ -361,6 +367,9 @@ class StudentController extends Controller
                     if ($i == 4) {
                         // lấy khoa theo Id
                         $facultyName = explode(':', $dataFileExcel[$i][5]);
+                        if(empty($facultyName[0])){
+                            $facultyName = explode(':', $dataFileExcel[$i][6]);
+                        }
                         $facultyName = trim($facultyName[1]);
                         $faculty = Faculty::where('name', 'like', "%$facultyName%")->first();
 
@@ -402,7 +411,6 @@ class StudentController extends Controller
                             $term = explode(':', $dataFileExcel[$i][3]);
                         }
                         $term = trim($term[1]);
-
                         switch ($term) {
                             case "II":
                                 $term = 2;
@@ -412,6 +420,9 @@ class StudentController extends Controller
                                 break;
                         }
                         $year = explode(':', $dataFileExcel[$i][5]);
+                        if(empty($year[0])){
+                            $year = explode(':', $dataFileExcel[$i][6]);
+                        }
                         $year = explode('-', trim($year[1]));
                         $yearFrom = trim($year[0]);
                         $yearTo = trim($year[1]);
@@ -426,6 +437,7 @@ class StudentController extends Controller
                             $arrError[] = "Học kì $term năm học $yearFrom - $yearTo không tồn tại";
                         }else{
                             $semesterId = $semester->id;
+                            $arrSemester[$fileName] = $semesterId;
                         }
                     }
                     elseif (!empty($dataFileExcel[$i][1]) AND !empty($dataFileExcel[$i][0]) AND $i >= 10 AND !empty($faculty) AND !empty($classes) AND !empty($semester) AND !empty($monitor)) {
@@ -441,61 +453,85 @@ class StudentController extends Controller
             }
 
             $arrFileImport = array();
-            $userLogin = Auth::user();
+            $userLogin = $this->getUserLogin();
             if (empty($arrError)) {
-
                 // kiểm tra xem có user nào k tồn tại trong DB k? nếu có thì lấy rồi xuất ra thông báo
                 foreach($arrUser as $key => $value){
                     $userSearch = User::where('users_id', $value['user_id'])->first();
                     if(empty($userSearch)){
-                        $arrError[] = "MSSV $value[user_id] không tồn tại trong danh sách sinh viên";
+                        $classOfUserSearch = Classes::find($value['class_id']);
+                        $className = $classOfUserSearch->name;
+                        $arrError[] = "MSSV $value[user_id], lớp $className không tồn tại trong danh sách sinh viên";
                     }
                 }
                 if(!empty($arrError)){
                     //vì trên kia đã lưu file. nên cho dù đc hay k thì đều lưu lại lịch sử import
+                    // =>>>> đổi thành nếu có lỗi thì xóa file đi.đỡ tốn bộ nhớ
                     for($i = 0 ; $i< count($arrFile); $i++){
-                        $arrFileImport[] = [
-                            'file_path' => $arrFileName[$i],
-                            'file_name' => $arrFile[$i]->getClientOriginalName(),
-                            'status' => 'Thất bại',
-                            'staff_id' => $userLogin->Staff->id
-                        ];
+                        unlink(STUDENT_PATH.$arrFileName[$i]);
                     }
-                    FileImport::insert($arrFileImport);
                     $arrError = array_merge(['Vui lòng thêm tài khoản cho sinh viên hoặc sửa lại thông tin nếu SV chuyển khoa, sau đó nhập lại File.'],$arrError);
                     return response()->json([
                         'status' => false,
                         'errors' => $arrError
                     ], 200);
-                }
+                }else{
+                    //nếu k có lỗi. di chuyển file qua thư mục mới.
+                    for($i = 0 ; $i< count($arrFile); $i++){
+                        $semesterIdByFileName = $arrSemester[$arrFileName[$i]];
+                        //kiểm tra xem folder có tên = id học kì đa có chưa. chưa có thì tạo.
+                        if (!file_exists(public_path().'/'.STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName)) {
+                            mkdir(public_path().'/'.STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName, 0777, true);
+                        }
 
-                for($i = 0 ; $i< count($arrFile); $i++){
-                    $arrFileImport[] = [
-                        'file_path' => $arrFileName[$i],
-                        'file_name' => $arrFile[$i]->getClientOriginalName(),
-                        'status' => 'Thành công',
-                        'staff_id' => $userLogin->Staff->id
-                    ];
-                }
-                FileImport::insert($arrFileImport);
-                StudentListEachSemester::insert($arrUser);
+                        //nếu file giống và học kì giông đã tồn tại thì xóa r tạo mới.
+                        if(file_exists(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName())){
+                            unlink(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName());
+                        }
 
-                $this->addEvaluationFormAfterInportStudent($semesterId);
-                return response()->json([
-                    'status' => true,
-                ], 200);
+                        // di chuyển và xóa file cũ
+                        if(File::move(STUDENT_PATH.$arrFileName[$i],STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName())) {
+                            if (file_exists(STUDENT_PATH . $arrFileName[$i])) {
+                                unlink(STUDENT_PATH . $arrFileName[$i]);
+                            }
+                        }
+                        $arrFileImport[] = [
+                            'file_path' => $semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName(),
+                            'file_name' => $arrFile[$i]->getClientOriginalName(),
+                            'status' => 'Thành công',
+                            'staff_id' => $userLogin->Staff->id,
+                            'semester_id' => $semesterIdByFileName
+                        ];
+                    }
+                    FileImport::insert($arrFileImport);
+
+                    // lúc đầu là làm sẽ insert vào hết. nhưng giờ sửa lại. để lỡ mà insert 2 lần
+                    // thì danh sách sinh veien mỗi học kì sẽ k bị lặp
+                    // cũng như có thể update lại thông tin của ban sán sự lớp cũng như cố vấn học tập
+                    foreach ($arrUser as $value) {
+                        StudentListEachSemester::updateOrCreate(
+                            [
+                                'user_id' => $value['user_id'],
+                                'semester_id' => $value['semester_id']
+                            ],
+                            [
+                                'class_id' => $value['class_id'],
+                                'monitor_id' => $value['monitor_id'],
+                                'staff_id' => $value['staff_id'],
+                            ]
+                        );
+                    }
+//                    StudentListEachSemester::insert($arrUser);
+                    $this->addEvaluationFormAfterInportStudent($semesterIdByFileName);
+                    return response()->json([
+                        'status' => true,
+                    ], 200);
+                }
             } else {
-                StudentListEachSemester::insert($arrUser);
+                // xóa file nếu có lỗi.
                 for($i = 0 ; $i< count($arrFile); $i++){
-                    $arrFileImport[] = [
-                        'file_path' => $arrFileName[$i],
-                        'file_name' => $arrFile[$i]->getClientOriginalName(),
-                        'status' => 'Thất bại',
-                        'staff_id' => $userLogin->Staff->id
-                    ];
+                    unlink(STUDENT_PATH.$arrFileName[$i]);
                 }
-                FileImport::insert($arrFileImport);
-
                 return response()->json([
                     'status' => false,
                     'errors' => $arrError
@@ -510,19 +546,56 @@ class StudentController extends Controller
         $students = Student::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','students.user_id')
             ->where('semester_id',$semesterId)->select('students.*')->get();
 
-        $arrEvaluationForm = array();
+        //làm v đễ lỡ mà có r thì k bị trùng
         foreach ($students as $value) {
-            $arrEvaluationForm[] = [
+            $arrEvaluationForm = [
                 'semester_id' => $semesterId,
                 'student_id' => $value->id
             ];
+            EvaluationForm::updateOrCreate($arrEvaluationForm);
         }
-        EvaluationForm::insert($arrEvaluationForm);
+
+        // cập nhật lại. nếu chủ form là ban cán sự thì + status 1.
+        // lấy danh sách tất cả ban cán sự của form
+        $studentList = DB::table('student_list_each_semesters')
+            ->leftJoin('students','student_list_each_semesters.user_id','=','students.user_id')
+            ->leftJoin('users','users.users_id','=','students.user_id')
+            ->leftJoin('roles','roles.id','=','users.role_id')
+            ->where('roles.weight','=',ROLE_BANCANSULOP)
+            ->where('student_list_each_semesters.semester_id','=',$semesterId)
+            ->select('student_list_each_semesters.user_id','students.id')
+            ->get()->toArray();
+        $arrStudentId = array();
+        foreach ($studentList as $value){
+            $arrStudentId[]= $value->id;
+        }
+        // = 1. nghĩa là tính các form của ban cán sự lớp do k chấm ở time sinh viên nên mặc định cho là đã chấm ở time sinh viên
+        EvaluationForm::whereIn('student_id', $arrStudentId)
+            ->where('semester_id', $semesterId)
+            ->update(['status' => 1]);
     }
 
     public function ajaxGetUsers(Request $request){
-        $user = Auth::user();
+        $user = $this->getUserLogin();
         $students = $this->getStudentByRoleUserLogin($user);
-        return DataTables::of($students)->make(true);
+        $datatables  = DataTables::of($students)
+        ->filter(function ($student) use ($request) {
+            $semester = $request->has('semester_id');
+            $semesterValue = $request->get('semester_id');
+            if (!empty($semester) AND $semesterValue != 0) {
+                $student->where('student_list_each_semesters.semester_id', '=', $semesterValue);
+                $student->where('evaluation_forms.semester_id', '=', $semesterValue);
+            }
+        });
+
+//        if ($keyword = $request->get('search')['value']) {
+//            // override users.name global search
+//            $datatables->filterColumn('users.name', 'where', 'like', "$keyword%");
+//
+//            // override users.id global search - demo for concat
+//            $datatables->filterColumn('users.id', 'whereRaw', "CONCAT(users.id,'-',users.id) like ? ", ["%$keyword%"]);
+//        }
+
+        return $datatables->make(true);
     }
 }
