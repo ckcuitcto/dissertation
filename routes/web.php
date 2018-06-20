@@ -34,6 +34,9 @@ Route::group(['middleware' => 'auth'], function () {
         //update
         Route::post('/update/{id}', ['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update'])->middleware('can:faculty-change');
 
+        Route::post('/get-faculties', ['as' => 'ajax-get-faculties', 'uses' => 'Department\FacultyController@ajaxGetFaculties']);
+        Route::post('/get-faculty-detail', ['as' => 'ajax-get-faculty-detail', 'uses' => 'Department\FacultyController@ajaxGetFacultyDetail']);
+
     });
 
     Route::group(['prefix' => 'lop','middleware' => 'can:manage-class'], function () {
@@ -48,6 +51,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/get-list-by-faculty', ['as' => 'class-get-list-by-faculty', 'uses' => 'Department\ClassController@getListClassByFaculty']);
         Route::post('/get-list-by-faculty-none', ['as' => 'class-get-list-by-faculty-none', 'uses' => 'Department\ClassController@getListClassByFacultyAddAll']);
+
+        Route::post('/get-students-by-class', ['as' => 'ajax-get-students-by-class', 'uses' => 'Department\ClassController@ajaxGetStudentByClass']);
+
 
     });
 
@@ -73,8 +79,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'vai-tro','middleware' => 'can:manager-role'], function () {
         // danh sach role
         Route::get('/', ['as' => 'role-list', 'uses' => 'Role\RoleController@index']);
-        // vao xem chi tiet role, se co cac danh sach user thuoc role o day
-//        Route::get('/{id}',['as' => 'role-detail','uses' => 'Role\RoleController@show']);
         // xoa 1 role
 //        Route::group(['middleware' => 'role:admin'],function() {
         Route::get('/destroy/{id}', ['as' => 'role-destroy', 'uses' => 'Role\RoleController@destroy']);
@@ -83,6 +87,9 @@ Route::group(['middleware' => 'auth'], function () {
         // chỉnh sửa role
         Route::post('/update/{id}', ['as' => 'role-update', 'uses' => 'Role\RoleController@update']);
         Route::get('/edit/{id}', ['as' => 'role-edit', 'uses' => 'Role\RoleController@edit']);
+
+//        Route::post('/get-roles', ['as' => 'ajax-get-roles', 'uses' => 'Permission\PermissionController@ajaxGetRoles']);
+
 //        });
     });
 
@@ -100,6 +107,9 @@ Route::group(['middleware' => 'auth'], function () {
         // chỉnh sửa role
         Route::post('/update/{id}', ['as' => 'permission-update', 'uses' => 'Permission\PermissionController@update'])->middleware('can:user-rights');
         Route::get('/edit/{id}', ['as' => 'permission-edit', 'uses' => 'Permission\PermissionController@edit'])->middleware('can:user-rights');
+
+        Route::post('/get-permissions', ['as' => 'ajax-get-permissions', 'uses' => 'Permission\PermissionController@ajaxGetPermissions']);
+
 //        });
     });
 
@@ -115,6 +125,9 @@ Route::group(['middleware' => 'auth'], function () {
         // chỉnh sửa
         Route::post('/update/{id}', ['as' => 'semester-update', 'uses' => 'Semester\SemesterController@update'])->middleware('can:semester-change');
         Route::get('/edit/{id}', ['as' => 'semester-edit', 'uses' => 'Semester\SemesterController@edit'])->middleware('can:semester-change');
+
+        Route::post('/get-semesters', ['as' => 'ajax-get-semesters', 'uses' => 'Semester\SemesterController@ajaxGetSemesters']);
+
     });
 
     Route::group(['prefix' => 'bang-diem'], function () {
@@ -190,6 +203,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'proof-update', 'uses' => 'Proof\ProofController@update']);
 
         Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store']);
+
+        Route::post('/get-proofs', ['as' => 'ajax-get-proofs', 'uses' => 'Proof\ProofController@ajaxGetProofs']);
     });
 
     Route::group(['prefix' => 'y-kien'], function () {
@@ -220,7 +235,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit'])->middleware('can:can-change-news');
 
         Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy'])->middleware('can:can-change-news');
-
     });
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
@@ -229,6 +243,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'notifications', 'uses' => 'Notification\NotificationController@index']);
 
         Route::get('/show/{id}', ['as' => 'notifications-show', 'uses' => 'Notification\NotificationController@show']);
+
+        Route::post('/get-notifications', ['as' => 'ajax-get-notifications', 'uses' => 'Notification\NotificationController@ajaxGetNotifications']);
 
     });
 

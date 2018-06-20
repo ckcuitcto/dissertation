@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Permission;
 use App\Model\Permission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Validator;
+use Yajra\DataTables\DataTables;
+
 
 class PermissionController extends Controller
 {
@@ -16,8 +19,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permissions = Permission::all();
-        return view('permission.index',compact('permissions'));
+
+        return view('permission.index');
     }
 
     /**
@@ -148,5 +151,19 @@ class PermissionController extends Controller
         return response()->json([
             'status' => false
         ]);
+    }
+
+    public function ajaxGetPermissions(){
+        $permissions = DB::table('permissions')->select('id','name','display_name','description');
+
+        return DataTables::of($permissions)
+            ->addColumn('action', function ($permission) {
+                $linkEdit = route('permission-edit',$permission->id);
+                $linkUpdate = route('permission-update',$permission->id);
+                $btnUpdate = "<a style='color: white' title='Sửa' data-permission-id='$permission->id' data-permission-edit-link='$linkEdit'
+                data-permission-update-link='$linkUpdate' class='btn btn-primary permission-update'><i class='fa fa-edit' aria-hidden='true'></i> </a>";
+                return "<p class='bs-component'>$btnUpdate</p> ";
+            })
+            ->make(true);
     }
 }

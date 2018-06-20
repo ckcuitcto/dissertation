@@ -143,8 +143,12 @@ class ReMakingController extends Controller
             if(!empty($request->remarking_reply)){
                 $remaking->remarking_reply = $request->remarking_reply;
 
+                $term = $remaking->EvaluationForm->Semester->term;
+                $yearFrom = $remaking->EvaluationForm->Semester->year_from;
+                $yearTo = $remaking->EvaluationForm->Semester->year_to;
+
                 $notifications = new Notification();
-                $notifications->title = "Yêu cầu phúc khảo đã được xét duyệt";
+                $notifications->title = "Yêu cầu phúc khảo HK $term năm học $yearFrom - $yearTo đã được xét duyệt";
                 $notifications->created_by = $userLogin->Staff->id;
                 $link = route('evaluation-form-show',$remaking->EvaluationForm->id);
                 $notifications->content = "
@@ -163,9 +167,6 @@ class ReMakingController extends Controller
             if(!empty($request->status)){
                 $remaking->status = $request->status;
             }
-
-
-
 
             $remaking->save();
             // lưu thời gian chấm
@@ -190,7 +191,7 @@ class ReMakingController extends Controller
 //    }
 
     public function ajaxGetRemakings(Request $request){
-        $userLogin = Auth::user();
+        $userLogin = $this->getUserLogin();
 
         $options['all'] = true;
         $options['only-get-id']= true;

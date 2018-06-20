@@ -12,7 +12,7 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
 
                     <div class="tile user-settings">
@@ -34,52 +34,22 @@
                         </div>
                     </div>
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        <table class="table table-hover table-bordered" id="studentsTable">
                             <thead>
                             <tr>
                                 <th>MSSV</th>
                                 <th>Sinh viên</th>
                                 <th>Email</th>
-                                <th>SĐT</th>
+                                {{--<th>SĐT</th>--}}
                                 <th>Giới tính</th>
-                                <th>Địa chỉ</th>
-                                <th>Ngày sinh</th>
+                                {{--<th>Địa chỉ</th>--}}
+                                {{--<th>Ngày sinh</th>--}}
                                 <th>Chức vụ</th>
                                 <th>Trạng thái</th>
                                 <th>Tác vụ</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @foreach($class->Students as $student)
-                                <tr>
-                                    <td>{{ $student->user_id}}</td>
-                                    <td>{{ $student->User->name }}</td>
-                                    <td>{{ $student->User->email }}</td>
-                                    <td>{{ $student->User->phone_number }}</td>
-                                    <td>{{ \App\Http\Controllers\Controller::getDisplayGender( $student->User->gender) }}</td>
-                                    <td>{{ $student->User->address }}</td>
-                                    <td>{{ $student->User->birthday }}</td>
-                                    <td>{{ $student->User->Role->display_name }}</td>
-                                    <td>{{ \App\Http\Controllers\Controller::getDisplayStatusStudent($student->status) }}</td>
-                                    <td>
-                                        <button data-student-id="{{$student->id}}" class="btn update-student btn-primary"
-                                                data-student-edit-link="{{route('student-edit',$student->id)}}"
-                                                data-student-update-link="{{route('student-update',$student->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i> Sửa
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
                         </table>
-                        {{--<div class="row">--}}
-                            {{--<div class="col-md-6">--}}
-                                {{--<button data-toggle="modal" data-target="#myModal" class="btn btn-primary"--}}
-                                        {{--id="btn-add-student" type="button"><i class="fa fa-pencil-square-o"--}}
-                                                                              {{--aria-hidden="true"></i>Thêm sinh viên--}}
-                                {{--</button>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
                     </div>
                 </div>
             </div>
@@ -241,12 +211,46 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-
+    {{--<script type="text/javascript" src="{{ asset('js/web/class-detail.js') }} "></script>--}}
     <script>
         $(document).ready(function () {
+
+            var oTable = $('#studentsTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "autoWidth": false,
+                "ajax": {
+                    "url": "{{ route('ajax-get-students-by-class') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": {
+                        "_token": "{{ csrf_token() }}"
+                    }
+                },
+                "columns": [
+                    {data: "userId", name: "userId"},
+                    {data: "userName", name: "userName"},
+                    {data: "userEmail", name: "userEmail"},
+                    // {data: "phone_number", name: "phone_number"},
+                    {data: "gender", name: "gender"},
+                    // {data: "address", name: "address"},
+                    // {data: "birthday", name: "birthday"},
+                    {data: "roleName", name: "roleName"},
+                    {data: "status", name: "status"},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    "zeroRecords": "Không có bản ghi nào!",
+                    "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
+
+                },
+                "pageLength": 25
+            });
+
             $("input#checkBoxChangePassword").change(function () {
                 if($(this).val() === 'on'){
                     $(this).val('off');
@@ -259,8 +263,9 @@
 
                 }
             });
-            
-            $("#btn-save-class").click(function () {
+
+            $('body').on('click', '#btn-save-class', function (e) {
+                // $("#btn-save-class").click(function () {
                 var valueForm = $('form#class-form').serialize();
                 var url = $(this).attr('data-link');
                 $('#modal-edit-class').find('span.messageErrors').remove();
@@ -325,7 +330,8 @@
                 $('#modal-edit-student').modal('show');
             });
 
-            $("#btn-save-student").click(function () {
+            $('body').on('click', '#btn-save-student', function (e) {
+                // $("#btn-save-student").click(function () {
                 var valueForm = $('form#student-form').serialize();
                 var url = $(this).attr('data-link');
                 $('#modal-edit-student').find('span.messageErrors').remove();
@@ -346,11 +352,16 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#modal-edit-student').find('.modal-body').html('<p>Thành công</p>');
-                            $('#modal-edit-student').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#modal-edit-student').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: "Cập nhật thông tin thành công",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#modal-edit-student').modal('hide');
+                            oTable.draw();
+
                         }
                     }
                 });

@@ -243,8 +243,8 @@ class UserController extends Controller
                 $dataUserEditLink = route('user-edit',$student->users_id);
                 $dataUserUpdateLink = route('user-update',$student->users_id);
                 $dataUserId = $student->users_id;
-                return '<button class="btn update-user btn-primary" data-user-id="'.$dataUserId.'" data-user-edit-link="'.$dataUserEditLink.'" 
-                    data-user-update-link="'.$dataUserUpdateLink.'"> <i class="fa fa-lg fa-edit" aria-hidden="true">Sửa</i>
+                return '<button title="Sửa thông tin" class="btn update-user btn-primary" data-user-id="'.$dataUserId.'" data-user-edit-link="'.$dataUserEditLink.'" 
+                    data-user-update-link="'.$dataUserUpdateLink.'"> <i class="fa fa-lg fa-edit" aria-hidden="true"></i>
                     </button>';
             })
             ->filter(function ($student) use ($request) {

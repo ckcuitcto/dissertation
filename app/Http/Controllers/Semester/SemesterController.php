@@ -10,7 +10,9 @@ use Carbon\Carbon;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Validator;
+use Yajra\DataTables\DataTables;
 
 class SemesterController extends Controller
 {
@@ -21,12 +23,11 @@ class SemesterController extends Controller
      */
     public function index()
     {
-        $semesters = Semester::all();
         $rolesCanMark = Role::whereHas('permissions', function ($query) {
             $query->where('name', 'like', '%can-mark%');
         })->orderBy('id')->get();
 
-        return view('semester.index', compact('semesters', 'rolesCanMark'));
+        return view('semester.index', compact('rolesCanMark'));
     }
 
     /**
@@ -60,22 +61,20 @@ class SemesterController extends Controller
             $arrValidatorRole[$dateEnd] = "required";
             $arrValidatorRole[$dateStart] = "required";
 
-            $arrValidatorRoleMessage[$dateEnd. ".required"] = 'Bắt buộc nhập thời gian bắt đầu chấm ';
-            $arrValidatorRoleMessage[$dateStart. ".required"] = 'Bắt buộc nhập thời gian kết thúc chấm';
+            $arrValidatorRoleMessage[$dateEnd . ".required"] = 'Bắt buộc nhập thời gian bắt đầu chấm ';
+            $arrValidatorRoleMessage[$dateStart . ".required"] = 'Bắt buộc nhập thời gian kết thúc chấm';
 
 //            $arrValidatorRole[$dateStart] = "date|after_or_equal:" . $dateEnd;
 //            $arrValidatorRole[$dateEnd] = "date";
 //            $arrValidatorRoleMessage[$dateStart . ".after_or_equal"] = "Ngày bắt đầu <=  ngày kết thúc";
         }
-//        var_dump($arrValidatorRoleMessage);
-//        dd($arrValidatorRole);
+
         $arrValidatorRole['year_from'] = "required";
         $arrValidatorRole['year_to'] = "required";
         $arrValidatorRole['date_start'] = "required";
         $arrValidatorRole['date_end'] = "required";
         $arrValidatorRole['term'] = "required";
-        $arrValidatorRole['date_start_to_mark'] = "required";
-        $arrValidatorRole['date_end_to_mark'] = "required";
+
         $arrValidatorRole['date_start_to_request_re_mark'] = "required";
         $arrValidatorRole['date_end_to_request_re_mark'] = "required";
         $arrValidatorRole['date_start_to_re_mark'] = "required";
@@ -88,8 +87,6 @@ class SemesterController extends Controller
         $arrValidatorRoleMessage['year_from.required'] = 'Bắt buộc nhập năm học. ';
         $arrValidatorRoleMessage['year_to.required'] = 'Bắt buộc nhập năm học. ';
         $arrValidatorRoleMessage['term.required'] = 'Bắt buộc nhập học kì';
-        $arrValidatorRoleMessage['date_start_to_mark.required'] = 'Bắt buộc nhập thời gian bắt đầu chấm';
-        $arrValidatorRoleMessage['date_end_to_mark.required'] = 'Bắt buộc nhập thời gian kết thúc chấm';
         $arrValidatorRoleMessage['date_start_to_request_re_mark.required'] = 'Bắt buộc nhập thời gian gửi yêu cầu phúc khảo';
         $arrValidatorRoleMessage['date_end_to_request_re_mark.required'] = 'Bắt buộc nhập thời gian kết thúc gửi yêu cầu phúc khảo';
         $arrValidatorRoleMessage['date_start_to_re_mark.required'] = 'Bắt buộc nhập thời gian bắt đầu chấm phúc khảo';
@@ -118,12 +115,12 @@ class SemesterController extends Controller
             if (!empty($request->date_end_to_re_mark)) {
                 $semester->date_end_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_re_mark);
             }
-            if (!empty($request->date_start_to_mark)) {
-                $semester->date_start_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_mark);
-            }
-            if (!empty($request->date_end_to_mark)) {
-                $semester->date_end_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_mark);
-            }
+//            if (!empty($request->date_start_to_mark)) {
+//                $semester->date_start_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_mark);
+//            }
+//            if (!empty($request->date_end_to_mark)) {
+//                $semester->date_end_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_mark);
+//            }
             if (!empty($request->date_end_to_request_re_mark)) {
                 $semester->date_end_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_request_re_mark);
             }
@@ -131,31 +128,37 @@ class SemesterController extends Controller
                 $semester->date_start_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_request_re_mark);
             }
             $semester->term = $request->term;
-            $semester->save();
 
             $arrRoleMarkTime = array();
-            foreach ($rolesCanMark as $role) {
-                $dateEnd = "date_end_to_mark_" . $role->id;
-                $dateStart = "date_start_to_mark_" . $role->id;
+
+            $dateStartMarkOfFirstRoleCanMark = null;
+            $dateEndMarkOfLastRoleCanMark = null;
+            $first = false;
+            for($i = 0 ; $i < count($rolesCanMark) ; $i++){
+
+                $dateEnd = "date_end_to_mark_" . $rolesCanMark[$i]->id;
+                $dateStart = "date_start_to_mark_" . $rolesCanMark[$i]->id;
+
+                if($first == false){
+                    $dateStartMarkOfFirstRoleCanMark = Carbon::createFromFormat('d/m/Y', $request->$dateStart);
+                    $first = true;
+                }
+                if(count($rolesCanMark)-1 == $i){
+                    $dateEndMarkOfLastRoleCanMark = Carbon::createFromFormat('d/m/Y', $request->$dateEnd);
+                }
 
                 $arrRoleMarkTime[] = [
                     'mark_time_start' => Carbon::createFromFormat('d/m/Y', $request->$dateStart),
                     'mark_time_end' => Carbon::createFromFormat('d/m/Y', $request->$dateEnd),
-                    'role_id' => $role->id
+                    'role_id' => $rolesCanMark[$i]->id
                 ];
             }
+            $semester->date_start_to_mark = $dateStartMarkOfFirstRoleCanMark;
+            $semester->date_end_to_mark = $dateEndMarkOfLastRoleCanMark;
+
+            $semester->save();
             // lưu thời gian chấm
             $semester->MarkTimes()->createMany($arrRoleMarkTime);
-
-            // sau khi tạo mới 1 học kì, sẽ tạo cho mỗi sinh viên 1 form đánh giá
-//            $students = Student::all();
-//            $arrEvaluationForm = array();
-//            foreach ($students as $student) {
-//                $arrEvaluationForm[] = [
-//                    'student_id' => $student->id
-//                ];
-//            }
-//            $semester->EvaluationForm()->createMany($arrEvaluationForm);
 
             return response()->json([
                 'semester' => $semester,
@@ -242,8 +245,8 @@ class SemesterController extends Controller
             $arrValidatorRole[$dateEnd] = "required";
             $arrValidatorRole[$dateStart] = "required";
 
-           $arrValidatorRoleMessage[$dateEnd . ".required"] = " Bắt buộc nhập. ";
-           $arrValidatorRoleMessage[$dateStart . ".required"] = "Bắt buộc nhập. ";
+            $arrValidatorRoleMessage[$dateEnd . ".required"] = " Bắt buộc nhập. ";
+            $arrValidatorRoleMessage[$dateStart . ".required"] = "Bắt buộc nhập. ";
 
 //            $arrValidatorRole[$dateEnd] = "required|before:" . $dateStart;
             // $arrValidatorRole[$dateEnd] = "required";
@@ -256,10 +259,28 @@ class SemesterController extends Controller
         $arrValidatorRole['year_from'] = "sometimes|required";
         $arrValidatorRole['term'] = "required";
 //        $arrValidatorRole['year_to'] = "required|after:year_from";
-        $arrValidatorRoleMessage['year_from.required'] = 'Bắt buộc nhập. ';
-        $arrValidatorRoleMessage['year_to.required'] = 'Bắt buộc nhập. ';
 //        $arrValidatorRoleMessage['year_to.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
+
+        $arrValidatorRole['date_start'] = "required";
+        $arrValidatorRole['date_end'] = "required";
+        $arrValidatorRole['date_start_to_request_re_mark'] = "required";
+        $arrValidatorRole['date_end_to_request_re_mark'] = "required";
+        $arrValidatorRole['date_start_to_re_mark'] = "required";
+        $arrValidatorRole['date_end_to_re_mark'] = "required";
+
+        $arrValidatorRoleMessage['year_to.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
+//        $arrValidatorRoleMessage['date_end.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
+
+        $arrValidatorRoleMessage['date_start.required'] = 'Bắt buộc nhập thời gian bắt đầu học kì ';
+        $arrValidatorRoleMessage['date_end.required'] = 'Bắt buộc nhập thời gian kết thúc học kì ';
+        $arrValidatorRoleMessage['year_from.required'] = 'Bắt buộc nhập năm học. ';
+        $arrValidatorRoleMessage['year_to.required'] = 'Bắt buộc nhập năm học. ';
         $arrValidatorRoleMessage['term.required'] = 'Bắt buộc nhập học kì';
+
+        $arrValidatorRoleMessage['date_start_to_request_re_mark.required'] = 'Bắt buộc nhập thời gian gửi yêu cầu phúc khảo';
+        $arrValidatorRoleMessage['date_end_to_request_re_mark.required'] = 'Bắt buộc nhập thời gian kết thúc gửi yêu cầu phúc khảo';
+        $arrValidatorRoleMessage['date_start_to_re_mark.required'] = 'Bắt buộc nhập thời gian bắt đầu chấm phúc khảo';
+        $arrValidatorRoleMessage['date_end_to_re_mark.required'] = 'Bắt buộc nhập thời gian kết thúc chấm phúc khảo';
 
         $validator = Validator::make($request->all(), $arrValidatorRole, $arrValidatorRoleMessage);
 
@@ -280,12 +301,12 @@ class SemesterController extends Controller
             if (!empty($request->date_end_to_re_mark)) {
                 $semester->date_end_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_re_mark);
             }
-            if (!empty($request->date_start_to_mark)) {
-                $semester->date_start_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_mark);
-            }
-            if (!empty($request->date_end_to_mark)) {
-                $semester->date_end_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_mark);
-            }
+//            if (!empty($request->date_start_to_mark)) {
+//                $semester->date_start_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_mark);
+//            }
+//            if (!empty($request->date_end_to_mark)) {
+//                $semester->date_end_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_mark);
+//            }
             if (!empty($request->date_end_to_request_re_mark)) {
                 $semester->date_end_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_request_re_mark);
             }
@@ -302,14 +323,27 @@ class SemesterController extends Controller
             $semester->term = $request->term;
             $semester->save();
 
-            foreach ($rolesCanMark as $role) {
-                $dateEnd = "date_end_to_mark_" . $role->id;
-                $dateStart = "date_start_to_mark_" . $role->id;
+            $dateStartMarkOfFirstRoleCanMark = null;
+            $dateEndMarkOfLastRoleCanMark = null;
+            $first = false;
+//            foreach ($rolesCanMark as $role) {
+            for($i = 0 ; $i < count($rolesCanMark) ; $i++){
+
+                    $dateEnd = "date_end_to_mark_" . $rolesCanMark[$i]->id;
+                $dateStart = "date_start_to_mark_" . $rolesCanMark[$i]->id;
+
+                if($first == false){
+                    $dateStartMarkOfFirstRoleCanMark = Carbon::createFromFormat('d/m/Y', $request->$dateStart);
+                    $first = true;
+                }
+                if(count($rolesCanMark)-1 == $i){
+                    $dateEndMarkOfLastRoleCanMark = Carbon::createFromFormat('d/m/Y', $request->$dateEnd);
+                }
 
                 MarkTime::updateOrCreate(
                     [
                         'semester_id' => $semester->id,
-                        'role_id' => $role->id
+                        'role_id' => $rolesCanMark[$i]->id
                     ],
                     [
                         'mark_time_start' => Carbon::createFromFormat('d/m/Y', $request->$dateStart),
@@ -317,6 +351,11 @@ class SemesterController extends Controller
                     ]
                 );
             }
+
+            $semester->date_start_to_mark = $dateStartMarkOfFirstRoleCanMark;
+            $semester->date_end_to_mark = $dateEndMarkOfLastRoleCanMark;
+
+            $semester->save();
             // lưu thời gian chấm
 
             return response()->json([
@@ -349,5 +388,32 @@ class SemesterController extends Controller
         return response()->json([
             'status' => false
         ], 200);
+    }
+
+    public function ajaxGetSemesters()
+    {
+        $semesters = DB::table('semesters')
+            ->select(
+                '*',
+                DB::raw("CONCAT(semesters.year_from,'-',semesters.year_to) as semesterYear")
+            )
+            ->orderBy('id', 'DESC');
+
+        return DataTables::of($semesters)
+            ->addColumn('action', function ($semester) {
+                $linkEdit = route('semester-edit', $semester->id);
+                $linkUpdate = route('semester-update', $semester->id);
+                $linkDestroy = route('semester-destroy', $semester->id);
+
+                $btnEdit = "<a style='color: white' title='Sửa học kì' data-semester-id='$semester->id' data-semester-edit-link='$linkEdit'
+                data-semester-update-link='$linkUpdate' class='btn btn-primary update-semester'> <i class='fa fa-edit' aria-hidden='true'></i> </a>";
+
+                $btnDelete = "<a style='color: white' title='Xóa minh chứng' data-semester-id='$semester->id' id='destroy-semester' data-semester-delete-link='$linkDestroy'
+
+                class='btn btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></a>";
+                return "<p class='bs-component'>$btnEdit $btnDelete</p> ";
+
+            })
+            ->make(true);
     }
 }

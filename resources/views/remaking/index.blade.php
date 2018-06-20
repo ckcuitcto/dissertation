@@ -13,7 +13,7 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12  custom-quanly-taikhoan">
+            <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
                     <table id="remaking-table" class="table table-bordered table-hover">
                         <thead>
@@ -125,7 +125,7 @@
             $('#myModal').modal('show');
         });
 
-        $("button#btn-reply-remaking").click(function () {
+        $('body').on('click', 'button#btn-reply-remaking', function (e) {
             var valueForm = $('form#remarking-form').serialize();
             var url = $(this).attr('data-link');
             $('.form-group').find('span.messageErrors').remove();
@@ -158,11 +158,6 @@
                         });
                         $('div#myModal').modal('hide');
                         oTable.draw();
-                        // $('div#myModal').find('.modal-body').html('<p> Trả lời phúc khảo thành công</p>');
-                        // $("div#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                        // $('div#myModal').on('hidden.bs.modal', function (e) {
-                            // location.reload();
-                        // });
                     }
                 }
             });
@@ -177,6 +172,7 @@
         var oTable = $('#remaking-table').DataTable({
             "processing": true,
             "serverSide": true,
+            "autoWidth": false,
             "ajax": {
                 "url": "{{ route('ajax-remakings') }}",
                 "dataType": "json",

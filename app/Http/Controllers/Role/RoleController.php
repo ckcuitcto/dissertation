@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class RoleController extends Controller
 {

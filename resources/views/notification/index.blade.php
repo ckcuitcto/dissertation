@@ -15,31 +15,17 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
-                    <table class="table table-hover" id="sampleTable">
+                    <table class="table table-hover" id="notificationTable">
                         <thead>
                         <tr>
-                            <th scope="col">STT</th>
+                            <th scope="col">ID</th>
                             <th scope="col">Tiêu đề</th>
-                            {{--<th scope="col">Nội dung</th>--}}
+                            <th scope="col">Trạng thái</th>
                             <th scope="col">Người tạo</th>
                             <th scope="col">Ngày tạo</th>
                             <th>Tác vụ</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        @foreach($notificationList as $key => $value)
-                        <tr>
-                            <th scope="row">{{ $key + 1 }}</th>
-                            <td>{!! $value->title !!}</td>
-                            {{--<td>{!! $value->content !!}</td>--}}
-                            <td>{{ $value->name }}</td>
-                            <td>{{ date('H:i d/m/y',strtotime($value->created_at)) }}</td>
-                            <td>
-                                <button class="view-notification btn btn-info" data-id="{{$value->id}}" link-view="{{route('notifications-show',$value->id)}}"><i class="fa fa-eye" aria-hidden="true"></i></button>
-                            </td>
-                        </tr>
-                        @endforeach
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -66,6 +52,37 @@
 
     <script>
         $(document).ready(function () {
+
+            var oTable = $('#notificationTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "autoWidth": false,
+                "ajax": {
+                    "url": "{{ route('ajax-get-notifications') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": {
+                        "_token": "{{ csrf_token() }}"
+                    }
+                },
+                "columns": [
+                    {data: "id", name: "id"},
+                    {data: "title", name: "title"},
+                    {data: "status", name: "status"},
+                    {data: "createdByName", name: "createdByName"},
+                    {data: "created_at", name: "created_at"},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    // "zeroRecords": "Không có bản ghi nào!",
+                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 25
+            });
+
             $('body').on('click', 'button.view-notification', function (e) {
                 var url = $(this).attr('link-view');
                 var id = $(this).attr('data-id');
@@ -80,6 +97,7 @@
                                 $.each(result.notification, function (elementName, value) {
                                     $("div#myModal").find('p.' + elementName).append(value);
                                 });
+                                oTable.draw();
                             }
                         }
                     }
@@ -90,6 +108,10 @@
             $('div#myModal').on('hidden.bs.modal', function (e) {
                 $('div#myModal').find("p").html('');
             });
+
+            @if(!empty($notification))
+                $('input[type="search"]').val("{{ $notification->id.' '.$notification->title }}").keyup();
+            @endif
         });
     </script>
 @endsection
