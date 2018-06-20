@@ -121,7 +121,7 @@
 @endsection
 
 @section('sub-javascript')
-    <script src="{{ asset('js/web/faculty-detail.js') }} "></script>
+{{--    <script src="{{ asset('js/web/faculty-detail.js') }} "></script>--}}
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -233,7 +233,7 @@
                             }
                         } else if (result.status === true) {
                             $.notify({
-                                title: "Thêm lớp thành công  ",
+                                title: "Thành công  ",
                                 message: ":D",
                                 icon: 'fa fa-check'
                             },{
