@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Validator;
+use Yajra\DataTables\DataTables;
 
 class ClassController extends Controller
 {
@@ -185,5 +186,49 @@ class ClassController extends Controller
         return response()->json([
             'classes' => $classes
         ],200);
+    }
+
+    public function ajaxGetStudentByClass(){
+
+        $students = DB::table('students')
+            ->leftJoin('classes', 'classes.id', '=', 'students.class_id')
+            ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+            ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+            ->select(
+                'students.id',
+                'students.user_id as userId',
+                'users.name as userName',
+                'users.email as userEmail',
+                'users.phone_number',
+                'users.gender',
+                'users.address',
+                'users.birthday',
+                'students.status',
+                'roles.display_name as roleName'
+            );
+
+        return DataTables::of($students)
+            ->editColumn('gender', function ($student){
+                $displayStatus = $this->getDisplayGender($student->gender);
+                return $displayStatus;
+            })->editColumn('status', function ($student){
+                $displayStatus = self::getDisplayStatusStudent($student->status);
+                return $displayStatus;
+            })
+            ->addColumn('action', function ($student) {
+                $studentId = $student->id;
+
+                $linkEdit = route('student-edit',$studentId);
+                $linkUpdate = route('student-update',$studentId);
+                $linkButton = "<button style='color:white' class='btn btn-primary update-student' 
+                                data-student-edit-link='$linkEdit'
+                                data-student-update-link='$linkUpdate'
+                                data-student-id='$studentId'
+                                 title='Sửa thông tin sinh viên'>
+                                <i class='fa fa-edit' aria-hidden='true'></i>
+                               </button>";
+                return "<p class='bs-component'>$linkButton </p>";
+            })
+            ->make(true);
     }
 }

@@ -52,6 +52,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/get-list-by-faculty', ['as' => 'class-get-list-by-faculty', 'uses' => 'Department\ClassController@getListClassByFaculty']);
         Route::post('/get-list-by-faculty-none', ['as' => 'class-get-list-by-faculty-none', 'uses' => 'Department\ClassController@getListClassByFacultyAddAll']);
 
+        Route::post('/get-students-by-class', ['as' => 'ajax-get-students-by-class', 'uses' => 'Department\ClassController@ajaxGetStudentByClass']);
+
+
     });
 
     Route::group(['prefix' => 'sinh-vien'], function () {

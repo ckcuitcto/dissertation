@@ -48,30 +48,6 @@
                                     <th>Tác vụ</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                @foreach($faculty->classes as $class)
-                                    <tr>
-                                        <td><a href="{{ route('class-detail',$class->id) }}">{{ $class->name }} </a>
-                                        </td>
-                                        <td>{{ count($class->Students) }}</td>
-                                        <td style="color:white">
-                                            <a data-id="{{$class->id}}" id="class-edit"
-                                               data-edit-link="{{route('class-edit',$class->id)}}"
-                                               data-update-link="{{route('class-update',$class->id)}}"
-                                               class="btn btn-primary">
-                                                <i class="fa fa-lg fa-edit " aria-hidden="true"> </i> Sửa
-                                            </a>
-                                            @if(!count($class->Students)>0)
-                                                <a data-id="{{$class->id}}" id="class-destroy"
-                                                   data-link="{{route('class-destroy',$class->id)}}"
-                                                   class="btn btn-danger">
-                                                    <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i> Xóa
-                                                </a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
                             </table>
                         </form>
                         <div class="row">

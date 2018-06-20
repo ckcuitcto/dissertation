@@ -236,6 +236,8 @@
     <script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
     <script src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/script.js') }}"></script>
     <script>
         $(document).ready(function () {
