@@ -220,7 +220,7 @@ class ProofController extends Controller
                     $evaluationCriterias = EvaluationCriteria::find($proof->evaluation_criteria_id);
 
                     $notifications = new Notification();
-                    $title = "Sửa trạng thái minh chứng của sinh viên: <b>".$student->User->users_id."-".$student->User->name ."</b> thuộc lớp: ".$student->Classes->name;
+                    $title = "Sửa trạng thái minh chứng của sinh viên: ".$student->User->users_id."-".$student->User->name ." thuộc lớp: ".$student->Classes->name;
                     $notifications->title = $title;
                     $notifications->created_by = Auth::user()->Staff->id;
                     if($request->valid != 0){

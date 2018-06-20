@@ -237,6 +237,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/show/{id}', ['as' => 'notifications-show', 'uses' => 'Notification\NotificationController@show']);
 
+        Route::post('/get-notifications', ['as' => 'ajax-get-notifications', 'uses' => 'Notification\NotificationController@ajaxGetNotifications']);
+
     });
 
     Route::group(['prefix' => 'tai-khoan', 'middleware' => 'can:manage-user'], function () {
