@@ -39,9 +39,10 @@
                     <div class="tile-body">
                         <form id="class-form-export" action="{{route('export-file')}}" method="post">
                             {{ csrf_field() }}
-                            <table class="table table-hover table-bordered" id="facultyTable">
+                            <table class="table table-hover table-bordered" id="facultyDetailTable">
                                 <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Lớp</th>
                                     <th>Số lượng sinh viên</th>
                                     <th>Tác vụ</th>
@@ -144,13 +145,38 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            var oTable = $('#facultyDetailTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "autoWidth": false,
+                "ajax": {
+                    "url": "{{ route('ajax-get-faculty-detail') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": {
+                        "_token": "{{ csrf_token() }}"
+                    }
+                },
+                "columns": [
+                    {data: "id", name: "id"},
+                    {data: "name", name: "name"},
+                    {data: "countStudent", name: "countStudent"},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    // "zeroRecords": "Không có bản ghi nào!",
+                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 25
+            });
 
             $('body').on('click', 'input[name=checkAll]', function (e) {
                 if($(this).is(':checked')){
@@ -182,7 +208,7 @@
             $('div.alert-success').delay(2000).slideUp();
 
 
-            $('body').on('click', 'a#class-edit', function (e) {
+            $('body').on('click', 'a.class-edit', function (e) {
                 var urlEdit = $(this).attr('data-edit-link');
                 var urlUpdate = $(this).attr('data-update-link');
                 var id = $(this).attr('data-id');
@@ -196,10 +222,7 @@
                         if (result.status === true) {
                             if (result.classes !== undefined) {
                                 $.each(result.classes, function (elementName, value) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + value)
                                     $('.' + elementName).val(value);
-//                                    });
                                 });
                             }
                         }
@@ -234,23 +257,22 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#myModal').find('.modal-body').html('<p>Đã thêm lớp thành công</p>');
-                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#myModal').on('hidden.bs.modal', function (e) {
-                                $('#myModal').find("input[type=text],input[type=number], select").val('');
-                                $('.text-red').html('');
-                                $('span.messageErrors').remove();
-                                $('#myModal').find(".modal-title").text("Thêm mới lớp thuộc khoa {{ $faculty->name }}");
-                                $('#myModal').find(".modal-footer > button[name=btn-save-class]").html('Thêm');
-                                $('#myModal').find(".modal-footer > button[name=btn-save-class]").attr('data-link', "{{ route('class-store') }}");
-                                location.reload();
+                            $.notify({
+                                title: "Thêm lớp thành công  ",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#myModal').modal('hide');
+                            oTable.draw();
+
                         }
                     }
                 });
             });
 
-            $('body').on('click', 'a#class-destroy', function (e) {
+            $('body').on('click', 'a.class-destroy', function (e) {
             // $('a#class-destroy').click(function () {
                 var id = $(this).attr("data-id");
                 var url = $(this).attr('data-link');
@@ -274,7 +296,7 @@
                                 if (data.status === true) {
                                     swal("Deleted!", "Đã xóa lớp " + data.class.name, "success");
                                     $('.sa-confirm-button-container').click(function () {
-                                        location.reload();
+                                        oTable.draw();
                                     })
                                 } else {
                                     swal("Cancelled", "Không tìm thấy lớp !!! :)", "error");

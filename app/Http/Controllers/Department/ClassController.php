@@ -147,7 +147,7 @@ class ClassController extends Controller
         if (!empty($class)) {
             $class->delete();
             return response()->json([
-                'faculty' => $class,
+                'class' => $class,
                 'status' => true
             ], 200);
         }

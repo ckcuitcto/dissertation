@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update'])->middleware('can:faculty-change');
 
         Route::post('/get-faculties', ['as' => 'ajax-get-faculties', 'uses' => 'Department\FacultyController@ajaxGetFaculties']);
+        Route::post('/get-faculty-detail', ['as' => 'ajax-get-faculty-detail', 'uses' => 'Department\FacultyController@ajaxGetFacultyDetail']);
 
     });
 
