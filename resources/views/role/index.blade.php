@@ -16,7 +16,7 @@
                 <div class="tile">
 
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        <table class="table table-hover table-bordered" id="rolesTable">
                             <thead>
                             <tr>
                                 <th>Id</th>
@@ -39,9 +39,9 @@
                                     <td>
                                         @foreach($role->Permissions as $key => $permission)
                                             @if($key == count($role->Permissions)-1)
-                                                <b>{{ $permission->name  }}</b>
+                                                <b>{{ $permission->display_name  }}</b>
                                             @else
-                                                <b>{{ $permission->name  }}</b>&nbsp&nbsp {{ " && " }}&nbsp&nbsp
+                                                <b>{{ $permission->display_name  }}</b>&nbsp&nbsp {{ " -- " }}&nbsp&nbsp
                                             @endif
                                         @endforeach
                                     </td>
@@ -173,12 +173,9 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-
 
     <script>
         $(document).ready(function () {

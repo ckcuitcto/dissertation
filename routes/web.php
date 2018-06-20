@@ -34,6 +34,8 @@ Route::group(['middleware' => 'auth'], function () {
         //update
         Route::post('/update/{id}', ['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update'])->middleware('can:faculty-change');
 
+        Route::post('/get-faculties', ['as' => 'ajax-get-faculties', 'uses' => 'Department\FacultyController@ajaxGetFaculties']);
+
     });
 
     Route::group(['prefix' => 'lop','middleware' => 'can:manage-class'], function () {
@@ -73,8 +75,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'vai-tro','middleware' => 'can:manager-role'], function () {
         // danh sach role
         Route::get('/', ['as' => 'role-list', 'uses' => 'Role\RoleController@index']);
-        // vao xem chi tiet role, se co cac danh sach user thuoc role o day
-//        Route::get('/{id}',['as' => 'role-detail','uses' => 'Role\RoleController@show']);
         // xoa 1 role
 //        Route::group(['middleware' => 'role:admin'],function() {
         Route::get('/destroy/{id}', ['as' => 'role-destroy', 'uses' => 'Role\RoleController@destroy']);
@@ -83,6 +83,9 @@ Route::group(['middleware' => 'auth'], function () {
         // chỉnh sửa role
         Route::post('/update/{id}', ['as' => 'role-update', 'uses' => 'Role\RoleController@update']);
         Route::get('/edit/{id}', ['as' => 'role-edit', 'uses' => 'Role\RoleController@edit']);
+
+//        Route::post('/get-roles', ['as' => 'ajax-get-roles', 'uses' => 'Permission\PermissionController@ajaxGetRoles']);
+
 //        });
     });
 

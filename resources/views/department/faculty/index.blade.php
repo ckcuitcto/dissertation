@@ -15,40 +15,41 @@
             <div class="col-md-12">
                 <div class="tile">
                     <div class="tile-body">
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        <table class="table table-hover table-bordered" id="facultiesTable">
                             <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Khoa</th>
                                 <th>Số lượng lớp</th>
                                 <th>Tác vụ</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @foreach($faculties as $faculty)
-                                <tr>
-                                    <td>
-                                        <a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>
-                                    </td>
-                                    <td>{{ count($faculty->classes) }}</td>
-                                    <td style="color:white">
-                                        <a class="btn btn-primary icon-btn" data-faculty-id="{{$faculty->id}}"
-                                           id="faculty-update"
-                                           data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"
-                                           data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
-                                        </a>
-                                        @if(!count($faculty->classes)>0 AND !count($faculty->News)>0)
-                                            <a class="btn btn-danger" data-faculty-id="{{$faculty->id}}"
-                                               id="faculty-destroy"
-                                               data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                            {{--<tbody>--}}
+                            {{--@foreach($faculties as $faculty)--}}
+                                {{--<tr>--}}
+                                    {{--<td>--}}
+                                        {{--<a href="{{ route('faculty-detail',$faculty->id) }}">{{ $faculty->name }} </a>--}}
+                                    {{--</td>--}}
+                                    {{--<td>{{ count($faculty->classes) }}</td>--}}
+                                    {{--<td style="color:white">--}}
+                                        {{--<a class="btn btn-primary icon-btn" data-faculty-id="{{$faculty->id}}"--}}
+                                           {{--id="faculty-update"--}}
+                                           {{--data-faculty-edit-link="{{route('faculty-edit',$faculty->id)}}"--}}
+                                           {{--data-faculty-update-link="{{route('faculty-update',$faculty->id)}}">--}}
+                                            {{--<i class="fa fa-lg fa-edit" aria-hidden="true"> </i>--}}
+                                        {{--</a>--}}
+                                        {{--@if(!count($faculty->classes)>0 AND !count($faculty->News)>0)--}}
+                                            {{--<a class="btn btn-danger" data-faculty-id="{{$faculty->id}}"--}}
+                                               {{--id="faculty-destroy"--}}
+                                               {{--data-faculty-link="{{route('faculty-destroy',$faculty->id)}}">--}}
+                                                {{--<i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>--}}
 
-                                            </a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
+                                            {{--</a>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
+                            {{--@endforeach--}}
+                            {{--</tbody>--}}
                         </table>
 
                         <div class="row">
@@ -105,11 +106,38 @@
 @section('sub-javascript')
     <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
 
     <script>
         $(document).ready(function () {
-            $("a#faculty-update").click(function () {
+            var oTable = $('#facultiesTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "autoWidth": false,
+                "ajax": {
+                    "url": "{{ route('ajax-get-faculties') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": {
+                        "_token": "{{ csrf_token() }}"
+                    }
+                },
+                "columns": [
+                    {data: "id", name: "id"},
+                    {data: "name", name: "name"},
+                    {data: "countClass", name: "countClass"},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    // "zeroRecords": "Không có bản ghi nào!",
+                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 25
+            });
+
+            $('body').on('click', 'a.faculty-update', function (e) {
                 var urlEdit = $(this).attr('data-faculty-edit-link');
                 var urlUpdate = $(this).attr('data-faculty-update-link');
                 var id = $(this).attr('data-faculty-id');
@@ -123,10 +151,7 @@
                         if (result.status === true) {
                             if (result.faculty !== undefined) {
                                 $.each(result.faculty, function (elementName, value) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + messageValue)
                                     $('.' + elementName).val(value);
-//                                    });
                                 });
                             }
                         }
@@ -138,7 +163,8 @@
                 $('#myModal').modal('show');
             });
 
-            $("#btn-save-faculty").click(function () {
+
+            $('body').on('click', '#btn-save-faculty', function (e) {
                 var valueForm = $('form#faculty-form').serialize();
                 var url = $(this).attr('data-link');
                 $('.form-group').find('span.messageErrors').remove();
@@ -158,17 +184,21 @@
                                 });
                             }
                         } else if (result.status === true) {
-                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
-                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload();
+                            $.notify({
+                                title: "Thành công  ",
+                                message: ":D",
+                                icon: 'fa fa-check'
+                            },{
+                                type: "success"
                             });
+                            $('div#myModal').modal('hide');
+                            oTable.draw();
                         }
                     }
                 });
             });
 
-            $('a#faculty-destroy').click(function () {
+            $('body').on('click', 'a.faculty-destroy', function (e) {
                 var id = $(this).attr("data-faculty-id");
                 var url = $(this).attr('data-faculty-link');
                 swal({
@@ -191,7 +221,7 @@
                                 if (data.status === true) {
                                     swal("Deleted!", "Đã xóa Khoa " + data.faculty.name, "success");
                                     $('.sa-confirm-button-container').click(function () {
-                                        location.reload();
+                                        oTable.draw();
                                     })
                                 } else {
                                     swal("Cancelled", "Không tìm thấy Khoa !!! :)", "error");
