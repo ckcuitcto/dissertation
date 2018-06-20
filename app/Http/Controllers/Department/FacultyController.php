@@ -209,7 +209,7 @@ class FacultyController extends Controller
 
             $linkEdit = route('class-edit', $classId);
             $linkUpdate = route('class-update', $classId);
-            $buttonEdit = "<a style='color:white' class='btn btn-primary class-update' data-id='$classId'
+            $buttonEdit = "<a style='color:white' class='btn btn-primary class-edit' data-id='$classId'
                             data-edit-link='$linkEdit' data-update-link='$linkUpdate' title='Sửa lớp'>
                            <i class='fa fa-edit' aria-hidden='true'></i> </a>";
             $buttonDetail .= " ".$buttonEdit;

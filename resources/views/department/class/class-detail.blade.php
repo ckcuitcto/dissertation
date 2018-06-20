@@ -211,10 +211,7 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-
+    {{--<script type="text/javascript" src="{{ asset('js/web/class-detail.js') }} "></script>--}}
     <script>
         $(document).ready(function () {
 
@@ -244,10 +241,12 @@
                 ],
                 "language": {
                     "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                    // "zeroRecords": "Không có bản ghi nào!",
-                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "zeroRecords": "Không có bản ghi nào!",
+                    "info": "Hiển thị trang _PAGE_ của _PAGES_",
                     "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
+
                 },
                 "pageLength": 25
             });

@@ -121,8 +121,7 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('js/web/faculty-detail.js') }} "></script>
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -204,7 +203,7 @@
                         }
                     }
                 });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
+                $('#myModal').find(".modal-title").text('Sửa thông tin lớp ');
                 $('#myModal').find(".modal-footer > button[name=btn-save-class]").html('Sửa');
                 $('#myModal').find(".modal-footer > button[name=btn-save-class]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');
