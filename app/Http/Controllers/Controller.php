@@ -35,7 +35,7 @@ class Controller extends BaseController
 
     protected function getCurrentSemester()
     {
-        $semester = Semester::where('date_start', '<=', Carbon::now()->format('Y/m/d'))->orderBy('id', 'desc')->first();
+        $semester = Semester::where('date_start', '<=', Carbon::now()->format('Y/m/d'))->orderBy('date_start', 'desc')->first();
         return $semester;
     }
 
