@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('title')
+    STU| 403
+@endsection
 @section('content')
     <main>
         <div class="page-error">

@@ -27,32 +27,32 @@ class StaffSeeder extends Seeder
                 'role_id' => 5,
                 'faculty_id' => null
             ],[
-                'users_id' => 'BCMK000001',
+                'users_id' => 'BCNK000001',
                 'name' => 'Ban chủ nhiệm Khoa IT 1',
-                'email' => 'BCMK000001@gmail1.com',
-                'password' => bcrypt('BCMK000001'),
+                'email' => 'BCNK000001@gmail1.com',
+                'password' => bcrypt('BCNK000001'),
                 'role_id' => 4,
                 'faculty_id' => 1
             ],          
             [
-                'users_id' => 'BCMK000002',
+                'users_id' => 'BCNK000002',
                 'name' => 'Ban chủ nhiệm Khoa QTKD 1',
-                'email' => 'BCMK000002@gmail1.com',
-                'password' => bcrypt('BCMK000002'),
+                'email' => 'BCNK000002@gmail1.com',
+                'password' => bcrypt('BCNK000002'),
                 'role_id' => 4,
                 'faculty_id' => 2
             ],          
             [
-                'users_id' => 'BCMK000003',
+                'users_id' => 'BCNK000003',
                 'name' => 'Ban chủ nhiệm Khoa Cơ Khí 1',
-                'email' => 'BCMK000003@gmail1.com',
-                'password' => bcrypt('BCMK000003'),
+                'email' => 'BCNK000003@gmail1.com',
+                'password' => bcrypt('BCNK000003'),
                 'role_id' => 4,
                 'faculty_id' => 6
             ],
             [
                 'users_id' => 'GVIT000001',
-                'name' => 'CVHT Khoa IT 1',
+                'name' => 'Thầy Hùng',
                 'email' => 'GVIT000001@gmail.com',
                 'password' => bcrypt('GVIT000001'),
                 'role_id' => 3,
@@ -89,17 +89,17 @@ class StaffSeeder extends Seeder
                 'role_id' => 3,
                 'faculty_id' => 6
             ],[
-                'users_id' => 'ADMINDUCCC',
-                'name' => 'A D M I N',
+                'users_id' => 'SUPERADMIN',
+                'name' => 'A D M I N 1',
                 'email' => 'thducit@gmail.com',
-                'password' => bcrypt('ADMINDUCCC'),
+                'password' => bcrypt('SUPERADMIN'),
                 'role_id' => 6,
                 'faculty_id' => null
             ],[
-                'users_id' => 'ADMINHANNN',
-                'name' => 'A D M I N',
+                'users_id' => 'SUP3R4DMIN',
+                'name' => 'A D M I N 2',
                 'email' => 'tnghanit@gmail.com',
-                'password' => bcrypt('ADMINHANNN'),
+                'password' => bcrypt('SUP3R4DMIN'),
                 'role_id' => 6,
                 'faculty_id' => null
             ],
