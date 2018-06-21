@@ -372,7 +372,7 @@ class Controller extends BaseController
 
     public function getStatusEvaluationForm($status)
     {
-        $userLogin = $this->userLogin();
+        $userLogin = $this->getUserLogin();
         $binary = (string)decbin($status);
         $arrBinary = str_split($binary);
         if(!empty($arrBinary[$userLogin->Role->weight - 1]) AND $arrBinary[$userLogin->Role->weight - 1] == 1){
