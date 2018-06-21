@@ -329,14 +329,17 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-
+    <script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
+    <script src="{{ asset('vendor/datatables/buttons.server-side.js')  }}"></script>
     <script>
 
         $(document).ready(function () {
 
             var oTable = $('#tableManageUsers').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy','csv','excel'
+                ],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
