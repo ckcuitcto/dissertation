@@ -396,8 +396,7 @@ class SemesterController extends Controller
             ->select(
                 '*',
                 DB::raw("CONCAT(semesters.year_from,'-',semesters.year_to) as semesterYear")
-            )
-            ->orderBy('id', 'DESC');
+            );
 
         return DataTables::of($semesters)
             ->addColumn('action', function ($semester) {

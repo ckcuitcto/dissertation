@@ -198,7 +198,7 @@
                                                             @if( $evaluationForm->Student->User->users_id == $user->users_id AND $user->Role->name == $currentRoleCanMark->name)
                                                                 @php $name= "proof".$valueLevel3->id; @endphp
                                                                 <input type="file" class="proof" id="{{$valueLevel3->id}}"
-                                                                       name="{{ $name."[]" }}" multiple style="background-color:tomato">
+                                                                       name="{{ $name."[]" }}" multiple>
                                                             @endif
                                                         @endisset
                                                         @if(!empty($proofs->where('evaluation_criteria_id',$valueLevel3->id)))

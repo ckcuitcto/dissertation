@@ -35,7 +35,7 @@ class Controller extends BaseController
 
     protected function getCurrentSemester()
     {
-        $semester = Semester::where('date_start', '<=', Carbon::now()->format('Y/m/d'))->orderBy('id', 'desc')->first();
+        $semester = Semester::where('date_start', '<=', Carbon::now()->format('Y/m/d'))->orderBy('date_start', 'desc')->first();
         return $semester;
     }
 
@@ -372,7 +372,7 @@ class Controller extends BaseController
 
     public function getStatusEvaluationForm($status)
     {
-        $userLogin = $this->userLogin();
+        $userLogin = $this->getUserLogin();
         $binary = (string)decbin($status);
         $arrBinary = str_split($binary);
         if(!empty($arrBinary[$userLogin->Role->weight - 1]) AND $arrBinary[$userLogin->Role->weight - 1] == 1){

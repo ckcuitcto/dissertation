@@ -141,10 +141,12 @@
                 class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
                 class="treeview-indicator fa fa-angle-right"></i></a>
                 @can('comment-add')
+                    @if ($userLogin->Role->weight < ROLE_COVANHOCTAP)
                     <ul class="treeview-menu">
                         <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
                                         class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
                     </ul>
+                    @endif
                 @endcan
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('comment-list') }}"><i

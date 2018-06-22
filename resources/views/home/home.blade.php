@@ -70,7 +70,7 @@
                 </a>
             </div>
         </div>
-        @if(!empty($userLogin->Student))
+        @if(!empty($userLogin->Student) AND !empty($evaluationForm))
             <div class="row">
                 <div class="col-md-12">
                     <div class="tile">

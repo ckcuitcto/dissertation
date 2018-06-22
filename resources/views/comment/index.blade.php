@@ -162,8 +162,8 @@
                         if (result.status === true) {
                             if (result.comment !== undefined) {
                                 $.each(result.comment, function (elementName, value) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + value);
+// $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+// alert(elementName + "+ " + value);
                                     if (elementName === 'title' || elementName === 'content') {
                                         $('.' + elementName).html(value);
                                     } else if(elementName === 'reply') {

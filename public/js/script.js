@@ -13,12 +13,14 @@ function readURL(input) {
 
 <!--Khoa coppy-->
 
-/*  $(function(){
-      $('img').bind('dragstart', function(event) { event.preventDefault(); });
-      $('body').delegate("img").on("contextmenu",function(){
-          return false;
-      });
-  })*/
+// $(function () {
+//     $('img').bind('dragstart', function (event) {
+//         event.preventDefault();
+//     });
+//     $('body').delegate("img").on("contextmenu", function () {
+//         return false;
+//     });
+// });
 // $(document).keydown(function (event) {
 //     if (event.keyCode == 123) {
 //         return false;
@@ -26,11 +28,11 @@ function readURL(input) {
 //         return false;
 //     }
 // });
-//
-//
+
+
 // if (document.layers) {
 //     document.captureEvents(Event.MOUSEDOWN);
-//
+
 //     $(document).mousedown(function () {
 //         return false;
 //     });
@@ -46,7 +48,7 @@ function readURL(input) {
 //         }
 //     });
 // }
-//
+
 // //Disable the Context Menu event.
 // $(document).contextmenu(function () {
 //     return false;
