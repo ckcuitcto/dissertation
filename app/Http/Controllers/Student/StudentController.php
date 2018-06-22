@@ -363,12 +363,19 @@ class StudentController extends Controller
                 $classes = null;
                 $monitor = null;
                 $semester = null;
+
                 for ($i = 4; $i < count($dataFileExcel); $i++) {
                     if ($i == 4) {
                         // lấy khoa theo Id
-                        $facultyName = explode(':', $dataFileExcel[$i][5]);
+                        $column = 5;
+                        $facultyName = explode(':', $dataFileExcel[$i][$column]);
                         if(empty($facultyName[0])){
-                            $facultyName = explode(':', $dataFileExcel[$i][6]);
+                            while($column <= 10){
+                                $facultyName = explode(':', $dataFileExcel[$i][++$column]);
+                                if(!empty($facultyName[0])){
+                                    break;
+                                }
+                            }
                         }
                         $facultyName = trim($facultyName[1]);
                         $faculty = Faculty::where('name', 'like', "%$facultyName%")->first();
@@ -379,9 +386,15 @@ class StudentController extends Controller
 
                         // lấy Lớp theo Id
                         // trường hợp file excel. file thị lớp cột 2. file thì lớp cột 3
-                        $className = explode(':', $dataFileExcel[$i][2]);
+                        $column = 2;
+                        $className = explode(':', $dataFileExcel[$i][$column]);
                         if(empty($className[0])){
-                            $className = explode(':', $dataFileExcel[$i][3]);
+                            while($column <= 10){
+                                $className = explode(':', $dataFileExcel[$i][++$column]);
+                                if(!empty($className[0])){
+                                    break;
+                                }
+                            }
                         }
                         $className = trim($className[1]);
                         $classes = Classes::where('name', 'like', "%$className%")->first();
@@ -406,9 +419,15 @@ class StudentController extends Controller
 
                     } elseif ($i == 5) {
                         //lấy học kì từ học kì và năm học
-                        $term = explode(':', $dataFileExcel[$i][2]);
+                        $column = 2;
+                        $term = explode(':', $dataFileExcel[$i][$column]);
                         if(empty($term[0])){
-                            $term = explode(':', $dataFileExcel[$i][3]);
+                            while($column <= 10){
+                                $term = explode(':', $dataFileExcel[$i][++$column]);
+                                if(!empty($term[0])){
+                                    break;
+                                }
+                            }
                         }
                         $term = trim($term[1]);
                         switch ($term) {
@@ -419,9 +438,16 @@ class StudentController extends Controller
                                 $term = 1;
                                 break;
                         }
-                        $year = explode(':', $dataFileExcel[$i][5]);
+
+                        $column = 5;
+                        $year = explode(':', $dataFileExcel[$i][$column]);
                         if(empty($year[0])){
-                            $year = explode(':', $dataFileExcel[$i][6]);
+                            while($column <= 10){
+                                $year = explode(':', $dataFileExcel[$i][++$column]);
+                                if(!empty($year[0])){
+                                    break;
+                                }
+                            }
                         }
                         $year = explode('-', trim($year[1]));
                         $yearFrom = trim($year[0]);
@@ -432,7 +458,7 @@ class StudentController extends Controller
                             ['year_to' , $yearTo],
                             ['term' , $term],
                         ])->first();
-                        
+
                         if (empty($semester)) {
                             $arrError[] = "Học kì $term năm học $yearFrom - $yearTo không tồn tại";
                         }else{

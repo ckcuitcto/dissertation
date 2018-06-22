@@ -187,6 +187,7 @@
                 if (parseInt($fileUpload.get(0).files.length) > 20) {
                     $('form#import-student-form').find('.fileImport').parents('.form-row').append('<span class="messageErrors" style="color:red">Chỉ được upload tối đa 20 tập tin</span>');
                 } else {
+                    $('#importModal').find('.show-error').hide();
                     $("#importModal").find("p.child-error").remove();
                     var formData = new FormData();
                     var fileImport = document.getElementById('fileImport');
@@ -248,7 +249,7 @@
                 }
             });
 
-            $('#myModal').on('hidden.bs.modal', function (e) {
+            $('#importModal').on('hidden.bs.modal', function (e) {
                 $("input[type=text],input[type=number], select").val('');
                 $('.text-red').html('');
                 $('.form-row').find('span.messageErrors').remove();
