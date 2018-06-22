@@ -38,15 +38,39 @@ class ExportController extends Controller
     public function ajaxGetClasses(Request $request)
     {
         $user = $this->getUserLogin();
-        $classes = DB::table('student_list_each_semesters')
-            ->leftJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
-            ->leftJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
-            ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
-            ->select(
-                DB::raw('count(student_list_each_semesters.user_id) AS count'),
-                'classes.*'
-            )
-            ->groupBy('student_list_each_semesters.class_id');
+        if($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) {
+            $classes = DB::table('student_list_each_semesters')
+                ->leftJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
+                ->leftJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
+                ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+                ->select(
+                    DB::raw('count(student_list_each_semesters.user_id) AS count'),
+                    'classes.*'
+                )
+                ->groupBy('student_list_each_semesters.class_id');
+        }elseif($user->Role->weight == ROLE_BANCHUNHIEMKHOA) {
+            $classes = DB::table('student_list_each_semesters')
+                ->leftJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
+                ->leftJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
+                ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+                ->select(
+                    DB::raw('count(student_list_each_semesters.user_id) AS count'),
+                    'classes.*'
+                )
+                ->where('classes.faculty_id',$user->faculty_id)
+                ->groupBy('student_list_each_semesters.class_id');
+        }elseif($user->Role->weight == ROLE_COVANHOCTAP) {
+            $classes = DB::table('student_list_each_semesters')
+                ->leftJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
+                ->leftJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
+                ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+                ->select(
+                    DB::raw('count(student_list_each_semesters.user_id) AS count'),
+                    'classes.*'
+                )
+                ->where('student_list_each_semesters.staff_id',$user->Staff->id)
+                ->groupBy('student_list_each_semesters.class_id');
+        }
 
         $dataTables = DataTables::of($classes)
             ->addColumn('action', function ($class) {
