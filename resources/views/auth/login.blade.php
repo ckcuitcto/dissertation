@@ -8,13 +8,10 @@
         <div class="cover"></div>
     </section>
     <section class="login-content">
-        {{-- <div class="logo">
-            <h1>Trường Đại học Công nghệ Sài Gòn</h1>
-        </div> --}}
         <div class="login-box">
             <form class="login-form" method="POST" action="{{ route('login') }}">
                 {{ csrf_field() }}
-                <img src="{{'template/assets/logo.bmp'}}" width="30%">
+                <img src="{{asset('template/assets/logo.bmp')}}" width="30%">
                 <div class="row" style="margin-top:-65px;">
                     <div class="col-sm-6 col-md-4"></div>
                     <div class="col-sm-6 col-md-8">
@@ -60,15 +57,16 @@
             <form class="forget-form" method="POST" action="{{ route('password.email') }}">
                 {{ csrf_field() }}
                 <img src="{{'template/assets/logo.bmp'}}" width="30%">
-                <div class="row" style="margin-top:-65px;">
+                <div class="row" style="margin-top:-80px;border">
                     <div class="col-sm-6 col-md-4"></div>
                     <div class="col-sm-6 col-md-8">
                         <h4 class="login-head" style="text-align:right;color:#006BB3;font-family: 'Dosis', sans-serif;">                    
                          SAIGON TECHNOLOGY UNIVERSITY</h4>
                     </div>
                 </div>  
-                <h4 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Quên mật khẩu ?</h4>
+                
                 <div class="form-group">
+                    <h4 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Quên mật khẩu ?</h4>
                     <label class="control-label">Email</label>
                     <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
                     @if ($errors->has('email'))
