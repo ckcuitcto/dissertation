@@ -27,7 +27,7 @@
             @if($authCheck)
             <li class="dropdown">
                 <a class="app-nav__item" href="#" data-toggle="dropdown"
-                                    aria-label="Show notifications" style="text-decoration: none;">Thông báo &nbsp;<i class="fa fa-bell-o fa-lg">{{ count($notifications) }}</i></a>
+                                    aria-label="Show notifications" style="text-decoration: none;">Thông báo &nbsp;<i class="fa fa-bell-o fa-lg"></i><span class="message-notification">{{ count($notifications) }}</span></a>
                 <ul class="app-notification dropdown-menu dropdown-menu-right">
                     <li class="app-notification__title">Bạn có {{ count($notifications) }} thông báo mới</li>
                     <div class="app-notification__content">
@@ -219,7 +219,15 @@
             @can('export-file')
             <li><a class="app-menu__item" href="{{ route('export-file-list') }}">
                     <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
-                            class="app-menu__label">Xuất File </span>
+                            class="app-menu__label">Xuất File đánh giá</span>
+                </a>
+            </li>
+            @endcan
+
+            @can('backup')
+            <li><a class="app-menu__item" href="{{ route('export-file-list') }}">
+                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                            class="app-menu__label">Backup</span>
                 </a>
             </li>
             @endcan

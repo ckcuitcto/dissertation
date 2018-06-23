@@ -14914,3 +14914,17 @@ input[type=number]::-webkit-outer-spin-button {
 .input-evaluation-form {
   width: 50px;
 }
+
+.custom-quanly-taikhoan .invoice tr td:last-child{
+  width: 20%;
+  text-align: center;
+}
+.message-notification{
+  position: absolute;
+  top: 22px;
+  color: #a72838;
+  font-weight: bold;
+}
+.popup-role .modal-dialog.modal-lg{
+  max-width: 75%;
+}

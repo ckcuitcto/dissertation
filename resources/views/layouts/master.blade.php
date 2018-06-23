@@ -13,8 +13,8 @@
     {{--<link href="{{ asset('css/font-css.css') }}" rel="stylesheet">--}}
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('template/css/font-awesome.min.css') }}">
     <!-- Font-icon css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.0.3/css/buttons.dataTables.min.css">
-
+    {{--<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.0.3/css/buttons.dataTables.min.css">--}}
+    @yield('css')
 {{--    <link href="{{ URL::asset('css/bootstrap-datepicker.css') }}" rel="stylesheet"/>--}}
     <link rel="shortcut icon" href="{{ url('icon/logoSTU.ico')}}">
     <title>STU - @yield('title')</title>

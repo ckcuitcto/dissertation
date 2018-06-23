@@ -62,7 +62,7 @@
                             </tfoot>
                         </table>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <button data-toggle="modal" data-target="#modal-add-user" class="btn btn-primary"
                                         id="btn-add-user" type="button"><i class="fa fa-pencil-square-o"
                                                                            aria-hidden="true"></i>Thêm tài khoản
@@ -72,7 +72,7 @@
                                                          aria-hidden="true"></i> Nhập danh sách sinh viên khóa mới.
                                 </button>
                                 <a href="{{ asset('upload/file_mau/File_mau.xlsx') }}" class="btn btn-outline-success">
-                                    <i class="fa fa-download" aria-hidden="true"></i>Tải file mẫu
+                                    <i class="fa fa-download" aria-hidden="true"></i>Tải file  mẫu nhập danh sách sinh viên khóa mới
                                 </a>
                             </div>
                         </div>
@@ -324,22 +324,13 @@
             </div>
         </div>
     </main>
-
-
 @endsection
 
 @section('sub-javascript')
-    <script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
-    <script src="{{ asset('vendor/datatables/buttons.server-side.js')  }}"></script>
-    <script>
-
+      <script>
         $(document).ready(function () {
 
             var oTable = $('#tableManageUsers').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy','csv','excel'
-                ],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -457,11 +448,6 @@
                             $('div#importModal').modal('hide');
                             oTable.draw();
 
-                            // $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
-                            // $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            // $('#importModal').on('hidden.bs.modal', function (e) {
-                            //     location.reload();
-                            // });
                         }
                     }
                 });
@@ -545,12 +531,6 @@
                             });
                             $('div#modal-edit-user').modal('hide');
                             oTable.draw();
-
-                            // $('#modal-edit-user').find('.modal-body').html('<p>Thành công</p>');
-                            // $('#modal-edit-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            // $('#modal-edit-user').on('hidden.bs.modal', function (e) {
-                            //     location.reload();
-                            // });
                         }
                     }
                 });
@@ -592,11 +572,6 @@
                             $('div#modal-add-user').modal('hide');
                             oTable.draw();
 
-                            // $('#modal-add-user').find('.modal-body').html('<p>Thành công</p>');
-                            // $('#modal-add-user').find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            // $('#modal-add-user').on('hidden.bs.modal', function (e) {
-                            //     location.reload();
-                            // });
                         }
                     }
                 });

@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-    <main class="app-content">
+    <main class="app-content popup-role">
         <div class="app-title">
             <div>
                 <h1><i class="fa fa-file-text-o"></i> Danh sách các vai trò</h1>
@@ -46,15 +46,15 @@
                                         @endforeach
                                     </td>
                                     <td style="color:white">
-                                        <a data-role-id="{{$role->id}}" id="role-update"
+                                        <a data-role-id="{{$role->id}}"
                                            data-role-edit-link="{{route('role-edit',$role->id)}}"
-                                           data-role-update-link="{{route('role-update',$role->id)}}" class="btn btn-primary">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                           data-role-update-link="{{route('role-update',$role->id)}}" class="btn btn-primary role-update">
+                                            <i class="fa fa-lg fa-edit " aria-hidden="true"> </i>
                                         </a>
                                         @if(!count($role->Users)>0)
-                                            <a data-role-id="{{$role->id}}" id="role-destroy"
-                                               data-role-link="{{route('role-destroy',$role->id)}}" class="btn btn-danger">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                                            <a data-role-id="{{$role->id}}"
+                                               data-role-link="{{route('role-destroy',$role->id)}}" class="btn btn-danger role-destroy">
+                                                <i class="fa fa-lg fa-trash-o " aria-hidden="true"> </i>
                                             </a>
                                         @endif
                                     </td>
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal fade " id="myModal" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -180,7 +180,8 @@
     <script>
         $(document).ready(function () {
 
-            $("a#role-update").click(function () {
+            $('body').on('click', 'a.role-update', function (e) {
+                // $("a#role-update").click(function () {
                 var urlEdit = $(this).attr('data-role-edit-link');
                 var urlUpdate = $(this).attr('data-role-update-link');
                 var id = $(this).attr('data-role-id');
@@ -197,7 +198,6 @@
                                 $.each(result.role, function (elementName, value) {
 //                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
 //                                    alert(elementName + "+ " + value);
-                                    $('.' + elementName).val(value);
 //                                    });
                                     if(elementName === "permissions"){
                                         $.each(value, function (permission, valuePermission) {
@@ -205,6 +205,8 @@
                                             $('.permission_' + valuePermission.id).val(valuePermission.id).prop('checked', true);
 
                                         });
+                                    }else{
+                                        $('.' + elementName).val(value);
                                     }
                                 });
                             }
@@ -212,11 +214,13 @@
                     }
                 });
                 $('#myModal').find(".modal-title").text('Sửa thông tin vai trò ');
-                $('#myModal').find(".modal-footer > button[name=btn-save-role]").html('Sửa')
+                $('#myModal').find(".modal-footer > button[name=btn-save-role]").html('Sửa');
                 $('#myModal').find(".modal-footer > button[name=btn-save-role]").attr('data-link', urlUpdate);
                 $('#myModal').modal('show');
             });
-            $("#btn-save-role").click(function () {
+
+            $('body').on('click', '#btn-save-role', function (e) {
+                // $("#btn-save-role").click(function () {
 //                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
 //                $('#myModal').find(".modal-footer > button[name=btn-save-role]").html('Thêm');
                 var valueForm = $('form#role-form').serialize();
@@ -249,7 +253,9 @@
                 });
             });
 
-            $('a#role-destroy').click(function () {
+            $('body').on('click', 'a.role-destroy', function (e) {
+
+                // $('a#role-destroy').click(function () {
                 var id = $(this).attr("data-role-id");
                 var url = $(this).attr('data-role-link');
                 swal({
