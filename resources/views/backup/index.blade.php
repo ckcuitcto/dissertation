@@ -27,8 +27,8 @@
                 <div class="tile">
                     <div class="col-md-12 ">
                         <div class="tile-title">
-                            <h5>Lưu ý: Khi xuất file chỉ xuất những sinh viên hiện đang hiển thị </h5>
-                            <h5>Muốn xuất tất cả sinh viên. Chọn "Tất cả" ở số lượng hiển thị mỗi trang</h5>
+                            <h5>Lưu ý: Khi xuất file chỉ xuất những giá trị hiện đang hiển thị </h5>
+                            <h5>Muốn xuất tất cả giá trị. Chọn "Tất cả" ở số lượng hiển thị mỗi trang</h5>
                         </div>
                         <div class="bs-component">
                             <ul class="nav nav-tabs">
@@ -36,6 +36,12 @@
                                         khoản</a></li>
                                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#eachSemester">Danh
                                         sách sinh viên đánh giá mỗi học kì</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabFaculty">Danh
+                                        sách khoa</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabClasses">Danh
+                                        sách sinh lớp</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabSemester">Danh
+                                        sách sinh học kì</a></li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade active show" id="user">
@@ -147,6 +153,69 @@
                                         </table>
                                     </div>
                                 </div>
+                                <div class="tab-pane" id="tabFaculty">
+                                    <div class="tile-body">
+                                        <table class="table table-hover table-bordered" id="facultyBackupTable">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Khoa</th>
+                                                <th>Số lượng lớp</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tabClasses">
+                                    <div class="tile-body">
+                                        <form class="row" role="form" id="search-class-form" method="post">
+                                            {!! csrf_field() !!}
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label"></label>
+                                                <select class="form-control faculty_id" name="faculty_id"
+                                                        id="faculty_id">
+                                                    @foreach($faculties as $value)
+                                                        <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3 align-self-end">
+                                                <button class="btn btn-primary" type="submit"><i
+                                                            class="fa fa-fw fa-lg fa-search"></i>Tìm kiếm
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tile-body">
+                                        <table class="table table-hover table-bordered" id="classBackupTable">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Lớp</th>
+                                                <th>Số lượng sinh viên</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tabSemester">
+                                    <div class="tile-body">
+                                        <table class="table table-hover table-bordered" id="semesterBackupTable">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Học kì</th>
+                                                <th>Năm học</th>
+                                                <th> Thời gian học kì</th>
+                                                <th> Thời gian chấm</th>
+                                                <th> Thời gian yêu cầu phúc khảo</th>
+                                                <th> Thời gian chấm lại phúc khảo</th>
+                                                <th> </th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -186,7 +255,7 @@
                 "dataType": "json",
                 "type": "POST",
                 "data": function (d) {
-                    d.role_id = $('select[name=search_role_id]').val();
+                    d.role_id = $('#user').find('select[name=search_role_id]').val();
                     d._token = "{{ csrf_token() }}";
                 },
             },
@@ -231,9 +300,6 @@
         });
 
 
-
-
-
         var eachSemesterBackupTable = $('#eachSemesterBackupTable').DataTable({
             "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, 'Tất cả']],
             "dom": '<"top"Bifpl<"clear">>rt<"bottom"ip<"clear">>',
@@ -247,8 +313,8 @@
                 "dataType": "json",
                 "type": "POST",
                 "data": function (d) {
-                    d.faculty_id = $('select[name=faculty_id]').val();
-                    d.semester_id = $('select[name=semester_id]').val();
+                    d.faculty_id = $('#eachSemester').find('select[name=faculty_id]').val();
+                    d.semester_id = $('#eachSemester').find('select[name=semester_id]').val();
                     d._token = "{{ csrf_token() }}";
                 },
             },
@@ -283,11 +349,121 @@
             },
             "pageLength": 10,
         });
-
         $('#search-each-semester-form').on('submit', function (e) {
             eachSemesterBackupTable.draw();
             e.preventDefault();
         });
 
+
+        var facultyBackupTable = $('#facultyBackupTable').DataTable({
+            "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, 'Tất cả']],
+            "dom": '<"top"Bifpl<"clear">>rt<"bottom"ip<"clear">>',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ],
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                "url": "{{ route('ajax-get-backup-faculty') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": {
+                    "_token": "{{ csrf_token() }}"
+                }
+            },
+            "columns": [
+                {data: "id", name: "id"},
+                {data: "name", name: "name"},
+                {data: "countClass", name: "countClass", searchable: false},
+            ],
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
+            },
+            "pageLength": 25
+        });
+
+
+        var classBackupTable = $('#classBackupTable').DataTable({
+            "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, 'Tất cả']],
+            "dom": '<"top"Bifpl<"clear">>rt<"bottom"ip<"clear">>',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ],
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                "url": "{{ route('ajax-get-backup-class') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function (d) {
+                    d.faculty_id = $("#tabClasses").find('select[name=faculty_id]').val();
+                    d._token = "{{ csrf_token() }}";
+                },
+            },
+            "columns": [
+                {data: "id", name: "id"},
+                {data: "name", name: "name"},
+                {data: "countStudent", name: "countStudent", searchable: false},
+            ],
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
+            },
+            "pageLength": 10
+        });
+        $('#search-class-form').on('submit', function (e) {
+            classBackupTable.draw();
+            e.preventDefault();
+        });
+
+
+        var semesterBackupTable = $('#semesterBackupTable').DataTable({
+            "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, 'Tất cả']],
+            "dom": '<"top"Bifpl<"clear">>rt<"bottom"ip<"clear">>',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ],
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                "url": "{{ route('ajax-get-backup-semester') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function (d) {
+                    d._token = "{{ csrf_token() }}";
+                },
+            },
+            "columns": [
+                {data: "id", name: "id"},
+                {data: "term", name: "term"},
+                {data: "year", name: "year_from"},
+                {data: "semesterDate", name: "date_start"},
+                {data: "date_mark", name: "date_start_to_mark"},
+                {data: "date_request_re_mark", name: "date_start_to_request_re_mark"},
+                {data: "date_re_mark", name: "date_start_to_re_mark"},
+                {data: "detail", name: "detail", orderable: false, searchable: false},
+            ],
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
+            },
+            "pageLength": 10
+        });
     </script>
 @endsection

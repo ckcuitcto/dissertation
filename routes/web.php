@@ -274,12 +274,20 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/danh-sach', ['as' => 'export-file-list', 'uses' => 'Export\ExportController@index']);
 
-        Route::post('/list', ['as' => 'ajax-get-class-export', 'uses' => 'Export\ExportController@ajaxGetClasses']);
+        //. 1 expỏtt điểm đánh giá của lớp
+        Route::post('/list-class', ['as' => 'ajax-get-class-export', 'uses' => 'Export\ExportController@ajaxGetClasses']);
 
         Route::get('/backup', ['as' => 'export-backup', 'uses' => 'Export\ExportController@backup']);
 
         Route::post('/list-user', ['as' => 'ajax-get-backup-users', 'uses' => 'Export\ExportController@ajaxGetUsers']);
         Route::post('/list-each-semester', ['as' => 'ajax-get-backup-each-semester', 'uses' => 'Export\ExportController@ajaxGetEachSemester']);
+        Route::post('/list-faculty', ['as' => 'ajax-get-backup-faculty', 'uses' => 'Export\ExportController@ajaxGetFaculties']);
+
+        //export backup
+        Route::post('/list-export-class', ['as' => 'ajax-get-backup-class', 'uses' => 'Export\ExportController@ajaxGetBackUpClass']);
+
+        Route::post('/list-export-semester', ['as' => 'ajax-get-backup-semester', 'uses' => 'Export\ExportController@ajaxGetBackUpSemester']);
+
     });
 
     Route::post('/xuat-danh-sach', ['as' => 'export-users', 'uses' => 'Export\ExportController@exportByUserId'])->middleware('can:export-users');

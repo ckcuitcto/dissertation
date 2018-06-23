@@ -764,11 +764,6 @@ class ExportController extends Controller
             if (!empty($faculty) AND $facultyValue != 0) {
                 $student->where('users.faculty_id', '=', $facultyValue);
 
-                $class = $request->has('class_id');
-                $classValue = $request->get('class_id');
-                if (!empty($class) AND $classValue != 0) {
-                    $student->where('students.class_id','=', $classValue);
-                }
             }
 
             $semester = $request->has('semester_id');
@@ -780,4 +775,70 @@ class ExportController extends Controller
 
         return $dataTables->make(true);
     }
+
+    public function ajaxGetFaculties()
+    {
+        $faculties = DB::table('faculties')
+            ->leftJoin('classes', 'classes.faculty_id', '=', 'faculties.id')
+            ->select(
+                'faculties.*',
+                DB::raw('count(classes.faculty_id) AS countClass')
+            )->groupBy('faculties.id');
+
+        return DataTables::of($faculties)->make(true);
+    }
+
+    public function ajaxGetBackUpClass(Request $request)
+    {
+        $classes = DB::table('classes')
+            ->leftJoin('students', 'classes.id', '=', 'students.class_id')
+            ->select(
+                'classes.*',
+                DB::raw('count(students.id) AS countStudent')
+            )->groupBy('classes.id');
+
+        return DataTables::of($classes)
+        ->filter(function ($class) use ($request) {
+            $faculty = $request->has('faculty_id');
+            $facultyValue = $request->get('faculty_id');
+
+            if (!empty($faculty) AND $facultyValue != 0) {
+                $class->where('classes.faculty_id', '=', $facultyValue);
+            }
+        })
+        ->make(true);
+    }
+
+    public function ajaxGetBackUpSemester(Request $request)
+    {
+        $semesters = DB::table('semesters')
+        ->select(
+            'id',
+            'term',
+            DB::raw("CONCAT(year_from,'-',year_to) as year"),
+            DB::raw("CONCAT(date_start,'-',date_end) as semesterDate"),
+            DB::raw("CONCAT(date_start_to_mark,'-',date_end_to_mark) as date_mark"),
+            DB::raw("CONCAT(date_start_to_request_re_mark,'-',date_end_to_request_re_mark) as date_request_re_mark"),
+            DB::raw("CONCAT(date_start_to_re_mark,'-',date_start_to_re_mark) as date_re_mark")
+        );
+
+        $dataTable = DataTables::of($semesters)
+            ->addColumn('detail', function ($semester) {
+                $markTime = DB::table('mark_times')
+                    ->leftJoin('roles','mark_times.role_id','=','roles.id')
+                    ->where('semester_id',$semester->id)
+                    ->select(
+                        DB::raw("CONCAT(mark_time_start,' -> ',mark_time_end) as markTime"),
+                        'roles.display_name as roleDisplayName'
+                    )->get();
+
+                $strDetail = '';
+                foreach ($markTime as $key => $time){
+                    $strDetail .= ($key+1).": ". $time->roleDisplayName .': '.$time->markTime."-*-*-" ;
+                }
+                return $strDetail;
+            });
+        return $dataTable->make(true);
+    }
+
 }
