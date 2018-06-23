@@ -14890,6 +14890,13 @@ input[type=number]::-webkit-outer-spin-button {
   display: none;
 }
 
+#userBackupTable_filter {
+  display: none;
+}
+#eachSemesterBackupTable_filter {
+  display: none;
+}
+
 
 .custom-quanly-taikhoan table tr th input {
     max-width: 100%;

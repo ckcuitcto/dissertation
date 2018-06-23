@@ -266,13 +266,7 @@ class TranscriptController extends Controller
                 }
             });
 
-//        if ($keyword = $request->get('search')['value']) {
-            // override users.name global search
-//            $dataTables->filterColumn('users.faculty_id', 'where', '=', "%$keyword%");
 
-            // override users.id global search - demo for concat
-//            $dataTables->filterColumn('students.class_id', 'where', "=", "%$keyword%");
-//        }
         return $dataTables->make(true);
     }
 }

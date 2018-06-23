@@ -13,9 +13,6 @@
         </div>
         <div class="row">
             <div class="col-md-12 custom-quanly-taikhoan">
-                {{--<div class="tile">--}}
-
-                {{--</div>--}}
                 <div class="tile">
                     <div class="tile-body">
                         <form class="row" role="form" id="search-form" method="post">

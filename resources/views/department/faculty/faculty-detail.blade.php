@@ -137,7 +137,7 @@
             "columns": [
                 {data: "id", name: "id"},
                 {data: "name", name: "name"},
-                {data: "countStudent", name: "countStudent"},
+                {data: "countStudent", name: "countStudent", searchable: false},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ],
             "language": {
