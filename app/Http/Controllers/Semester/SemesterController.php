@@ -407,9 +407,8 @@ class SemesterController extends Controller
                 $btnEdit = "<a style='color: white' title='Sửa học kì' data-semester-id='$semester->id' data-semester-edit-link='$linkEdit'
                 data-semester-update-link='$linkUpdate' class='btn btn-primary update-semester'> <i class='fa fa-edit' aria-hidden='true'></i> </a>";
 
-                $btnDelete = "<a style='color: white' title='Xóa minh chứng' data-semester-id='$semester->id' id='destroy-semester' data-semester-delete-link='$linkDestroy'
-
-                class='btn btn-danger'> <i class='fa fa-trash' aria-hidden='true'></i></a>";
+                $btnDelete = "<a style='color: white' title='Xóa học kì' data-semester-id='$semester->id'  data-semester-delete-link='$linkDestroy'
+                class='btn btn-danger destroy-semester'> <i class='fa fa-trash' aria-hidden='true'></i></a>";
                 return "<p class='bs-component'>$btnEdit $btnDelete</p> ";
 
             })

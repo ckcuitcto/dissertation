@@ -205,6 +205,7 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" name="class_id" id="class_id" class="class_id" value="{{ $class->id }}">
     </main>
 
 
@@ -220,9 +221,10 @@
                 "url": "{{ route('ajax-get-students-by-class') }}",
                 "dataType": "json",
                 "type": "POST",
-                "data": {
-                    "_token": "{{ csrf_token() }}"
-                }
+                "data": function (d) {
+                    d.class_id = $('input#class_id').val();
+                    d._token = "{{ csrf_token() }}";
+                },
             },
             "columns": [
                 {data: "userId", name: "userId"},
@@ -248,5 +250,5 @@
         });
 
     </script>
-    <script type="text/javascript" src="{{ asset('js/web/class-detail.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('js/web/class/class-detail.js') }} "></script>
 @endsection

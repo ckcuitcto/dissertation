@@ -27,7 +27,8 @@
                             </div>
                             <div class="form-group col-md-2">
                                 <label class="control-label">Khoa</label>
-                                <select class="form-control search_faculty_id" name="search_faculty_id" id="search_faculty_id">
+                                <select class="form-control search_faculty_id" name="search_faculty_id"
+                                        id="search_faculty_id">
                                     @foreach($facultiesForSelectSearch as $value)
                                         <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
                                     @endforeach
@@ -35,11 +36,14 @@
                             </div>
                             <div class="form-group col-md-2">
                                 <label class="control-label">Lớp</label>
-                                <select class="form-control search_class_id" name="search_class_id" id="search_class_id">
+                                <select class="form-control search_class_id" name="search_class_id"
+                                        id="search_class_id">
                                 </select>
                             </div>
                             <div class="form-group col-md-3 align-self-end">
-                                <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-search"></i>Tìm kiếm</button>
+                                <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-search"></i>Tìm
+                                    kiếm
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -55,10 +59,10 @@
                             </tr>
                             </thead>
                             <tfoot>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             </tfoot>
                         </table>
                         <div class="row">
@@ -72,7 +76,8 @@
                                                          aria-hidden="true"></i> Nhập danh sách sinh viên khóa mới.
                                 </button>
                                 <a href="{{ asset('upload/file_mau/File_mau.xlsx') }}" class="btn btn-outline-success">
-                                    <i class="fa fa-download" aria-hidden="true"></i>Tải file  mẫu nhập danh sách sinh viên khóa mới
+                                    <i class="fa fa-download" aria-hidden="true"></i>Tải file mẫu nhập danh sách sinh
+                                    viên khóa mới
                                 </a>
                             </div>
                         </div>
@@ -327,345 +332,163 @@
 @endsection
 
 @section('sub-javascript')
-      <script>
-        $(document).ready(function () {
-
-            var oTable = $('#tableManageUsers').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    "url": "{{ route('ajax-user-get-users') }}",
-                    "dataType": "json",
-                    "type": "POST",
-                    "data": function (d) {
-                        d.faculty_id = $('select[name=search_faculty_id]').val();
-                        d.class_id = $('select[name=search_class_id]').val();
-                        d.role_id = $('select[name=search_role_id]').val();
-                        d._token = "{{ csrf_token() }}";
-                    },
+    <script>
+        var oTable = $('#tableManageUsers').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{{ route('ajax-user-get-users') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function (d) {
+                    d.faculty_id = $('select[name=search_faculty_id]').val();
+                    d.class_id = $('select[name=search_class_id]').val();
+                    d.role_id = $('select[name=search_role_id]').val();
+                    d._token = "{{ csrf_token() }}";
                 },
-                "columns": [
-                    {data: "users_id", name: "users.users_id"},
-                    {data: "userName", name: "users.name"},
-                    {data: "display_name", name: "roles.display_name"},
-                    {data: "status", name: "users.status"},
-                    {data: 'action', name: 'action', orderable: false, searchable: false}
-                ],
-                initComplete: function () {
-                    this.api().columns().every(function () {
-                        var column = this;
-                        var input = document.createElement("input");
-                        $(input).appendTo($(column.footer()).empty())
-                            .on('change', function () {
-                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                                column.search(val ? val : '', true, false).draw();
-                            });
+            },
+            "columns": [
+                {data: "users_id", name: "users.users_id"},
+                {data: "userName", name: "users.name"},
+                {data: "display_name", name: "roles.display_name"},
+                {data: "status", name: "users.status"},
+                {data: 'action', name: 'action', orderable: false, searchable: false}
+            ],
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var input = document.createElement("input");
+                    $(input).appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val ? val : '', true, false).draw();
+                        });
+                });
+            },
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
+            },
+            "pageLength": 25
+        });
+
+        $('#search-form').on('submit', function (e) {
+            oTable.draw();
+            e.preventDefault();
+        });
+
+        $('body').on('change', 'select.search_faculty_id', function (e) {
+            // $('select.search_faculty_id').change(function () {
+            var facultyId = $(this).val();
+            var url = "{{ route('class-get-list-by-faculty-none') }}";
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {id: facultyId},
+                dataType: 'json',
+                success: function (data) {
+                    $("select.search_class_id").empty();
+                    $.each(data.classes, function (key, value) {
+                        $("select.search_class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
                     });
-                },
-                "language": {
-                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                    // "zeroRecords": "Không có bản ghi nào!",
-                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
-                    "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
-                },
-                "pageLength": 25
-            });
-
-            $('#search-form').on('submit', function(e) {
-                oTable.draw();
-                e.preventDefault();
-            });
-
-            $('select.search_faculty_id').change(function () {
-                var facultyId = $(this).val();
-                var url = "{{ route('class-get-list-by-faculty-none') }}";
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: {id: facultyId},
-                    dataType: 'json',
-                    success: function (data) {
-                        $("select.search_class_id").empty();
-                        $.each(data.classes, function (key, value) {
-                            $("select.search_class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                    }
-                });
-            });
-
-            //            import
-            // $("#btn-import-student").click(function (e) {
-            $('body').on('click', '#btn-import-student', function (e) {
-                e.preventDefault();
-                $("#importModal").find("p.child-error").remove();
-                var formData = new FormData();
-                var fileImport = document.getElementById('fileImport');
-                var inss = fileImport.files.length;
-                for (var x = 0; x < inss; x++) {
-                    file = fileImport.files[x];
-                    formData.append("fileImport[]", file);
-                }
-                var url = $(this).attr('data-link');
-                $('.form-row').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    // enctype: 'multipart/form-data',
-                    processData: false,
-                    beforeSend: function () {
-                        $('#ajax_loader').show();
-                    },
-                    success: function (result) {
-                        $('#ajax_loader').hide();
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#import-student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
-                                });
-                            }
-                            if (result.errors !== undefined) {
-                                // console.log(result.errors);
-                                $('#importModal').find('div.alert-danger').show();
-                                $.each(result.errors, function (elementName, arrMessagesEveryElement) {
-                                    $('#importModal').find('div.alert-danger').append("<p class='child-error'>" + arrMessagesEveryElement + "</p>");
-                                });
-                            }
-                        } else if (result.status === true) {
-                            $.notify({
-                                title: " Upload Thành công ",
-                                message: ":D",
-                                icon: 'fa fa-check'
-                            },{
-                                type: "success"
-                            });
-                            $('div#importModal').modal('hide');
-                            oTable.draw();
-
-                        }
-                    }
-                });
-            });
-
-            // $("button.update-user").click(function () {
-            $('body').on('click', 'button.update-user', function (e) {
-                var urlEdit = $(this).attr('data-user-edit-link');
-                var urlUpdate = $(this).attr('data-user-update-link');
-                var id = $(this).attr('data-user-id');
-
-                var modal = $('#modal-edit-user');
-                modal.find('span.messageErrors').remove();
-                $.ajax({
-                    type: "get",
-                    url: urlEdit,
-                    cache: false,
-                    data: {id:id},
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === true) {
-                            if (result.user !== undefined) {
-                                var classId;
-                                $.each(result.user, function (elementName, value) {
-                                    // alert(elementName + '- '+ value);
-                                    if (elementName === 'status' || elementName === 'role_id') {
-                                        modal.find("select." + elementName).val(value);
-                                    }else if(elementName === 'faculty_id'){
-                                        modal.find("select." + elementName).val(value);
-                                        getClassByFacultyId('modal-edit-user');
-                                    }else if(elementName === 'classes_id'){
-                                        classId = value;
-                                    }else if(elementName === 'gender'){
-                                        modal.find("."+elementName+"[value="+value+"]").prop('checked',true);
-                                    }else {
-                                        modal.find('.' + elementName).val(value);
-                                    }
-                                });
-                                hideAndShowFaculty('modal-edit-user');
-                                setTimeout(function(){
-                                    modal.find("select.classes_id").val(classId);
-                                }, 800);
-                            }
-                        }
-                    }
-                });
-                modal.find(".modal-title").text('Sửa thông tài khoản');
-                modal.find(".modal-footer > button[name=btn-save-user]").html('Sửa');
-                modal.find(".modal-footer > button[name=btn-save-user]").attr('data-link', urlUpdate);
-                modal.modal('show');
-            });
-            // $("#btn-save-user").click(function () {
-            $('body').on('click', '#btn-save-user', function (e) {
-
-                var valueForm = $('form#user-form').serialize();
-                var url = $(this).attr('data-link');
-                $('#modal-edit-user').find('span.messageErrors').remove();
-
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: valueForm,
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#user-form').find('.' + elementName).parents('.form-group').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
-                                });
-                            }
-                        } else if (result.status === true) {
-                            $.notify({
-                                title: " Sửa thành công ",
-                                message: "",
-                                icon: 'fa fa-check'
-                            },{
-                                type: "success"
-                            });
-                            $('div#modal-edit-user').modal('hide');
-                            oTable.draw();
-                        }
-                    }
-                });
-            });
-
-            // $("button#btn-add").click(function () {
-            $('body').on('click', 'button#btn-add', function (e) {
-
-                var valueForm = $('form#user-add-form').serialize();
-                var url = $(this).attr('data-link');
-                $('form#user-add-form').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: valueForm,
-                    dataType: 'json',
-                    beforeSend: function () {
-                        $('#ajax_loader').show();
-                    },
-                    success: function (result) {
-                        $('#ajax_loader').hide();
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#user-add-form').find('.' + elementName).parents('.col-md-8').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
-                                });
-                            }
-                        } else if (result.status === true) {
-                            $.notify({
-                                title: " Thêm thành công",
-                                message: ":D",
-                                icon: 'fa fa-check'
-                            },{
-                                type: "success"
-                            });
-                            $('div#modal-add-user').modal('hide');
-                            oTable.draw();
-
-                        }
-                    }
-                });
-            });
-
-
-            // ẩn hiện khi chọn role
-
-            // $('div#modal-add-user').on('change', 'select.role_id', function (e) {
-            $('select.role_id').change(function (e) {
-                var roleId = $(this).val();
-
-                if (roleId === "{{ ROLE_PHONGCONGTACSINHVIEN }}" || roleId === "{{ ROLE_ADMIN }}") {
-                    $("div#faculty").hide();
-                    $("div#classes").hide();
-                    // $('div#modal-add-user').find("select.faculty_id").prop('disabled', true);
-                    // $('div#modal-add-user').find("select.classes_id").prop('disabled', true);
-                    $("select.faculty_id").prop('disabled', true);
-                    $("select.classes_id").prop('disabled', true);
-                } else if (roleId === "{{ ROLE_BANCANSULOP }}" || roleId === "{{ ROLE_SINHVIEN }}") {
-                    $("div#faculty").show();
-                    $("div#classes").show();
-                    $("select.faculty_id").prop('disabled', false);
-                    $("select.classes_id").prop('disabled', false);
-                } else {
-                    $("div#faculty").show();
-                    $("div#classes").hide();
-                    $("select.faculty_id").prop('disabled', false);
-                    $("select.classes_id").prop('disabled', true);
                 }
             });
+        });
 
-            // $('div#modal-add-user').on('change', 'select.faculty_id', function (e) {
-            $('select.faculty_id').change(function () {
-                var facultyId = $(this).val();
-                var url = "{{ route('class-get-list-by-faculty') }}";
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: {id: facultyId},
-                    dataType: 'json',
-                    success: function (data) {
-                        $("select.classes_id").empty();
-                        $.each(data.classes, function (key, value) {
-                            $("select.classes_id").append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                    }
-                });
-            });
 
-            $('#modal-edit-user').on('hidden.bs.modal', function (e) {
-                // hideAndShowFaculty('modal-edit-user');
-                $('#modal-edit-user').find("input[type=text],input[type=number],input[type=year],input[type=hidden], select").val('');
-                $('.text-red').html('');
-                $('span.messageErrors').remove();
-            });
+        // ẩn hiện khi chọn role
+        // $('div#modal-add-user').on('change', 'select.role_id', function (e) {
+        // $('select.role_id').change(function (e) {
+        $('body').on('change', 'select.role_id', function (e) {
 
-            getClassByFacultyId('modal-add-user');
-
-            function getClassByFacultyId(modal) {
-                var facultyId = $('div#'+modal).find('select.faculty_id').val();
-                var url = "{{ route('class-get-list-by-faculty') }}";
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: {id: facultyId},
-                    dataType: 'json',
-                    success: function (data) {
-                        $('div#'+modal).find("select.classes_id").empty();
-                        $.each(data.classes, function (key, value) {
-                            $('div#'+modal).find("select.classes_id").append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                    }
-                });
+            var roleId = $(this).val();
+            if (roleId === "{{ ROLE_PHONGCONGTACSINHVIEN }}" || roleId === "{{ ROLE_ADMIN }}") {
+                $("div#faculty").hide();
+                $("div#classes").hide();
+                // $('div#modal-add-user').find("select.faculty_id").prop('disabled', true);
+                // $('div#modal-add-user').find("select.classes_id").prop('disabled', true);
+                $("select.faculty_id").prop('disabled', true);
+                $("select.classes_id").prop('disabled', true);
+            } else if (roleId === "{{ ROLE_BANCANSULOP }}" || roleId === "{{ ROLE_SINHVIEN }}") {
+                $("div#faculty").show();
+                $("div#classes").show();
+                $("select.faculty_id").prop('disabled', false);
+                $("select.classes_id").prop('disabled', false);
+            } else {
+                $("div#faculty").show();
+                $("div#classes").hide();
+                $("select.faculty_id").prop('disabled', false);
+                $("select.classes_id").prop('disabled', true);
             }
         });
+
+        // $('div#modal-add-user').on('change', 'select.faculty_id', function (e) {
+        // $('select.faculty_id').change(function () {
+        $('body').on('change', 'select.faculty_id', function (e) {
+
+            var facultyId = $(this).val();
+            var url = "{{ route('class-get-list-by-faculty') }}";
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {id: facultyId},
+                dataType: 'json',
+                success: function (data) {
+                    $("select.classes_id").empty();
+                    $.each(data.classes, function (key, value) {
+                        $("select.classes_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#modal-edit-user').on('hidden.bs.modal', function (e) {
+            // hideAndShowFaculty('modal-edit-user');
+            $('#modal-edit-user').find("input[type=text],input[type=number],input[type=year],input[type=hidden], select").val('');
+            $('.text-red').html('');
+            $('span.messageErrors').remove();
+        });
+
+        getClassByFacultyId('modal-add-user');
+
+        function getClassByFacultyId(modal) {
+            var facultyId = $('div#' + modal).find('select.faculty_id').val();
+            var url = "{{ route('class-get-list-by-faculty') }}";
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {id: facultyId},
+                dataType: 'json',
+                success: function (data) {
+                    $('div#' + modal).find("select.classes_id").empty();
+                    $.each(data.classes, function (key, value) {
+                        $('div#' + modal).find("select.classes_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
 
         hideAndShowFaculty('modal-add-user');
         hideAndShowFaculty('modal-edit-user');
 
         function hideAndShowFaculty(modal) {
-            var roleId = $('div#'+modal).find('select.role_id').val();
+            var roleId = $('div#' + modal).find('select.role_id').val();
             if (roleId === "{{ ROLE_PHONGCONGTACSINHVIEN }}" || roleId === "{{ ROLE_ADMIN }}") {
-                $('div#'+modal).find("div#faculty").hide();
-                $('div#'+modal).find("div#classes").hide();
+                $('div#' + modal).find("div#faculty").hide();
+                $('div#' + modal).find("div#classes").hide();
             } else if (roleId === "{{ ROLE_BANCHUNHIEMKHOA }}" || roleId === "{{ ROLE_COVANHOCTAP }}") {
-                $('div#'+modal).find("div#faculty").show();
-                $('div#'+modal).find("div#classes").hide();
-            }else{
-                $('div#'+modal).find("div#faculty").show();
-                $('div#'+modal).find("div#classes").show();
+                $('div#' + modal).find("div#faculty").show();
+                $('div#' + modal).find("div#classes").hide();
+            } else {
+                $('div#' + modal).find("div#faculty").show();
+                $('div#' + modal).find("div#classes").show();
             }
         }
 
-
     </script>
+    <script src="{{ asset('js/web/user/index.js') }}"></script>
 @endsection

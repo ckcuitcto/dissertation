@@ -78,11 +78,7 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-
     <script>
-        $(document).ready(function () {
             var oTable = $('#facultiesTable').DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -103,109 +99,13 @@
                 ],
                 "language": {
                     "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                    // "zeroRecords": "Không có bản ghi nào!",
-                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "zeroRecords": "Không có bản ghi nào!",
+                    "info": "Hiển thị trang _PAGE_ của _PAGES_",
                     "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
                 },
                 "pageLength": 25
-            });
-
-            $('body').on('click', 'a.faculty-update', function (e) {
-                var urlEdit = $(this).attr('data-faculty-edit-link');
-                var urlUpdate = $(this).attr('data-faculty-update-link');
-                var id = $(this).attr('data-faculty-id');
-                $('.form-group').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "get",
-                    url: urlEdit,
-                    data: {id: id},
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === true) {
-                            if (result.faculty !== undefined) {
-                                $.each(result.faculty, function (elementName, value) {
-                                    $('.' + elementName).val(value);
-                                });
-                            }
-                        }
-                    }
-                });
-                $('#myModal').find(".modal-title").text('Sửa thông tin khoa');
-                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Sửa')
-                $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").attr('data-link', urlUpdate);
-                $('#myModal').modal('show');
-            });
-
-
-            $('body').on('click', '#btn-save-faculty', function (e) {
-                var valueForm = $('form#faculty-form').serialize();
-                var url = $(this).attr('data-link');
-                $('.form-group').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: valueForm,
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#faculty-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
-                                });
-                            }
-                        } else if (result.status === true) {
-                            $.notify({
-                                title: "Thành công  ",
-                                message: ":D",
-                                icon: 'fa fa-check'
-                            },{
-                                type: "success"
-                            });
-                            $('div#myModal').modal('hide');
-                            oTable.draw();
-                        }
-                    }
-                });
-            });
-
-            $('body').on('click', 'a.faculty-destroy', function (e) {
-                var id = $(this).attr("data-faculty-id");
-                var url = $(this).attr('data-faculty-link');
-                swal({
-                    title: "Bạn chắc chưa?",
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Có, tôi chắc chắn!",
-                    cancelButtonText: "Không, Hủy dùm tôi!",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            cache: false,
-                            data: {"id": id},
-                            success: function (data) {
-                                if (data.status === true) {
-                                    swal("Deleted!", "Đã xóa Khoa " + data.faculty.name, "success");
-                                    $('.sa-confirm-button-container').click(function () {
-                                        oTable.draw();
-                                    })
-                                } else {
-                                    swal("Cancelled", "Không tìm thấy Khoa !!! :)", "error");
-                                }
-                            }
-                        });
-                    } else {
-                        swal("Đã hủy", "Đã hủy xóa khoa:)", "error");
-                    }
-                });
             });
 
             $('#myModal').on('hidden.bs.modal', function (e) {
@@ -216,6 +116,6 @@
                 $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").html('Thêm');
                 $('#myModal').find(".modal-footer > button[name=btn-save-faculty]").attr('data-link', "{{ route('faculty-store') }}");
             });
-        });
     </script>
+    <script src="{{ asset('js/web/faculty/index.js') }}"></script>
 @endsection

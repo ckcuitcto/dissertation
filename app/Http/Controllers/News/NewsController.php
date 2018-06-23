@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
+use Yajra\DataTables\DataTables;
 
 class NewsController extends Controller
 {
@@ -30,19 +31,7 @@ class NewsController extends Controller
 
     public function index()
     {
-        $userLogin = $this->getUserLogin();
-        if ($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
-        {
-            $newsList = News::all();
-        } elseif ($userLogin->Role->weight == ROLE_BANCHUNHIEMKHOA OR $userLogin->Role->weight == ROLE_COVANHOCTAP ) {
-            // neeus laf ban chu nhiem khoa thi lay cung khoa
-            $newsList = DB::table('users')
-                ->leftJoin('staff', 'users.users_id', '=', 'staff.user_id')
-                ->rightJoin('news', 'news.created_by', '=', 'staff.id')
-                ->where('users.faculty_id', $userLogin->faculty_id)
-                ->select('news.*')->get();
-        }
-        return view('news.index', compact('newsList'));
+        return view('news.index');
     }
 
     public function create()
@@ -152,5 +141,40 @@ class NewsController extends Controller
         return response()->json([
             'status' => false
         ], 200);
+    }
+
+    public function ajaxGetNews(Request $request){
+        $userLogin = $this->getUserLogin();
+
+        if ($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
+        {
+            $newsList = DB::table('news')->select('news.*');
+        } elseif ($userLogin->Role->weight == ROLE_BANCHUNHIEMKHOA OR $userLogin->Role->weight == ROLE_COVANHOCTAP ) {
+            // neeus laf ban chu nhiem khoa thi lay cung khoa
+            $newsList = DB::table('users')
+                ->leftJoin('staff', 'users.users_id', '=', 'staff.user_id')
+                ->rightJoin('news', 'news.created_by', '=', 'staff.id')
+                ->where('users.faculty_id', $userLogin->faculty_id)
+                ->select('news.*');
+        }
+
+        return DataTables::of($newsList)
+            ->addColumn('action', function ($news) {
+                $newsId = $news->id;
+                $linkEdit = route('news-edit',$newsId);
+                $linkDestroy = route('news-destroy',$newsId);
+                $linkView = route('news-show',[ str_slug($news->title),$newsId]);
+                $linkView= "<a href='$linkView' class='btn btn-primary'> <i class='fa fa-eye'></i> </a>";
+
+
+                $buttonEdit = "<a class='btn btn-primary' href='$linkEdit'><i class='fa fa-lg fa-edit'></i></a>";
+
+                $linkButton = "<button type='button' class='btn btn-danger news-destroy' 
+                                data-news-link='$linkDestroy'
+                                data-news-id='$newsId'><i class='fa fa-lg fa-trash' aria-hidden='true'></i>
+                                </button>";
+                return "<p class='bs-component'>$linkView $buttonEdit $linkButton</p>";
+            })
+            ->make(true);
     }
 }

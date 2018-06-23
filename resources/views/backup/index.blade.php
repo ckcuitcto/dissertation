@@ -427,7 +427,6 @@
             e.preventDefault();
         });
 
-
         var semesterBackupTable = $('#semesterBackupTable').DataTable({
             "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, 'Tất cả']],
             "dom": '<"top"Bifpl<"clear">>rt<"bottom"ip<"clear">>',

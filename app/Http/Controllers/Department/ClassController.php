@@ -188,7 +188,7 @@ class ClassController extends Controller
         ],200);
     }
 
-    public function ajaxGetStudentByClass(){
+    public function ajaxGetStudentByClass(Request $request){
 
         $students = DB::table('students')
             ->leftJoin('classes', 'classes.id', '=', 'students.class_id')
@@ -205,7 +205,8 @@ class ClassController extends Controller
                 'users.birthday',
                 'students.status',
                 'roles.display_name as roleName'
-            );
+            )
+            ->where('students.class_id', $request->class_id);
 
         return DataTables::of($students)
             ->editColumn('gender', function ($student){

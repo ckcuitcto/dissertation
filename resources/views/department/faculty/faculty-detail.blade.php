@@ -78,7 +78,6 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="name">Tên lớp :</label>
-                                        {{--<input type="hidden" name="id" class="id" id="modal-class-id">--}}
                                         <input type="hidden" name="faculty_id" class="faculty_id" id="faculty_id"
                                                value="{{ $faculty->id }}">
                                         <input class="form-control name" id="name" name="name" type="text" required
@@ -115,7 +114,7 @@
                 </div>
             </div>
         </div>
-
+        <input type="hidden" name="faculty_id" id="faculty_id" class="faculty_id" value="{{ $faculty->id }}">
     </main>
 
 @endsection
@@ -127,12 +126,13 @@
             "serverSide": true,
             "autoWidth": false,
             "ajax": {
-                "url": "{{ route('ajax-get-faculty-detail') }}",
+                "url": "{{ route('ajax-get-class-by-faculty-detail') }}",
                 "dataType": "json",
                 "type": "POST",
-                "data": {
-                    "_token": "{{ csrf_token() }}"
-                }
+                "data": function (d) {
+                    d.faculty_id = $('input#faculty_id').val();
+                    d._token = "{{ csrf_token() }}";
+                },
             },
             "columns": [
                 {data: "id", name: "id"},
@@ -142,13 +142,23 @@
             ],
             "language": {
                 "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                // "zeroRecords": "Không có bản ghi nào!",
-                // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 25
         });
+
+        $('#myModal').on('hidden.bs.modal', function (e) {
+            $('#myModal').find("input[type=text],input[type=number], select").val('');
+            $('.text-red').html('');
+            $('span.messageErrors').remove();
+            $('#myModal').find(".modal-title").text("Thêm mới lớp thuộc khoa {{ $faculty->name }}");
+            $('#myModal').find(".modal-footer > button[name=btn-save-class]").html('Thêm');
+            $('#myModal').find(".modal-footer > button[name=btn-save-class]").attr('data-link', "{{ route('class-store') }}");
+        });
     </script>
-    <script type="text/javascript" src="{{ asset('js/web/faculty-detail.js') }} ">  </script>
+    <script type="text/javascript" src="{{ asset('js/web/faculty/faculty-detail.js') }} ">  </script>
 @endsection

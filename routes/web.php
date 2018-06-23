@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update'])->middleware('can:faculty-change');
 
         Route::post('/get-faculties', ['as' => 'ajax-get-faculties', 'uses' => 'Department\FacultyController@ajaxGetFaculties']);
-        Route::post('/get-faculty-detail', ['as' => 'ajax-get-faculty-detail', 'uses' => 'Department\FacultyController@ajaxGetFacultyDetail']);
+        Route::post('/get-faculty-detail', ['as' => 'ajax-get-class-by-faculty-detail', 'uses' => 'Department\FacultyController@ajaxGetClassByFacultyDetail']);
 
     });
 
@@ -219,6 +219,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/danh-sach-y-kien', ['as' => 'comment-list', 'uses' => 'Comment\CommentController@index']);
 
+        Route::post('/get-comments', ['as' => 'ajax-get-comments', 'uses' => 'Comment\CommentController@ajaxGetComments']);
+
+
     });
 
     Route::group(['prefix' => 'tin-tuc'], function () {
@@ -235,6 +238,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit'])->middleware('can:can-change-news');
 
         Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy'])->middleware('can:can-change-news');
+
+        Route::post('/get-news', ['as' => 'ajax-get-news', 'uses' => 'News\NewsController@ajaxGetNews']);
+
     });
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);

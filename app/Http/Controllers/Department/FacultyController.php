@@ -191,14 +191,16 @@ class FacultyController extends Controller
             ->make(true);
     }
 
-    public function ajaxGetFacultyDetail()
+    public function ajaxGetClassByFacultyDetail(Request $request)
     {
         $classes = DB::table('classes')
             ->leftJoin('students', 'classes.id', '=', 'students.class_id')
             ->select(
                 'classes.*',
                 DB::raw('count(students.class_id) AS countStudent')
-            )->groupBy('classes.id');
+            )
+            ->where('classes.faculty_id',$request->faculty_id)
+            ->groupBy('classes.id');
 
         return DataTables::of($classes)
         ->addColumn('action', function ($class) {
