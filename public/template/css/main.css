@@ -14928,3 +14928,9 @@ input[type=number]::-webkit-outer-spin-button {
 .popup-role .modal-dialog.modal-lg{
   max-width: 75%;
 }
+.custom-role tr td b{
+  font-weight: bolder;
+  width: calc(100% / 3);
+  display: block;
+  float: left;
+}

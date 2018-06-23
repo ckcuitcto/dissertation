@@ -56,7 +56,7 @@ class InformationController extends Controller
             'gender.required' => "Vui lòng chọn giới tính",
             'address.required' => "Vui lòng nhập địa chỉ",
             'phone_number.required' => "Vui lòng nhập số điện thoại",
-            'phone_number.numeric' => "Số điện thoại phải là số",
+            'phone_number.numeric' => "Số điện thoại không hợp lệ. ",
             'phone_number.phone' => "Số điện thoại không đúng định dạng",
             'birthday.required' => 'Vui lòng nhập ngày sinh',
             'birthday.date_format' => 'Ngày sinh không đúng định dạng. VD:24/08/1996',

@@ -275,6 +275,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/danh-sach', ['as' => 'export-file-list', 'uses' => 'Export\ExportController@index']);
 
         Route::post('/list', ['as' => 'ajax-get-class-export', 'uses' => 'Export\ExportController@ajaxGetClasses']);
+
+        Route::post('/list-user', ['as' => 'ajax-get-backup-users', 'uses' => 'Export\ExportController@ajaxGetUsers']);
+        Route::get('/tai-khoan', ['as' => 'export-user-list', 'uses' => 'Export\ExportController@backup']);
+
     });
 
     Route::post('/xuat-danh-sach', ['as' => 'export-users', 'uses' => 'Export\ExportController@exportByUserId'])->middleware('can:export-users');

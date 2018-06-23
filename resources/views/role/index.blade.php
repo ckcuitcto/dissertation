@@ -12,7 +12,7 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 custom-role">
                 <div class="tile">
 
                     <div class="tile-body">
@@ -38,11 +38,11 @@
                                     <td> {{ count($role->Users) }} </td>
                                     <td>
                                         @foreach($role->Permissions as $key => $permission)
-                                            @if($key == count($role->Permissions)-1)
+{{--                                            @if($key == count($role->Permissions)-1)--}}
                                                 <b>{{ $permission->display_name  }}</b>
-                                            @else
-                                                <b>{{ $permission->display_name  }}</b>&nbsp&nbsp {{ " -- " }}&nbsp&nbsp
-                                            @endif
+                                            {{--@else--}}
+                                                {{--<b>{{ $permission->display_name  }}</b>--}}
+                                            {{--@endif--}}
                                         @endforeach
                                     </td>
                                     <td style="color:white">
@@ -173,12 +173,26 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
 
     <script>
         $(document).ready(function () {
+
+            $('#rolesTable').DataTable({
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                    "zeroRecords": "Không có bản ghi nào!",
+                    "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "infoEmpty": "Không có bản ghi nào!!!",
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                },
+                "pageLength": 25
+            });
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
             $('body').on('click', 'a.role-update', function (e) {
                 // $("a#role-update").click(function () {

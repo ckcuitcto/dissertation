@@ -225,7 +225,7 @@
             @endcan
 
             @can('backup')
-            <li><a class="app-menu__item" href="{{ route('export-file-list') }}">
+            <li><a class="app-menu__item" href="{{ route('export-user-list') }}">
                     <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
                             class="app-menu__label">Backup</span>
                 </a>
@@ -250,24 +250,22 @@
     <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/script.js') }}"></script>
     <script>
-        $(document).ready(function () {
-            $('#sampleTable').DataTable({
-                "language": {
-                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                    "zeroRecords": "Không có bản ghi nào!",
-                    "info": "Hiển thị trang _PAGE_ của _PAGES_",
-                    "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
-                },
-                "pageLength": 25
-            });
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+        $('#sampleTable').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+            },
+            "pageLength": 25
+        });
 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
 
         var options = {

@@ -94,7 +94,6 @@ class ExportController extends Controller
         return $dataTables->make(true);
     }
 
-
     public function exportVer2(Request $request)
     {
 
@@ -679,4 +678,36 @@ class ExportController extends Controller
         }
     }
 
+    public function backup()
+    {
+        $userLogin = $this->getUserLogin();
+
+        $currentSemester = $this->getCurrentSemester();
+        $semesters = Semester::select('id', DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+
+        if ($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN) {
+            $faculties = Faculty::all()->toArray();
+            $faculties = array_prepend($faculties, array('id' => 0, 'name' => 'Tất cả khoa'));
+        } else {
+            $faculties = Faculty::where('id', $userLogin->Faculty->id)->get()->toArray();
+        }
+
+        return view('backup.index', compact('faculties', 'semesters', 'currentSemester'));
+    }
+
+    public function ajaxGetUsers(){
+        $users = DB::table('users')
+            ->leftJoin('students','students.user_id','=','users.users_id')
+            ->leftJoin('faculties','faculties.id','=','users.faculty_id')
+            ->leftJoin('classes','classes.id','=','students.class_id')
+            ->leftJoin('roles','roles.id','=','users.role_id')
+            ->select(
+                'users.*',
+                'faculties.name as facultyName',
+                'classes.name as className',
+                'roles.display_name as roleName'
+            );
+
+        return DataTables::of($users)->make(true);
+    }
 }
