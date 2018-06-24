@@ -26,10 +26,7 @@
             <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
                     <div class="col-md-12 ">
-                        <div class="tile-title">
-                            <h5>Lưu ý: Khi xuất file chỉ xuất những giá trị hiện đang hiển thị </h5>
-                            <h5>Muốn xuất tất cả giá trị. Chọn "Tất cả" ở số lượng hiển thị mỗi trang</h5>
-                        </div>
+
                         <div class="bs-component">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#user">Tài
@@ -42,6 +39,12 @@
                                         sách sinh lớp</a></li>
                                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabSemester">Danh
                                         sách sinh học kì</a></li>
+                                <li class="leds-test">
+                                    <button class="btn btn-info btn-show-notes" title="
+Lưu ý: Khi xuất file chỉ xuất những giá trị hiện đang hiển thị.
+Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiển thị mỗi trang"><i style="background:#ff0000;color:#ff0000;"
+                                                                          class="led led-sm on blink"></i></button>
+                                </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade active show" id="user">
@@ -141,14 +144,14 @@
                                             </tr>
                                             </thead>
                                             <tfoot>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
                                             </tfoot>
                                         </table>
                                     </div>
@@ -210,7 +213,7 @@
                                                 <th> Thời gian chấm</th>
                                                 <th> Thời gian yêu cầu phúc khảo</th>
                                                 <th> Thời gian chấm lại phúc khảo</th>
-                                                <th> </th>
+                                                <th></th>
                                             </tr>
                                             </thead>
                                         </table>
@@ -326,7 +329,12 @@
                 {data: "academic", name: "students.academic_year_from"},
                 {data: "monitor", name: "student_list_each_semesters.monitor_id"},
                 {data: "staffName", name: "student_list_each_semesters.staff_id"},
-                {data: "semesterInfo", name: "student_list_each_semesters.semester_id",orderable: false, searchable: false},
+                {
+                    data: "semesterInfo",
+                    name: "student_list_each_semesters.semester_id",
+                    orderable: false,
+                    searchable: false
+                },
             ],
             initComplete: function () {
                 this.api().columns().every(function () {

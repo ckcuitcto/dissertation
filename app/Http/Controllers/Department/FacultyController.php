@@ -44,6 +44,10 @@ class FacultyController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:6|unique:faculties,name',
+        ], [
+            'name.required' => "Vui lòng nhập tên Khoa",
+            'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
+            'name.unique' => 'Tên khoa đã tồn tại'
         ]);
 
         if ($validator->fails()) {
