@@ -24,7 +24,7 @@
                     <label class="control-label">MSSV</label>
                     <input class="form-control" type="text" placeholder="Mã số sinh viên" id="users_id" name="users_id" value="{{ old('users_id') }}" required autofocus>
                     @if ($errors->has('users_id'))
-                            <strong>{{ $errors->first('users_id') }}</strong>
+                        <span class="messageErrors" style="color:red">{{ $errors->first('users_id') }}</span>
                     @endif
                 </div>
 
@@ -33,7 +33,7 @@
                     <input id="password" type="password" placeholder="Mật khẩu" class="form-control" name="password" required>
                     @if ($errors->has('password'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('password') }}</strong>
+                            <span class="messageErrors" style="color:red">{{ $errors->first('password') }}</span>
                         </span>
                     @endif
                 </div>
@@ -45,7 +45,7 @@
                                 <input type="checkbox" name="remember"><span class="label-text" {{ old('remember') ? 'checked' : '' }}>Ghi nhớ</span>
                             </label>
                         </div>
-                        <p class="semibold-text mb-2"><a href="#" data-toggle="flip">Quên mật khẩu ?</a></p>
+                        <p class="semibold-text mb-2"><a href="#" id="forgot-password-toggle" data-toggle="flip">Quên mật khẩu ?</a></p>
                     </div>
                 </div>
 
@@ -57,21 +57,22 @@
             <form class="forget-form" method="POST" action="{{ route('password.email') }}">
                 {{ csrf_field() }}
                 <img src="{{'template/assets/logo.bmp'}}" width="30%">
-                <div class="row" style="margin-top:-80px;border">
+                <div class="row" style="margin-top:-80px;">
                     <div class="col-sm-6 col-md-4"></div>
                     <div class="col-sm-6 col-md-8">
-                        <h4 class="login-head" style="text-align:right;color:#006BB3;font-family: 'Dosis', sans-serif;">                    
+                        <h4 class="login-head" style="text-align:right;color:#006BB3;font-family: 'Dosis', sans-serif;">
                          SAIGON TECHNOLOGY UNIVERSITY</h4>
                     </div>
-                </div>  
-                
+                </div>
+
                 <div class="form-group">
                     <h4 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Quên mật khẩu ?</h4>
                     <label class="control-label">Email</label>
                     <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
                     @if ($errors->has('email'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
+                            <span class="messageErrors" style="color:red">{{ $errors->first('email') }}</span>
+
                         </span>
                     @endif
                 </div>
@@ -93,5 +94,9 @@
             $('.login-box').toggleClass('flipped');
             return false;
         });
+
+        @if ($errors->has('email'))
+            $("#forgot-password-toggle").trigger('click');
+        @endif
     </script>
 @endsection
