@@ -503,8 +503,6 @@
     </main>
 @endsection
 @section('sub-javascript')
-    <script type="text/javascript" src=" {{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src=" {{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
 
         $('body').on('change', 'input.input-evaluation-form', function (e) {
@@ -673,6 +671,7 @@
             });
         });
 
+        $("body.sidebar-mini").addClass('sidenav-toggled');
     </script>
     <script type="text/javascript" src="{{ asset('js/web/evaluationForm.js') }}"></script>
 @endsection
