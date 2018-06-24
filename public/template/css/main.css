@@ -13082,8 +13082,8 @@ be a descendant of the grid when it is being dragged.
   min-height: calc(100vh - 50px);
   margin-top: 50px;
   padding: 30px;
-  /* background-color: #E5E5E5; */
-  background: lightblue url("../assets/2.jpg") no-repeat fixed center;
+   /*background-color: #E5E5E5; */
+  background: #E5E5E5 no-repeat fixed center;
   -webkit-transition: margin-left 0.3s ease;
   -o-transition: margin-left 0.3s ease;
   transition: margin-left 0.3s ease;
@@ -15013,3 +15013,8 @@ input[type=number]::-webkit-outer-spin-button {
   box-shadow:unset !important;
 }
 /*end css led*/
+
+
+.form-reset-password {
+  height: 450px;
+}

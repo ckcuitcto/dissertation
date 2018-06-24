@@ -11,21 +11,21 @@
                 <li class="breadcrumb-item">Trang chủ</li>
             </ul> --}}
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                {{-- <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button> --}}
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav">
-                        <a class="nav-item nav-link" target="_blank"
-                           href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html">Phòng đào tạo</a>
-                        <a class="nav-item nav-link" target="_blank"
-                           href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html">Phòng Công tác sinh
-                            viên</a>
-                    </div>
-                </div>
-            </nav>
+            {{--<nav class="navbar navbar-expand-lg navbar-light">--}}
+                {{-- <a class="navbar-brand" href="#">Navbar</a>--}}
+                {{--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">--}}
+                  {{--<span class="navbar-toggler-icon"></span>--}}
+                {{--</button> --}}
+                {{--<div class="collapse navbar-collapse" id="navbarNavAltMarkup">--}}
+                    {{--<div class="navbar-nav">--}}
+                        {{--<a class="nav-item nav-link" target="_blank"--}}
+                           {{--href="http://www.stu.edu.vn/vi/276/phong-dao-tao.html">Phòng đào tạo</a>--}}
+                        {{--<a class="nav-item nav-link" target="_blank"--}}
+                           {{--href="http://www.stu.edu.vn/vi/280/phong-cong-tac-sinh-vien.html">Phòng Công tác sinh--}}
+                            {{--viên</a>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</nav>--}}
         </div>
 
         <div class="row">
