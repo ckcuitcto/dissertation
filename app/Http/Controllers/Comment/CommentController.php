@@ -170,10 +170,10 @@ class CommentController extends Controller
         } else {
             $facultyId = $this->getUserLogin()->Faculty->id;
             $comments->where('users.faculty_id', $facultyId);
-            if ($user->Role->id >= ROLE_BANCHUNHIEMKHOA) // chu nhiem khoa thì lấy user thuộc khoa giống
+            if ($user->Role->id == ROLE_BANCHUNHIEMKHOA) // chu nhiem khoa thì lấy user thuộc khoa giống
             {
                 // lấy ra tất cả user cùng khoa vs user đang đăng nhập
-            } elseif ($user->Role->id >= ROLE_COVANHOCTAP) { // cố vấn học tập
+            } elseif ($user->Role->id == ROLE_COVANHOCTAP) { // cố vấn học tập
                 $arrClassId = [];
                 foreach ($user->Staff->Classes as $class) {
                     $arrClassId[] = $class->id;
@@ -185,11 +185,11 @@ class CommentController extends Controller
         }
 
         return DataTables::of($comments)
-            ->addColumn('action', function ($comment) {
+            ->addColumn('action', function ($comment) use ($user) {
                 $result = "";
-
-                if($this->authorize('comment-reply')){
-                    $linkShow = route('comment-show',$comment->id);
+                $linkShow = route('comment-show',$comment->id);
+                if($user->can('comment-reply')){
+//                if($this->authorize('comment-reply')){
                     $linkReply = route('comment-reply',$comment->id);
                     if(empty($comment->reply)){
                         $title = "Phản hồi ý kiến";
@@ -204,7 +204,8 @@ class CommentController extends Controller
                     $result = $buttonReply." ";
                 }
 
-                if($this->authorize('comment-delete')){
+                if($user->can('comment-delete')){
+//                if($this->authorize('comment-delete')){
                     $linkDelelte = route('comment-destroy',$comment->id);
                     $buttonDelete = "<a title='Xóa ý kiến' class='btn btn-danger comment-destroy' style='color: white' data-comment-id='$comment->id' data-comment-link='$linkDelelte' > <i class='fa fa-lg fa-trash-o' aria-hidden='true'> </i> </a>";
                     $result .= $buttonDelete." ";

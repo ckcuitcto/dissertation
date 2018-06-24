@@ -159,8 +159,7 @@
                             đánh giá điểm rèn luyện</h3>
                         <div class="card mb-3">
                             <div class="card-header">
-                                <div>Đánh giá điểm rèn luyện học kỳ {{$timeList->term}} năm
-                                    học {{$timeList->year_to}}</div>
+                                <div>Đánh giá điểm rèn luyện học kỳ {{$timeList->term}} năm học {{$timeList->year_from .' - '.$timeList->year_to}}</div>
                             </div>
                             <div class="card-body">
                                 {{-- <h5 class="card-title">Warning card title</h5> --}}

@@ -206,7 +206,7 @@ $('body').on('click', '#btn-save-semester', function (e) {
                 }
             } else if (result.status === true) {
                 $.notify({
-                    title: "Thêm học kì thành công",
+                    title: "Thành công",
                     message: ":D",
                     icon: 'fa fa-check'
                 }, {
