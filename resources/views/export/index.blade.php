@@ -85,13 +85,7 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/jquery.dataTables.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
 
             var oTable = $('#exportTable').DataTable({
                 "processing": true,
@@ -124,68 +118,14 @@
                 },
                 "language": {
                     "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                    // "zeroRecords": "Không có bản ghi nào!",
-                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
-                    "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
-                },
-                "pageLength": 10,
-            });
-
-            $('#search-form').on('submit', function(e) {
-                oTable.draw();
-                e.preventDefault();
-            });
-
-            $('body').on('change', "select#semester_id", function (e) {
-                $("input#semesterChoose").val($(this).val());
-            });
-
-            $('body').on('click', 'input[name=checkAll]', function (e) {
-                if($(this).is(':checked')){
-                    $("input.checkboxClasses").prop('checked', true);
-                }else{
-                    $("input.checkboxClasses").prop('checked', false);
-                }
-            });
-
-            $('body').on('change', "input.checkboxClasses", function (e) {
-                $("input[name=checkAll]").prop('checked',false);
-            });
-
-
-            var table = $('#facultyTable').DataTable({
-                "language": {
-                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
                     "zeroRecords": "Không có bản ghi nào!",
                     "info": "Hiển thị trang _PAGE_ của _PAGES_",
                     "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
                 },
-                "pageLength": 25,
-                "columnDefs": [
-                    { "orderable": false, "targets": 3 }
-                ]
+                "pageLength": 10,
             });
-
-            $('body').on('click', 'button#btnExport', function (e) {
-                var boxes = $('input.checkboxClasses:checked');
-
-                if(boxes.length == 0){
-                    $.notify({
-                        title: "Vui lòng chọn lớp !!!!!!",
-                        message: ":(",
-                        icon: 'fa fa-exclamation-triangle'
-                    },{
-                        type: "warning"
-                    });
-                }else{
-                    $("form#class-form-export").submit();
-                }
-            });
-            $('div.alert-success').delay(2000).slideUp();
-
-        });
-
     </script>
+    <script src="{{asset('js/web/export/index.js')}}"></script>
 @endsection

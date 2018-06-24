@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Export;
 use App\Model\Classes;
 use App\Model\Faculty;
 use App\Model\FileImport;
+use App\Model\Role;
 use App\Model\Semester;
 use App\Model\User;
 use Carbon\Carbon;
@@ -93,7 +94,6 @@ class ExportController extends Controller
             });
         return $dataTables->make(true);
     }
-
 
     public function exportVer2(Request $request)
     {
@@ -677,6 +677,168 @@ class ExportController extends Controller
         } else {
             return redirect()->back();
         }
+    }
+
+    public function backup()
+    {
+        $userLogin = $this->getUserLogin();
+
+        $currentSemester = $this->getCurrentSemester();
+        $semesters = Semester::select('id', DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+
+        $rolesForSelectSearch = Role::all()->toArray();
+        $rolesForSelectSearch = array_prepend($rolesForSelectSearch,array('id' => 0,'display_name' => 'Tất cả Role'));
+
+        if ($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN) {
+            $faculties = Faculty::all()->toArray();
+            $faculties = array_prepend($faculties, array('id' => 0, 'name' => 'Tất cả khoa'));
+        } else {
+            $faculties = Faculty::where('id', $userLogin->Faculty->id)->get()->toArray();
+        }
+
+        return view('backup.index', compact('faculties', 'semesters', 'currentSemester','rolesForSelectSearch'));
+    }
+
+    public function ajaxGetUsers(Request $request){
+        $users = DB::table('users')
+            ->leftJoin('students','students.user_id','=','users.users_id')
+            ->leftJoin('faculties','faculties.id','=','users.faculty_id')
+            ->leftJoin('classes','classes.id','=','students.class_id')
+            ->leftJoin('roles','roles.id','=','users.role_id')
+            ->select(
+                'users.*',
+                'faculties.name as facultyName',
+                'classes.name as className',
+                'roles.display_name as roleName'
+            );
+
+        return DataTables::of($users)->filter(function ($student) use ($request) {
+            $role = $request->has('role_id');
+            $roleValue = $request->get('role_id');
+            if (!empty($role) AND $roleValue != 0) {
+                $student->where('roles.id', '=', $roleValue);
+            }
+            })->make(true);
+    }
+
+    public function ajaxGetEachSemester(Request $request){
+
+        $user = $this->getUserLogin();
+        $students = DB::table('student_list_each_semesters')
+            ->leftJoin('classes', 'classes.id', '=', 'student_list_each_semesters.class_id')
+            ->leftJoin('students', 'students.user_id', '=', 'student_list_each_semesters.user_id')
+            ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+            ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
+            ->select(
+                'users.users_id',
+                'users.name as userName',
+                'classes.name as className',
+                'faculties.name as facultyName',
+                DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic"),
+                'students.id',
+                'students.id as studentId',
+                'users.faculty_id',
+                'students.class_id',
+                'student_list_each_semesters.semester_id as semesterId',
+                'student_list_each_semesters.monitor_id',
+                'student_list_each_semesters.staff_id'
+            );
+        $dataTables = DataTables::of($students)
+        ->addColumn('monitor', function ($student) {
+            $monitor = DB::table('users')->where('users_id',$student->monitor_id)->select('name')->first();
+            return $monitor->name;
+        })
+        ->addColumn('staffName', function ($student) {
+            $staff = DB::table('users')->leftJoin('staff','users.users_id','=','staff.user_id')
+                ->where('staff.id',$student->staff_id)->select('name')->first();
+            return $staff->name;
+        })
+        ->addColumn('semesterInfo', function ($student) {
+            $semester = DB::table('semesters')->where('id',$student->semesterId)->select(DB::raw("CONCAT('Học kì ',term,' năm học ',year_from,'-',year_to) as semesterInfo"))->first();
+            return $semester->semesterInfo;
+        })
+        ->filter(function ($student) use ($request) {
+            $faculty = $request->has('faculty_id');
+            $facultyValue = $request->get('faculty_id');
+
+            if (!empty($faculty) AND $facultyValue != 0) {
+                $student->where('users.faculty_id', '=', $facultyValue);
+
+            }
+
+            $semester = $request->has('semester_id');
+            $semesterValue = $request->get('semester_id');
+            if (!empty($semester) AND $semesterValue != 0) {
+                $student->where('student_list_each_semesters.semester_id', '=', $semesterValue);
+            }
+        });
+
+        return $dataTables->make(true);
+    }
+
+    public function ajaxGetFaculties()
+    {
+        $faculties = DB::table('faculties')
+            ->leftJoin('classes', 'classes.faculty_id', '=', 'faculties.id')
+            ->select(
+                'faculties.*',
+                DB::raw('count(classes.faculty_id) AS countClass')
+            )->groupBy('faculties.id');
+
+        return DataTables::of($faculties)->make(true);
+    }
+
+    public function ajaxGetBackUpClass(Request $request)
+    {
+        $classes = DB::table('classes')
+            ->leftJoin('students', 'classes.id', '=', 'students.class_id')
+            ->select(
+                'classes.*',
+                DB::raw('count(students.id) AS countStudent')
+            )->groupBy('classes.id');
+
+        return DataTables::of($classes)
+        ->filter(function ($class) use ($request) {
+            $faculty = $request->has('faculty_id');
+            $facultyValue = $request->get('faculty_id');
+
+            if (!empty($faculty) AND $facultyValue != 0) {
+                $class->where('classes.faculty_id', '=', $facultyValue);
+            }
+        })
+        ->make(true);
+    }
+
+    public function ajaxGetBackUpSemester(Request $request)
+    {
+        $semesters = DB::table('semesters')
+        ->select(
+            'id',
+            'term',
+            DB::raw("CONCAT(year_from,'-',year_to) as year"),
+            DB::raw("CONCAT(date_start,'-',date_end) as semesterDate"),
+            DB::raw("CONCAT(date_start_to_mark,'-',date_end_to_mark) as date_mark"),
+            DB::raw("CONCAT(date_start_to_request_re_mark,'-',date_end_to_request_re_mark) as date_request_re_mark"),
+            DB::raw("CONCAT(date_start_to_re_mark,'-',date_start_to_re_mark) as date_re_mark")
+        );
+
+        $dataTable = DataTables::of($semesters)
+            ->addColumn('detail', function ($semester) {
+                $markTime = DB::table('mark_times')
+                    ->leftJoin('roles','mark_times.role_id','=','roles.id')
+                    ->where('semester_id',$semester->id)
+                    ->select(
+                        DB::raw("CONCAT(mark_time_start,' -> ',mark_time_end) as markTime"),
+                        'roles.display_name as roleDisplayName'
+                    )->get();
+
+                $strDetail = '';
+                foreach ($markTime as $key => $time){
+                    $strDetail .= ($key+1).": ". $time->roleDisplayName .': '.$time->markTime."-*-*-" ;
+                }
+                return $strDetail;
+            });
+        return $dataTable->make(true);
     }
 
 }

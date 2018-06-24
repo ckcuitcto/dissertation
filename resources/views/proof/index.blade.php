@@ -126,7 +126,8 @@
                                 <div class="col-md-12">
                                     <div class="form-row">
                                         <label for="evaluation_criteria_id">Chọn tiêu chí </label>
-                                        <select class="form-control evaluation_criteria_id" name="evaluation_criteria_id"
+                                        <select class="form-control evaluation_criteria_id"
+                                                name="evaluation_criteria_id"
                                                 id="evaluation_criteria_id">
                                             <option value="0"> ---Chọn tiêu chí---</option>
                                             @foreach($evaluationCriterias as $value)
@@ -145,8 +146,8 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="modal-body body-view-file">
-                                        <div id="iframe-view-file" class="doc"></div>
-                                    </div>
+                                            <div id="iframe-view-file" class="doc"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -154,8 +155,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button  class="btn btn-primary"
-                                 id="btn-update-proof" name="btn-update-proof" type="button">
+                        <button class="btn btn-primary"
+                                id="btn-update-proof" name="btn-update-proof" type="button">
                             Sửa
                         </button>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
@@ -167,267 +168,147 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
     <script>
-        $(document).ready(function () {
+        var oTable = $('#proofsTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{{ route('ajax-get-proofs') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": {
+                    "_token": "{{ csrf_token() }}"
+                }
+            },
+            "columns": [
+                {data: "proofId", name: "proofs.id"},
+                {data: "content", name: "evaluation_criterias.content"},
+                {data: "term", name: "semesters.term"},
+                {data: "semesterYear", name: "semesters.year_from"},
+                {data: "valid", name: "proofs.valid"},
+                {data: 'action', name: 'action', orderable: false, searchable: false}
+            ],
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
+            },
+            "pageLength": 10
+        });
 
-            var oTable = $('#proofsTable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    "url": "{{ route('ajax-get-proofs') }}",
-                    "dataType": "json",
-                    "type": "POST",
-                    "data": {
-                        "_token": "{{ csrf_token() }}"
-                    }
-                },
-                "columns": [
-                    {data: "proofId", name: "proofs.id"},
-                    {data: "content", name: "evaluation_criterias.content"},
-                    {data: "term", name: "semesters.term"},
-                    {data: "semesterYear", name: "semesters.year_from"},
-                    {data: "valid", name: "proofs.valid"},
-                    {data: 'action', name: 'action', orderable: false, searchable: false}
-                ],
-                "language": {
-                    "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                    // "zeroRecords": "Không có bản ghi nào!",
-                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
-                    "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
-                },
-                "pageLength": 10
-            });
+        $('body').on('click', 'a#proof-view-file', function (e) {
+            var thisproof = $(this);
+            var id = thisproof.attr('data-proof-id');
+            var url = thisproof.attr('data-get-file-link');
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: {id: id},
+                success: function (data) {
+                    if (data.status === true && data.proof !== undefined) {
+                        // $("form#proof-form").attr("data-link", urlDeleteProofFile);
+                        $.each(data.proof, function (elementName, value) {
+                            if (elementName === 'name') {
+                                var fileType = value.lastIndexOf(".");
+                                var type = value.substring(fileType + 1, value.length);
 
-            $('body').on('click', 'a#proof-view-file', function (e) {
-                var thisproof = $(this);
-                var id = thisproof.attr('data-proof-id');
-                var url = thisproof.attr('data-get-file-link');
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {id: id},
-                    success: function (data) {
-                        if (data.status === true && data.proof !== undefined) {
-                            // $("form#proof-form").attr("data-link", urlDeleteProofFile);
-                            $.each(data.proof, function (elementName, value) {
-                                if (elementName === 'name') {
-                                    var fileType = value.lastIndexOf(".");
-                                    var type = value.substring(fileType + 1, value.length);
-
-                                    // kiểm tra file. nếu là file pdf thì bỏ vào iframe. nếu là file khác(ảnh) thì bỏ vào img rồi cho lên
-                                    var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
-                                    if(type === "pdf"){
-                                        var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
-                                    }else{
-                                        var contentView = "<img src='"+urlFile+"'> ";
-                                    }
-                                    $("#myModal").find('div#iframe-view-file').html(contentView);
-                                }
-                            });
-                            $('#myModal').modal('show');
-                        }
-                    }
-                });
-            });
-
-            $('body').on('click', 'button#proof-view-update-file', function (e) {
-
-                var thisproof = $(this);
-                var id = thisproof.attr('data-proof-id');
-                var url = thisproof.attr('data-get-file-link');
-                var urlUpdate = thisproof.attr('data-link-update-proof-file');
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {id: id},
-                    success: function (data) {
-                        if (data.status === true && data.proof !== undefined) {
-                            // $("form#proof-form").attr("data-link", urlDeleteProofFile);
-                            $.each(data.proof, function (elementName, value) {
-                                if (elementName === 'name') {
-                                    var fileType = value.lastIndexOf(".");
-                                    var type = value.substring(fileType + 1, value.length);
-
-                                    // kiểm tra file. nếu là file pdf thì bỏ vào iframe. nếu là file khác(ảnh) thì bỏ vào img rồi cho lên
-                                    var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
-                                    if (type === "pdf") {
-                                        var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
-                                    } else {
-                                        var contentView = "<img src='" + urlFile + "'> ";
-                                    }
-                                    $("#updateModal").find('div#iframe-view-file').html(contentView);
-                                }else if (elementName === 'semester_id' || elementName === 'evaluation_criteria_id') {
-                                    if(value === null){
-                                        $("#updateModal").find('select.'+elementName).val(0);
-                                    }else{
-                                        $("#updateModal").find('select.'+elementName).val(value);
-                                    }
-                                }else{
-                                    $("#updateModal").find('.'+elementName).val(value);
-                                }
-                            });
-                            $('#updateModal').find("button#btn-update-proof").attr('data-link',urlUpdate);
-                            $('#updateModal').modal('show');
-                        }
-                    }
-                });
-            });
-
-            $('body').on('click', 'button#btn-update-proof', function (e) {
-                var valueForm = $('form#update-proof-form').serialize();
-                var url = $(this).attr('data-link');
-                $('.form-row').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: valueForm,
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#update-proof-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
-                                });
-                            }
-                        } else if (result.status === true) {
-
-                            $.notify({
-                                title: "Sửa minh chứng thành công",
-                                message: ":D",
-                                icon: 'fa fa-check'
-                            },{
-                                type: "success"
-                            });
-                            $('div#updateModal').modal('hide');
-                            oTable.draw();
-                        }
-                    }
-                });
-            });
-
-            $('body').on('click', 'button#proof-destroy', function (e) {
-                var id = $(this).attr("data-proof-id");
-                var url = $(this).attr('data-proof-destroy-link');
-
-                swal({
-                    title: "Bạn chắc chưa?",
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Có, tôi chắc chắn!",
-                    cancelButtonText: "Không, Hủy dùm tôi!",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            cache: false,
-                            data: {"id": id},
-                            success: function (data) {
-                                if (data.status === true) {
-                                    swal("Deleted!", "Đã xóa file " + data.proof.name, "success");
-                                    $('.sa-confirm-button-container').click(function () {
-                                        oTable.draw();
-                                    })
+                                // kiểm tra file. nếu là file pdf thì bỏ vào iframe. nếu là file khác(ảnh) thì bỏ vào img rồi cho lên
+                                var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
+                                if (type === "pdf") {
+                                    var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
                                 } else {
-                                    swal("Cancelled", "Không tìm thấy file !!! :)", "error");
+                                    var contentView = "<img src='" + urlFile + "'> ";
                                 }
+                                $("#myModal").find('div#iframe-view-file').html(contentView);
                             }
                         });
-                    } else {
-                        swal("Đã hủy", "Đã hủy xóa File:)", "error");
+                        $('#myModal').modal('show');
                     }
-                });
-            });
-
-            $('body').on('change', 'input#fileUpload', function (e) {
-                // $('input#fileUpload').change(function (e) {
-                e.preventDefault();
-                var urlCheckFile = "{{ route('evaluation-form-upload') }}";
-                var formData = new FormData();
-                var fileUpload = $(this);
-                var countFile = fileUpload[0].files.length;
-                for (var x = 0; x < countFile; x++) {
-                    file = fileUpload[0].files[x];
-                    formData.append("fileUpload[]", file);
                 }
-                $('.form-row').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: urlCheckFile,
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (result) {
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        fileUpload.after('<span class="messageErrors" style="color:red"><br>' + messageValue + '</span>');
-                                    });
-                                });
+            });
+        });
+
+        $('body').on('click', 'button#proof-view-update-file', function (e) {
+
+            var thisproof = $(this);
+            var id = thisproof.attr('data-proof-id');
+            var url = thisproof.attr('data-get-file-link');
+            var urlUpdate = thisproof.attr('data-link-update-proof-file');
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: {id: id},
+                success: function (data) {
+                    if (data.status === true && data.proof !== undefined) {
+                        // $("form#proof-form").attr("data-link", urlDeleteProofFile);
+                        $.each(data.proof, function (elementName, value) {
+                            if (elementName === 'name') {
+                                var fileType = value.lastIndexOf(".");
+                                var type = value.substring(fileType + 1, value.length);
+
+                                // kiểm tra file. nếu là file pdf thì bỏ vào iframe. nếu là file khác(ảnh) thì bỏ vào img rồi cho lên
+                                var urlFile = '{{ asset("upload/proof/") }}' + '/' + value;
+                                if (type === "pdf") {
+                                    var contentView = '<iframe class="doc" src="' + urlFile + '"></iframe>';
+                                } else {
+                                    var contentView = "<img src='" + urlFile + "'> ";
+                                }
+                                $("#updateModal").find('div#iframe-view-file').html(contentView);
+                            } else if (elementName === 'semester_id' || elementName === 'evaluation_criteria_id') {
+                                if (value === null) {
+                                    $("#updateModal").find('select.' + elementName).val(0);
+                                } else {
+                                    $("#updateModal").find('select.' + elementName).val(value);
+                                }
+                            } else {
+                                $("#updateModal").find('.' + elementName).val(value);
                             }
-                        }
+                        });
+                        $('#updateModal').find("button#btn-update-proof").attr('data-link', urlUpdate);
+                        $('#updateModal').modal('show');
                     }
-                });
-            });
-
-            $('body').on('click', 'button#btn-upload-proof', function (e) {
-                e.preventDefault();
-                var formData = new FormData($('form#upload-proof-form')[0]);
-                // var formData = new FormData();
-                var fileUpload = document.getElementById('fileUpload');
-                var inss = fileUpload.files.length;
-                for (var x = 0; x < inss; x++) {
-                    file = fileUpload.files[x];
-                    formData.append("fileUpload[]", file);
                 }
-                var url = $(this).attr('data-link');
-                $('.form-row').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: formData,
-                    processData: false,
-                    dataType: 'json',
-                    contentType: false,
-                    enctype: 'multipart/form-data',
-                    success: function (result) {
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#upload-proof-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
+            });
+        });
+
+        $('body').on('change', 'input#fileUpload', function (e) {
+            // $('input#fileUpload').change(function (e) {
+            e.preventDefault();
+            var urlCheckFile = "{{ route('evaluation-form-upload') }}";
+            var formData = new FormData();
+            var fileUpload = $(this);
+            var countFile = fileUpload[0].files.length;
+            for (var x = 0; x < countFile; x++) {
+                file = fileUpload[0].files[x];
+                formData.append("fileUpload[]", file);
+            }
+            $('.form-row').find('span.messageErrors').remove();
+            $.ajax({
+                type: "post",
+                url: urlCheckFile,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    if (result.status === false) {
+                        //show error list fields
+                        if (result.arrMessages !== undefined) {
+                            $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                                $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                                    fileUpload.after('<span class="messageErrors" style="color:red"><br>' + messageValue + '</span>');
                                 });
-                            }
-                        } else if (result.status === true) {
-                            $.notify({
-                                title: "Thêm minh chứng thành công",
-                                message: ":D",
-                                icon: 'fa fa-check'
-                            },{
-                                type: "success"
                             });
-                            $('div#addModal').modal('hide');
-                            oTable.draw();
                         }
                     }
-                });
+                }
             });
         });
     </script>
+    <script src="{{ asset('js/web/proof/index.js') }}"></script>
 @endsection

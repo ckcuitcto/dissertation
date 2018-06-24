@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', ['as' => 'faculty-update', 'uses' => 'Department\FacultyController@update'])->middleware('can:faculty-change');
 
         Route::post('/get-faculties', ['as' => 'ajax-get-faculties', 'uses' => 'Department\FacultyController@ajaxGetFaculties']);
-        Route::post('/get-faculty-detail', ['as' => 'ajax-get-faculty-detail', 'uses' => 'Department\FacultyController@ajaxGetFacultyDetail']);
+        Route::post('/get-faculty-detail', ['as' => 'ajax-get-class-by-faculty-detail', 'uses' => 'Department\FacultyController@ajaxGetClassByFacultyDetail']);
 
     });
 
@@ -219,6 +219,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/danh-sach-y-kien', ['as' => 'comment-list', 'uses' => 'Comment\CommentController@index']);
 
+        Route::post('/get-comments', ['as' => 'ajax-get-comments', 'uses' => 'Comment\CommentController@ajaxGetComments']);
+
+
     });
 
     Route::group(['prefix' => 'tin-tuc'], function () {
@@ -235,6 +238,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/edit/{id}', ['as' => 'news-edit', 'uses' => 'News\NewsController@edit'])->middleware('can:can-change-news');
 
         Route::get('/destroy/{id}', ['as' => 'news-destroy', 'uses' => 'News\NewsController@destroy'])->middleware('can:can-change-news');
+
+        Route::post('/get-news', ['as' => 'ajax-get-news', 'uses' => 'News\NewsController@ajaxGetNews']);
+
     });
 
     Route::get('/phong-ban', ['as' => 'departmentlist', 'uses' => 'Departmentlist\DepartmentlistController@departmentlist']);
@@ -274,7 +280,20 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/danh-sach', ['as' => 'export-file-list', 'uses' => 'Export\ExportController@index']);
 
-        Route::post('/list', ['as' => 'ajax-get-class-export', 'uses' => 'Export\ExportController@ajaxGetClasses']);
+        //. 1 expỏtt điểm đánh giá của lớp
+        Route::post('/list-class', ['as' => 'ajax-get-class-export', 'uses' => 'Export\ExportController@ajaxGetClasses']);
+
+        Route::get('/backup', ['as' => 'export-backup', 'uses' => 'Export\ExportController@backup']);
+
+        Route::post('/list-user', ['as' => 'ajax-get-backup-users', 'uses' => 'Export\ExportController@ajaxGetUsers']);
+        Route::post('/list-each-semester', ['as' => 'ajax-get-backup-each-semester', 'uses' => 'Export\ExportController@ajaxGetEachSemester']);
+        Route::post('/list-faculty', ['as' => 'ajax-get-backup-faculty', 'uses' => 'Export\ExportController@ajaxGetFaculties']);
+
+        //export backup
+        Route::post('/list-export-class', ['as' => 'ajax-get-backup-class', 'uses' => 'Export\ExportController@ajaxGetBackUpClass']);
+
+        Route::post('/list-export-semester', ['as' => 'ajax-get-backup-semester', 'uses' => 'Export\ExportController@ajaxGetBackUpSemester']);
+
     });
 
     Route::post('/xuat-danh-sach', ['as' => 'export-users', 'uses' => 'Export\ExportController@exportByUserId'])->middleware('can:export-users');

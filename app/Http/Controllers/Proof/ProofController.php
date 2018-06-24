@@ -98,12 +98,10 @@ class ProofController extends Controller
         } else {
             $proof = Proof::find($id);
             if (!empty($proof)) {
-                if(!empty($request->semester_id)){
-                    $proof->semester_id = $request->semester_id;
-                }
-                if(!empty($request->evaluation_criteria_id)){
-                    $proof->evaluation_criteria_id  = $request->evaluation_criteria_id;
-                }
+
+                $proof->semester_id = ($request->semester_id) ? $request->semester_id : null;
+                $proof->evaluation_criteria_id  =  ($request->evaluation_criteria_id) ? $request->evaluation_criteria_id : null;
+
                 $proof->save();
                 return response()->json([
                     'proof' => $proof,

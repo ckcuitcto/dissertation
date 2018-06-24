@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-    <main class="app-content">
+    <main class="app-content popup-role">
         <div class="app-title">
             <div>
                 <h1><i class="fa fa-file-text-o"></i> Danh sách các vai trò</h1>
@@ -12,7 +12,7 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 custom-role">
                 <div class="tile">
 
                     <div class="tile-body">
@@ -38,23 +38,23 @@
                                     <td> {{ count($role->Users) }} </td>
                                     <td>
                                         @foreach($role->Permissions as $key => $permission)
-                                            @if($key == count($role->Permissions)-1)
+{{--                                            @if($key == count($role->Permissions)-1)--}}
                                                 <b>{{ $permission->display_name  }}</b>
-                                            @else
-                                                <b>{{ $permission->display_name  }}</b>&nbsp&nbsp {{ " -- " }}&nbsp&nbsp
-                                            @endif
+                                            {{--@else--}}
+                                                {{--<b>{{ $permission->display_name  }}</b>--}}
+                                            {{--@endif--}}
                                         @endforeach
                                     </td>
                                     <td style="color:white">
-                                        <a data-role-id="{{$role->id}}" id="role-update"
+                                        <a data-role-id="{{$role->id}}"
                                            data-role-edit-link="{{route('role-edit',$role->id)}}"
-                                           data-role-update-link="{{route('role-update',$role->id)}}" class="btn btn-primary">
-                                            <i class="fa fa-lg fa-edit" aria-hidden="true"> </i>
+                                           data-role-update-link="{{route('role-update',$role->id)}}" class="btn btn-primary role-update">
+                                            <i class="fa fa-lg fa-edit " aria-hidden="true"> </i>
                                         </a>
                                         @if(!count($role->Users)>0)
-                                            <a data-role-id="{{$role->id}}" id="role-destroy"
-                                               data-role-link="{{route('role-destroy',$role->id)}}" class="btn btn-danger">
-                                                <i class="fa fa-lg fa-trash-o" aria-hidden="true"> </i>
+                                            <a data-role-id="{{$role->id}}"
+                                               data-role-link="{{route('role-destroy',$role->id)}}" class="btn btn-danger role-destroy">
+                                                <i class="fa fa-lg fa-trash-o " aria-hidden="true"> </i>
                                             </a>
                                         @endif
                                     </td>
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal fade " id="myModal" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -173,125 +173,5 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    {{--<script type="text/javascript">$('#sampleTable').DataTable();</script>--}}
-
-    <script>
-        $(document).ready(function () {
-
-            $("a#role-update").click(function () {
-                var urlEdit = $(this).attr('data-role-edit-link');
-                var urlUpdate = $(this).attr('data-role-update-link');
-                var id = $(this).attr('data-role-id');
-                $('.form-group').find('span.messageErrors').remove();
-                $.ajax({
-                    type: "get",
-                    url: urlEdit,
-                    data: {id: id},
-                    dataType: 'json',
-                    cache: false,
-                    success: function (result) {
-                        if (result.status === true) {
-                            if (result.role !== undefined) {
-                                $.each(result.role, function (elementName, value) {
-//                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-//                                    alert(elementName + "+ " + value);
-                                    $('.' + elementName).val(value);
-//                                    });
-                                    if(elementName === "permissions"){
-                                        $.each(value, function (permission, valuePermission) {
-//                                            alert(permission + "+ " + valuePermission.id);
-                                            $('.permission_' + valuePermission.id).val(valuePermission.id).prop('checked', true);
-
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-                $('#myModal').find(".modal-title").text('Sửa thông tin vai trò ');
-                $('#myModal').find(".modal-footer > button[name=btn-save-role]").html('Sửa')
-                $('#myModal').find(".modal-footer > button[name=btn-save-role]").attr('data-link', urlUpdate);
-                $('#myModal').modal('show');
-            });
-            $("#btn-save-role").click(function () {
-//                $('#myModal').find(".modal-title").text('Thêm mới Khoa');
-//                $('#myModal').find(".modal-footer > button[name=btn-save-role]").html('Thêm');
-                var valueForm = $('form#role-form').serialize();
-                var url = $(this).attr('data-link');
-                $('span.messageErrors').remove();
-                $.ajax({
-                    type: "post",
-                    url: url,
-                    data: valueForm,
-                    dataType: 'json',
-                    cache: false,
-                    success: function (result) {
-                        if (result.status === false) {
-                            //show error list fields
-                            if (result.arrMessages !== undefined) {
-                                $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                    $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                        $('form#role-form').find('.' + elementName).parents('.form-group ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                    });
-                                });
-                            }
-                        } else if (result.status === true) {
-                            $('#myModal').find('.modal-body').html('<p>Thành công</p>');
-                            $("#myModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                            $('#myModal').on('hidden.bs.modal', function (e) {
-                                location.reload(true);
-                            });
-                        }
-                    }
-                });
-            });
-
-            $('a#role-destroy').click(function () {
-                var id = $(this).attr("data-role-id");
-                var url = $(this).attr('data-role-link');
-                swal({
-                    title: "Bạn chắc chưa?",
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu !!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Có, tôi chắc chắn!",
-                    cancelButtonText: "Không, Hủy dùm tôi!",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            cache: false,
-                            data: {"id": id},
-                            success: function (data) {
-                                if (data.status === true) {
-                                    swal("Deleted!", "Đã xóa vai trò " + data.role.name, "success");
-                                    $('.sa-confirm-button-container').click(function () {
-                                        location.reload();
-                                    })
-                                } else {
-                                    swal("Cancelled", "Không tìm thấy Vai trò !!! :)", "error");
-                                }
-                            }
-                        });
-                    } else {
-                        swal("Đã hủy", "Đã hủy xóa vai trò:)", "error");
-                    }
-                });
-            });
-
-            $('#myModal').on('hidden.bs.modal', function (e) {
-                $("input[type=text],input[type=number], select").val('');
-                $("input[type=checkbox]").prop('checked', false);
-                $('.text-red').html('');
-                $('.form-group').find('span.messageErrors').remove();
-            });
-
-        });
-    </script>
+    <script src="{{ asset('js/web/role/index.js') }}"></script>
 @endsection

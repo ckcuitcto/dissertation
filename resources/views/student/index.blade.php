@@ -14,15 +14,6 @@
         <div class="row">
             <div class="col-md-12 custom-quanly-taikhoan">
                 <div class="tile">
-                    <div class="overlay custom-overlay" style="opacity: 0">
-                        <div class="m-loader mr-4">
-                            <svg class="m-circular" viewBox="25 25 50 50">
-                                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4"
-                                        stroke-miterlimit="10"/>
-                            </svg>
-                        </div>
-                        <h3 class="l-text">Loading</h3>
-                    </div>
                     <div class="tile-body">
                         <form class="row" role="form" id="search-form" method="post">
                             {!! csrf_field() !!}
@@ -120,15 +111,7 @@
 @endsection
 
 @section('sub-javascript')
-    <script type="text/javascript" src="{{ asset('template/js/plugins/bootstrap-notify.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('template/js/plugins/sweetalert.min.js') }}"></script>
-    <script type="text/javascript">
-    </script>
-
-
     <script>
-        $(document).ready(function () {
-
             $("div#students_filter").hide();
 
             var oTable = $('#studentsEachList').DataTable({
@@ -165,96 +148,14 @@
                 },
                 "language": {
                     "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                    // "zeroRecords": "Không có bản ghi nào!",
-                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "zeroRecords": "Không có bản ghi nào!",
+                    "info": "Hiển thị trang _PAGE_ của _PAGES_",
                     "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
                 },
                 "pageLength": 10
             });
-
-            $('#search-form').on('submit', function (e) {
-                oTable.draw();
-                e.preventDefault();
-            });
-
-
-//            import
-            $("#btn-import-student").click(function (e) {
-                e.preventDefault();
-                $('.form-row').find('span.messageErrors').remove();
-                var $fileUpload = $("input[type='file']");
-                if (parseInt($fileUpload.get(0).files.length) > 20) {
-                    $('form#import-student-form').find('.fileImport').parents('.form-row').append('<span class="messageErrors" style="color:red">Chỉ được upload tối đa 20 tập tin</span>');
-                } else {
-                    $('#importModal').find('.show-error').hide();
-                    $("#importModal").find("p.child-error").remove();
-                    var formData = new FormData();
-                    var fileImport = document.getElementById('fileImport');
-                    var inss = fileImport.files.length;
-                    for (var x = 0; x < inss; x++) {
-                        file = fileImport.files[x];
-                        formData.append("fileImport[]", file);
-                    }
-                    var url = $(this).attr('data-link');
-                    $('.form-row').find('span.messageErrors').remove();
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        // enctype: 'multipart/form-data',
-                        processData: false,
-                        beforeSend: function () {
-                            $('#ajax_loader').show();
-                        },
-                        success: function (result) {
-                            $('#ajax_loader').hide();
-                            $("#importModal").find("button#btn-import-student").prop('disabled', false);
-                            if (result.status === false) {
-                                //show error list fields
-                                if (result.arrMessages !== undefined) {
-                                    $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
-                                        $.each(arrMessagesEveryElement, function (messageType, messageValue) {
-                                            $('form#import-student-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
-                                        });
-                                    });
-                                }
-                                if (result.errors !== undefined) {
-                                    // console.log(result.errors);
-                                    $('#importModal').find('div.alert-danger').show();
-                                    $.each(result.errors, function (elementName, arrMessagesEveryElement) {
-                                        $('#importModal').find('div.alert-danger').append("<p class='child-error'>" + arrMessagesEveryElement + "</p>");
-                                    });
-                                }
-                            } else if (result.status === true) {
-                                $.notify({
-                                    title: "Upload Thành công ",
-                                    message: ":D",
-                                    icon: 'fa fa-check'
-                                },{
-                                    type: "success"
-                                });
-                                $('div#importModal').modal('hide');
-                                oTable.draw();
-                                // $('#importModal').find('.modal-body').html('<p>Upload Thành công</p>');
-                                // $("#importModal").find('.modal-footer').html('<button  class="btn btn-default" data-dismiss="modal">Đóng</button>');
-                                // $('#importModal').on('hidden.bs.modal', function (e) {
-                                //     location.reload();
-                                // });
-                            }
-                        }
-                    });
-                }
-            });
-
-            $('#importModal').on('hidden.bs.modal', function (e) {
-                $("input[type=text],input[type=number], select").val('');
-                $('.text-red').html('');
-                $('.form-row').find('span.messageErrors').remove();
-            });
-
-        });
     </script>
+    <script src="{{asset('js/web/student/index.js')}}"></script>
 @endsection

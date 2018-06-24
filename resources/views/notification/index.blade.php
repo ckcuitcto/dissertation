@@ -49,10 +49,7 @@
 @endsection
 
 @section('sub-javascript')
-
     <script>
-        $(document).ready(function () {
-
             var oTable = $('#notificationTable').DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -75,43 +72,18 @@
                 ],
                 "language": {
                     "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
-                    // "zeroRecords": "Không có bản ghi nào!",
-                    // "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                    "zeroRecords": "Không có bản ghi nào!",
+                    "info": "Hiển thị trang _PAGE_ của _PAGES_",
                     "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
                 },
                 "pageLength": 25
-            });
-
-            $('body').on('click', 'button.view-notification', function (e) {
-                var url = $(this).attr('link-view');
-                var id = $(this).attr('data-id');
-                $.ajax({
-                    type: "get",
-                    url: url,
-                    data: {id: id},
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === true) {
-                            if (result.notification !== undefined) {
-                                $.each(result.notification, function (elementName, value) {
-                                    $("div#myModal").find('p.' + elementName).append(value);
-                                });
-                                oTable.draw();
-                            }
-                        }
-                    }
-                });
-                $('#myModal').modal('show');
-            });
-
-            $('div#myModal').on('hidden.bs.modal', function (e) {
-                $('div#myModal').find("p").html('');
             });
 
             @if(!empty($notification))
                 $('input[type="search"]').val("{{ $notification->id.' '.$notification->title }}").keyup();
             @endif
-        });
     </script>
+    <script src="{{ asset('js/web/notification/index.js') }}"></script>
 @endsection

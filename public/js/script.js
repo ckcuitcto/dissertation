@@ -11,6 +11,31 @@ function readURL(input) {
     }
 }
 
+
+$('#sampleTable').DataTable({
+    "language": {
+        "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+        "zeroRecords": "Không có bản ghi nào!",
+        "info": "Hiển thị trang _PAGE_ của _PAGES_",
+        "infoEmpty": "Không có bản ghi nào!!!",
+        "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+    },
+    "pageLength": 25
+});
+
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+var options = {
+    filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+    filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+    filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+    filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+};
+
 <!--Khoa coppy-->
 
 // $(function () {

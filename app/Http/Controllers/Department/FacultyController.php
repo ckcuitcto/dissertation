@@ -44,6 +44,10 @@ class FacultyController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:6|unique:faculties,name',
+        ], [
+            'name.required' => "Vui lòng nhập tên Khoa",
+            'name.min' => 'Tên khoa phải có ít nhất 6 kí tự',
+            'name.unique' => 'Tên khoa đã tồn tại'
         ]);
 
         if ($validator->fails()) {
@@ -191,14 +195,16 @@ class FacultyController extends Controller
             ->make(true);
     }
 
-    public function ajaxGetFacultyDetail()
+    public function ajaxGetClassByFacultyDetail(Request $request)
     {
         $classes = DB::table('classes')
             ->leftJoin('students', 'classes.id', '=', 'students.class_id')
             ->select(
                 'classes.*',
                 DB::raw('count(students.class_id) AS countStudent')
-            )->groupBy('classes.id');
+            )
+            ->where('classes.faculty_id',$request->faculty_id)
+            ->groupBy('classes.id');
 
         return DataTables::of($classes)
         ->addColumn('action', function ($class) {

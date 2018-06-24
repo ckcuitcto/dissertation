@@ -123,6 +123,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'export-users',
                 'display_name' => 'Xuất file bảng tổng hợp',
                 'description' => 'Xuất file bảng tổng hợp đánh giá RL của SV'
+            ],[
+                'name' => 'backup',
+                'display_name' => 'Lưu lại dữ liệu',
+                'description' => 'Xuất file tất cả dữ liệu'
             ],
         ]);
     }
