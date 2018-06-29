@@ -43,14 +43,12 @@ class InformationController extends Controller
         $date = date("d/m/Y", $time);
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
             'email' => 'required|unique:users,email,'.$id.',users_id',
             'gender' => 'required',
             'address' => 'required',
             'phone_number' => 'required|numeric|phone',
-            'birthday' => 'required|date_format:d/m/Y|before:'.$date
+            'birthday' => 'required|date_format:d/m/Y|before:'.$date.'|after:01/01/1940'
         ],[
-            'name.required' => "Vui lòng nhập tên",
             'email.required' => "Vui lòng nhập email",
             'email.unique' => "Email đã tồn tại",
             'gender.required' => "Vui lòng chọn giới tính",
@@ -61,6 +59,7 @@ class InformationController extends Controller
             'birthday.required' => 'Vui lòng nhập ngày sinh',
             'birthday.date_format' => 'Ngày sinh không đúng định dạng. VD:24/08/1996',
             'birthday.before' => 'Ngày sinh không họp lệ',
+            'birthday.after' => 'Ngày sinh không họp lệ',
 
         ]);
         if ($validator->fails()) {
@@ -71,7 +70,6 @@ class InformationController extends Controller
         } else {
              $user = User::where('users_id',$id)->first();
             if (!empty($user)) {
-                $user->name = $request->name;
                 $user->email = $request->email;
                 $user->gender = $request->gender;
                 $user->address = $request->address;

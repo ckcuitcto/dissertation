@@ -101,7 +101,7 @@
                                                                    data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
                                                                    data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                     <i class="fa fa-eye"
-                                                                       aria-hidden="true"></i>{{ $proof->name }}
+                                                                       aria-hidden="true"></i>{{ str_limit($proof->name,20) }}
                                                                     @if($proof->valid == 1)
                                                                         <button type="button"
                                                                                 class="btn btn-primary btn-sm"><i
@@ -138,7 +138,7 @@
                                                                    data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
                                                                    data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                     <i class="fa fa-eye"
-                                                                       aria-hidden="true"></i>{{ $proof->name }}
+                                                                       aria-hidden="true"></i>{{ str_limit($proof->name,20) }}
 
                                                                     @if($proof->valid == 1)
                                                                         <button type="button"
@@ -225,7 +225,7 @@
                                                                        data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
                                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                         <i class="fa fa-eye"
-                                                                           aria-hidden="true"></i>{{ $proof->name }}
+                                                                           aria-hidden="true"></i>{{ str_limit($proof->name,20) }}
 
                                                                         @if($proof->valid == 1)
                                                                             <button type="button"
@@ -264,7 +264,7 @@
                                                                        data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
                                                                        data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
                                                                         <i class="fa fa-eye"
-                                                                           aria-hidden="true"></i>{{ $proof->name }}
+                                                                           aria-hidden="true"></i>{{ str_limit($proof->name,20) }}
                                                                         @if($proof->valid == 1)
                                                                             <button type="button"
                                                                                     class="btn btn-primary btn-sm"><i
@@ -648,10 +648,10 @@
 
                             } else if (elementName === 'valid') {
                                 if (value == 1) {
-                                    $('form#proof-form').find('#valid').attr('checked', true);
+                                    $('form#proof-form').find('#valid').prop('checked', true);
                                     $("form#proof-form").find('#textarea-note').hide();
                                 } else if (value == 0) {
-                                    $('form#proof-form').find('#invalid').attr('checked', true);
+                                    $('form#proof-form').find('#invalid').prop('checked', true);
                                     $("form#proof-form").find('#textarea-note').show();
                                 } else {
                                     $('form#proof-form').find('#valid').attr('checked', true);

@@ -74,6 +74,14 @@
                                 <i class="fa fa-download" aria-hidden="true"></i>Lập bảng tổng hợp đánh giá
                             </button>
                         </div>
+                        <div class="col-md-6">
+                               <span class="leds-test">
+                                <button class="btn btn-info btn-show-notes" title="
+Lưu ý: Khi xuất file chỉ xuất những giá trị hiện đang hiển thị.
+Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiển thị mỗi trang"><i style="background:#ff0000;color:#ff0000;"
+                                                                          class="led led-sm on blink"></i></button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

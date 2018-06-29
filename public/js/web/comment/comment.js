@@ -18,6 +18,7 @@ $('body').on('click', 'a.comment-reply', function (e) {
                         if (elementName === 'title' || elementName === 'content') {
                             $('.' + elementName).html(value);
                         } else if (elementName === 'reply') {
+
                             $('.email_content').html(value);
                         } else {
                             $('.' + elementName).val(value);
@@ -63,7 +64,8 @@ $('body').on('click', '#btn-reply', function (e) {
                 }, {
                     type: "success"
                 });
-                $('div#myModal').modal('hide');
+                $("#reply-form")[0].reset();
+                $('div#myModal').modal('hide').find(".email_content").html('');
                 oTable.draw();
             }
         }
@@ -132,7 +134,7 @@ $('div#modalViewComment').on('hidden.bs.modal', function (e) {
 });
 
 $('#myModal').on('hidden.bs.modal', function (e) {
-    $('#myModal').find("textarea.email_content").html('');
+    $('#myModal').find(".email_content").html('');
     $('.text-red').html('');
     $('span.messageErrors').remove();
 });

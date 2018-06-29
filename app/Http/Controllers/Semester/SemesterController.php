@@ -392,6 +392,7 @@ class SemesterController extends Controller
 
     public function ajaxGetSemesters()
     {
+        $currentSemester = $this->getCurrentSemester();
         $semesters = DB::table('semesters')
             ->select(
                 '*',
@@ -409,8 +410,11 @@ class SemesterController extends Controller
 
                 $btnDelete = "<a style='color: white' title='Xóa học kì' data-semester-id='$semester->id'  data-semester-delete-link='$linkDestroy'
                 class='btn btn-danger destroy-semester'> <i class='fa fa-trash' aria-hidden='true'></i></a>";
-                return "<p class='bs-component'>$btnEdit $btnDelete</p> ";
+                return "<span class='bs-component'>$btnEdit $btnDelete</span> ";
 
+            })
+            ->setRowClass(function ($semester) use ($currentSemester) {
+                return $semester->id == $currentSemester->id ? 'alert-success' : '';
             })
             ->make(true);
     }

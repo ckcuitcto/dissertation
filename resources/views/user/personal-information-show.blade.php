@@ -63,7 +63,7 @@
 
                         <div class="col-md-4">
                             <label>Họ và tên</label>
-                            <input class="form-control name can-edit" id="name" type="text" name="name"
+                            <input class="form-control name" id="name" type="text" name="name"
                                    value="{{ $user->name }}" disabled>
                         </div>
                         <div class="col-md-4">

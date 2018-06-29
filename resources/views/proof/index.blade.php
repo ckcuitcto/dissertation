@@ -92,7 +92,7 @@
                                         </select>
                                     </div>
                                     <div class="form-row">
-                                        <label for="fileUpload">Chọn file excel</label>
+                                        <label for="fileUpload">Chọn file minh chứng</label>
                                         <input type="file" multiple class="form-control fileUpload" name="fileUpload"
                                                id="fileUpload">
                                     </div>

@@ -15018,3 +15018,7 @@ input[type=number]::-webkit-outer-spin-button {
 .form-reset-password {
   height: 450px;
 }
+
+tfoot {
+    display: table-header-group;
+}
