@@ -40,10 +40,10 @@
                                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabSemester">Danh
                                         sách sinh học kì</a></li>
                                 <li class="leds-test">
-                                    <button class="btn btn-info btn-show-notes" title="
+                                    <a href="#" data-toggle="tooltip" class="btn btn-info btn-show-notes" title="
 Lưu ý: Khi xuất file chỉ xuất những giá trị hiện đang hiển thị.
 Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiển thị mỗi trang"><i style="background:#ff0000;color:#ff0000;"
-                                                                          class="led led-sm on blink"></i></button>
+                                                                          class="led led-sm on blink"></i></a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">

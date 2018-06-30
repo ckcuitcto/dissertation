@@ -23,7 +23,7 @@ require __DIR__.'/define.php';
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/luanvan/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +37,7 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once __DIR__.'/luanvan/bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------

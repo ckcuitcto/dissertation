@@ -199,12 +199,14 @@ class ExportController extends Controller
         }
 
         if (!empty($arrFileName)) {
-            $public_dir = public_path();
+            $public_dir = dirname(dirname(public_path()));
             $zip = new ZipArchive();
+//            var_dump($public_dir);
             $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
             foreach ($arrFileName as $file) {
+//                dd($public_dir . '/' . STUDENT_PATH . $fileZipName);
                 if ($zip->open($public_dir . '/' . STUDENT_PATH . $fileZipName, ZipArchive::CREATE) === TRUE) {
-                    $zip->addFile(STUDENT_PATH . $file);
+                    $zip->addFile(STUDENT_PATH . $file,$file);
                 }
             }
             $zip->close();
@@ -420,7 +422,7 @@ class ExportController extends Controller
 
             });
         })->store('xlsx', STUDENT_PATH, true);
-        $public_dir = public_path();
+        $public_dir = dirname(dirname(public_path()));
         $headers = array(
             'Content-Type' => 'application/octet-stream',
         );
@@ -653,7 +655,7 @@ class ExportController extends Controller
         }
 
         if (!empty($arrFileName)) {
-            $public_dir = public_path();
+            $public_dir = dirname(dirname(public_path()));
             $zip = new ZipArchive();
             $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
             foreach ($arrFileName as $file) {
