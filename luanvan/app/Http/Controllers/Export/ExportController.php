@@ -119,7 +119,6 @@ class ExportController extends Controller
                     if (!empty($dataFileExcel[$i][0]) AND !empty($dataFileExcel[$i][1])) {
                         $arrScore = array();
                         $userId = $dataFileExcel[$i][1];
-//                        $userId = 'DH51400250';
                         // lấy ra điểm của form
                         // với kết quả có thời gian chấm trễ nhất. chỉ lấy level1 = tiêu chí
                         //litmit(4) vì có 5 cái level. nhưng bỏ qua cái đầu tiên nên chỉ lấy 4
@@ -183,7 +182,7 @@ class ExportController extends Controller
 
                 //mở file và sửa file, sau đó lưu thahf file mới
                 $arrColumns = array('F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O');
-                Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) use ($arrScoreByFile, $arrColumns) {
+                Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) use ($arrScoreByFile, $arrColumns,$dataFileExcel) {
                     $sheet = $reader->getSheet(0);
                     for ($i = 0; $i < count($arrScoreByFile); $i++) {
                         $row = $i + 11;
@@ -193,32 +192,42 @@ class ExportController extends Controller
                             $sheet->setCellValue($cl . $row, $arrScore[$key]);
                         }
                     }
+                    //set lại ngày tháng
+                    // vì các file đặt lộn xộn k đúng vị trí ngày tháng
+                    // nên kiểm tra ở row 3. nếu có giá trị thì set lại ngày
+                    if(!empty($dataFileExcel[2][6])){
+                        $sheet->setCellValue("G3", $this->getCurrentDate());
+                    }elseif(!empty($dataFileExcel[2][8])){
+                        $sheet->setCellValue("I3", $this->getCurrentDate());
+                    }
+
                 })->store('xlsx', STUDENT_PATH, true);
                 $arrFileName[] = $fileImport->file_name;
             }
         }
 
+//        $arrFileName = $this->convertXLSXtoXLS($arrFileName);
         if (!empty($arrFileName)) {
             $public_dir = dirname(dirname(public_path()));
             $zip = new ZipArchive();
-//            var_dump($public_dir);
             $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
             foreach ($arrFileName as $file) {
-//                dd($public_dir . '/' . STUDENT_PATH . $fileZipName);
                 if ($zip->open($public_dir . '/' . STUDENT_PATH . $fileZipName, ZipArchive::CREATE) === TRUE) {
                     $zip->addFile(STUDENT_PATH . $file,$file);
                 }
             }
             $zip->close();
             $headers = array(
-                'Content-Type' => 'application/octet-stream',
+                'Content-Type' => 'application/zip',
             );
             $fileToPath = $public_dir . '/' . STUDENT_PATH . $fileZipName;
             if (file_exists($fileToPath)) {
                 foreach ($arrFileName as $file) {
                     unlink($public_dir . '/' . STUDENT_PATH . $file);
                 }
-                return response()->download($fileToPath, $fileZipName, $headers)->deleteFileAfterSend(true);
+//                return response()->download($fileToPath, $fileZipName, $headers)->deleteFileAfterSend(true);
+//                return response()->download($fileToPath)->deleteFileAfterSend(true);
+                return response()->file($fileToPath,$headers);
             } else {
                 return redirect()->back();
             }
@@ -227,6 +236,22 @@ class ExportController extends Controller
         }
     }
 
+    private function getCurrentDate(){
+        $day= Carbon::now()->format('d');
+        $month= Carbon::now()->format('m');
+        $year= Carbon::now()->format('Y');
+        return "Tp. Hồ Chí Minh, ngày $day tháng $month năm $year";
+    }
+
+    private function convertXLSXtoXLS($arrFileName){
+        $arrTmp = array();
+        foreach($arrFileName as $value){
+            $arrName = explode('.',$value);
+            array_pop($arrName);
+            $arrTmp[] = implode($arrName).".xls";
+        }
+        return $arrTmp;
+    }
     public function exportByUserId(Request $request)
     {
 
@@ -424,11 +449,14 @@ class ExportController extends Controller
         })->store('xlsx', STUDENT_PATH, true);
         $public_dir = dirname(dirname(public_path()));
         $headers = array(
-            'Content-Type' => 'application/octet-stream',
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => "attachment; filename='Report.xlsx'"
         );
         $fileToPath = $public_dir . '/' . STUDENT_PATH . FILE_TONG_HOP_DANH_GIA_REN_LUYEN;
         if (file_exists($fileToPath)) {
-            return response()->download($fileToPath, FILE_TONG_HOP_DANH_GIA_REN_LUYEN, $headers)->deleteFileAfterSend(true);
+//            return response()->download($fileToPath, FILE_TONG_HOP_DANH_GIA_REN_LUYEN, $headers)->deleteFileAfterSend(true);
+//            return response()->download($fileToPath)->deleteFileAfterSend(true);
+            return response()->file($fileToPath,$headers);
         } else {
             return redirect()->back();
         }
