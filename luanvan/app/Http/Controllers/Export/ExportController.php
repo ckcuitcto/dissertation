@@ -347,7 +347,10 @@ class ExportController extends Controller
         }
         //mở file và sửa file, sau đó lưu thanh file mới
         $arrColumns = array('A','B','C','D','E','F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O');
-        Excel::load(FILE_TEMPLATE . FILE_TONG_HOP_DANH_GIA_REN_LUYEN, function ($reader) use ($arrScoreAllUser,$arrColumns,$semester,$facultyName) {
+        ob_end_clean();
+
+        ob_start(); //At the very top of your program (first line)
+        Excel::load(FILE_TEMPLATE . FILE_TONG_HOP_DANH_GIA_REN_LUYEN_XLS, function ($reader) use ($arrScoreAllUser,$arrColumns,$semester,$facultyName) {
 //            sheet 0 là lớp. sheet 1 là khoa
 //            $sheet = $reader->getSheet(1);
             $reader->sheet('khoa', function ($sheet) use ($arrScoreAllUser,$arrColumns,$semester,$facultyName) {
@@ -446,13 +449,15 @@ class ExportController extends Controller
                 });
 
             });
-        })->store('xlsx', STUDENT_PATH, true);
+        })->store('xls', STUDENT_PATH, true);
         $public_dir = dirname(dirname(public_path()));
         $headers = array(
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => "attachment; filename='Report.xlsx'"
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => "attachment; filename='Report.xls'",
+            'Content-Transfer-Encoding' => "binary",
+            'Accept-Ranges' => "bytes",
         );
-        $fileToPath = $public_dir . '/' . STUDENT_PATH . FILE_TONG_HOP_DANH_GIA_REN_LUYEN;
+        $fileToPath = $public_dir . '/' . STUDENT_PATH . FILE_TONG_HOP_DANH_GIA_REN_LUYEN_XLS;
         if (file_exists($fileToPath)) {
 //            return response()->download($fileToPath, FILE_TONG_HOP_DANH_GIA_REN_LUYEN, $headers)->deleteFileAfterSend(true);
 //            return response()->download($fileToPath)->deleteFileAfterSend(true);

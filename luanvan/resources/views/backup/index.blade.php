@@ -6,7 +6,9 @@
 @section('css')
     {{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">--}}
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('css/pagination-backup.css') }}">
     {{--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/b-1.2.4/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/cr-1.3.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.css"/>--}}
+
 @endsection
 @section('content')
     <main class="app-content">
@@ -144,14 +146,14 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                                             </tr>
                                             </thead>
                                             <tfoot>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
                                             </tfoot>
                                         </table>
                                     </div>
@@ -237,6 +239,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
     {{--<script src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-colvis-1.2.4/b-flash-1.0.3/b-html5-1.2.4/cr-1.3.2/datatables.min.js"></script>--}}
 
     <script type="text/javascript">
+
         $('body').on('click', '.nav-item', function (e) {
             var tabs = $(this).children().attr('href');
             // $("div.tab-pane").removeClass('active');
@@ -296,7 +299,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
             },
             "pageLength": 10,
         });
-        $("div#userBackupTable_paginate").css('display', 'none');
+
         $('#search-backup-user-form').on('submit', function (e) {
             userBackupTable.draw();
             e.preventDefault();
@@ -393,7 +396,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
-            "pageLength": 25
+            "pageLength": 10
         });
 
 
@@ -472,5 +475,31 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
             },
             "pageLength": 10
         });
+
+        // ẩn thanh phân trang ở top
+
+        $("div#userBackupTable_paginate").css('display', 'none');
+        $("div#userBackupTable_info").css('display', 'none');
+
+        $("div#eachSemesterBackupTable_paginate").css('display', 'none');
+        $("div#eachSemesterBackupTable_info").css('display', 'none');
+
+        $("div#facultyBackupTable_paginate").css('display', 'none');
+        $("div#facultyBackupTable_info").css('display', 'none');
+
+        $("div#classBackupTable_paginate").css('display', 'none');
+        $("div#classBackupTable_info").css('display', 'none');
+
+        $("div#semesterBackupTable_paginate").css('display', 'none');
+        $("div#semesterBackupTable_info").css('display', 'none');
+
+        // them form-control  cho select
+        $("div.dataTables_length").find("select").attr('class', 'form-control form-control-sm');
+
+        $("div.dt-buttons").find("a.dt-button").addClass('btn');
+        
+        $("input[type=search]").addClass('form-control form-control-sm');
+
+
     </script>
 @endsection

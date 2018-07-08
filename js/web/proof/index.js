@@ -7,7 +7,11 @@ $('body').on('click', 'button#btn-update-proof', function (e) {
         url: url,
         data: valueForm,
         dataType: 'json',
+        beforeSend: function () {
+            $('#ajax_loader').show();
+        },
         success: function (result) {
+            $('#ajax_loader').hide();
             if (result.status === false) {
                 //show error list fields
                 if (result.arrMessages !== undefined) {
@@ -89,7 +93,11 @@ $('body').on('click', 'button#btn-upload-proof', function (e) {
         dataType: 'json',
         contentType: false,
         enctype: 'multipart/form-data',
+        beforeSend: function () {
+            $('#ajax_loader').show();
+        },
         success: function (result) {
+            $('#ajax_loader').hide();
             if (result.status === false) {
                 //show error list fields
                 if (result.arrMessages !== undefined) {
