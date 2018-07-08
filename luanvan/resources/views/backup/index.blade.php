@@ -5,8 +5,9 @@
 @endsection
 @section('css')
     {{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">--}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('css/datatables/buttons.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/pagination-backup.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables/jquery.dataTables.min.css') }}">
     {{--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/b-1.2.4/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/cr-1.3.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.css"/>--}}
 
 @endsection
@@ -234,7 +235,8 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
 @section('sub-javascript')
     {{--<script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>--}}
     {{--    <script src="{{ asset('vendor/datatables/buttons.server-side.js')  }}"></script>--}}
-    <script src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/cr-1.3.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
+    {{--<script src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/cr-1.3.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>--}}
+        <script src="{{ asset('js/datatables.min.js') }}"></script>
     {{--    <script src="{{ asset('js/datatables-export.min.js') }}"></script>--}}
     {{--<script src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-colvis-1.2.4/b-flash-1.0.3/b-html5-1.2.4/cr-1.3.2/datatables.min.js"></script>--}}
 
@@ -497,7 +499,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
         $("div.dataTables_length").find("select").attr('class', 'form-control form-control-sm');
 
         $("div.dt-buttons").find("a.dt-button").addClass('btn');
-        
+
         $("input[type=search]").addClass('form-control form-control-sm');
 
 
