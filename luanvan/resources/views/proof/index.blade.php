@@ -1,5 +1,7 @@
 @extends('layouts.default')
 
+
+
 @section('content')
 
     <main class="app-content">
@@ -74,22 +76,24 @@
                                 <div class="col-md-12">
                                     <div class="form-row">
                                         <label for="evaluation_criteria">Chọn tiêu chí </label>
-                                        <select class="form-control evaluation_criteria" name="evaluation_criteria"
-                                                id="evaluationCriteria">
-                                            <option value="0"> ---Chọn tiêu chí---</option>
-                                            @foreach($evaluationCriterias as $value)
-                                                <option value="{{$value->id}}">{{$value->content}}</option>
-                                            @endforeach
-                                        </select>
+                                        {{--<div class="custom-select">--}}
+                                            <select class=" form-control evaluation_criteria" name="evaluation_criteria" id="evaluationCriteria">
+                                                <option value="0"> ---Chọn tiêu chí---</option>
+                                                @foreach($evaluationCriterias as $value)
+                                                    <option value="{{$value->id}}">{{$value->content}}</option>
+                                                @endforeach
+                                            </select>
+                                        {{--</div>--}}
                                     </div>
                                     <div class="form-row">
                                         <label for="semester">Chọn học kì</label>
-                                        <select class="form-control semester" name="semester" id="semester">
-                                            <option value="0"> ---Chọn học kì---</option>
-                                            @foreach($semesters as $value)
-                                                <option value="{{$value->id}}">{{ "Học kì $value->term. Năm học $value->year_from - $value->year_to" }}</option>
-                                            @endforeach
-                                        </select>
+
+                                            <select class="form-control semester" name="semester" id="semester">
+                                                <option value="0"> ---Chọn học kì---</option>
+                                                @foreach($semesters as $value)
+                                                    <option value="{{$value->id}}">{{ "Học kì $value->term. Năm học $value->year_from - $value->year_to" }}</option>
+                                                @endforeach
+                                            </select>
                                     </div>
                                     <div class="form-row">
                                         <label for="fileUpload">Chọn file minh chứng</label>

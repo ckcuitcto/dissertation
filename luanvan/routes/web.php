@@ -19,7 +19,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/laravel-filemanager', '\Unisharp\Laravelfilemanager\controllers\LfmController@show');
     Route::post('/laravel-filemanager/upload', '\Unisharp\Laravelfilemanager\controllers\UploadController@upload');
 
-    Route::get('/home', 'Home\HomeController@index')->name('home');   
+    Route::get('/home', 'Home\HomeController@index')->name('home');
+
+    Route::post('/change-password', ['as' => 'change-password', 'uses' => 'User\UserController@changePassword']);
 
     Route::group(['prefix' => 'khoa', 'middleware' => 'can:faculty-list'], function () {
         Route::get('/', ['as' => 'faculty', 'uses' => 'Department\FacultyController@index'])->middleware('can:faculty-change');

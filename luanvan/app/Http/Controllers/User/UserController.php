@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
@@ -268,5 +269,50 @@ class UserController extends Controller
                 }
             })
             ->make(true);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current-password' => 'required',
+            'password' => 'required',
+            'password_confirmation' => 'required|same:password',
+        ],[
+            'current-password.required' => 'Nhập mật khẩu hiện tại',
+            'password.required' => 'Nhập mật khẩu mới',
+            'password_confirmation.required' => 'Nhập lại mật khẩu mới',
+            'password_confirmation.same' => 'Mật khảu không khớp',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ],200);
+        }else{
+            if (Auth::Check()) {
+                $request_data = $request->All();
+
+                $current_password = Auth::User()->password;
+                if (Hash::check($request_data['current-password'], $current_password)) {
+                    $user_id = Auth::User()->id;
+                    $obj_user = User::find($user_id);
+                    $obj_user->password = Hash::make($request_data['password']);;
+                    $obj_user->save();
+
+                    return response()->json([
+                        'message' => 'Đổi mật khẩu thành công',
+                        'status' => true
+                    ],200);
+                } else {
+                    $arrMessage = array("message" => ["Vui lòng nhập đúng mật khẩu hiện tại"]);
+                    return response()->json([
+                        'status' => false,
+                        'arrMessages' => $arrMessage
+                    ], 200);
+                }
+            }
+
+        }
     }
 }

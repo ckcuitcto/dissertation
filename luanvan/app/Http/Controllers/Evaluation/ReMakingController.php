@@ -150,7 +150,8 @@ class ReMakingController extends Controller
                 $notifications = new Notification();
                 $notifications->title = "Yêu cầu phúc khảo HK $term năm học $yearFrom - $yearTo đã được xét duyệt";
                 $notifications->created_by = $userLogin->Staff->id;
-                $link = route('evaluation-form-show',$remaking->EvaluationForm->id);
+//                $link = route('evaluation-form-show',$remaking->EvaluationForm->id);
+                $link = url("/phieu-danh-gia/{$remaking->EvaluationForm->id}");
                 $notifications->content = "
                 <p>$request->remarking_reply</p>
                 <p>Vui lòng xem lại phiếu đánh giá điểm.</p>

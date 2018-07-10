@@ -19,10 +19,6 @@
         <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
         <!-- Navbar Right Menu-->
         <ul class="app-nav">
-            {{--<li class="app-search">--}}
-                {{--<input class="app-search__input" type="search" placeholder="Search">--}}
-                {{--<button class="app-search__button"><i class="fa fa-search"></i></button>--}}
-            {{--</li>--}}
             <!--Notification Menu-->
             @if($authCheck)
             <li class="dropdown">
@@ -32,7 +28,8 @@
                     <li class="app-notification__title">Bạn có {{ count($notifications) }} thông báo mới</li>
                     <div class="app-notification__content">
                         @foreach($notifications as $key => $value)
-                        <li><a class="app-notification__item" href="{{ route('notifications','id='.$value->id) }}"><span
+                        <li>
+                            <a class="app-notification__item" href="{{ route('notifications','id='.$value->id) }}"><span
                                         class="app-notification__icon"><span class="fa-stack fa-lg"><i
                                                 class="fa fa-circle fa-stack-2x text-primary"></i><i
                                                 class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
@@ -48,9 +45,9 @@
                 </ul>
             </li>
             @endif
-            <li class="nav-item active">
+            {{--<li class="nav-item active">--}}
 
-            </li>
+            {{--</li>--}}
             <!-- User Menu-->
 
             <li class="dropdown">
@@ -67,7 +64,11 @@
                     <li><a class="dropdown-item" href="{{ route('personal-information-show',$userLogin->users_id) }}"><i class="fa fa-user fa-lg"></i> Thông tin cá nhân</a>
                     @endif
                     </li>
-
+                    <li>
+                        <button data-toggle="modal" data-target="#modalChangePassword" class="dropdown-item">
+                            <i class="fa fa-key fa-lg"></i> Đổi mật khẩu
+                        </button>
+                    </li>
 
                     <li><a class="dropdown-item" href="{{route('logout')}}"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -230,6 +231,43 @@
 
         </ul>
     </aside>
+    <div class="modal fade" id="modalChangePassword" role="dialog">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Đổi mật khẩu</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <form id="change-password-form">
+                        {!! csrf_field() !!}
+                        <div class="form-row">
+                            <label for="term">Mật khẩu hiện tại</label>
+                            <input type="password" class="form-control current-password" id="current-password" name="current-password" placeholder="Password">
+                        </div>
+                        <div class="form-row">
+                            <label for="term">Mật khẩu mới</label>
+                            <input type="password" class="form-control password" id="password" name="password" placeholder="Password">
+                        </div>
+                        <div class="form-row">
+                            <label for="term">Nhập lại mật khẩu mới</label>
+                            <input type="password" class="form-control password_confirmation" id="password_confirmation" name="password_confirmation" placeholder="Re-enter Password">
+                        </div>
+
+                    </form>
+                    <div class="modal-footer">
+                        <button data-link="{{ route('change-password') }}" class="btn btn-primary"
+                                id="btn-change-password" name="btn-change-password" type="button">
+                            Đổi
+                        </button>
+                        <button class="btn btn-secondary" id="closeForm" type="button" data-dismiss="modal">Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('javascript')
