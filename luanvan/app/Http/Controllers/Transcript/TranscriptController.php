@@ -215,9 +215,9 @@ class TranscriptController extends Controller
         $dataTables = DataTables::of($students)
             ->addColumn('action', function ($student) use ($user) {
                 if($student->totalScore != 0){
-                    $linkView = '<a title="Xem phiếu điểm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
+                    $linkView = '<a title="Xem phiếu điểm" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
                 }else{
-                    $linkView = '<a title="Chưa chấm" href="' . route('transcript-show', $student->id) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
+                    $linkView = '<a title="Chưa chấm" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
                 }
 
                 //nếu ng đang đăng nhập đã chấm thì hiện ra điểm
