@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Export;
 
+use App\Model\AcademicTranscript;
 use App\Model\Classes;
 use App\Model\Faculty;
 use App\Model\FileImport;
@@ -252,6 +253,8 @@ class ExportController extends Controller
         }
         return $arrTmp;
     }
+
+    // EXPORT DANH SÁCH USER VS ĐIỂM CHẤM CHƯA CÓ KỈ LUẬT
     public function exportByUserId(Request $request)
     {
 
@@ -876,4 +879,201 @@ class ExportController extends Controller
         return $dataTable->make(true);
     }
 
+
+    // EXPORT DANH SÁCH USER VS ĐIỂM CHẤM CÓ KỈ LUẬT
+    public function exportAcademicTranscript(Request $request)
+    {
+
+        $strUserId = $request->strUsersId;
+        $strUserName = $request->strUserName;
+        $strClassName = $request->strClassName;
+        $semesterId = $request->semesterChoose;
+        $facultyId = $request->facultyChoose;
+
+        $arrUserId = explode(',', $strUserId);
+//        $arrUserName = explode(',', $strUserName);
+//        $arrClassName = explode(',', $strClassName);
+
+        $academicTranscript = DB::table('academic_transcripts')
+            ->leftJoin('classes', 'classes.id', '=', 'academic_transcripts.class_id')
+            ->leftJoin('students', 'students.user_id', '=', 'academic_transcripts.user_id')
+            ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+            ->select(
+                'users.users_id',
+                DB::raw("REVERSE (SUBSTRING( REVERSE(users.name), LOCATE(' ',REVERSE(users.name)), LENGTH(users.name) - LOCATE(' ',REVERSE(users.name)) ) ) as lastName"),
+                DB::raw("SUBSTRING_INDEX(users.name, ' ', -1) as firstName"),
+                'classes.name as className',
+                'academic_transcripts.score_ia',
+                'academic_transcripts.score_ib',
+                'academic_transcripts.score_ic',
+                'academic_transcripts.score_ii',
+                'academic_transcripts.score_iii',
+                'academic_transcripts.score_iv',
+                'academic_transcripts.score_v',
+                DB::raw("
+                academic_transcripts.score_ia +
+                academic_transcripts.score_ib +
+                academic_transcripts.score_ic +
+                academic_transcripts.score_ii +
+                academic_transcripts.score_iii +
+                academic_transcripts.score_iv +
+                academic_transcripts.score_v
+                as totalScore"),
+                'academic_transcripts.note'
+            )->whereIn('academic_transcripts.user_id',$arrUserId);
+            if(!empty($semesterId)){
+                $academicTranscript = $academicTranscript->where('academic_transcripts.semester_id',$semesterId);
+
+            }
+            $academicTranscript = $academicTranscript->orderBy('classes.id','ASC')
+            ->get()->toArray();
+
+        for ($i = 0; $i < count($academicTranscript); $i++) {
+
+            $tmp = (array)$academicTranscript[$i];
+            $tmp['rank'] = $this->checkRank1($tmp['totalScore']);
+            $tmp['notes'] = $tmp['note'];
+            unset($tmp['note']);
+
+            if($tmp['totalScore'] > 100){
+                $tmp['totalScore'] = 100;
+            }
+
+            $academicTranscript[$i] = $tmp;
+        }
+        if(!empty($semesterId)){
+            $semester = Semester::find($semesterId);
+        }else{
+            $semester = null;
+        }
+        if($facultyId == 0){
+            $facultyName = " Tất cả khoa";
+        }else{
+            $facultyName = Faculty::find($facultyId)->name;
+        }
+        //mở file và sửa file, sau đó lưu thanh file mới
+        $arrColumns = array('A','B','C','D','E','F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O');
+        ob_end_clean();
+        ob_start(); //At the very top of your program (first line)
+
+        Excel::load(FILE_TEMPLATE . FILE_TONG_HOP_DANH_GIA_REN_LUYEN_XLS, function ($reader) use ($academicTranscript,$arrColumns,$semester,$facultyName) {
+//            sheet 0 là lớp. sheet 1 là khoa
+////            $sheet = $reader->getSheet(1);
+            $reader->sheet('khoa', function ($sheet) use ($academicTranscript,$arrColumns,$semester,$facultyName) {
+                for ($i = 0; $i < count($academicTranscript); $i++) {
+                    $row = $i + 14;
+                    $rowValue = array_merge(array($i+1),$academicTranscript[$i]);
+                    $sheet->row($row,$rowValue);
+
+                    $range = "A$row:B$row";
+                    $sheet->setBorder($range, 'thin');
+                    $sheet->cells($range, function ($cells) {
+                        $cells->setFont(array(
+                            'size' => '10',
+                            'bold' => false,
+                        ));
+                        $cells->setAlignment('center');
+                    });
+
+                    $range = "E$row:O$row";
+                    $sheet->setBorder($range, 'thin');
+                    $sheet->cells($range, function ($cells) {
+                        $cells->setFont(array(
+                            'size' => '10',
+                            'bold' => false,
+                        ));
+                        $cells->setAlignment('center');
+                    });
+
+                    $range = "C$row:D$row";
+                    $sheet->setBorder($range, 'thin');
+                    $sheet->cells($range, function ($cells) {
+                        $cells->setFont(array(
+                            'size' => '10',
+                            'bold' => false,
+                        ));
+                        $cells->setAlignment('left');
+                    });
+                }
+
+                $sheet->cell('J5', function ($cell){
+                    $day = date("d");
+                    $month = date("m");
+                    $year = date("Y");
+                    $cell->setValue("Tp. Hồ Chí Minh, ngày $day tháng $month năm $year ");
+                });
+
+                $sheet->cell('E8', function ($cell) use ($facultyName){
+                    $cell->setValue("Khoa: $facultyName");
+                });
+
+                if(!empty($semester)){
+                    $sheet->cell('F9', function ($cell) use ($semester){
+                        $cell->setValue("Học kỳ: $semester->term");
+                    });
+                    $sheet->cell('I9', function ($cell) use ($semester){
+                        $cell->setValue("Năm học: $semester->year_from - $semester->year_to ");
+                    });
+                }
+
+                // xác định row có phần chữ kĩ = số User + 14 + 2(2 dòng khoảng cách ra)
+                $rowSign = count($academicTranscript) + 14 + 1;
+
+                $sheet->mergeCells("A$rowSign:G$rowSign");
+                $sheet->cells("A$rowSign:G$rowSign", function ($cells) {
+                    $cells->setFont(array(
+                        'size' => '11',
+                        'bold' => true,
+                    ));
+                    $cells->setAlignment('center');
+                });
+                $sheet->cell("A$rowSign", function ($cell) {
+                    $cell->setValue("TM. HỘI ĐỒNG CẤP KHOA");
+                });
+
+                $sheet->mergeCells("K$rowSign:O$rowSign");
+                $sheet->cells("K$rowSign:O$rowSign", function ($cells) {
+                    $cells->setFont(array(
+                        'size' => '11',
+                        'bold' => true,
+                    ));
+                    $cells->setAlignment('center');
+                });
+                $sheet->cell("K$rowSign", function ($cell) {
+                    $cell->setValue("Người lập bảng");
+                });
+
+                $rowSign += 1;
+                $sheet->mergeCells("A$rowSign:G$rowSign");
+                $sheet->cells("A$rowSign:G$rowSign", function ($cells) {
+                    $cells->setFont(array(
+                        'size' => '11',
+                        'bold' => true,
+                    ));
+                    $cells->setAlignment('center');
+                });
+                $sheet->cell("A$rowSign", function ($cell) {
+                    $cell->setValue("Chủ tịch");
+                });
+
+            });
+        })->store('xls', STUDENT_PATH, true);
+        // chuyển lên host thì dugnf cái trên. local thì dùng dưới
+//        $public_dir = dirname(dirname(public_path()));
+        $public_dir = public_path();
+        $headers = array(
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => "attachment; filename='Report.xls'",
+            'Content-Transfer-Encoding' => "binary",
+            'Accept-Ranges' => "bytes",
+        );
+        $fileToPath = $public_dir . '/' . STUDENT_PATH . FILE_TONG_HOP_DANH_GIA_REN_LUYEN_XLS;
+        if (file_exists($fileToPath)) {
+//            return response()->download($fileToPath, FILE_TONG_HOP_DANH_GIA_REN_LUYEN, $headers)->deleteFileAfterSend(true);
+//            return response()->download($fileToPath)->deleteFileAfterSend(true);
+            return response()->file($fileToPath,$headers);
+        } else {
+            return redirect()->back();
+        }
+    }
 }

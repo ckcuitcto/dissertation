@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Transcript;
 
+use App\Model\AcademicTranscript;
 use App\Model\EvaluationCriteria;
 use App\Model\EvaluationForm;
 use App\Model\EvaluationResult;
@@ -15,7 +16,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
-
+use Validator;
 class TranscriptController extends Controller
 {
     /**
@@ -215,9 +216,9 @@ class TranscriptController extends Controller
         $dataTables = DataTables::of($students)
             ->addColumn('action', function ($student) use ($user) {
                 if($student->totalScore != 0){
-                    $linkView = '<a title="Xem phiếu điểm" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
+                    $linkView = '<a title="Xem phiếu điểm" target="_blank" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
                 }else{
-                    $linkView = '<a title="Chưa chấm" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
+                    $linkView = '<a title="Chưa chấm" target="_blank" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
                 }
 
                 //nếu ng đang đăng nhập đã chấm thì hiện ra điểm
@@ -268,5 +269,245 @@ class TranscriptController extends Controller
 
 
         return $dataTables->make(true);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function academicTranscript()
+    {
+        $userLogin = $this->getUserLogin();
+
+        $currentSemester = $this->getCurrentSemester();
+        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+        $semestersNoAll = $semesters;
+        $semesters = array_prepend($semesters,array('id' => 0,'value' => 'Tất cả học kì'));
+
+        if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
+            $faculties = Faculty::all()->toArray();
+            $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
+
+            $facultiesNoAll = $faculties;
+            unset($facultiesNoAll[0]);
+        }else{
+            $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
+        }
+
+        $strEvaluationCriteriaChildParent1 = implode(',',EVALUATION_CRITERIAS_CHILD_PARENT_1);
+        $evaluationCriterias = DB::select("select * from evaluation_criterias where ( level = ? OR id in ($strEvaluationCriteriaChildParent1)) AND id <> ? order by level DESC", [1,YTHUCTHAMGIAHOCTAP_ID]);
+
+        return view('transcript.academic-transcript',compact('faculties','facultiesNoAll','semesters','semestersNoAll','currentSemester','evaluationCriterias'));
+    }
+
+    public function ajaxGetAcademicTranscript(Request $request)
+    {
+        $user = $this->getUserLogin();
+        $academicTranscript = $this->getAcademicTranscriptByRoleUserLogin($user);
+        $dataTables = DataTables::of($academicTranscript)
+            ->editColumn('totalScore', function ($aca){
+                if($aca->totalScore > 100){
+                    $aca->totalScore = 100;
+                }
+                return $aca->totalScore;
+            })
+            ->addColumn('action', function ($aca) use ($user) {
+                $linkEdit = route('edit-academic-transcript', $aca->academicTranscriptId);
+                $linkUpdate = route('add-academic-transcript');
+
+                $btnEdit = "<a style='color: white' title='Sửa điểm' data-id='$aca->academicTranscriptId' data-edit-link='$linkEdit'
+                data-update-link='$linkUpdate' class='btn btn-primary update-academic-transcript'> <i class='fa fa-edit' aria-hidden='true'></i> </a>";
+
+                return "<span class='bs-component'>$btnEdit</span> ";
+            })
+            ->filter(function ($student) use ($request) {
+                $faculty = $request->has('faculty_id');
+                $facultyValue = $request->get('faculty_id');
+
+                if (!empty($faculty) AND $facultyValue != 0) {
+                    $student->where('users.faculty_id', '=', $facultyValue);
+
+                    $class = $request->has('class_id');
+                    $classValue = $request->get('class_id');
+                    if (!empty($class) AND $classValue != 0) {
+                        $student->where('students.class_id','=', $classValue);
+                    }
+                }
+
+                $semester = $request->has('semester_id');
+                $semesterValue = $request->get('semester_id');
+                if (!empty($semester) AND $semesterValue != 0) {
+                    $student->where('academic_transcripts.semester_id', '=', $semesterValue);
+                    $student->where('academic_transcripts.semester_id', '=', $semesterValue);
+                }
+            });
+
+        return $dataTables->make(true);
+    }
+
+    private function getAcademicTranscriptByRoleUserLogin(User $user)
+    {
+        $arrUserId = DB::table('users')
+            ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+            ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+            ->select('users.users_id')->get()->toArray();
+        foreach ($arrUserId as $key => $value) {
+            $userIds[$key] = [$value->users_id];
+        }
+        if (!empty($userIds)) {
+            $students = DB::table('academic_transcripts')
+                ->leftJoin('classes', 'classes.id', '=', 'academic_transcripts.class_id')
+                ->leftJoin('students', 'students.user_id', '=', 'academic_transcripts.user_id')
+                ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+                ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
+                ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
+                ->whereIn('users.users_id', $userIds)
+                ->select(
+                    'academic_transcripts.id as academicTranscriptId',
+                    'users.users_id',
+                    'users.name as userName',
+                    'roles.display_name',
+                    'classes.name as className',
+                    'faculties.name as facultyName',
+                    'students.academic_year_from',
+                    'students.academic_year_to',
+                    DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic"),
+                    'students.id',
+                    'users.status',
+                    'students.id as studentId',
+                    'users.faculty_id',
+                    'students.class_id',
+                    'roles.id as role_id',
+                    'academic_transcripts.semester_id as semesterId',
+                    'academic_transcripts.score_ia',
+                    'academic_transcripts.score_ib',
+                    'academic_transcripts.score_ic',
+                    'academic_transcripts.score_i',
+                    'academic_transcripts.score_ii',
+                    'academic_transcripts.score_iii',
+                    'academic_transcripts.score_iv',
+                    'academic_transcripts.score_v',
+                    DB::raw("
+                    academic_transcripts.score_i +
+                    academic_transcripts.score_ii +
+                    academic_transcripts.score_iii +
+                    academic_transcripts.score_iv +
+                    academic_transcripts.score_v
+                    as totalScore")
+                )->distinct();
+            return $students;
+        }
+        return false;
+    }
+
+    public function addAcademicTranscript(Request $request)
+    {
+
+        $strEvaluationCriteriaChildParent1 = implode(',',EVALUATION_CRITERIAS_CHILD_PARENT_1);
+        $evaluationCriterias = DB::select("select * from evaluation_criterias where ( level = ? OR id in ($strEvaluationCriteriaChildParent1)) AND id <> ? order by level DESC", [1,YTHUCTHAMGIAHOCTAP_ID]);
+
+        $arrValidatorRole = array();
+        $arrValidatorRoleMessage = array();
+        foreach ($evaluationCriterias as $value) {
+
+            $arrValidatorRole["evaluation_criteria_".$value->id] = "required|min:$value->mark_range_from|max:$value->mark_range_to|numeric";
+            $arrValidatorRoleMessage["evaluation_criteria_".$value->id . ".required"] = 'Bắt buộc nhập điểm';
+            $arrValidatorRoleMessage["evaluation_criteria_".$value->id . ".min"] = "Điểm phải lớn hơn $value->mark_range_from";
+            $arrValidatorRoleMessage["evaluation_criteria_".$value->id . ".max"] = "Điểm phải nhỏ hơn $value->mark_range_to";
+            $arrValidatorRoleMessage["evaluation_criteria_".$value->id . ".numeric"] = 'Điểm phải là số';
+        }
+//        var_dump($arrValidatorRoleMessage);
+//        dd($arrValidatorRole);
+//        $arrValidatorRole['add_faculty_id'] = "required|exists:faculties,id";
+        $arrValidatorRole['add_class_id'] = "required|exists:classes,id";
+        $arrValidatorRole['add_student_id'] = "required|exists:students,user_id";
+        $arrValidatorRole['add_semester_id'] = "required|exists:semesters,id";
+
+//        $arrValidatorRoleMessage['add_faculty_id.required'] = "Bắt buộc chọn khoa";
+//        $arrValidatorRoleMessage['add_faculty_id.exists'] = "Khoa không tồn tại";
+
+        $arrValidatorRoleMessage['add_class_id.required'] = "Bắt buộc chọn lớp";
+        $arrValidatorRoleMessage['add_class_id.exists'] = "Lớp không tồn tại";
+
+        $arrValidatorRoleMessage['add_student_id.required'] = "Bắt buộc chọn sinh viên";
+        $arrValidatorRoleMessage['add_student_id.exists'] = "Sinh viên không tồn tại";
+
+        $arrValidatorRoleMessage['add_student_id.required'] = "Bắt buộc chọn học kì";
+        $arrValidatorRoleMessage['add_student_id.exists'] = "Học kì không tồn tại";
+
+        $validator = Validator::make($request->all(), $arrValidatorRole, $arrValidatorRoleMessage);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'arrMessages' => $validator->errors()
+            ], 200);
+        } else {
+            $arrValue = array();
+            foreach ($evaluationCriterias as $value) {
+                // lúc này name của input đang là 1 chuỗi evaluation_criteria_id
+                // nên phải cắt ra lấy id
+                $evaluationCriteriaId = "evaluation_criteria_".$value->id;
+                $key = ARRAY_EVALUATION_CRITERIA_VS_ACADEMIC_TRANSCRIPT[$value->id];
+                $arrValue[$key] = $request->$evaluationCriteriaId;
+            }
+            $arrValue['note'] = $request->note;
+            AcademicTranscript::updateOrCreate(
+                [
+                    'user_id' => $request->add_student_id,
+                    'semester_id' => $request->add_semester_id,
+                    'class_id' => $request->add_class_id,
+                ], $arrValue
+            );
+
+            return response()->json([
+                'status' => true
+            ], 200);
+        }
+    }
+
+    public function editAcademicTranscript($id)
+    {
+        $academicTranscript = DB::table('academic_transcripts')
+            ->leftJoin('classes', 'classes.id', '=', 'academic_transcripts.class_id')
+            ->leftJoin('students', 'students.user_id', '=', 'academic_transcripts.user_id')
+            ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+            ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
+            ->where('academic_transcripts.id', $id)
+            ->select(
+                'academic_transcripts.id',
+                'users.faculty_id as add_faculty_id',
+                'faculties.name as add_faculty_name',
+                'students.class_id as add_class_id',
+                'classes.name as add_class_name',
+                'students.user_id as add_student_id',
+                'users.name as add_student_name',
+                'academic_transcripts.semester_id as add_semester_id',
+                'academic_transcripts.score_ia',
+                'academic_transcripts.score_ib',
+                'academic_transcripts.score_ic',
+                'academic_transcripts.score_ii',
+                'academic_transcripts.score_iii',
+                'academic_transcripts.score_iv',
+                'academic_transcripts.score_v',
+                'academic_transcripts.note'
+            )->first();
+        $arrAcademicTranscript = (array)$academicTranscript;
+        foreach(ARRAY_ACADEMIC_TRANSCRIPT_TO_EVALUATION_CRITERIA as $key => $value){
+            $arrAcademicTranscript["evaluation_criteria_$value"] = $arrAcademicTranscript['score_'.$key];
+            unset($arrAcademicTranscript['score_'.$key]);
+        }
+        if(!empty($academicTranscript)){
+            return response()->json([
+                'academicTranscript' => $arrAcademicTranscript,
+                'status' => true
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => false
+            ], 200);
+        }
+
     }
 }

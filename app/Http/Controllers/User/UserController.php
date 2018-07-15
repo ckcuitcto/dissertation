@@ -87,6 +87,7 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->gender = $request->gender;
             $user->faculty_id = $request->faculty_id;
+            $user->password = Hash::make($request->users_id);
             $user->save();
 
             if($request->role_id == ROLE_SINHVIEN OR $request->role_id == ROLE_BANCANSULOP ){

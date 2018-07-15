@@ -25,4 +25,8 @@ class Classes extends Model
     public function StudentListEachSemester(){
         return $this->hasMany('App\Model\StudentListEachSemester','class_id','id');
     }
+
+    public function AcademicTranscripts(){
+        return $this->hasMany('App\Model\AcademicTranscript','class_id','id');
+    }
 }

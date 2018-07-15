@@ -76,15 +76,16 @@ $('body').on('click', 'button#proof-destroy', function (e) {
 
 $('body').on('click', 'button#btn-upload-proof', function (e) {
     e.preventDefault();
-    var formData = new FormData($('form#upload-proof-form')[0]);
-    var fileUpload = document.getElementById('fileUpload');
-    var inss = fileUpload.files.length;
+    var formData = new FormData($('form#upload-proof-form')[0]); // lấy dữ liệu của form có id là: upload-proof-form
+    var fileUpload = document.getElementById('fileUpload'); // láy phần tử có id là fileUpload
+    var inss = fileUpload.files.length; // lấy độ dài của fileUpload đó( up bao nhiêu file thì có bấy nheieu độ dài)
+    // chạy vòng lặp để thêm từng file vào form.
     for (var x = 0; x < inss; x++) {
         file = fileUpload.files[x];
         formData.append("fileUpload[]", file);
     }
-    var url = $(this).attr('data-link');
-    $('.form-row').find('span.messageErrors').remove();
+    var url = $(this).attr('data-link'); // lấy giá trị của attribute "data-link" trong nút vừa bấm. đây cũng là link để xử lí lưu file
+    $('.form-row').find('span.messageErrors').remove(); // xóa hết lỗi CŨ
     $.ajax({
         type: "post",
         url: url,
@@ -98,14 +99,22 @@ $('body').on('click', 'button#btn-upload-proof', function (e) {
         },
         success: function (result) {
             $('#ajax_loader').hide();
+            // nếu ở controller trả về false: nghĩa là bị sai
             if (result.status === false) {
                 //show error list fields
                 if (result.arrMessages !== undefined) {
+                    // nếu vẫn có giá trị arrMessages. thì chạy vòng lặp lỗi và xuất ra
+
+                    // bắt đầu đoạn code xuất ra lỗi
+                    // thường là giống nhau. có cái arrMessages thì tùy trả về tên là gì thì thay vào
                     $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
                         $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                            //elementName tương ứng với tên của thẻ có class là elementName
+                            // messageValue là nội dung lỗi
                             $('form#upload-proof-form').find('.' + elementName).parents('.form-row').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
                         });
                     });
+                    // kết thúc đoạn code xuất ra lỗi
                 }
             } else if (result.status === true) {
                 $.notify({
@@ -115,7 +124,10 @@ $('body').on('click', 'button#btn-upload-proof', function (e) {
                 }, {
                     type: "success"
                 });
+                // addModal là id của modal đang chứa forrm. code ở dưới là cho nó ẩn cái modal đó đi
                 $('div#addModal').modal('hide');
+
+                // load lại bảng dữ liệu
                 oTable.draw();
             }
         }

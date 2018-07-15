@@ -146,6 +146,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/get-users', ['as' => 'ajax-transcript-get-users', 'uses' => 'Transcript\TranscriptController@ajaxGetUsers']);
 
+        Route::get('/', ['as' => 'academic-transcript', 'uses' => 'Transcript\TranscriptController@academicTranscript'])->middleware('can:view-academic-score');
+        Route::post('/get-academic-transcript', ['as' => 'ajax-academic-transcript', 'uses' => 'Transcript\TranscriptController@ajaxGetAcademicTranscript'])->middleware('can:view-academic-score');
+        Route::post('/xuat-bang-diem-sinh-vien', ['as' => 'export-academic-transcript', 'uses' => 'Export\ExportController@exportAcademicTranscript'])->middleware('can:view-academic-score');
     });
 
     Route::group(['prefix' => 'phieu-danh-gia'], function () {
@@ -208,6 +211,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/get-proofs', ['as' => 'ajax-get-proofs', 'uses' => 'Proof\ProofController@ajaxGetProofs']);
     });
+
+    Route::post('/get-files', ['as' => 'ajax-get-files', 'uses' => 'Import\ImportController@ajaxGetFiles']);
+
 
     Route::group(['prefix' => 'y-kien'], function () {
         Route::get('/', ['as' => 'comment-create', 'uses' => 'Comment\CommentController@create'])->middleware('can:comment-add');
@@ -299,4 +305,23 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::post('/xuat-danh-sach', ['as' => 'export-users', 'uses' => 'Export\ExportController@exportByUserId'])->middleware('can:export-users');
+
+    Route::group(['prefix' => 'ki-luat', 'middleware' => 'can:import-discipline'], function () {
+        Route::get('/', ['as' => 'discipline', 'uses' => 'Import\ImportController@discipline']);
+
+        Route::post('/import-discipline', ['as' => 'import-discipline', 'uses' => 'Import\ImportController@importDiscipline']);
+
+        Route::post('/list-discipline', ['as' => 'ajax-get-discipline', 'uses' => 'Import\ImportController@ajaxGetDiscipline']);
+
+
+        Route::post('/add-academic-transcript', ['as' => 'add-academic-transcript', 'uses' => 'Transcript\TranscriptController@addAcademicTranscript']);
+//        Route::post('/update-academic-transcript/{id}', ['as' => 'update-academic-transcript', 'uses' => 'Transcript\TranscriptController@updateAcademicTranscript']);
+        Route::get('/edit-academic-transcript/{id}', ['as' => 'edit-academic-transcript', 'uses' => 'Transcript\TranscriptController@editAcademicTranscript']);
+
+        // có 1 cái tương tự nhưng ở route khác. dùng lại. nhưng tránh sửa code thì thêm mới cái này
+        Route::post('/get-classes-by-faculty', ['as' => 'get-classes-by-faculty', 'uses' => 'Department\ClassController@getListClassByFaculty']);
+        Route::post('/get-students-by-class', ['as' => 'get-students-by-class', 'uses' => 'Department\ClassController@getStudentsByClass']);
+    });
+
+
 });

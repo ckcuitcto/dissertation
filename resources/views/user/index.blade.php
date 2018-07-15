@@ -453,6 +453,13 @@
             $('span.messageErrors').remove();
         });
 
+        $('#modal-add-user').on('hidden.bs.modal', function (e) {
+            // hideAndShowFaculty('modal-edit-user');
+            $('#modal-add-user').find("input[type=text],input[type=number],input[type=year],input[type=hidden]").val('');
+            $('.text-red').html('');
+            $('span.messageErrors').remove();
+        });
+
         getClassByFacultyId('modal-add-user');
 
         function getClassByFacultyId(modal) {

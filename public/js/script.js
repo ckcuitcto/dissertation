@@ -20,7 +20,7 @@ $('#sampleTable').DataTable({
         "infoEmpty": "Không có bản ghi nào!!!",
         "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
     },
-    "pageLength": 25
+    "pageLength": 10
 });
 
 $.ajaxSetup({

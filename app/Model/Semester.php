@@ -30,4 +30,12 @@ class Semester extends Model
     public function FileImports(){
         return $this->hasMany('App\Model\FileImport','semester_id','id');
     }
+
+    public function Disciplines(){
+        return $this->hasMany('App\Model\Discipline','semester_id','id');
+    }
+
+    public function AcademicTranscripts(){
+        return $this->hasMany('App\Model\AcademicTranscript','semester_id','id');
+    }
 }

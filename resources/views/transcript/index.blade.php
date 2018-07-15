@@ -59,11 +59,11 @@
                             </tr>
                             </thead>
                             <tfoot>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tfoot>
                         </table>
                         {{-- </div> --}}
@@ -71,7 +71,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <button class="btn btn-outline-success" id="createFile">
-                                <i class="fa fa-download" aria-hidden="true"></i>Lập bảng tổng hợp đánh giá
+                                <i class="fa fa-download" aria-hidden="true"></i>Lập bảng tổng hợp đánh giá chưa áp dụng danh sách kỷ luật
                             </button>
                         </div>
                         <div class="col-md-6">

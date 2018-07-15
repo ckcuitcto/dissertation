@@ -38,23 +38,17 @@ class ProofController extends Controller
 
     public function index()
     {
-        $userLogin = $this->getUserLogin();
-        // nếu role vào k phải là học sinh
+        $userLogin = $this->getUserLogin(); // lấy ra người dùng đang đăng nhập
+
+        // nếu role vào k phải là học sinh, ban cán sự
+        // thì chuyển sang trang k có quyền
         if($userLogin->Role->weight >= ROLE_COVANHOCTAP) {
             return view('errors.403');
         }
 
-        // xác định role để lấy thời gian chấm.
-        // nếu user đăng nhạp là ban cán sự lớp thì sẽ lấy thời gian chấm của sinh viên bình thường
-        // nếu lấy theo role của ban cán sự lớp thì ban cán sự lớp có thể xóa file quá thời gian chấm
-
-
-        // luôn lấy theo thời gian của sinh viên
-//        $proofList = Proof::where('created_by',$userLogin->Student->id)->get();
-
         $evaluationCriterias = EvaluationCriteria::whereNotNull('proof')->get();
 
-        // phải lấy các học kì có thời gian kết thúc chấm lớn hơn thời gian hiện tại.
+        // phải lấy các học kì có thời gian kết thúc chấm lớn hơn thời gian hiện tại. ( là chưa kết thúc chấm)
         // tránh trường hợp sv thêm minh chứng vào các học kì trước.
         $semesters = Semester::where('date_end_to_mark','>=',Carbon::now()->format(DATE_FORMAT_DATABASE))->orderBy('id','DESC')->get();
 
@@ -123,48 +117,74 @@ class ProofController extends Controller
             'fileUpload.required' => 'Bắt buộc chọn File'
         );
 
+        // nếu != 0 nghĩa là có chọn tiêu chí. thì phải kiểm tra xem tiêu chí có trong db không
         if($request->evaluation_criteria != 0){
             $arrRule['evaluation_criteria'] = 'sometimes|exists:evaluation_criterias,id';
             $arrMessage['evaluation_criteria.exists'] = 'Tiêu chí không tồn tại';
         }
 
+        // nếu != 0 nghĩa là có chọn học kì. thì phải kiểm tra xem học kì có trong db không
         if($request->semester != 0){
             $arrRule['semester'] = 'sometimes|exists:semesters,id';
             $arrMessage['semester.exists'] = 'Học kì không tồn tại';
         }
 
+
+        // đưa dữ liệu nhập, và các điều kiện vào để kiểm tra
+        // $request->all() là để lấy ra tất cả các dữ liệu đã nhập ở form
        $validator = Validator::make($request->all(), $arrRule,$arrMessage);
 
+        //kiểm tra nếu dữ liệu nhập vào và điều kiện fail
        if ($validator->fails()) {
            return response()->json([
                'status' => false,
-               'arrMessages' => $validator->errors()
+               'arrMessages' => $validator->errors() // lấy ra nội dung bị sai
            ], 200);
        } else {
-           $userLogin = $this->getUserLogin();
+           $userLogin = $this->getUserLogin(); // lấy ra thông tin người dùng ĐANG ĐĂNG NHẬP
            $arrProof = array();
+
+           // chạy mảng các file minh chứng đã nhập
+           // mỗi $proof là tương ứng với 1 file (1 minh chứng)
            foreach ($request->fileUpload as $proof) {
+
+               // bắt đầu đoạn code này dùng để LƯU FILE VÀO thư mục
                $fileName = str_random(13) . "_" . $proof->getClientOriginalName();
                $fileName = $this->convert_vi_to_en(preg_replace('/\s+/', '', $fileName));
                while (file_exists(PROOF_PATH . $fileName)) {
-                   $fileName = $this->convert_vi_to_en(str_random(13) . "_" . $fileName);
+                   $fileName = $this->convert_vi_to_en(str_random(13) . "_" . $fileName); // tên của file.
                }
                $proof->move( PROOF_PATH, $fileName);  // lưu file vào thư mục
+               // kết thúc đoạn code này dùng để LƯU FILE VÀO thư mục
+
 
                $proofTmp = [
                    'name' => $fileName,
                    'created_by' => $userLogin->Student->id,
                ];
+
+               // kiểm tra nếu học kì k rỗng. thì sẽ lưu lại id
                if(!empty($request->semester)){
+                   // tại sao 1 cái là semester và 1 cái là semester_id .
+                   // cái semester là name của thẻ bên view. chỉ là tên, nhưng giá trị của nó vẫn là id của học kì
+                   // semester_id là tên của cột lưu lại id của học kì trong bảng proof( minh chứng)
                    $proofTmp['semester_id'] = $request->semester;
                }
+
+               // kiểm tra nếu tiêu chí k rỗng. thì sẽ lưu lại id
                if(!empty($request->evaluation_criteria)){
+                   // tại sao 1 cái là evaluation_criteria và 1 cái là evaluation_criteria_id .
+                   // cái evaluation_criteria là name của thẻ bên view. chỉ là tên, nhưng giá trị của nó vẫn là id của tiêu chí đánh giá
+                   // evaluation_criteria_id là tên của cột lưu lại id của tiêu chí trong bảng proof( minh chứng)
                    $proofTmp['evaluation_criteria_id'] = $request->evaluation_criteria;
                }
+               // thêm vào 1 mảng . để thêm 1 lần cho tối ưu code
                $arrProof[] = $proofTmp;
            }
+           // thêm vào database
            Proof::insert($arrProof);
 
+           // trả về true => thêm thành công
            return response()->json([
                'status' => true
            ], 200);

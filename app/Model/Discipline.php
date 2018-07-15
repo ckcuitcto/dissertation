@@ -8,6 +8,8 @@ class Discipline extends Model
 {
     protected $table = 'disciplines';
 
+    public $timestamps = false;
+
     protected $fillable = ['user_id','semester_id','evaluation_criteria_id','score_minus','reason'];
 
     public function Student(){

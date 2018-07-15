@@ -106,7 +106,7 @@
                 <ul class="treeview-menu">
                     @can('can-list-student-transcript')
                         <li>
-                            <a class="treeview-item" href="{{ route('transcript') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp; Danh sách </a>
+                            <a class="treeview-item" href="{{ route('transcript') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp; Danh sách sinh viên</a>
                         </li>
                     @endcan
                     @if($authCheck)
@@ -118,8 +118,19 @@
                     @endif
                     @can('manage-remaking')
                     <li>
-                        <a class="treeview-item" href="{{ route('remaking') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;DS yêu cầu phúc khảo</a>
+                        <a class="treeview-item" href="{{ route('remaking') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Danh sách yêu cầu phúc khảo</a>
                     </li>
+                    @endcan
+                    @can('import-discipline')
+                        <li>
+                            <a class="treeview-item" href="{{ route('discipline') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i> Nhập file kỉ luật</a>
+                        </li>
+                    @endcan
+
+                    @can('view-academic-score')
+                        <li>
+                            <a class="treeview-item" href="{{ route('academic-transcript') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i> Bảng điểm</a>
+                        </li>
                     @endcan
                 </ul>
             </li>           
@@ -194,8 +205,8 @@
                 </a>
             </li>
             <li><a class="app-menu__item" href="{{ route('files') }}">
-                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
-                            class="app-menu__label">Quản lí file </span>
+                    <i class="app-menu__icon fa fa-list" aria-hidden="true"></i><span
+                            class="app-menu__label">Danh sách file đã nhập</span>
                 </a>
             </li>
             @endcan

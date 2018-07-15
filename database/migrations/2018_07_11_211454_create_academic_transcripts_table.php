@@ -28,6 +28,7 @@ class CreateAcademicTranscriptsTable extends Migration
             $table->integer('score_ia')->unsigned()->nullable();
             $table->integer('score_ib')->unsigned()->nullable();
             $table->integer('score_ic')->unsigned()->nullable();
+            $table->integer('score_i')->unsigned()->nullable();
             $table->integer('score_ii')->unsigned()->nullable();
             $table->integer('score_iii')->unsigned()->nullable();
             $table->integer('score_iv')->unsigned()->nullable();

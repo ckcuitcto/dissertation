@@ -35,8 +35,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <button class="btn btn-outline-success" id="createFile" data-toggle="modal"
-                                        data-target="#addModal">
+                                <button class="btn btn-outline-success" id="createFile"
+                                        data-toggle="modal" data-target="#addModal">
                                     <i class="fa fa-plus" aria-hidden="true"></i>Thêm minh chứng
                                 </button>
                             </div>
@@ -173,10 +173,12 @@
 
 @section('sub-javascript')
     <script>
+        // đoạn code để chạy datatable
         var oTable = $('#proofsTable').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": {
+                // copy ttên route. qua bên web.php copy thêm 1 cái r đổi tên
                 "url": "{{ route('ajax-get-proofs') }}",
                 "dataType": "json",
                 "type": "POST",
@@ -202,6 +204,7 @@
             },
             "pageLength": 10
         });
+        // kết thúc đoạn code chạy datatable
 
         $('body').on('click', 'a#proof-view-file', function (e) {
             var thisproof = $(this);

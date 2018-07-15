@@ -249,6 +249,15 @@
             "pageLength": 25
         });
 
+        $('#modal-edit-student').on('hidden.bs.modal', function (e) {
+            // hideAndShowFaculty('modal-edit-user');
+            $('#modal-edit-student').find("input[type=text],input[type=password],input[type=number],input[type=year],input[type=hidden]").val('');
+            // $('#modal-edit-student').find("#checkBoxChangePassword").attr('value','on').trigger('change');
+            // $('#modal-edit-student').find("div#changepassword").hide();
+            $('.text-red').html('');
+            $('span.messageErrors').remove();
+        });
+
     </script>
     <script type="text/javascript" src="{{ asset('js/web/class/class-detail.js') }} "></script>
 @endsection

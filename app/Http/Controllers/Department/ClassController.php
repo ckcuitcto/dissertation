@@ -165,6 +165,19 @@ class ClassController extends Controller
         ],200);
     }
 
+    public function getStudentsByClass(Request $request){
+        $id = $request->id;
+        $students = DB::table('students as s')
+            ->leftJoin('users as u','s.user_id','u.users_id')
+            ->select('u.users_id', 'u.name','s.id')
+            ->where('s.class_id',$id)
+            ->orderBy('u.name')
+            ->get()->toArray();
+        return response()->json([
+            'students' => $students
+        ],200);
+    }
+
     public function getListClassByFacultyAddAll(Request $request){
         $id = $request->id;
 
