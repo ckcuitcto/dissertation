@@ -879,6 +879,55 @@ class ExportController extends Controller
         return $dataTable->make(true);
     }
 
+    public function ajaxGetBackUpAcademicTranscript(Request $request)
+    {
+        $academicTranscript = DB::table('academic_transcripts')
+            ->leftJoin('users','users.users_id','=','academic_transcripts.user_id')
+            ->leftJoin('classes','classes.id','=','academic_transcripts.class_id')
+            ->select(
+            DB::raw("@curRow := ifnull(@curRow,0) + 1 as stt"),
+            'users.users_id',
+            'users.name as userName',
+            'classes.name as className',
+            'academic_transcripts.score_i',
+            'academic_transcripts.score_ii',
+            'academic_transcripts.score_iii',
+            'academic_transcripts.score_iv',
+            'academic_transcripts.score_v',
+            DB::raw("
+                academic_transcripts.score_i +
+                academic_transcripts.score_ii +
+                academic_transcripts.score_iii +
+                academic_transcripts.score_iv +
+                academic_transcripts.score_v
+                as totalScore")
+        )->orderBy('classes.id','DESC');
+
+        $dataTable = DataTables::of($academicTranscript)
+            ->addColumn('rank', function ($aca) {
+                return $this->checkRank1($aca->totalScore);
+            })
+            ->addColumn('note', function ($aca) {
+                return '***';
+            })
+            ->filter(function ($aca) use ($request) {
+                $faculty = $request->has('faculty_id');
+                $facultyValue = $request->get('faculty_id');
+
+                if (!empty($faculty) AND $facultyValue != 0) {
+                    $aca->where('users.faculty_id', '=', $facultyValue);
+                }
+
+                $semester = $request->has('semester_id');
+                $semesterValue = $request->get('semester_id');
+                if (!empty($semester) AND $semesterValue != 0) {
+                    $aca->where('academic_transcripts.semester_id', '=', $semesterValue);
+                }
+            });
+
+        return $dataTable->make(true);
+    }
+
 
     // EXPORT DANH SÁCH USER VS ĐIỂM CHẤM CÓ KỈ LUẬT
     public function exportAcademicTranscript(Request $request)
@@ -906,14 +955,13 @@ class ExportController extends Controller
                 'academic_transcripts.score_ia',
                 'academic_transcripts.score_ib',
                 'academic_transcripts.score_ic',
+                'academic_transcripts.score_iv',
                 'academic_transcripts.score_ii',
                 'academic_transcripts.score_iii',
                 'academic_transcripts.score_iv',
                 'academic_transcripts.score_v',
                 DB::raw("
-                academic_transcripts.score_ia +
-                academic_transcripts.score_ib +
-                academic_transcripts.score_ic +
+                academic_transcripts.score_i +
                 academic_transcripts.score_ii +
                 academic_transcripts.score_iii +
                 academic_transcripts.score_iv +
@@ -923,7 +971,6 @@ class ExportController extends Controller
             )->whereIn('academic_transcripts.user_id',$arrUserId);
             if(!empty($semesterId)){
                 $academicTranscript = $academicTranscript->where('academic_transcripts.semester_id',$semesterId);
-
             }
             $academicTranscript = $academicTranscript->orderBy('classes.id','ASC')
             ->get()->toArray();

@@ -302,6 +302,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/list-export-semester', ['as' => 'ajax-get-backup-semester', 'uses' => 'Export\ExportController@ajaxGetBackUpSemester']);
 
+        Route::post('/list-export-academic-transcript', ['as' => 'ajax-get-backup-academic-transcript', 'uses' => 'Export\ExportController@ajaxGetBackUpAcademicTranscript']);
+
     });
 
     Route::post('/xuat-danh-sach', ['as' => 'export-users', 'uses' => 'Export\ExportController@exportByUserId'])->middleware('can:export-users');
@@ -321,6 +323,12 @@ Route::group(['middleware' => 'auth'], function () {
         // có 1 cái tương tự nhưng ở route khác. dùng lại. nhưng tránh sửa code thì thêm mới cái này
         Route::post('/get-classes-by-faculty', ['as' => 'get-classes-by-faculty', 'uses' => 'Department\ClassController@getListClassByFaculty']);
         Route::post('/get-students-by-class', ['as' => 'get-students-by-class', 'uses' => 'Department\ClassController@getStudentsByClass']);
+
+        Route::post('/store', ['as' => 'discipline-reason-store', 'uses' => 'Discipline\DisciplineReasonController@store']);
+        Route::get('/edit/{id}', ['as' => 'discipline-reason-edit', 'uses' => 'Discipline\DisciplineReasonController@edit']);
+        Route::post('/update/{id}', ['as' => 'discipline-reason-update', 'uses' => 'Discipline\DisciplineReasonController@update']);
+        Route::get('/destroy/{id}', ['as' => 'discipline-reason-destroy', 'uses' => 'Discipline\DisciplineReasonController@destroy']);
+        Route::post('/get-discipline-reasons', ['as' => 'ajax-get-discipline-reasons', 'uses' => 'Discipline\DisciplineReasonController@ajaxGetDisciplineReason']);
     });
 
 

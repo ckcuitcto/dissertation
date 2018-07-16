@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Import;
 
+use App\DisciplineReason;
 use App\Model\AcademicTranscript;
 use App\Model\Discipline;
 use App\Model\EvaluationCriteria;
@@ -25,7 +26,8 @@ class ImportController extends Controller
 
     public function discipline(){
         $semesters = Semester::where('date_end_to_mark','<',Carbon::now()->format(DATE_FORMAT_DATABASE))->orderBy('id','DESC')->get();
-        return view('discipline.index',compact('semesters'));
+        $evaluationCriterias = EvaluationCriteria::where('level','=',1)->get();
+        return view('discipline.index',compact('semesters','evaluationCriterias'));
     }
 
     public function ajaxGetDiscipline(Request $request){
@@ -34,12 +36,13 @@ class ImportController extends Controller
             ->leftJoin('students', 'disciplines.user_id', '=', 'students.user_id')
             ->leftJoin('users', 'students.user_id', '=', 'users.users_id')
             ->leftJoin('semesters', 'semesters.id', '=', 'disciplines.semester_id')
-            ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'disciplines.evaluation_criteria_id')
+            ->leftJoin('discipline_reasons', 'discipline_reasons.id', '=', 'disciplines.discipline_reason_id')
             ->select(
                 'disciplines.*',
                 'users.name as userName',
                 'semesters.year_from',
-                'evaluation_criterias.content',
+                'discipline_reasons.reason',
+                'discipline_reasons.score_minus',
                 DB::raw("CONCAT('Học kì: ',semesters.term,'*** Năm học: ',semesters.year_from,' - ',semesters.year_to) as semester")
             );
 
@@ -114,25 +117,21 @@ class ImportController extends Controller
                     // cột 5: nội dung vi phạm
                     // cột 6: hình thức kỉ luật
                     // cột 7 : ghi chú
-                    // cột 8 : tiêu chí bị trừ điểm
+                    // cột 8 : tiêu chí bị trừ điểm trong bảng lí do
                     $userId = $dataFileExcel[$i][4];
                     $student = Student::where('user_id', $userId)->first();
                     if (empty($student)) {
                         $arrError[] = "Sinh viên " . $dataFileExcel[$i][1] . "- $userId không tồn tại";
                     }else{
-                        $content = $dataFileExcel[$i][5];
-                        $hinhthuckiluat = $dataFileExcel[$i][6];
-                        $note = $dataFileExcel[$i][7];
-                        $evaluationCriteriaId = ARRAY_ACADEMIC_TRANSCRIPT_TO_EVALUATION_CRITERIA[$dataFileExcel[$i][8]];
-
-                        // nếu để key là userid thì nếu 1 sinh viên bị nheièu loại kỉ luật
-                        // thì sẽ bị trùng và chỉ lưu đc kỉ luật cuối
+                        $disciplineReasonId = $dataFileExcel[$i][8];
+                        $dc = DisciplineReason::find($disciplineReasonId);
+                        if(empty($dc)){
+                            $arrError[] = "Lý do kỷ luật có Id là $disciplineReasonId không tồn tại";
+                        }
                         $arrDiscipline[] = [
                             'semester_id' => $semesterId,
                             'user_id' => $userId,
-                            'evaluation_criteria_id' => $evaluationCriteriaId,
-                            'score_minus' => SCORE_MINUS,
-                            'reason' => "Nội dung vi phạm: $content.  Hình thức kỷ luật: $hinhthuckiluat . Ghi chú: $note"
+                            'discipline_reason_id' => $disciplineReasonId,
                         ];
                     }
                 }
@@ -149,7 +148,7 @@ class ImportController extends Controller
                 ));
 //                Discipline::insert($arrDiscipline);
 
-                $arrScore = $this->getScoreListBySemester($semesterId,$arrDiscipline);
+                $arrScore = $this->getScoreListBySemester($semesterId);
                 $arrScore = array_map(function($tag) {
                     return array(
                         'user_id' => $tag['0'],
@@ -158,11 +157,12 @@ class ImportController extends Controller
                         'score_ia' => $tag['3'],
                         'score_ib' => $tag['4'],
                         'score_ic' => $tag['5'],
-                        'score_ii' => $tag['6'],
-                        'score_iii' => $tag['7'],
-                        'score_iv' => $tag['8'],
-                        'score_v' => $tag['9'],
-                        'note' => $tag['10'],
+                        'score_i' => $tag['6'],
+                        'score_ii' => $tag['7'],
+                        'score_iii' => $tag['8'],
+                        'score_iv' => $tag['9'],
+                        'score_v' => $tag['10'],
+                        'note' => $tag['11'],
                     );
                 }, $arrScore);
 
@@ -180,29 +180,21 @@ class ImportController extends Controller
                     // lấy ra sinh viên đó ở bảng điểm trừ điểm. sau đó mới thêm vào bảng bảng điểm
                     // khóa chính của mỗi valua trong mảng đều là mã số sinh viên
                     foreach ($arrDiscipline as $value) {
-                        Discipline::updateOrCreate(
+                        Discipline::firstOrCreate(
                             [
                                 'user_id' => $value['user_id'],
                                 'semester_id' => $value['semester_id'],
-                                'evaluation_criteria_id' => $value['evaluation_criteria_id'],
-                            ],
-                            [
-                                'score_minus' => $value['score_minus'],
-                                'reason' => $value['reason']
+                                'discipline_reason_id' => $value['discipline_reason_id'],
                             ]
                         );
 
                         // lấy ra tiêu chí ( đã đc map với cột ở bảng bảng điểm. để xem tiêu chí bị kỉ luật là cái nào
                         // sau đó trừ điểm theo tiêu chí đó.
-                        $evaluation_criteria_id = ARRAY_EVALUATION_CRITERIA_VS_ACADEMIC_TRANSCRIPT[$value['evaluation_criteria_id']];
-                        $arrScore[$value['user_id']][$evaluation_criteria_id] -= $value['score_minus'];
-                        if (!empty($arrScore[$value['user_id']]['note'])) {
-                            $arrScore[$value['user_id']]['note'] .= "-" . $value['reason'];
-                        } else {
-                            $arrScore[$value['user_id']]['note'] = $value['reason'];
-                        }
+                        $disciplineReason = DisciplineReason::find($value['discipline_reason_id']);
+                        $scoreMinus = $disciplineReason->score_minus;
+                        $evaluation_criteria_id = ARRAY_EVALUATION_CRITERIA_VS_ACADEMIC_TRANSCRIPT[$disciplineReason->evaluation_criteria_id];
+                        $arrScore[$value['user_id']][$evaluation_criteria_id] -= $scoreMinus;
                     }
-
                     // xóa hết dữ liệu cũ rồi thêm mới.
                     AcademicTranscript::where('semester_id', $semesterId)->delete();
                     AcademicTranscript::insert($arrScore);
@@ -230,7 +222,7 @@ class ImportController extends Controller
         }
     }
 
-    protected function getScoreListBySemester($semesterId,$arrDiscipline){
+    protected function getScoreListBySemester($semesterId){
 
         // $arrDiscipline lấy mảng này để lấy reason
         $arrUserId = DB::table('student_list_each_semesters')->where('semester_id',$semesterId)->select('user_id','class_id')->get()->toArray();
@@ -253,7 +245,6 @@ class ImportController extends Controller
                     ['evaluation_criterias.level', 1],
                     ['students.user_id', $userId],
                     ['evaluation_forms.semester_id', $semesterId],
-                    ['evaluation_criterias.id', '<>', YTHUCTHAMGIAHOCTAP_ID]
                 ])
                 ->select(
                     'evaluation_results.marker_score',
@@ -262,7 +253,7 @@ class ImportController extends Controller
                 )
                 ->orderBy('evaluation_results.created_at', 'DESC')
                 ->orderBy('evaluation_criterias.id', 'ASC')
-                ->limit(4)->get()->toArray();
+                ->limit(5)->get()->toArray();
             if (!empty($resultLevel1)) {
                 $markerId = $resultLevel1[0]->marker_id;
                 //id người chấm thì giống nhau. mên lấy id của ngươi ở lv1 đem xuống lv2 luôn
@@ -299,7 +290,7 @@ class ImportController extends Controller
 
             if (empty($arrScore)) {
 //                $arrScore = array(0, 0, 0, 0, 0, 0, 0,(!empty($arrDiscipline[$userId]['reason'])) ? $arrDiscipline[$userId]['reason'] : "" );
-                $arrScore = array(0, 0, 0, 0, 0, 0, 0, '');
+                $arrScore = array(0, 0, 0, 0, 0, 0, 0, 0, '');
                 $arrScore = array_merge($arrUserInfo,$arrScore);
             }
             $arrScoreAllUser[$userId] = $arrScore;

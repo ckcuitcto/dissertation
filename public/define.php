@@ -82,6 +82,7 @@ define('ARRAY_EVALUATION_CRITERIA_VS_ACADEMIC_TRANSCRIPT', array(
     '6' => 'score_ia',
     '7' => 'score_ib',
     '8' => 'score_ic',
+    '1' => 'score_i',
     '2' => 'score_ii',
     '3' => 'score_iii',
     '4' => 'score_iv',
