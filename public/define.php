@@ -63,6 +63,7 @@ define('STUDENT_PATH_STORE','upload/student/');
 define('FILE_TEMPLATE','upload/file_mau/');
 define('FILE_TONG_HOP_DANH_GIA_REN_LUYEN','bang_tong_hop_danh_gia_ren_luyen.xlsx');
 define('FILE_TONG_HOP_DANH_GIA_REN_LUYEN_XLS','bang_tong_hop_danh_gia_ren_luyen.xls');
+define('FILE_TONG_HOP_DANH_GIA_REN_LUYEN_LEVEL_1_XLS','bang_tong_hop_danh_gia_ren_luyen_level1.xls');
 define('STUDENT_LIST_EACH_SEMESTER_PATH','upload/student_list_each_semester/');
 
 define('EVALUATION_CRITERIAS_CHILD_PARENT_1',array(6,7,8));

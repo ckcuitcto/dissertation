@@ -301,12 +301,6 @@ class SemesterController extends Controller
             if (!empty($request->date_end_to_re_mark)) {
                 $semester->date_end_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_re_mark);
             }
-//            if (!empty($request->date_start_to_mark)) {
-//                $semester->date_start_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_mark);
-//            }
-//            if (!empty($request->date_end_to_mark)) {
-//                $semester->date_end_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_mark);
-//            }
             if (!empty($request->date_end_to_request_re_mark)) {
                 $semester->date_end_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_request_re_mark);
             }
@@ -329,7 +323,7 @@ class SemesterController extends Controller
 //            foreach ($rolesCanMark as $role) {
             for($i = 0 ; $i < count($rolesCanMark) ; $i++){
 
-                    $dateEnd = "date_end_to_mark_" . $rolesCanMark[$i]->id;
+                $dateEnd = "date_end_to_mark_" . $rolesCanMark[$i]->id;
                 $dateStart = "date_start_to_mark_" . $rolesCanMark[$i]->id;
 
                 if($first == false){

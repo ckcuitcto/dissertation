@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Export;
 
 use App\Model\AcademicTranscript;
 use App\Model\Classes;
+use App\Model\Discipline;
 use App\Model\Faculty;
 use App\Model\FileImport;
 use App\Model\Role;
@@ -889,6 +890,7 @@ class ExportController extends Controller
             'users.users_id',
             'users.name as userName',
             'classes.name as className',
+            'academic_transcripts.semester_id',
             'academic_transcripts.score_i',
             'academic_transcripts.score_ii',
             'academic_transcripts.score_iii',
@@ -908,7 +910,12 @@ class ExportController extends Controller
                 return $this->checkRank1($aca->totalScore);
             })
             ->addColumn('note', function ($aca) {
-                return '***';
+                $disciplines = Discipline::select('id')->where('user_id',$aca->users_id)->where('semester_id',$aca->semester_id)->get();
+                $arrId = [];
+                foreach($disciplines as $val){
+                    $arrId[] = "[$val->id]";
+                }
+                return implode(',',$arrId);
             })
             ->filter(function ($aca) use ($request) {
                 $faculty = $request->has('faculty_id');
@@ -932,7 +939,6 @@ class ExportController extends Controller
     // EXPORT DANH SÁCH USER VS ĐIỂM CHẤM CÓ KỈ LUẬT
     public function exportAcademicTranscript(Request $request)
     {
-
         $strUserId = $request->strUsersId;
         $strUserName = $request->strUserName;
         $strClassName = $request->strClassName;

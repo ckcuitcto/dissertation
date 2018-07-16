@@ -361,8 +361,8 @@
                 }
             });
             $('#myModal').find(".modal-title").text('Sửa lý do kỷ luật');
-            $('#myModal').find(".modal-footer > button[name=discipline-reason-store]").html('Sửa');
-            $('#myModal').find(".modal-footer > button[name=discipline-reason-store]").attr('data-link', urlUpdate);
+            $('#myModal').find(".modal-footer > button[name=btn-save-discipline-reason]").html('Sửa');
+            $('#myModal').find(".modal-footer > button[name=btn-save-discipline-reason]").attr('data-link', urlUpdate);
             $('#myModal').modal('show');
         });
 

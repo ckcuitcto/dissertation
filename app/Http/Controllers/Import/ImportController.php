@@ -179,6 +179,10 @@ class ImportController extends Controller
                     // chạy vòng lặp các sinh viên bị kỉ luật.
                     // lấy ra sinh viên đó ở bảng điểm trừ điểm. sau đó mới thêm vào bảng bảng điểm
                     // khóa chính của mỗi valua trong mảng đều là mã số sinh viên
+
+                    //để tránh lỡ nhập 1 file nhiều lần. thì mỗi lần nhập
+                    // đều lấy lại bảng điểm cũ r trừ điểm.
+                    // mỗi học kì chỉ có 1 file.
                     foreach ($arrDiscipline as $value) {
                         Discipline::firstOrCreate(
                             [
