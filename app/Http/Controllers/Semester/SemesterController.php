@@ -372,15 +372,23 @@ class SemesterController extends Controller
     {
         $semester = Semester::find($id);
         if (!empty($semester)) {
-            $semester->delete();
-            //sau khi xóa học kì thì cũng xóa form đánh giá
+            if(empty($semester->Proofs) AND empty($semester->EvaluationForm) AND  empty($semester->StudentListEachSemester) AND empty($semester->AcademicTranscripts))
+            {
+                $semester->delete();
+                //sau khi xóa học kì thì cũng xóa form đánh giá
+                return response()->json([
+                    'semester' => $semester,
+                    'status' => true
+                ], 200);
+            }
             return response()->json([
-                'semester' => $semester,
-                'status' => true
+                'status' => false,
+                'message' => 'Không được xóa học kì này'
             ], 200);
         }
         return response()->json([
-            'status' => false
+            'status' => false,
+            'message' => 'Không tìm thấy học kì'
         ], 200);
     }
 
