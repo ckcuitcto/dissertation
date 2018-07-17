@@ -80,72 +80,79 @@ class ImportController extends Controller
             'fileImport.required' => 'Bắt buộc chọn file',
 
         ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'arrMessages' => $validator->errors()
             ], 200);
         } else {
-            $file = $request->file('fileImport');
-            if ($file->getClientOriginalExtension() != "xlsx") {
-                $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ "]);
-                return response()->json([
-                    'status' => false,
-                    'arrMessages' => $arrMessage
-                ], 200);
-            }
-            $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
-            while (File::exists(STUDENT_PATH . $fileName)) {
-                    $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
-            }
-            $file->move(STUDENT_PATH, $fileName);
-            $arrFileName[] = $fileName;
-            $dataFileExcel = \Maatwebsite\Excel\Facades\Excel::selectSheets('Sheet1')->load(STUDENT_PATH . $fileName, function ($reader) {
-            })->noHeading()->get();
             $semesterId = $request->semester_id;
-            $arrDiscipline = array();
-            for ($i = 4; $i < count($dataFileExcel); $i++) {
+            // nếu k có file import thì chỉ chuyển điểm qa là thôi.
+            if($request->fileImport != 'noFile') {
+                $file = $request->file('fileImport');
+                if ($file->getClientOriginalExtension() != "xlsx") {
+                    $arrMessage = array("fileImport" => ["File " . $file->getClientOriginalName() . " không hợp lệ "]);
+                    return response()->json([
+                        'status' => false,
+                        'arrMessages' => $arrMessage
+                    ], 200);
+                }
+                $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
+                while (File::exists(STUDENT_PATH . $fileName)) {
+                    $fileName = $this->convert_vi_to_en(str_random(8) . "_" . $file->getClientOriginalName());
+                }
+                $file->move(STUDENT_PATH, $fileName);
+                $arrFileName[] = $fileName;
+                $dataFileExcel = \Maatwebsite\Excel\Facades\Excel::selectSheets('Sheet1')->load(STUDENT_PATH . $fileName, function ($reader) {
+                })->noHeading()->get();
 
-                if (!empty($dataFileExcel[$i][4]) AND !empty($dataFileExcel[$i][0]) ) {
-                    // lấy khoa theo Id
-                    // cột 0 là stt
-                    // cột 1: họ và tên
-                    // cột 2: năm sinh
-                    // cột 3 : lớp
-                    // cột 4: mssv
-                    // cột 5: nội dung vi phạm
-                    // cột 6: hình thức kỉ luật
-                    // cột 7 : ghi chú
-                    // cột 8 : tiêu chí bị trừ điểm trong bảng lí do
-                    $userId = $dataFileExcel[$i][4];
-                    $student = Student::where('user_id', $userId)->first();
-                    if (empty($student)) {
-                        $arrError[] = "Sinh viên " . $dataFileExcel[$i][1] . "- $userId không tồn tại";
-                    }else{
-                        $disciplineReasonId = $dataFileExcel[$i][8];
-                        $dc = DisciplineReason::find($disciplineReasonId);
-                        if(empty($dc)){
-                            $arrError[] = "Lý do kỷ luật có Id là $disciplineReasonId không tồn tại";
+
+                $arrDiscipline = array();
+
+                for ($i = 4; $i < count($dataFileExcel); $i++) {
+                    if (!empty($dataFileExcel[$i][4]) AND !empty($dataFileExcel[$i][0]) ) {
+                        // lấy khoa theo Id
+                        // cột 0 là stt
+                        // cột 1: họ và tên
+                        // cột 2: năm sinh
+                        // cột 3 : lớp
+                        // cột 4: mssv
+                        // cột 5: nội dung vi phạm
+                        // cột 6: hình thức kỉ luật
+                        // cột 7 : ghi chú
+                        // cột 8 : tiêu chí bị trừ điểm trong bảng lí do
+                        $userId = $dataFileExcel[$i][4];
+                        $student = Student::where('user_id', $userId)->first();
+                        if (empty($student)) {
+                            $arrError[] = "Sinh viên " . $dataFileExcel[$i][1] . "- $userId không tồn tại";
+                        }else{
+                            $disciplineReasonId = $dataFileExcel[$i][8];
+                            $dc = DisciplineReason::find($disciplineReasonId);
+                            if(empty($dc)){
+                                $arrError[] = "Lý do kỷ luật có Id là $disciplineReasonId không tồn tại";
+                            }
+                            $arrDiscipline[] = [
+                                'semester_id' => $semesterId,
+                                'user_id' => $userId,
+                                'discipline_reason_id' => $disciplineReasonId,
+                            ];
                         }
-                        $arrDiscipline[] = [
-                            'semester_id' => $semesterId,
-                            'user_id' => $userId,
-                            'discipline_reason_id' => $disciplineReasonId,
-                        ];
                     }
                 }
             }
-
-            if(!empty($arrDiscipline) AND empty($arrError)) {
-                $userLogin = $this->getUserLogin();
-                FileImport::insert(array(
-                    'file_path' => $fileName,
-                    'file_name' => $file->getClientOriginalName(),
-                    'status'    => 'Thành công',
-                    'staff_id'  => $userLogin->Staff->id,
-                    'semester_id' => $semesterId
-                ));
+//            if(!empty($arrDiscipline) AND empty($arrError)) {
+            if(empty($arrError)) {
+                // các trường hợp áp dụng khi có file sẽ được kiểm tra để bỏ qua khi k import file.
+                if($request->fileImport != 'noFile' AND !empty($arrDiscipline)) {
+                    $userLogin = $this->getUserLogin();
+                    FileImport::insert(array(
+                        'file_path' => $fileName,
+                        'file_name' => $file->getClientOriginalName(),
+                        'status' => 'Thành công',
+                        'staff_id' => $userLogin->Staff->id,
+                        'semester_id' => $semesterId
+                    ));
+                }
 //                Discipline::insert($arrDiscipline);
 
                 $arrScore = $this->getScoreListBySemester($semesterId);
@@ -168,36 +175,40 @@ class ImportController extends Controller
 
                 if(!empty($arrScore)) {
 
-                    // di chuyển và xóa file cũ
-                    if(File::move(STUDENT_PATH.$fileName,STUDENT_PATH_STORE.$fileName)) {
-                        if (file_exists(STUDENT_PATH . $fileName)) {
-                            unlink(STUDENT_PATH . $fileName);
+                    // các trường hợp áp dụng khi có file sẽ được kiểm tra để bỏ qua khi k import file.
+                    if($request->fileImport != 'noFile' AND !empty($arrDiscipline)) {
+                        // di chuyển và xóa file cũ
+                        if(File::move(STUDENT_PATH.$fileName,STUDENT_PATH_STORE.$fileName)) {
+                            if (file_exists(STUDENT_PATH . $fileName)) {
+                                unlink(STUDENT_PATH . $fileName);
+                            }
                         }
-                    }
 
-                    // trừ điểm của sinh viên đó tại đây
-                    // chạy vòng lặp các sinh viên bị kỉ luật.
-                    // lấy ra sinh viên đó ở bảng điểm trừ điểm. sau đó mới thêm vào bảng bảng điểm
-                    // khóa chính của mỗi valua trong mảng đều là mã số sinh viên
+                        // trừ điểm của sinh viên đó tại đây
+                        // chạy vòng lặp các sinh viên bị kỉ luật.
+                        // lấy ra sinh viên đó ở bảng điểm trừ điểm. sau đó mới thêm vào bảng bảng điểm
+                        // khóa chính của mỗi valua trong mảng đều là mã số sinh viên
 
-                    //để tránh lỡ nhập 1 file nhiều lần. thì mỗi lần nhập
-                    // đều lấy lại bảng điểm cũ r trừ điểm.
-                    // mỗi học kì chỉ có 1 file.
-                    foreach ($arrDiscipline as $value) {
-                        Discipline::firstOrCreate(
-                            [
-                                'user_id' => $value['user_id'],
-                                'semester_id' => $value['semester_id'],
-                                'discipline_reason_id' => $value['discipline_reason_id'],
-                            ]
-                        );
+                        //để tránh lỡ nhập 1 file nhiều lần. thì mỗi lần nhập
+                        // đều lấy lại bảng điểm cũ r trừ điểm.
+                        // mỗi học kì chỉ có 1 file.
+                        foreach ($arrDiscipline as $value) {
+                            $discipline = Discipline::firstOrCreate(
+                                [
+                                    'user_id' => $value['user_id'],
+                                    'semester_id' => $value['semester_id'],
+                                    'discipline_reason_id' => $value['discipline_reason_id'],
+                                ]
+                            );
 
-                        // lấy ra tiêu chí ( đã đc map với cột ở bảng bảng điểm. để xem tiêu chí bị kỉ luật là cái nào
-                        // sau đó trừ điểm theo tiêu chí đó.
-                        $disciplineReason = DisciplineReason::find($value['discipline_reason_id']);
-                        $scoreMinus = $disciplineReason->score_minus;
-                        $evaluation_criteria_id = ARRAY_EVALUATION_CRITERIA_VS_ACADEMIC_TRANSCRIPT[$disciplineReason->evaluation_criteria_id];
-                        $arrScore[$value['user_id']][$evaluation_criteria_id] -= $scoreMinus;
+                            // lấy ra tiêu chí ( đã đc map với cột ở bảng bảng điểm. để xem tiêu chí bị kỉ luật là cái nào
+                            // sau đó trừ điểm theo tiêu chí đó.
+                            $disciplineReason = DisciplineReason::find($value['discipline_reason_id']);
+                            $scoreMinus = $disciplineReason->score_minus;
+                            $evaluation_criteria_id = ARRAY_EVALUATION_CRITERIA_VS_ACADEMIC_TRANSCRIPT[$disciplineReason->evaluation_criteria_id];
+                            $arrScore[$value['user_id']][$evaluation_criteria_id] -= $scoreMinus;
+                            $arrScore[$value['user_id']]['note'] .= $discipline->id;
+                        }
                     }
                     // xóa hết dữ liệu cũ rồi thêm mới.
                     AcademicTranscript::where('semester_id', $semesterId)->delete();
@@ -208,7 +219,11 @@ class ImportController extends Controller
                         'status' => true
                     ], 200);
                 } else {
-                    unlink(STUDENT_PATH . $fileName);
+                    if($request->fileImport != 'noFile') {
+                        if (file_exists(STUDENT_PATH . $fileName)) {
+                            unlink(STUDENT_PATH . $fileName);
+                        }
+                    }
                     $arrError[] = 'Danh sách sinh viên đã chấm trong học kì rỗng';
                     return response()->json([
                         'status' => false,
@@ -216,8 +231,12 @@ class ImportController extends Controller
                     ], 200);
                 }
             } else {
-                unlink(STUDENT_PATH . $fileName);
-                $arrError[] = 'Import không thành công hoặc file lỗi';
+                if($request->fileImport != 'noFile') {
+                    if (file_exists(STUDENT_PATH . $fileName)) {
+                        unlink(STUDENT_PATH . $fileName);
+                    }
+                }
+                $arrError[] = 'Import không thành công ';
                 return response()->json([
                     'status' => false,
                     'errors' => $arrError

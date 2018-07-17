@@ -23,4 +23,9 @@ class AcademicTranscript extends Model
     public function Classes(){
         return $this->belongsTo('App\Model\Classes','class_id','id');
     }
+
+//    public function Disciplines()
+//    {
+//        return $this->belongsToMany('App\Model\Discipline', 'discipline_academic_transcript', 'academic_transcript_id', 'discipline_id');
+//    }
 }

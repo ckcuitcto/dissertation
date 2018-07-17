@@ -431,7 +431,6 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
             }
         });
 
-
         // phần này dùng cho select ở form input
 
         $('body').on('change', "select.add_faculty_id", function (e) {

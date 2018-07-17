@@ -28,4 +28,9 @@ class Discipline extends Model
 //        return $this->belongsTo('App\Model\EvaluationCriteria','evaluation_criteria_id','id');
 //    }
 
+//    public function AcademicTranscripts()
+//    {
+//        return $this->belongsToMany('App\Model\AcademicTranscript', 'discipline_academic_transcript', 'discipline_id', 'academic_transcript_id');
+//    }
+
 }

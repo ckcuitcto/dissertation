@@ -148,7 +148,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/', ['as' => 'academic-transcript', 'uses' => 'Transcript\TranscriptController@academicTranscript'])->middleware('can:view-academic-score');
         Route::post('/get-academic-transcript', ['as' => 'ajax-academic-transcript', 'uses' => 'Transcript\TranscriptController@ajaxGetAcademicTranscript'])->middleware('can:view-academic-score');
-        Route::post('/xuat-bang-diem-sinh-vien', ['as' => 'export-academic-transcript', 'uses' => 'Export\ExportController@exportAcademicTranscript'])->middleware('can:view-academic-score');
+        Route::post('/xuat-bang-diem-sinh-vien', ['as' => 'export-academic-transcript', 'uses' => 'Export\ExportController@exportAcademicTranscriptLevel1'])->middleware('can:view-academic-score');
     });
 
     Route::group(['prefix' => 'phieu-danh-gia'], function () {

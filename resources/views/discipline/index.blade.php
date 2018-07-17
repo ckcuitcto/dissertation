@@ -102,6 +102,15 @@
                                         <input type="file" class="form-control fileImport" name="fileImport"
                                                id="fileImport">
                                     </div>
+                                    <br>
+                                    <div class="form-row">
+                                        {{--<label for="fileImport"></label>--}}
+                                        <div class="animated-checkbox">
+                                            <label>
+                                                <input value="off" type="checkbox" name="no-discipline" id="no-discipline" class="no-discipline"><span class="label-text">Nếu không có sinh viên bị kỉ luật. Tích chọn ở đây</span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -218,12 +227,25 @@
             $("#importModal").find("p.child-error").remove();
             var formData = new FormData();
             var fileImport = document.getElementById('fileImport');
-            var semester_id = $('#semester_id').val();
-            // var inss = fileImport.files.length;
-            // for (var x = 0; x < inss; x++) {
+            var semester_id = $("#importModal").find('#semester_id').val();
+
+            if ($('#no-discipline').is(":checked"))
+            {
+                $("#importModal").find('#no-discipline').val('on');
+                formData.append("fileImport", 'noFile');
+            }else{
+                $("#importModal").find('#no-discipline').val('off');
+                // var inss = fileImport.files.length;
+                // for (var x = 0; x < inss; x++) {
                 file = fileImport.files[0];
-                formData.append("fileImport", file);
-                formData.append("semester_id", semester_id);
+                if( file !== undefined) {
+                    formData.append("fileImport", file);
+                }
+            }
+            var no_discipline = $("#importModal").find('#no-discipline').val();
+
+            formData.append("semester_id", semester_id);
+            formData.append("no_discipline", no_discipline);
             // }
             var url = $(this).attr('data-link');
             $('.form-row').find('span.messageErrors').remove();
