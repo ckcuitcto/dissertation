@@ -111,7 +111,8 @@ class Controller extends BaseController
                         'roles.id as role_id',
                         'student_list_each_semesters.semester_id as semesterId',
                         'evaluation_forms.total as totalScore',
-                        'evaluation_forms.id as evaluationFormId'
+                        'evaluation_forms.id as evaluationFormId',
+                        'evaluation_forms.status as evaluationFormStatus'
                     )->distinct();
                 return $students;
             }

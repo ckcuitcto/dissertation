@@ -98,7 +98,9 @@
             <li><a class="app-menu__item" href="{{ route('home') }}"><i class="app-menu__icon fa fa-home"
                                                                                aria-hidden="true"></i><span
                             class="app-menu__label">Trang chủ</span></a></li>
-            <li class="treeview">
+            @if($authCheck)
+                @if($userLogin->Role->weight != ROLE_ADMIN)
+                <li class="treeview">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon fa fa-pencil-square-o"></i><span class="app-menu__label">Đánh giá rèn luyện</span>
                     <i class="treeview-indicator fa fa-angle-right"></i>
@@ -133,83 +135,91 @@
                         </li>
                     @endcan
                 </ul>
-            </li>           
+            </li>
+                @endif
+            @endif
+            @if($authCheck)
+                @if($userLogin->Role->weight != ROLE_ADMIN)
+                    @can('proofs-list')
+                        @if($userLogin->Role->weight <= ROLE_COVANHOCTAP)
+                            <li><a class="app-menu__item" href="{{ route('proof') }}">
+                                    <i class="app-menu__icon fa fa-file-text-o" aria-hidden="true"></i><span
+                                            class="app-menu__label">Quản lí minh chứng </span>
+                                </a>
+                            </li>
+                        @endif
+                    @endcan
+                    <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                        class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
+                        class="treeview-indicator fa fa-angle-right"></i></a>
+                        @can('comment-add')
+                            @if ($userLogin->Role->weight < ROLE_COVANHOCTAP)
+                            <ul class="treeview-menu">
+                                <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
+                                                class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
+                            </ul>
+                            @endif
+                        @endcan
+                        <ul class="treeview-menu">
+                            <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
+                                            class="icon fa fa-circle-o"></i>
+                                    Danh sách ý kiến</a></li>
+                        </ul>
+                    </li>
+                    @can('can-change-news')
+                        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                                        class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label"> Tin tức</span><i
+                                        class="treeview-indicator fa fa-angle-right"></i></a>
+                            <ul class="treeview-menu">
+                                <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Tin tức, sự kiện</a></li>
+                            </ul>
+                        </li>
+                    @endcan
 
-            @can('proofs-list')
-                @if($userLogin->Role->weight <= ROLE_COVANHOCTAP)
-                    <li><a class="app-menu__item" href="{{ route('proof') }}">
-                            <i class="app-menu__icon fa fa-file-text-o" aria-hidden="true"></i><span
-                                    class="app-menu__label">Quản lí minh chứng </span>
+                    @can('semester-change')
+                    <li><a class="app-menu__item" href="{{ route('semester-list') }}">
+                            <i class="app-menu__icon fa fa-th-list" aria-hidden="true"></i><span
+                                    class="app-menu__label">Quản lí học kì </span>
                         </a>
                     </li>
-                @endif
-            @endcan
-
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
-                class="treeview-indicator fa fa-angle-right"></i></a>
-                @can('comment-add')
-                    @if ($userLogin->Role->weight < ROLE_COVANHOCTAP)
-                    <ul class="treeview-menu">
-                        <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
-                                        class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
-                    </ul>
-                    @endif
                 @endcan
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
-                                    class="icon fa fa-circle-o"></i>
-                            Danh sách ý kiến</a></li>
-                </ul>
-            </li>
 
-            @can('can-change-news')
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label"> Tin tức</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Tin tức, sự kiện</a></li>
-                </ul>
-            </li>
-            @endcan
-            
-            @can('semester-change')
-            <li><a class="app-menu__item" href="{{ route('semester-list') }}">
-                    <i class="app-menu__icon fa fa-th-list" aria-hidden="true"></i><span
-                            class="app-menu__label">Quản lí học kì </span>
-                </a>
-            </li>
-            @endcan
-
-            @can(array('faculty-list','student-list'))
-            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                            class="app-menu__icon fa fa-cogs"></i><span
-                            class="app-menu__label">Quản lí Khoa - Sinh viên</span><i
-                            class="treeview-indicator fa fa-angle-right"></i></a>
-                <ul class="treeview-menu">
-                    @can('faculty-list')
-                    <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>
+                    @can(array('faculty-list','student-list'))
+                    <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                                    class="app-menu__icon fa fa-cogs"></i><span
+                                    class="app-menu__label">Quản lí Khoa - Sinh viên</span><i
+                                    class="treeview-indicator fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            @can('faculty-list')
+                            <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>
+                            </li>
+                            @endcan
+                            @can('student-list')
+                            <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> DS Sinh viên đánh giá</a></li>
+                            @endcan
+                        </ul>
                     </li>
+                    @endif
+
+                    @can('view-list-file-import')
+                        <li>
+                            <a class="app-menu__item" href="{{ route('files') }}">
+                                <i class="app-menu__icon fa fa-list" aria-hidden="true"></i><span
+                                        class="app-menu__label">Danh sách file đã nhập</span>
+                            </a>
+                        </li>
                     @endcan
-                    @can('student-list')
-                    <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> DS Sinh viên đánh giá</a></li>
-                    @endcan
-                </ul>
-            </li>
+
+                        @can('export-file')
+                            <li><a class="app-menu__item" href="{{ route('export-file-list') }}">
+                                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                                            class="app-menu__label">Xuất File đánh giá</span>
+                                </a>
+                            </li>
+                        @endcan
+                @endif
             @endif
 
-            @can('manage-user')
-            <li><a class="app-menu__item" href="{{ route('user') }}">
-                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
-                            class="app-menu__label">Quản lí tài khoản </span>
-                </a>
-            </li>
-            <li><a class="app-menu__item" href="{{ route('files') }}">
-                    <i class="app-menu__icon fa fa-list" aria-hidden="true"></i><span
-                            class="app-menu__label">Danh sách file đã nhập</span>
-                </a>
-            </li>
-            @endcan
 
             @can('user-rights')
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
@@ -223,15 +233,13 @@
                 </ul>
             </li>
             @endcan
-
-            @can('export-file')
-            <li><a class="app-menu__item" href="{{ route('export-file-list') }}">
-                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
-                            class="app-menu__label">Xuất File đánh giá</span>
-                </a>
-            </li>
+            @can('manage-user')
+                <li><a class="app-menu__item" href="{{ route('user') }}">
+                        <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                                class="app-menu__label">Quản lí tài khoản </span>
+                    </a>
+                </li>
             @endcan
-
             @can('backup')
             <li><a class="app-menu__item" href="{{ route('export-backup') }}">
                     <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span

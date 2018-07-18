@@ -135,6 +135,10 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'view-academic-score',
                 'display_name' => 'Xem, xuất danh sách bảng điểm',
                 'description' => 'Xem,xuất danh sách bảng điểm của sinh viên'
+            ],[
+                'name' => 'view-list-file-import',
+                'display_name' => 'Xem danh sách file đã nhập',
+                'description' => 'Xem danh sách file đã nhập'
             ],
         ]);
     }

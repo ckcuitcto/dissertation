@@ -280,8 +280,8 @@
                         }
                     } else if (result.status === true) {
                         $.notify({
-                            title: " Upload Thành công ",
-                            message: ":D",
+                            title: "Cập nhật danh sách kỷ luật thành công! Bảng điểm cuối cùng của sinh viên đã được cập nhật",
+                            message: "Có thể xem lại ở bảng điểm",
                             icon: 'fa fa-check'
                         }, {
                             type: "success"
