@@ -217,6 +217,14 @@
                                 </a>
                             </li>
                         @endcan
+
+                    @can('backup')
+                        <li><a class="app-menu__item" href="{{ route('export-backup') }}">
+                                <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                                        class="app-menu__label">Backup</span>
+                            </a>
+                        </li>
+                    @endcan
                 @endif
             @endif
 
@@ -240,13 +248,7 @@
                     </a>
                 </li>
             @endcan
-            @can('backup')
-            <li><a class="app-menu__item" href="{{ route('export-backup') }}">
-                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
-                            class="app-menu__label">Backup</span>
-                </a>
-            </li>
-            @endcan
+
 
         </ul>
     </aside>

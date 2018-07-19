@@ -16,6 +16,7 @@ $('#myModal').on('hidden.bs.modal', function (e) {
     $("input[type=checkbox]").prop('checked', false);
     $('.text-red').html('');
     $('.form-group').find('span.messageErrors').remove();
+    $(".name").prop('disabled',false);
 });
 
 $('body').on('click', 'a.role-destroy', function (e) {
@@ -104,11 +105,11 @@ $('body').on('click', 'a.role-update', function (e) {
                         if(elementName === "permissions"){
                             $.each(value, function (permission, valuePermission) {
                                 $('.permission_' + valuePermission.id).val(valuePermission.id).prop('checked', true);
-
                             });
                         }else{
                             $('.' + elementName).val(value);
                         }
+                        $(".name").prop('disabled',true);
                     });
                 }
             }

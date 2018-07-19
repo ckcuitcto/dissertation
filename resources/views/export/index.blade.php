@@ -66,13 +66,17 @@
                                     </tfoot>
                             </table>
                             <input type="hidden" name="semesterChoose" id="semesterChoose" value="{{$currentSemester->id}}">
+                            <input type="hidden" name="withDiscipline" value="no" id="withDiscipline">
                         </form>
                         <div class="row">
                             <div class="col-md-6">
-                                
                                 <button class="btn btn-info" id="btnExport" type="button" data-link="{{route('export-file')}}">
                                     <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                                    Xuất File
+                                    Xuất file đánh giá chưa áp dụng kỷ luật
+                                </button>
+                                <button class="btn btn-info" id="btnExportWithDiscipline" type="button" data-link="{{route('export-file')}}">
+                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                    Xuất file đánh giá đã áp dụng kỷ luật
                                 </button>
                             </div>
                         </div>

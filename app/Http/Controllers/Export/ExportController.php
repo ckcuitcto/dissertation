@@ -211,6 +211,7 @@ class ExportController extends Controller
 //        $arrFileName = $this->convertXLSXtoXLS($arrFileName);
         if (!empty($arrFileName)) {
             $public_dir = dirname(dirname(public_path()));
+//            $public_dir = public_path();
             $zip = new ZipArchive();
             $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
             foreach ($arrFileName as $file) {

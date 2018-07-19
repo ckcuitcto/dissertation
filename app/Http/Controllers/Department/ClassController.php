@@ -182,7 +182,7 @@ class ClassController extends Controller
         $id = $request->id;
 
         $userLogin = $this->getUserLogin();
-        if($userLogin->Role->weight > ROLE_BANCHUNHIEMKHOA){
+        if($userLogin->Role->weight >=   ROLE_BANCHUNHIEMKHOA){
             $classes = Classes::where('faculty_id', $id)->select('id','name')->get()->toArray();
             $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
         }elseif($userLogin->Role->weight == ROLE_COVANHOCTAP){

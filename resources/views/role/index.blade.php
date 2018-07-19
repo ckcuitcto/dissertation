@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="name">Tên hiển thị:</label>
+                                        <label for="display_name">Tên hiển thị:</label>
                                         <input class="form-control display_name" id="display_name" name="display_name" type="text" required
                                                aria-describedby="permission">
                                         <p style="color:red; display: none;" class="display_name"></p>
@@ -105,7 +105,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="name">Miêu tả :</label>
+                                        <label for="description">Miêu tả :</label>
                                         <input class="form-control description" id="description" name="description" type="text" required
                                                aria-describedby="description">
                                         <p style="color:red; display: none;" class="description"></p>
