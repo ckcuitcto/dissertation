@@ -262,7 +262,7 @@
                                                                        id="proof-view-file"
                                                                        data-proof-file-path="{{ asset('upload/proof/'.$proof->name) }}"
                                                                        data-link-update-proof-file="{{ route('update-valid-proof-file',$proof->id ) }}"
-                                                                       data-get-file-link="{{route('evaluation-form-get-file',$proof->id)}}">
+                                                                       data-get-file-link="{{ route('evaluation-form-get-file',$proof->id) }}">
                                                                         <i class="fa fa-eye"
                                                                            aria-hidden="true"></i>{{ str_limit($proof->name,20) }}
                                                                         @if($proof->valid == 1)

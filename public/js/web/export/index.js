@@ -23,7 +23,6 @@ $('body').on('change', "input.checkboxClasses", function (e) {
 
 $('body').on('click', 'button#btnExport', function (e) {
     var boxes = $('input.checkboxClasses:checked');
-
     if(boxes.length == 0){
         $.notify({
             title: "Vui lòng chọn lớp !!!!!!",
@@ -33,6 +32,23 @@ $('body').on('click', 'button#btnExport', function (e) {
             type: "warning"
         });
     }else{
+        $("form#class-form-export").find("#withDiscipline").val("no");
+        $("form#class-form-export").submit();
+    }
+});
+
+$('body').on('click', 'button#btnExportWithDiscipline', function (e) {
+    var boxes = $('input.checkboxClasses:checked');
+    if(boxes.length == 0){
+        $.notify({
+            title: "Vui lòng chọn lớp !!!!!!",
+            message: ":(",
+            icon: 'fa fa-exclamation-triangle'
+        },{
+            type: "warning"
+        });
+    }else{
+        $("form#class-form-export").find("#withDiscipline").val("yes");
         $("form#class-form-export").submit();
     }
 });

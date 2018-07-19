@@ -99,3 +99,8 @@ define('ARRAY_ACADEMIC_TRANSCRIPT_TO_EVALUATION_CRITERIA', array(
     'iv' =>     '4',
     'v' =>      '5'
 ));
+
+define('PROOF_VALID', array(
+    '1' =>     'Hợp lệ',
+    '0' =>     'Không hợp lệ',
+));

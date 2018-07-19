@@ -18,7 +18,7 @@
                         <form class="row" role="form" id="search-form" method="post">
                             {!! csrf_field() !!}
                             <div class="form-group col-md-3">
-                                <label class="control-label">Học kì</label>
+                                <label for="semester_id" class="control-label">Học kì</label>
                                 <select class="form-control semester_id" name="semester_id" id="semester_id">
                                     @foreach($semesters as $value)
                                         <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
@@ -26,7 +26,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label">Khoa</label>
+                                <label for="faculty_id" class="control-label">Khoa</label>
                                 <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
                                     @foreach($faculties as $value)
                                         <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
@@ -34,7 +34,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label">Lớp</label>
+                                <label for="class_id" class="control-label">Lớp</label>
                                 <select class="form-control class_id" name="class_id" id="class_id">
                                 </select>
                             </div>
@@ -141,7 +141,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10,

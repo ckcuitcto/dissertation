@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Proof;
 
 use App\Model\EvaluationCriteria;
 use App\Model\EvaluationForm;
+use App\Model\Faculty;
 use App\Model\MarkTime;
 use App\Model\Notification;
 use App\Model\Proof;
@@ -53,6 +54,40 @@ class ProofController extends Controller
         $semesters = Semester::where('date_end_to_mark','>=',Carbon::now()->format(DATE_FORMAT_DATABASE))->orderBy('id','DESC')->get();
 
         return view('proof.index', compact('proofList','evaluationCriterias','semesters','userLogin'));
+    }
+
+    public function list()
+    {
+        $userLogin = $this->getUserLogin(); // lấy ra người dùng đang đăng nhập
+
+        // nếu role vào k phải là học sinh, ban cán sự
+        // thì chuyển sang trang k có quyền
+        if($userLogin->Role->weight < ROLE_COVANHOCTAP) {
+            return view('errors.403');
+        }
+
+//        $evaluationCriterias = EvaluationCriteria::whereNotNull('proof')->get();
+        // phải lấy các học kì có thời gian kết thúc chấm lớn hơn thời gian hiện tại. ( là chưa kết thúc chấm)
+        // tránh trường hợp sv thêm minh chứng vào các học kì trước.
+//        $semesters = Semester::where('date_end_to_mark','>=',Carbon::now()->format(DATE_FORMAT_DATABASE))->orderBy('id','DESC')->get();
+
+        $userLogin = $this->getUserLogin();
+
+        $currentSemester = $this->getCurrentSemester();
+//        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+
+        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+        $semestersNoAll = $semesters;
+        $semesters = array_prepend($semesters,array('id' => 0,'value' => 'Tất cả học kì'));
+
+        if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
+            $faculties = Faculty::all()->toArray();
+            $faculties = array_prepend($faculties,array('id' => 0,'name' => 'Tất cả khoa'));
+        }else{
+            $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
+        }
+
+        return view('proof.list', compact('proofList','semesters','userLogin','faculties','currentSemester'));
     }
 
     public function show($id)
@@ -241,15 +276,29 @@ class ProofController extends Controller
                     $title = "Sửa trạng thái minh chứng của sinh viên: ".$student->User->users_id."-".$student->User->name ." thuộc lớp: ".$student->Classes->name;
                     $notifications->title = $title;
                     $notifications->created_by = Auth::user()->Staff->id;
+
+                    // nếu tiêu chí bị rỗng. ( chưa chọn tiêu chí) thì sẽ xuất nội dung khác
+                    if(empty($evaluationCriterias)){
+                        $noidungTieuChi = '';
+                    }else {
+                        $noidungTieuChi = " của tiêu chí $evaluationCriterias->content";
+                    }
+                    if(empty($semester)){
+                        $noiDungHocKy = '';
+                    }else {
+                        $noiDungHocKy = " <b>Học kì $semester->term Năm học $semester->year_from - $semester->year_to.</b> ";
+                    }
+                    $from = PROOF_VALID[$proof->valid] ;
+                    $to = PROOF_VALID[$request->valid];
                     if($request->valid != 0){
-                        $notifications->content = $title. " từ $proof->valid thành $request->valid của tiêu chí $evaluationCriterias->content .<br>
+                        $notifications->content = $title. " từ $from thành $to $noidungTieuChi.<br>
                          Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!<br>
-                         <b>Học kì $semester->term Năm học $semester->year_from - $semester->year_to.</b> <br>
+                         $noiDungHocKy <br>
                          ";
                     }else{
-                        $notifications->content = $title. " từ $proof->valid thành $request->valid của tiêu chí $evaluationCriterias->content .Với nội dung:<b>$request->note.</b> 
+                        $notifications->content = $title. " từ $from thành $to $noidungTieuChi .Với nội dung:<b>$request->note.</b> 
                         Cố vấn học tập vui lòng vào kiểm tra lại file minh chứng của sinh viên và chỉnh sửa điểm phù hợp!<br>
-                         <b>Học kì $semester->term Năm học $semester->year_from - $semester->year_to.</b> <br>
+                         $noiDungHocKy <br>
                         ";
                     }
 
@@ -383,11 +432,146 @@ class ProofController extends Controller
                     return "<p class='bs-component'>$linkViewFile $linkEditFile $linkDeleteFile</p> ";
 
                 }
-
-
                 return "<p class='bs-component'>$linkViewFile</p> ";
-
             })
             ->make(true);
+    }
+
+    public function ajaxGetProofsOfStudent(Request $request){
+
+        $userLogin = $this->getUserLogin();
+
+        $options['all'] = true;
+        $options['only-get-id']= true;
+        $userIds = $this->getUserIdByUserLogin($userLogin);
+
+        $proofs = DB::table('proofs')
+            ->leftJoin('evaluation_criterias','evaluation_criterias.id','=','proofs.evaluation_criteria_id')
+            ->leftJoin('students','students.id','=','proofs.created_by')
+            ->leftJoin('users','students.user_id','=','users.users_id')
+            ->leftJoin('classes','classes.id','=','students.class_id')
+            ->leftJoin('semesters','semesters.id','=','proofs.semester_id')
+//            ->where('proofs.created_by', $userLogin->Student->id)
+            ->whereIn('students.user_id', $userIds)
+            ->select(
+                'evaluation_criterias.content',
+                'proofs.id as proofId',
+                'proofs.name as proofName',
+                'proofs.valid',
+                'semesters.year_from',
+                'semesters.year_to',
+                DB::raw("CONCAT(semesters.year_from,'-',semesters.year_to) as semesterYear"),
+                'semesters.term',
+                'semesters.id as semesterId',
+                'semesters.date_end_to_re_mark',
+                'users.name as userName',
+                'classes.name as className',
+                'students.user_id as userId'
+//                'users.faculty_id',
+//                'students.class_id',
+//                'proofs.semester_id'
+            )->orderBy('students.user_id','DESC')->orderBy('proofs.id','DESC');
+        $dataTable = DataTables::of($proofs)
+            ->editColumn('valid', function ($proof){
+                return ($proof->valid) ? "Hợp lệ" : "Không hợp lệ";
+            })
+            ->editColumn('term', function ($proof){
+                return ($proof->term) ? $proof->term : "";
+            })
+            ->editColumn('content', function ($proof){
+                return ($proof->content) ? $proof->content : "Chưa chọn tiêu chí";
+            })
+            ->addColumn('action', function ($proof) use ($userLogin) {
+
+                // lấy ra học kì của minh chứng
+                // sau đó tìm thời gina chấm
+                // nếu hiện tại <= thời gian kết thúc chấm phúc khảo => vẫn cho sửa
+
+                if( strtotime($proof->date_end_to_re_mark) < strtotime(date('Y-m-d')))
+                {
+                    $canEdit = 2; // k thể edit
+                }else{
+                    $canEdit = 1; // có thể edit
+                }
+
+                $linkGetFile = route('evaluation-form-get-file',$proof->proofId); // dung chung
+                $linkFilePath =  asset('upload/proof/'.$proof->proofName);
+                $linkUpdate = route('update-valid-proof-file',$proof->proofId );
+
+                $class = ($proof->valid == 0) ? "btn-danger" : "btn-primary";
+                $linkViewFile =
+                    "<a title='Xem minh chứng' data-can-edit='$canEdit' style='color:white;' data-proof-file-path='$linkFilePath'  data-link-update-proof-file='$linkUpdate'
+                        data-proof-id='$proof->proofId' data-get-file-link='$linkGetFile' class='btn $class proof-view-file'>
+                   <i class='fa fa-eye' aria-hidden='true'></i></a>";
+                return $linkViewFile;
+            })
+            ->filter(function ($proof) use ($request) {
+                $faculty = $request->has('faculty_id');
+                $facultyValue = $request->get('faculty_id');
+
+                if (!empty($faculty) AND $facultyValue != 0) {
+                    $proof->where('users.faculty_id', '=', $facultyValue);
+
+                    $class = $request->has('class_id');
+                    $classValue = $request->get('class_id');
+                    if (!empty($class) AND $classValue != 0) {
+                        $proof->where('students.class_id','=', $classValue);
+                    }
+                }
+
+                $semester = $request->has('semester_id');
+                $semesterValue = $request->get('semester_id');
+                if (!empty($semester) AND $semesterValue != 0) {
+                    $proof->where('proofs.semester_id','=', $semesterValue);
+                }
+            });
+
+        return $dataTable->make(true);
+    }
+
+    private function getUserIdByUserLogin($user){
+//        $user = $this->getUserLogin();
+        if ($user->Role->weight >= ROLE_PHONGCONGTACSINHVIEN) // admin va phong ctsv thì lấy tất cả user
+        {
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->select('users.users_id')->get()->toArray();
+        } elseif ($user->Role->weight >= ROLE_BANCHUNHIEMKHOA) {
+            // neeus laf ban chu nhiem khoa thi lay cung khoa
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->select('users.users_id')->get()->toArray();
+        } elseif ($user->Role->weight >= ROLE_COVANHOCTAP) {
+            // neeus laf ban co van hoc tap thi lay cac sinh vien thuoc cac lop ma ng nay lam co  van
+            // lấy danh sách các lớp mà ng này làm cố vấn
+            $arrClassId = [];
+            foreach ($user->Staff->Classes as $class) {
+                $arrClassId[] = $class->id;
+            }
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                ->leftJoin('students', 'students.user_id', '=', 'users.users_id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->whereIn('students.class_id', $arrClassId)
+                ->select('users.users_id')->get()->toArray();
+        } elseif ($user->Role->weight >= ROLE_BANCANSULOP) //ban can su lop, thì lấy user thuộc lop
+        {
+            $arrUserId = DB::table('users')
+                ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                ->leftJoin('students', 'students.user_id', '=', 'users.users_id')
+                ->where('users.faculty_id', $user->faculty_id)
+                ->where('roles.weight', '<=', ROLE_BANCANSULOP)
+                ->where('students.class_id', $user->Student->class_id)
+                ->select('users.users_id')->get()->toArray();
+        }
+        foreach ($arrUserId as $key => $value){
+            $userIds[$key] = [$value->users_id];
+        }
+
+        return $userIds;
     }
 }

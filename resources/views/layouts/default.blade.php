@@ -140,11 +140,24 @@
             @endif
             @if($authCheck)
                 @if($userLogin->Role->weight != ROLE_ADMIN)
+                    {{-- cái này là để cho sinh viên và ban cán sự tự quản lí của mình--}}
                     @can('proofs-list')
-                        @if($userLogin->Role->weight <= ROLE_COVANHOCTAP)
+                        @if($userLogin->Role->weight < ROLE_COVANHOCTAP)
                             <li><a class="app-menu__item" href="{{ route('proof') }}">
                                     <i class="app-menu__icon fa fa-file-text-o" aria-hidden="true"></i><span
                                             class="app-menu__label">Quản lí minh chứng </span>
+                                </a>
+                            </li>
+                        @endif
+                    @endcan
+
+                {{-- cái này là để cố vấn, khoa, ctsv xem lại minh chứng và sửa trạng thái cho nhanh--}}
+                    @can('proofs-list-student')
+                        @if($userLogin->Role->weight >= ROLE_COVANHOCTAP)
+                            <li>
+                                <a class="app-menu__item" href="{{ route('proof-list') }}">
+                                    <i class="app-menu__icon fa fa-file-text-o" aria-hidden="true"></i><span
+                                            class="app-menu__label">Quản lí minh chứng SV</span>
                                 </a>
                             </li>
                         @endif

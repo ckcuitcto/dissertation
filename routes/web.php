@@ -198,7 +198,8 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'minh-chung'], function () {
-        Route::get('/', ['as' => 'proof', 'uses' => 'Proof\ProofController@index']);
+        Route::get('/', ['as' => 'proof', 'uses' => 'Proof\ProofController@index'])->middleware('can:proofs-list');
+        Route::get('/danh-sach', ['as' => 'proof-list', 'uses' => 'Proof\ProofController@list'])->middleware('can:proofs-list-student');
 
         Route::get('/destroy/{id}', ['as' => 'proof-destroy', 'uses' => 'Proof\ProofController@destroy'])->middleware('can:proofs-delete');
         Route::post('/update-valid-proof-file/{id}', ['as' => 'update-valid-proof-file', 'uses' => 'Proof\ProofController@updateValidProofFile']);
@@ -209,7 +210,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store']);
 
-        Route::post('/get-proofs', ['as' => 'ajax-get-proofs', 'uses' => 'Proof\ProofController@ajaxGetProofs']);
+        Route::post('/get-proofs', ['as' => 'ajax-get-proofs', 'uses' => 'Proof\ProofController@ajaxGetProofs'])->middleware('can:proofs-list');
+        Route::post('/get-proofs-of-student', ['as' => 'ajax-get-proofs-of-student', 'uses' => 'Proof\ProofController@ajaxGetProofsOfStudent'])->middleware('can:proofs-list-student');
     });
 
     Route::post('/get-files', ['as' => 'ajax-get-files', 'uses' => 'Import\ImportController@ajaxGetFiles']);

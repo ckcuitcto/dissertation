@@ -346,7 +346,6 @@ class TranscriptController extends Controller
                 $semesterValue = $request->get('semester_id');
                 if (!empty($semester) AND $semesterValue != 0) {
                     $student->where('academic_transcripts.semester_id', '=', $semesterValue);
-                    $student->where('academic_transcripts.semester_id', '=', $semesterValue);
                 }
             });
 
@@ -440,8 +439,8 @@ class TranscriptController extends Controller
         $arrValidatorRoleMessage['add_student_id.required'] = "Bắt buộc chọn sinh viên";
         $arrValidatorRoleMessage['add_student_id.exists'] = "Sinh viên không tồn tại";
 
-        $arrValidatorRoleMessage['add_student_id.required'] = "Bắt buộc chọn học kì";
-        $arrValidatorRoleMessage['add_student_id.exists'] = "Học kì không tồn tại";
+        $arrValidatorRoleMessage['add_semester_id.required'] = "Bắt buộc chọn học kì";
+        $arrValidatorRoleMessage['add_semester_id.exists'] = "Học kì không tồn tại";
 
         $validator = Validator::make($request->all(), $arrValidatorRole, $arrValidatorRoleMessage);
 

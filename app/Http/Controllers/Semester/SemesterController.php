@@ -100,70 +100,82 @@ class SemesterController extends Controller
                 'arrMessages' => $validator->errors()
             ], 200);
         } else {
-            $semester = new Semester();
-            $semester->year_from = $request->year_from;
-            $semester->year_to = $request->year_to;
-            if (!empty($request->date_start)) {
-                $semester->date_start = Carbon::createFromFormat('d/m/Y', $request->date_start);
-            }
-            if (!empty($request->date_end)) {
-                $semester->date_end = Carbon::createFromFormat('d/m/Y', $request->date_end);
-            }
-            if (!empty($request->date_start_to_re_mark)) {
-                $semester->date_start_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_re_mark);
-            }
-            if (!empty($request->date_end_to_re_mark)) {
-                $semester->date_end_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_re_mark);
-            }
-//            if (!empty($request->date_start_to_mark)) {
-//                $semester->date_start_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_mark);
-//            }
-//            if (!empty($request->date_end_to_mark)) {
-//                $semester->date_end_to_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_mark);
-//            }
-            if (!empty($request->date_end_to_request_re_mark)) {
-                $semester->date_end_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_request_re_mark);
-            }
-            if (!empty($request->date_start_to_request_re_mark)) {
-                $semester->date_start_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_request_re_mark);
-            }
-            $semester->term = $request->term;
-
-            $arrRoleMarkTime = array();
-
-            $dateStartMarkOfFirstRoleCanMark = null;
-            $dateEndMarkOfLastRoleCanMark = null;
-            $first = false;
-            for($i = 0 ; $i < count($rolesCanMark) ; $i++){
-
-                $dateEnd = "date_end_to_mark_" . $rolesCanMark[$i]->id;
-                $dateStart = "date_start_to_mark_" . $rolesCanMark[$i]->id;
-
-                if($first == false){
-                    $dateStartMarkOfFirstRoleCanMark = Carbon::createFromFormat('d/m/Y', $request->$dateStart);
-                    $first = true;
-                }
-                if(count($rolesCanMark)-1 == $i){
-                    $dateEndMarkOfLastRoleCanMark = Carbon::createFromFormat('d/m/Y', $request->$dateEnd);
+            $semester = Semester::where('year_from',$request->year_from)->where('year_to',$request->year_to)->where('term',$request->term)->first();
+            if(empty($semester)) {
+                // bắt lỗi = tay
+                $arrMessage = $this->ruleSemester($request->all());
+                if(!empty($arrMessage)){
+                    return response()->json([
+                        'status' => false,
+                        'arrMessages' => $arrMessage
+                    ], 200);
                 }
 
-                $arrRoleMarkTime[] = [
-                    'mark_time_start' => Carbon::createFromFormat('d/m/Y', $request->$dateStart),
-                    'mark_time_end' => Carbon::createFromFormat('d/m/Y', $request->$dateEnd),
-                    'role_id' => $rolesCanMark[$i]->id
-                ];
+                $semester = new Semester();
+                $semester->year_from = $request->year_from;
+                $semester->year_to = $request->year_to;
+                if (!empty($request->date_start)) {
+                    $semester->date_start = Carbon::createFromFormat('d/m/Y', $request->date_start);
+                }
+                if (!empty($request->date_end)) {
+                    $semester->date_end = Carbon::createFromFormat('d/m/Y', $request->date_end);
+                }
+                if (!empty($request->date_start_to_re_mark)) {
+                    $semester->date_start_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_re_mark);
+                }
+                if (!empty($request->date_end_to_re_mark)) {
+                    $semester->date_end_to_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_re_mark);
+                }
+                if (!empty($request->date_end_to_request_re_mark)) {
+                    $semester->date_end_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_end_to_request_re_mark);
+                }
+                if (!empty($request->date_start_to_request_re_mark)) {
+                    $semester->date_start_to_request_re_mark = Carbon::createFromFormat('d/m/Y', $request->date_start_to_request_re_mark);
+                }
+                $semester->term = $request->term;
+
+                $arrRoleMarkTime = array();
+
+                $dateStartMarkOfFirstRoleCanMark = null;
+                $dateEndMarkOfLastRoleCanMark = null;
+                $first = false;
+                for ($i = 0; $i < count($rolesCanMark); $i++) {
+
+                    $dateEnd = "date_end_to_mark_" . $rolesCanMark[$i]->id;
+                    $dateStart = "date_start_to_mark_" . $rolesCanMark[$i]->id;
+
+                    if ($first == false) {
+                        $dateStartMarkOfFirstRoleCanMark = Carbon::createFromFormat('d/m/Y', $request->$dateStart);
+                        $first = true;
+                    }
+                    if (count($rolesCanMark) - 1 == $i) {
+                        $dateEndMarkOfLastRoleCanMark = Carbon::createFromFormat('d/m/Y', $request->$dateEnd);
+                    }
+
+                    $arrRoleMarkTime[] = [
+                        'mark_time_start' => Carbon::createFromFormat('d/m/Y', $request->$dateStart),
+                        'mark_time_end' => Carbon::createFromFormat('d/m/Y', $request->$dateEnd),
+                        'role_id' => $rolesCanMark[$i]->id
+                    ];
+                }
+                $semester->date_start_to_mark = $dateStartMarkOfFirstRoleCanMark;
+                $semester->date_end_to_mark = $dateEndMarkOfLastRoleCanMark;
+
+                $semester->save();
+                // lưu thời gian chấm
+                $semester->MarkTimes()->createMany($arrRoleMarkTime);
+
+                return response()->json([
+                    'semester' => $semester,
+                    'status' => true
+                ], 200);
+            }else{
+                $arrMessage = array("year_from" => ["Học kỳ này đã tồn tại"]);
+                return response()->json([
+                    'status' => false,
+                    'arrMessages' => $arrMessage
+                ], 200);
             }
-            $semester->date_start_to_mark = $dateStartMarkOfFirstRoleCanMark;
-            $semester->date_end_to_mark = $dateEndMarkOfLastRoleCanMark;
-
-            $semester->save();
-            // lưu thời gian chấm
-            $semester->MarkTimes()->createMany($arrRoleMarkTime);
-
-            return response()->json([
-                'semester' => $semester,
-                'status' => true
-            ], 200);
         }
     }
 
@@ -256,7 +268,7 @@ class SemesterController extends Controller
         }
 
         $arrValidatorRole['year_from'] = "sometimes|required";
-        $arrValidatorRole['year_from'] = "sometimes|required";
+        $arrValidatorRole['year_to'] = "sometimes|required";
         $arrValidatorRole['term'] = "required";
 //        $arrValidatorRole['year_to'] = "required|after:year_from";
 //        $arrValidatorRoleMessage['year_to.after'] = 'Ngày kết thúc phải > ngày bắt đầu. ';
@@ -293,6 +305,14 @@ class SemesterController extends Controller
 
         $semester = Semester::find($id);
         if (!empty($semester)) {
+
+            $arrMessage = $this->ruleSemester($request->all());
+            if(!empty($arrMessage)){
+                return response()->json([
+                    'status' => false,
+                    'arrMessages' => $arrMessage
+                ], 200);
+            }
 //            $semester->year_from = $request->year_from;
 //            $semester->year_to = $request->year_to;
             if (!empty($request->date_start_to_re_mark)) {
@@ -372,15 +392,15 @@ class SemesterController extends Controller
     {
         $semester = Semester::find($id);
         if (!empty($semester)) {
-            if(empty($semester->Proofs) AND empty($semester->EvaluationForm) AND  empty($semester->StudentListEachSemester) AND empty($semester->AcademicTranscripts))
-            {
+//            if(empty($semester->Proofs) AND empty($semester->EvaluationForm) AND  empty($semester->StudentListEachSemester) AND empty($semester->AcademicTranscripts))
+//            {
                 $semester->delete();
                 //sau khi xóa học kì thì cũng xóa form đánh giá
                 return response()->json([
                     'semester' => $semester,
                     'status' => true
                 ], 200);
-            }
+//            }
             return response()->json([
                 'status' => false,
                 'message' => 'Không được xóa học kì này'
@@ -419,5 +439,96 @@ class SemesterController extends Controller
                 return $semester->id == $currentSemester->id ? 'alert-success' : '';
             })
             ->make(true);
+    }
+
+    // tự kiểm tra hơp lệ = tay
+    public function ruleSemester($arrRequest){
+
+        $arrMessage = array();
+
+//        $yearFrom = Carbon::createFromFormat('d/m/Y', $arrRequest['year_from']);
+//        $yearTo = Carbon::createFromFormat('d/m/Y', $arrRequest['year_to']);
+        foreach($arrRequest as $key => $value){
+            if ($key != '_token' AND $key != 'year_from' AND $key != 'year_to' AND $key != 'term') {
+                $arrRequest[$key] = Carbon::createFromFormat('d/m/Y', $value);
+
+//                $formatYear = Carbon::createFromFormat('Y', $value);
+//                if($yearFrom != $formatYear OR $yearTo != $formatYear ){
+//                    $arrMessage["year_from"] = ["Các thời gian chấm điểm phải thuộc năm của học kì"];
+//                    return $arrMessage;
+//                }
+            }
+        }
+        if(!empty($arrRequest['year_from']) AND !empty($arrRequest['year_to'])) {
+            if ($arrRequest['year_from'] > $arrRequest['year_to']) {
+                $arrMessage["year_from"] = ["Năm kết thúc phải lớn hơn năm bắt đầu"];
+            }
+        }
+        if(strtotime($arrRequest['date_start']) > strtotime($arrRequest['date_end'])){
+            $arrMessage["date_start"] = ["Ngày kết thúc phải lớn hơn ngày bắt đầu"];
+        }
+
+        if( strtotime($arrRequest['date_start_to_request_re_mark']) > strtotime($arrRequest['date_end_to_request_re_mark']) ){
+            $arrMessage["date_start_to_request_re_mark"] = ["Ngày kết thúc phải lớn hơn ngày bắt đầu"];
+        }
+
+        if(strtotime($arrRequest['date_start_to_re_mark']) > strtotime($arrRequest['date_end_to_re_mark'])){
+            $arrMessage["date_start_to_re_mark"] =["Ngày kết thúc phải lớn hơn ngày bắt đầu"];
+        }
+
+        if(!empty($arrRequest['date_start_to_mark_1']) AND !empty($arrRequest['date_end_to_mark_1'])) {
+            if (strtotime($arrRequest['date_start_to_mark_1']) > strtotime($arrRequest['date_end_to_mark_1'])) {
+                $arrMessage["date_start_to_mark_1"] = ["Ngày kết thúc phải lớn hơn ngày bắt đầu"];
+            }
+        }
+
+        if(!empty($arrRequest['date_start_to_mark_2']) AND !empty($arrRequest['date_end_to_mark_2'])) {
+            if (strtotime($arrRequest['date_start_to_mark_2']) > strtotime($arrRequest['date_end_to_mark_2'])) {
+                $arrMessage["date_start_to_mark_2"] = ["Ngày kết thúc phải lớn hơn ngày bắt đầu"];
+            }
+        }
+        if(!empty($arrRequest['date_start_to_mark_3']) AND !empty($arrRequest['date_end_to_mark_3'])) {
+            if (strtotime($arrRequest['date_start_to_mark_3']) > strtotime($arrRequest['date_end_to_mark_3'])) {
+                $arrMessage["date_start_to_mark_3"] = ["Ngày kết thúc phải lớn hơn ngày bắt đầu"];
+            }
+        }
+
+        if(!empty($arrRequest['date_end_to_mark_1']) AND !empty($arrRequest['date_start_to_mark_2'])) {
+            if (strtotime($arrRequest['date_end_to_mark_1']) > strtotime($arrRequest['date_start_to_mark_2'])) {
+                $arrMessage["date_start_to_mark_2"] = ["Ngày kết thúc của vài trò chấm trước phải bé hơn ngày bắt đầu của vai trò chấm sau"];
+            }
+        }
+
+        if(!empty($arrRequest['date_end_to_mark_2']) AND !empty($arrRequest['date_start_to_mark_3'])) {
+            if (strtotime($arrRequest['date_end_to_mark_2']) > strtotime($arrRequest['date_start_to_mark_3'])) {
+                $arrMessage["date_start_to_mark_3"] = ["Ngày kết thúc của vài trò chấm trước phải bé hơn ngày bắt đầu của vai trò chấm sau"];
+            }
+        }
+
+        if(!empty($arrRequest['date_start_to_mark_1']) AND !empty($arrRequest['date_start'])) {
+            if (strtotime($arrRequest['date_start_to_mark_1']) < strtotime($arrRequest['date_start'])) {
+                $arrMessage["date_start_to_mark_1"] = ["Ngày bắt đầu chấm của các vai trò phải bé hơn thời gian bắt đầu học kì"];
+            }
+        }
+
+        if(!empty($arrRequest['date_end_to_mark_3']) AND !empty($arrRequest['date_end'])) {
+            if (strtotime($arrRequest['date_end_to_mark_3']) > strtotime($arrRequest['date_end'])) {
+                $arrMessage["date_end_to_mark_3"] = ["Ngày bắt kết thúc chấm của các vai trò phải bé hơn thời gian kết thúc học kì"];
+            }
+        }
+
+        if(!empty($arrRequest['date_end_to_mark_3']) AND !empty($arrRequest['date_end'])) {
+            if (strtotime($arrRequest['date_end_to_mark_3']) > strtotime($arrRequest['date_end'])) {
+                $arrMessage["date_start_to_request_re_mark"] = ["Ngày bắt đầu khiếu nại phải lớn hơn ngày kết thúc chấm của vai trò cuối cùng"];
+            }
+        }
+
+        if(!empty($arrRequest['date_end_to_request_re_mark']) AND !empty($arrRequest['date_start_to_re_mark'])) {
+            if (strtotime($arrRequest['date_end_to_request_re_mark']) > strtotime($arrRequest['date_start_to_re_mark'])) {
+                $arrMessage["date_start_to_re_mark"] = ["Ngày bắt đầu chấm lại khiếu nại phải lớn hơn ngày kết thúc khiếu nại"];
+            }
+        }
+
+        return $arrMessage;
     }
 }
