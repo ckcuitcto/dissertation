@@ -330,6 +330,4 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/destroy/{id}', ['as' => 'discipline-reason-destroy', 'uses' => 'Discipline\DisciplineReasonController@destroy']);
         Route::post('/get-discipline-reasons', ['as' => 'ajax-get-discipline-reasons', 'uses' => 'Discipline\DisciplineReasonController@ajaxGetDisciplineReason']);
     });
-
-
 });
