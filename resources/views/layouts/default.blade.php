@@ -21,29 +21,31 @@
         <ul class="app-nav">
             <!--Notification Menu-->
             @if($authCheck)
-            <li class="dropdown">
-                <a class="app-nav__item" href="#" data-toggle="dropdown"
-                                    aria-label="Show notifications" style="text-decoration: none;">Thông báo &nbsp;<i class="fa fa-bell-o fa-lg"></i><span class="message-notification">{{ count($notifications) }}</span></a>
-                <ul class="app-notification dropdown-menu dropdown-menu-right">
-                    <li class="app-notification__title">Bạn có {{ count($notifications) }} thông báo mới</li>
-                    <div class="app-notification__content">
-                        @foreach($notifications as $key => $value)
-                        <li>
-                            <a class="app-notification__item" href="{{ route('notifications','id='.$value->id) }}"><span
-                                        class="app-notification__icon"><span class="fa-stack fa-lg"><i
-                                                class="fa fa-circle fa-stack-2x text-primary"></i><i
-                                                class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
-                                <div>
-                                    <p class="app-notification__message">{!!  $value->title  !!}</p>
-                                    <p class="app-notification__meta">{{ date('H:i d/m/y',strtotime($value->created_at)) }}</p>
-                                </div>
-                            </a>
-                        </li>
-                        @endforeach
-                    </div>
-                    <li class="app-notification__footer"><a href="{{ route('notifications') }}">Xem tất cả thông báo.</a></li>
-                </ul>
-            </li>
+                @if($userLogin->Role->weight != ROLE_ADMIN)
+                    <li class="dropdown">
+                        <a class="app-nav__item" href="#" data-toggle="dropdown"
+                                            aria-label="Show notifications" style="text-decoration: none;">Thông báo &nbsp;<i class="fa fa-bell-o fa-lg"></i><span class="message-notification">{{ count($notifications) }}</span></a>
+                        <ul class="app-notification dropdown-menu dropdown-menu-right">
+                            <li class="app-notification__title">Bạn có {{ count($notifications) }} thông báo mới</li>
+                            <div class="app-notification__content">
+                                @foreach($notifications as $key => $value)
+                                <li>
+                                    <a class="app-notification__item" href="{{ route('notifications','id='.$value->id) }}"><span
+                                                class="app-notification__icon"><span class="fa-stack fa-lg"><i
+                                                        class="fa fa-circle fa-stack-2x text-primary"></i><i
+                                                        class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                                        <div>
+                                            <p class="app-notification__message">{!!  $value->title  !!}</p>
+                                            <p class="app-notification__meta">{{ date('H:i d/m/y',strtotime($value->created_at)) }}</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                @endforeach
+                            </div>
+                            <li class="app-notification__footer"><a href="{{ route('notifications') }}">Xem tất cả thông báo.</a></li>
+                        </ul>
+                    </li>
+                @endif
             @endif
             {{--<li class="nav-item active">--}}
 
@@ -162,31 +164,45 @@
                             </li>
                         @endif
                     @endcan
-                    <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                        class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
-                        class="treeview-indicator fa fa-angle-right"></i></a>
-                        @can('comment-add')
-                            @if ($userLogin->Role->weight < ROLE_COVANHOCTAP)
-                            <ul class="treeview-menu">
-                                <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
-                                                class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
-                            </ul>
-                            @endif
-                        @endcan
-                        <ul class="treeview-menu">
-                            <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
-                                            class="icon fa fa-circle-o"></i>
-                                    Danh sách ý kiến</a></li>
-                        </ul>
-                    </li>
-                    @can('can-change-news')
-                        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                                        class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label"> Tin tức</span><i
-                                        class="treeview-indicator fa fa-angle-right"></i></a>
-                            <ul class="treeview-menu">
-                                <li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Tin tức, sự kiện</a></li>
-                            </ul>
+                    @can('comment-add')
+                        @if ($userLogin->Role->weight < ROLE_COVANHOCTAP)
+                            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                                class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
+                                class="treeview-indicator fa fa-angle-right"></i></a>
+
+                                    <ul class="treeview-menu">
+                                        <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
+                                                        class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
+                                    </ul>
+
+                                <ul class="treeview-menu">
+                                    <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
+                                                    class="icon fa fa-circle-o"></i>
+                                            Danh sách ý kiến</a></li>
+                                </ul>
+                            </li>
+                        @endif
+                    @else
+                        <li>
+                            <a class="treeview-item" href="{{ route('comment-list') }}">
+                                <i class="icon fa fa-comment"></i>Danh sách ý kiến
+                            </a>
                         </li>
+                    @endcan
+                    @can('can-change-news')
+                        <li>
+                            <a class="app-menu__item" href="{{ route('proof-list') }}">
+                                <i class="app-menu__icon fa fa-newspaper-o" aria-hidden="true"></i><span
+                                        class="app-menu__label">Quản lí tin tức</span>
+                            </a>
+                        </li>
+                        {{--<li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i--}}
+                                        {{--class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label"> Tin tức</span><i--}}
+                                        {{--class="treeview-indicator fa fa-angle-right"></i></a>--}}
+                            {{--<ul class="treeview-menu">--}}
+                                {{--<li><a class="treeview-item" href="{{ route('news') }}"><i class="icon fa fa-circle-o"></i> Tin tức, sự kiện</a></li>--}}
+                            {{--</ul>--}}
+                        {{--</li>--}}
                     @endcan
 
                     @can('semester-change')
@@ -195,24 +211,33 @@
                                     class="app-menu__label">Quản lí học kì </span>
                         </a>
                     </li>
-                @endcan
+                    @endcan
 
-                    @can(array('faculty-list','student-list'))
-                    <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
-                                    class="app-menu__icon fa fa-cogs"></i><span
-                                    class="app-menu__label">Quản lí Khoa - Sinh viên</span><i
-                                    class="treeview-indicator fa fa-angle-right"></i></a>
-                        <ul class="treeview-menu">
-                            @can('faculty-list')
-                            <li><a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>
-                            </li>
-                            @endcan
-                            @can('student-list')
-                            <li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> DS Sinh viên đánh giá</a></li>
-                            @endcan
-                        </ul>
+                    @can('faculty-list')
+                    <li><a class="app-menu__item" href="{{ route('faculty') }}">
+                            <i class="app-menu__icon fa fa-th-list" aria-hidden="true"></i><span
+                                    class="app-menu__label">Quản lí Khoa, Lớp, Sinh viên </span>
+                        </a>
                     </li>
-                    @endif
+                    @endcan
+
+                    {{--@can(array('faculty-list'))--}}
+                    {{--<li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i--}}
+                                    {{--class="app-menu__icon fa fa-cogs"></i><span--}}
+                                    {{--class="app-menu__label">Quản lí Khoa - Sinh viên</span><i--}}
+                                    {{--class="treeview-ind icator fa fa-angle-right"></i></a>--}}
+                        {{--<ul class="treeview-menu">--}}
+                            {{--@can('faculty-list')--}}
+                            {{--<li>--}}
+                                {{--<a class="treeview-item" href="{{ route('faculty') }}"><i class="icon fa fa-circle-o"></i> Khoa</a>--}}
+                            {{--</li>--}}
+                            {{--@endcan--}}
+                            {{--@can('student-list')--}}
+                                {{--<li><a class="treeview-item" href="{{ route('student') }}"><i class="icon fa fa-circle-o"></i> DS Sinh viên đánh giá</a></li>--}}
+                            {{--@endcan--}}
+                        {{--</ul>--}}
+                    {{--</li>--}}
+                    {{--@endif--}}
 
                     @can('view-list-file-import')
                         <li>
@@ -225,7 +250,7 @@
 
                         @can('export-file')
                             <li><a class="app-menu__item" href="{{ route('export-file-list') }}">
-                                    <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                                    <i class="app-menu__icon fa fa-download" aria-hidden="true"></i><span
                                             class="app-menu__label">Xuất File đánh giá</span>
                                 </a>
                             </li>
@@ -233,7 +258,7 @@
 
                     @can('backup')
                         <li><a class="app-menu__item" href="{{ route('export-backup') }}">
-                                <i class="app-menu__icon fa fa-cogs" aria-hidden="true"></i><span
+                                <i class="app-menu__icon fa fa-save" aria-hidden="true"></i><span
                                         class="app-menu__label">Backup</span>
                             </a>
                         </li>

@@ -570,10 +570,15 @@
 
         //nếu quá hạn thì k thể chấm điểm
         // nhưng nếu đang trong thời gian phúc khảo thì vẫn cho chấm
+        // nếu chưa đến hoặc đã quá thời gian chấm thì k cho chấm nữa
+        //
         @if( strtotime($evaluationForm->Semester->date_start_to_mark) > strtotime(date('Y-m-d')) OR strtotime($evaluationForm->Semester->date_end_to_mark) < strtotime(date('Y-m-d')))
-            @if(!(\App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark)))
             $('input').attr('disabled', true);
-            $('button').attr('disabled', true);
+            $('button').attr('disabled', true)
+        // nhưng nếu đang trong thời gian chấm phúc khảo thì vẫn cho sửa
+            @if((\App\Http\Controllers\Controller::checkInTime($evaluationForm->Semester->date_start_to_re_mark,$evaluationForm->Semester->date_end_to_re_mark)))// trong time phuc khao
+                $('input').attr('disabled', false);
+                $('button').attr('disabled', false);
             @endif
         @endif
 

@@ -117,71 +117,121 @@ class ExportController extends Controller
                 })->noHeading()->get();
 
                 $arrScoreByFile = array(); // mảng này lưu tất cả điểm của sinh viên trong 1 lớp
-                for ($i = 10; $i < count($dataFileExcel); $i++) {
-                    if (!empty($dataFileExcel[$i][0]) AND !empty($dataFileExcel[$i][1])) {
-                        $arrScore = array();
-                        $userId = $dataFileExcel[$i][1];
-                        // lấy ra điểm của form
-                        // với kết quả có thời gian chấm trễ nhất. chỉ lấy level1 = tiêu chí
-                        //litmit(4) vì có 5 cái level. nhưng bỏ qua cái đầu tiên nên chỉ lấy 4
-                        $resultLevel1 = DB::table('evaluation_criterias')
-                            ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
-                            ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
-                            ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
-                            ->where([
-                                ['evaluation_criterias.level', 1],
-                                ['students.user_id', $userId],
-                                ['evaluation_forms.semester_id', $semesterId],
-                                ['evaluation_criterias.id', '<>', YTHUCTHAMGIAHOCTAP_ID]
-                            ])
-                            ->select(
-                                'evaluation_results.marker_score',
-                                'evaluation_results.marker_id',
-                                'evaluation_forms.total'
-                            )
-                            ->orderBy('evaluation_results.created_at', 'DESC')
-                            ->orderBy('evaluation_criterias.id', 'ASC')
-                            ->limit(4)->get()->toArray();
-                        if (!empty($resultLevel1)) {
-                            $markerId = $resultLevel1[0]->marker_id;
-                            $totalScore = $resultLevel1[0]->total;
-                            //id người chấm thì giống nhau. mên lấy id của ngươi ở lv1 đem xuống lv2 luôn
-                            $resultLevel2 = DB::table('evaluation_criterias')
+
+                // = no: nghĩa là export theo điểm sv chấm
+                // yes là điểm đã sửa trong bảg điểm, có kỉ luật
+                if($request->withDiscipline == 'no') {
+                    for ($i = 10; $i < count($dataFileExcel); $i++) {
+                        if (!empty($dataFileExcel[$i][0]) AND !empty($dataFileExcel[$i][1])) {
+                            $arrScore = array();
+                            $userId = $dataFileExcel[$i][1];
+                            // lấy ra điểm của form
+                            // với kết quả có thời gian chấm trễ nhất. chỉ lấy level1 = tiêu chí
+                            //litmit(4) vì có 5 cái level. nhưng bỏ qua cái đầu tiên nên chỉ lấy 4
+                            $resultLevel1 = DB::table('evaluation_criterias')
                                 ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
                                 ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
                                 ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
                                 ->where([
-                                    ['evaluation_results.marker_id', $markerId],
-                                    ['evaluation_forms.semester_id', $semesterId],
+                                    ['evaluation_criterias.level', 1],
                                     ['students.user_id', $userId],
+                                    ['evaluation_forms.semester_id', $semesterId],
+                                    ['evaluation_criterias.id', '<>', YTHUCTHAMGIAHOCTAP_ID]
                                 ])
-                                ->whereIn('evaluation_criterias.parent_id', EVALUATION_CRITERIAS_CHILD_PARENT_1)
                                 ->select(
-                                    DB::raw('SUM(evaluation_results.marker_score) as marker_score')
+                                    'evaluation_results.marker_score',
+                                    'evaluation_results.marker_id',
+                                    'evaluation_forms.total'
                                 )
-                                ->orderBy('evaluation_criterias.parent_id', 'ASC')
-                                ->groupBy('evaluation_criterias.parent_id')
-                                ->get()->toArray();
+                                ->orderBy('evaluation_results.created_at', 'DESC')
+                                ->orderBy('evaluation_criterias.id', 'ASC')
+                                ->limit(4)->get()->toArray();
+                            if (!empty($resultLevel1)) {
+                                $markerId = $resultLevel1[0]->marker_id;
+                                $totalScore = $resultLevel1[0]->total;
+                                //id người chấm thì giống nhau. mên lấy id của ngươi ở lv1 đem xuống lv2 luôn
+                                $resultLevel2 = DB::table('evaluation_criterias')
+                                    ->leftJoin('evaluation_results', 'evaluation_results.evaluation_criteria_id', '=', 'evaluation_criterias.id')
+                                    ->leftJoin('evaluation_forms', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
+                                    ->leftJoin('students', 'students.id', '=', 'evaluation_forms.student_id')
+                                    ->where([
+                                        ['evaluation_results.marker_id', $markerId],
+                                        ['evaluation_forms.semester_id', $semesterId],
+                                        ['students.user_id', $userId],
+                                    ])
+                                    ->whereIn('evaluation_criterias.parent_id', EVALUATION_CRITERIAS_CHILD_PARENT_1)
+                                    ->select(
+                                        DB::raw('SUM(evaluation_results.marker_score) as marker_score')
+                                    )
+                                    ->orderBy('evaluation_criterias.parent_id', 'ASC')
+                                    ->groupBy('evaluation_criterias.parent_id')
+                                    ->get()->toArray();
 
-                            $arrScore = array_merge($resultLevel2, $resultLevel1);
-                            $arrScoreTmp = array();
-                            foreach ($arrScore as $value) {
-                                $arrScoreTmp[] = $value->marker_score;
+                                $arrScore = array_merge($resultLevel2, $resultLevel1);
+                                $arrScoreTmp = array();
+                                foreach ($arrScore as $value) {
+                                    $arrScoreTmp[] = $value->marker_score;
+                                }
+                                $arrScoreTmp[] = $totalScore;
+                                $arrScoreTmp[] = $this->checkRank1($totalScore);
+                                $arrScoreTmp[] = '';
+                                $arrScore = $arrScoreTmp;
                             }
-                            $arrScoreTmp[] = $totalScore;
-                            $arrScoreTmp[] = $this->checkRank1($totalScore);
-                            $arrScoreTmp[] = '';
-                            $arrScore = $arrScoreTmp;
-                        }
 
-                        if (empty($arrScore)) {
-                            $arrScore = array('', '', '', '', '', '', '', 0, $this->checkRank1(0), '*');
+                            if (empty($arrScore)) {
+                                $arrScore = array('', '', '', '', '', '', '', 0, $this->checkRank1(0), '*');
+                            }
+                            $arrScoreByFile[$userId] = $arrScore;
+                            //nếu k có điểm
                         }
-                        $arrScoreByFile[$userId] = $arrScore;
-                        //nếu k có điểm
+                    }
+                }else{
+                    for ($i = 10; $i < count($dataFileExcel); $i++) {
+                        if (!empty($dataFileExcel[$i][0]) AND !empty($dataFileExcel[$i][1])) {
+                            $userId = $dataFileExcel[$i][1];
+                            $students = DB::table('academic_transcripts')
+                                ->leftJoin('classes', 'classes.id', '=', 'academic_transcripts.class_id')
+                                ->leftJoin('students', 'students.user_id', '=', 'academic_transcripts.user_id')
+                                ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+                                ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
+                                ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
+                                ->where('academic_transcripts.user_id', $userId)
+                                ->where('academic_transcripts.semester_id', $semesterId)
+                                ->select(
+                                    'academic_transcripts.score_ia',
+                                    'academic_transcripts.score_ib',
+                                    'academic_transcripts.score_ic',
+                                    'academic_transcripts.score_ii',
+                                    'academic_transcripts.score_iii',
+                                    'academic_transcripts.score_iv',
+                                    'academic_transcripts.score_v',
+                                    DB::raw("
+                                    academic_transcripts.score_i +
+                                    academic_transcripts.score_ii +
+                                    academic_transcripts.score_iii +
+                                    academic_transcripts.score_iv +
+                                    academic_transcripts.score_v
+                                    as totalScore"),
+                                    'academic_transcripts.note'
+                                )->first();
+
+                            $arrScoreTmp = (array)$students;
+                            $arrScoreTmp[] = $this->checkRank1($arrScoreTmp['totalScore']);
+                            $arrScoreTmp['notes'] = $arrScoreTmp['note'];
+                            unset($arrScoreTmp['note']);
+
+                            if($arrScoreTmp['totalScore'] > 100){
+                                $arrScoreTmp['totalScore'] = 100;
+                            }
+
+                            if (!$this->checkIfEmptyScore($arrScoreTmp)) {
+                                $arrScoreTmp = array('', '', '', '', '', '', '', 0, $this->checkRank1(0), '*');
+                            }
+                            $arrScoreByFile[$userId] = $arrScoreTmp;
+                            //nếu k có điểm
+                        }
                     }
                 }
-
                 //mở file và sửa file, sau đó lưu thahf file mới
                 $arrColumns = array('F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O');
                 Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) use ($arrScoreByFile, $arrColumns,$dataFileExcel) {
@@ -189,7 +239,7 @@ class ExportController extends Controller
                     for ($i = 0; $i < count($arrScoreByFile); $i++) {
                         $row = $i + 11;
                         $arrScore = $arrScoreByFile[$sheet->getCell('B' . $row)->getValue()];
-
+                        $arrScore = array_values($arrScore);
                         foreach ($arrColumns as $key => $cl) {
                             $sheet->setCellValue($cl . $row, $arrScore[$key]);
                         }
@@ -210,8 +260,8 @@ class ExportController extends Controller
 
 //        $arrFileName = $this->convertXLSXtoXLS($arrFileName);
         if (!empty($arrFileName)) {
-            $public_dir = dirname(dirname(public_path()));
-//            $public_dir = public_path();
+//            $public_dir = dirname(dirname(public_path()));
+            $public_dir = public_path();
             $zip = new ZipArchive();
             $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
             foreach ($arrFileName as $file) {
@@ -1130,8 +1180,6 @@ class ExportController extends Controller
         }
     }
 
-
-
     // EXPORT DANH SÁCH USER VS ĐIỂM CHẤM CÓ KỈ LUẬT // CHỈ CÓ CÁC MỤC LỚN LEVEL 1
     public function exportAcademicTranscriptLevel1(Request $request)
     {
@@ -1328,5 +1376,14 @@ class ExportController extends Controller
             $arrId[] = "[$val->id]";
         }
         return implode(',',$arrId);
+    }
+
+    private function checkIfEmptyScore($arrScore){
+        foreach($arrScore as $val){
+            if($val != 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

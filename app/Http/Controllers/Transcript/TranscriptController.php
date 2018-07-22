@@ -352,7 +352,7 @@ class TranscriptController extends Controller
         return $dataTables->make(true);
     }
 
-    private function getAcademicTranscriptByRoleUserLogin(User $user)
+    public function getAcademicTranscriptByRoleUserLogin(User $user)
     {
         $arrUserId = DB::table('users')
             ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
