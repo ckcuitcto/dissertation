@@ -216,7 +216,7 @@
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10
@@ -280,8 +280,8 @@
                         }
                     } else if (result.status === true) {
                         $.notify({
-                            title: " Upload Thành công ",
-                            message: ":D",
+                            title: "Cập nhật danh sách kỷ luật thành công! Bảng điểm cuối cùng của sinh viên đã được cập nhật",
+                            message: "Có thể xem lại ở bảng điểm",
                             icon: 'fa fa-check'
                         }, {
                             type: "success"
@@ -317,7 +317,7 @@
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10

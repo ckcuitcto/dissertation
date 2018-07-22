@@ -34,14 +34,10 @@
                             <ul class="nav nav-tabs">
                                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#user">Tài
                                         khoản</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#eachSemester">Danh
-                                        sách sinh viên đánh giá mỗi học kì</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabFaculty">Danh
-                                        sách khoa</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabClasses">Danh
-                                        sách sinh lớp</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabSemester">Danh
-                                        sách sinh học kì</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#eachSemester">Danh sách sinh viên đánh giá mỗi học kì</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabFaculty">Danh sách khoa</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabClasses">Danh sách lớp</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabSemester">Danh sách học kì</a></li>
                                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabAcademicTranscript"> Danh sách điểm của sinh viên</a></li>
                                 <li class="leds-test">
                                     <a href="#" data-toggle="tooltip" class="btn btn-info btn-show-notes" title="
@@ -56,7 +52,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                                         <form class="row" role="form" id="search-backup-user-form" method="post">
                                             {!! csrf_field() !!}
                                             <div class="form-group col-md-2">
-                                                <label class="control-label"></label>
+                                                <label for="search_role_id" class="control-label"></label>
                                                 <select class="form-control search_role_id" name="search_role_id"
                                                         id="search_role_id">
                                                     @foreach($rolesForSelectSearch as $value)
@@ -353,7 +349,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10,
@@ -414,7 +410,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10,
@@ -452,7 +448,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10
@@ -487,7 +483,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10
@@ -529,7 +525,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10
@@ -587,7 +583,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10,

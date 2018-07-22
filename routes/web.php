@@ -41,18 +41,22 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::group(['prefix' => 'lop','middleware' => 'can:manage-class'], function () {
-        Route::get('/{id}', ['as' => 'class-detail', 'uses' => 'Department\ClassController@show']);
+//    Route::group(['prefix' => 'lop','middleware' => 'can:manage-class'], function () {
+    Route::group(['prefix' => 'lop'], function () {
+        Route::get('/{id}', ['as' => 'class-detail', 'uses' => 'Department\ClassController@show'])->middleware('can:manage-class');
 
-        Route::post('/store', ['as' => 'class-store', 'uses' => 'Department\ClassController@store']);
+        Route::post('/store', ['as' => 'class-store', 'uses' => 'Department\ClassController@store'])->middleware('can:manage-class');
 
-        Route::get('/destroy/{id}', ['as' => 'class-destroy', 'uses' => 'Department\ClassController@destroy']);
+        Route::get('/destroy/{id}', ['as' => 'class-destroy', 'uses' => 'Department\ClassController@destroy'])->middleware('can:manage-class');
 
-        Route::get('/edit/{id}', ['as' => 'class-edit', 'uses' => 'Department\ClassController@edit']);
-        Route::post('/update/{id}', ['as' => 'class-update', 'uses' => 'Department\ClassController@update']);
+        Route::get('/edit/{id}', ['as' => 'class-edit', 'uses' => 'Department\ClassController@edit'])->middleware('can:manage-class');
+        Route::post('/update/{id}', ['as' => 'class-update', 'uses' => 'Department\ClassController@update'])->middleware('can:manage-class');
 
         Route::post('/get-list-by-faculty', ['as' => 'class-get-list-by-faculty', 'uses' => 'Department\ClassController@getListClassByFaculty']);
         Route::post('/get-list-by-faculty-none', ['as' => 'class-get-list-by-faculty-none', 'uses' => 'Department\ClassController@getListClassByFacultyAddAll']);
+
+        // lấy ra danh sách lớp theo học kì theo người đang dăgd nhập
+//        Route::post('/get-list-by-semester-and-userlogin-none', ['as' => 'class-get-list-by-semester-and-userlogin-none', 'uses' => 'Department\ClassController@getListClassBySemesterAndUser']);
 
         Route::post('/get-students-by-class', ['as' => 'ajax-get-students-by-class', 'uses' => 'Department\ClassController@ajaxGetStudentByClass']);
 
@@ -60,7 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'sinh-vien'], function () {
-        Route::get('/', ['as' => 'student', 'uses' => 'Student\StudentController@index']);
+//        Route::get('/', ['as' => 'student', 'uses' => 'Student\StudentController@index']);
 
         Route::get('/{id}', ['as' => 'student-detail', 'uses' => 'Student\StudentController@show']);
 
@@ -176,13 +180,13 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/store', ['as' => 'remaking-store', 'uses' => 'Evaluation\ReMakingController@store']);
 
-        Route::get('/reply/{id}', ['as' => 'remaking-reply', 'uses' => 'Evaluation\ReMakingController@reply']);
+        Route::get('/reply/{id}', ['as' => 'remaking-reply', 'uses' => 'Evaluation\ReMakingController@reply'])->middleware('can:manage-remaking');
 
-        Route::get('/edit/{id}', ['as' => 'remaking-edit', 'uses' => 'Evaluation\ReMakingController@edit']);
+        Route::get('/edit/{id}', ['as' => 'remaking-edit', 'uses' => 'Evaluation\ReMakingController@edit'])->middleware('can:manage-remaking');
 
-        Route::post('/update/{id}', ['as' => 'remaking-update', 'uses' => 'Evaluation\ReMakingController@update']);
+        Route::post('/update/{id}', ['as' => 'remaking-update', 'uses' => 'Evaluation\ReMakingController@update'])->middleware('can:manage-remaking');
 
-        Route::post('/get-remakings', ['as' => 'ajax-remakings', 'uses' => 'Evaluation\ReMakingController@ajaxGetRemakings']);
+        Route::post('/get-remakings', ['as' => 'ajax-remakings', 'uses' => 'Evaluation\ReMakingController@ajaxGetRemakings'])->middleware('can:manage-remaking');
 
     });
 
@@ -198,7 +202,8 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'minh-chung'], function () {
-        Route::get('/', ['as' => 'proof', 'uses' => 'Proof\ProofController@index']);
+        Route::get('/', ['as' => 'proof', 'uses' => 'Proof\ProofController@index'])->middleware('can:proofs-list');
+        Route::get('/danh-sach', ['as' => 'proof-list', 'uses' => 'Proof\ProofController@list'])->middleware('can:proofs-list-student');
 
         Route::get('/destroy/{id}', ['as' => 'proof-destroy', 'uses' => 'Proof\ProofController@destroy'])->middleware('can:proofs-delete');
         Route::post('/update-valid-proof-file/{id}', ['as' => 'update-valid-proof-file', 'uses' => 'Proof\ProofController@updateValidProofFile']);
@@ -209,7 +214,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/store', ['as' => 'proof-store', 'uses' => 'Proof\ProofController@store']);
 
-        Route::post('/get-proofs', ['as' => 'ajax-get-proofs', 'uses' => 'Proof\ProofController@ajaxGetProofs']);
+        Route::post('/get-proofs', ['as' => 'ajax-get-proofs', 'uses' => 'Proof\ProofController@ajaxGetProofs'])->middleware('can:proofs-list');
+        Route::post('/get-proofs-of-student', ['as' => 'ajax-get-proofs-of-student', 'uses' => 'Proof\ProofController@ajaxGetProofsOfStudent'])->middleware('can:proofs-list-student');
     });
 
     Route::post('/get-files', ['as' => 'ajax-get-files', 'uses' => 'Import\ImportController@ajaxGetFiles']);
@@ -279,12 +285,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::group(['prefix' => 'files', 'middleware' => 'can:manage-user'], function () {
+    Route::group(['prefix' => 'files', 'middleware' => 'can:view-list-file-import'], function () {
         Route::get('/', ['as' => 'files', 'uses' => 'Import\ImportController@index']);
     });
 
     Route::group(['prefix' => 'xuat', 'middleware' => 'can:export-file'], function () {
         Route::post('/', ['as' => 'export-file', 'uses' => 'Export\ExportController@exportVer2']);
+//        Route::post('/export-file-with-discipline', ['as' => 'export-file-with-discipline', 'uses' => 'Export\ExportController@exportWithDiscipline']);
 
         Route::get('/danh-sach', ['as' => 'export-file-list', 'uses' => 'Export\ExportController@index']);
 

@@ -29,13 +29,13 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $users = User::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','users.users_id')->select('users.*')->orderBy('student_list_each_semesters.id')->paginate(25);
-        $currentSemester = $this->getCurrentSemester();
-        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
-        return view('student.index', compact('users','currentSemester','semesters'));
-    }
+//    public function index()
+//    {
+//        $users = User::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','users.users_id')->select('users.*')->orderBy('student_list_each_semesters.id')->paginate(25);
+//        $currentSemester = $this->getCurrentSemester();
+//        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+//        return view('student.index', compact('users','currentSemester','semesters'));
+//    }
 
     /**
      * Show the form for creating a new resource.

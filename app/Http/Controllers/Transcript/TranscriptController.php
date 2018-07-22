@@ -215,14 +215,17 @@ class TranscriptController extends Controller
         $students = $this->getStudentByRoleUserLogin($user);
         $dataTables = DataTables::of($students)
             ->addColumn('action', function ($student) use ($user) {
-                if($student->totalScore != 0){
+//                if($student->totalScore != 0){
+                // nếu làm v. khi chấm điểm r. cố vấn hcấm lại = 0 điểm thì sẽ bị lỗi( k hiện điểm chấm)
+                //nên phải set lại = status
+                if($student->evaluationFormStatus != 0){
                     $linkView = '<a title="Xem phiếu điểm" target="_blank" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
                 }else{
                     $linkView = '<a title="Chưa chấm" target="_blank" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
                 }
 
                 //nếu ng đang đăng nhập đã chấm thì hiện ra điểm
-                if(!empty($student->totalScore)){
+                if(!empty($student->evaluationFormStatus)){
                     $currentTotal = '<button title="Điểm hiện tại" class="btn btn-outline-success"><i class="fa fa-check"></i>' . $student->totalScore . ' đ</button>';
                     $linkView = $linkView.' '.$currentTotal;
                 }
@@ -236,11 +239,15 @@ class TranscriptController extends Controller
                         ['evaluation_results.marker_id', $user->users_id],
                         ['evaluation_criterias.level', 1],
                     ])
-                    ->select(DB::raw('SUM(evaluation_results.marker_score) as score'))->first();
-                if ($result->score) {
-                    $score = $result->score;
+                    ->select(
+                        DB::raw('SUM(evaluation_results.marker_score) as score'),
+                        'evaluation_forms.status'
+                    )->first();
+                if ($result->score OR $result->status != 0) {
+                    $score = $result->score OR 0;
                     // nếu điểm sinh viên = 0 => chưa chấm => hiện màu đỏ
                         $iconMarked = '<button title="Điểm bạn chấm" class="btn btn-success"><i class="fa fa-check"></i>' . $score . ' đ</button>';
+//                    $linkView = $linkView . ' ' . $result->score;
                     $linkView = $linkView . ' ' . $iconMarked;
                 }
                 return $linkView;
@@ -339,14 +346,13 @@ class TranscriptController extends Controller
                 $semesterValue = $request->get('semester_id');
                 if (!empty($semester) AND $semesterValue != 0) {
                     $student->where('academic_transcripts.semester_id', '=', $semesterValue);
-                    $student->where('academic_transcripts.semester_id', '=', $semesterValue);
                 }
             });
 
         return $dataTables->make(true);
     }
 
-    private function getAcademicTranscriptByRoleUserLogin(User $user)
+    public function getAcademicTranscriptByRoleUserLogin(User $user)
     {
         $arrUserId = DB::table('users')
             ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
@@ -433,8 +439,8 @@ class TranscriptController extends Controller
         $arrValidatorRoleMessage['add_student_id.required'] = "Bắt buộc chọn sinh viên";
         $arrValidatorRoleMessage['add_student_id.exists'] = "Sinh viên không tồn tại";
 
-        $arrValidatorRoleMessage['add_student_id.required'] = "Bắt buộc chọn học kì";
-        $arrValidatorRoleMessage['add_student_id.exists'] = "Học kì không tồn tại";
+        $arrValidatorRoleMessage['add_semester_id.required'] = "Bắt buộc chọn học kì";
+        $arrValidatorRoleMessage['add_semester_id.exists'] = "Học kì không tồn tại";
 
         $validator = Validator::make($request->all(), $arrValidatorRole, $arrValidatorRoleMessage);
 
