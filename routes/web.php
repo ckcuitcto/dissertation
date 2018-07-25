@@ -79,7 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/get-users', ['as' => 'ajax-student-get-users', 'uses' => 'Student\StudentController@ajaxGetUsers']);
 
         Route::post('/import', ['as' => 'student-import', 'uses' => 'Student\StudentController@import']);
-        Route::post('/import-student-list-each-semester', ['as' => 'import-student-list-each-semester', 'uses' => 'Student\StudentController@importStudentListEachSemester']);
+        Route::post('/import-student-list-each-semester', ['as' => 'import-student-list-each-semester', 'uses' => 'Student\StudentController@importStudentListEachSemester'])->middleware('can:import-student-list-each-semester');
     });
 
     Route::group(['prefix' => 'vai-tro','middleware' => 'can:manager-role'], function () {
@@ -338,5 +338,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/get-discipline-reasons', ['as' => 'ajax-get-discipline-reasons', 'uses' => 'Discipline\DisciplineReasonController@ajaxGetDisciplineReason']);
     });
 
+    Route::get('/backup-all', ['as' => 'backup-important', 'uses' => 'Semester\SemesterController@backupImportant'])->middleware('can:backup-important');
+    Route::get('/backup-all-handle/{id}', ['as' => 'backup-important-handle', 'uses' => 'Semester\SemesterController@backupImportantHandle'])->middleware('can:backup-important');
+    Route::post('/get-semester-for-backup', ['as' => 'ajax-get-semester-for-backup-important', 'uses' => 'Semester\SemesterController@ajaxGetSemestersForBackupImportant'])->middleware('can:backup-important');
 
 });

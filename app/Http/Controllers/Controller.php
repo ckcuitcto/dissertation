@@ -98,6 +98,7 @@ class Controller extends BaseController
                         'users.users_id',
                         'users.name as userName',
                         'roles.display_name',
+                        'roles.weight as roleWeight',
                         'classes.name as className',
                         'faculties.name as facultyName',
                         'students.academic_year_from',
@@ -370,6 +371,21 @@ class Controller extends BaseController
             return "Hoàn thành";
         }
 
+    }
+
+    public function getStatusOfEvaluationForm($status)
+    {
+        if($status != -1){
+            $userLogin = Auth::user();
+            $binary = (string)decbin($status);
+            $arrBinary = str_split($binary);
+            if(!empty($arrBinary[$userLogin->Role->weight - 1]) AND $arrBinary[$userLogin->Role->weight - 1] == 1){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return true;
     }
 
     public function getStatusEvaluationForm($status)

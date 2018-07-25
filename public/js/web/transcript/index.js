@@ -39,9 +39,9 @@ $('body').on('click', "button#createFile", function (e) {
 
 
 $('#importModal').on('hidden.bs.modal', function (e) {
-    $("input[type=text],input[type=number], select").val('');
-    $('.text-red').html('');
-    $('.form-row').find('span.messageErrors').remove();
+    $('#importModal').find("input[type=text],input[type=number], select").val('');
+    $('#importModal').find('.text-red').html('');
+    $('#importModal').find('.form-row').find('span.messageErrors').remove();
 });
 
 //import

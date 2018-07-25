@@ -108,10 +108,12 @@ class ExportController extends Controller
             foreach ($classes as $key => $class) {
                 $className2 = $class->name;
                 $className1 = str_replace('-', '_', $class->name);
+                $className3 = str_replace('_', '-', $class->name);
 
                 $fileImport = FileImport::where('semester_id', $semesterId)
                     ->where('file_name', 'like', "%$className2%")
                     ->orWhere('file_name', 'like', "%$className1%")
+                    ->orWhere('file_name', 'like', "%$className3%")
                     ->first();
                 $dataFileExcel = Excel::load(STUDENT_LIST_EACH_SEMESTER_PATH . $fileImport->file_path, function ($reader) {
                 })->noHeading()->get();
@@ -185,7 +187,7 @@ class ExportController extends Controller
                             //nếu k có điểm
                         }
                     }
-                }else{
+                } else {
                     for ($i = 10; $i < count($dataFileExcel); $i++) {
                         if (!empty($dataFileExcel[$i][0]) AND !empty($dataFileExcel[$i][1])) {
                             $userId = $dataFileExcel[$i][1];

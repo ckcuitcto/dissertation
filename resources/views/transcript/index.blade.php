@@ -73,10 +73,14 @@
                             <button class="btn btn-outline-success" id="createFile">
                                 <i class="fa fa-download" aria-hidden="true"></i>Lập bảng tổng hợp đánh giá chưa áp dụng danh sách kỷ luật
                             </button>
+
+                            {{-- quyền cho phép import. chỉ CTSV mới đc impỏt ds này--}}
+                            @can('import-student-list-each-semester')
                             <button data-toggle="modal" data-target="#importModal" class="btn btn-outline-primary"
                                              type="button"><i class="fa fa-pencil-square-o"
                                                               aria-hidden="true"></i> Nhập danh sách sinh viên mới đánh giá mới
                             </button>
+                            @endcan
 
                         </div>
                         <div class="col-md-2">
@@ -99,7 +103,8 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
             <input type="hidden" name="semesterChoose" id="semesterChoose" value="{{$currentSemester->id}}">
             <input type="hidden" name="facultyChoose" id="facultyChoose">
         </form>
-        <div class="modal fade" id="importModal" role="dialog">
+        @can('import-student-list-each-semester')
+            <div class="modal fade" id="importModal" role="dialog">
             <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -140,6 +145,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 </div>
             </div>
         </div>
+        @endcan
     </main>
 
 @endsection

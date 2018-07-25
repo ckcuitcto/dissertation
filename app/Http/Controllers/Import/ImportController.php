@@ -20,8 +20,7 @@ use Illuminate\Support\Facades\File;
 class ImportController extends Controller
 {
     public function index(){
-        $imports = FileImport::all();
-        return view('import.index',compact('imports'));
+        return view('import.index');
     }
 
     public function discipline(){
@@ -338,20 +337,20 @@ class ImportController extends Controller
                 if(file_exists(STUDENT_PATH_STORE.$proof->file_path)) {
                     $link = asset(STUDENT_PATH_STORE.$proof->file_path);
                     $linkViewFile = "<a href='$link'> $proof->file_name </a>";
+                   return $linkDownload = "<a title='Tải file' href='$link' target='_blank' class='btn btn-primary'>
+                   <i class='fa fa-download' aria-hidden='true'></i>$linkViewFile</a>";
                 }
                 elseif(file_exists(STUDENT_LIST_EACH_SEMESTER_PATH.$proof->file_path)) {
                     $link = asset(STUDENT_LIST_EACH_SEMESTER_PATH.$proof->file_path);
                     $linkViewFile = "<a href='$link'> $proof->file_name </a>";
+                    return  $linkDownload = "<a title='Tải file' href='$link' target='_blank' class='btn btn-primary'>
+                   <i class='fa fa-download' aria-hidden='true'></i>$linkViewFile</a>";
                 }
                 else {
-                    $link = '';
+                    $link = '#';
                     $linkViewFile = $proof->file_name;
+                    return "$linkViewFile";
                 }
-                $linkDownload = "<a title='Tải file' href='$link' target='_blank' class='btn btn-primary'>
-                   <i class='fa fa-eye' aria-hidden='true'></i>$linkViewFile</a>";
-
-                return "$linkDownload";
-
             })
             ->make(true);
     }

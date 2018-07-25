@@ -139,6 +139,14 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'view-list-file-import',
                 'display_name' => 'Xem danh sách file đã nhập',
                 'description' => 'Xem danh sách file đã nhập'
+            ],[
+                'name' => 'proofs-list-student',
+                'display_name' => 'Quản lí minh chứng SV',
+                'description' => 'Để Cố vấn, khoa, phòng CTSV có thể xem lại minh chứng của sinh viên và sửa trạng thái cho nhanh, k cần vào form'
+            ],[
+                'name' => 'import-student-list-each-semester',
+                'display_name' => 'Nhập danh sách sinh viên đánh giá mỗi học kỳ',
+                'description' => 'Quyền cho phòng CTSV để nhập ds sinh viên đánh giá mỗi học kì'
             ],
         ]);
     }
