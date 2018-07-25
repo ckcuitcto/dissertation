@@ -218,37 +218,51 @@ class TranscriptController extends Controller
 //                if($student->totalScore != 0){
                 // nếu làm v. khi chấm điểm r. cố vấn hcấm lại = 0 điểm thì sẽ bị lỗi( k hiện điểm chấm)
                 //nên phải set lại = status
-                if($student->evaluationFormStatus != 0){
+
+                if($student->roleWeight == ROLE_SINHVIEN){
+                    $statusMark = 0;
+                }elseif($student->roleWeight == ROLE_BANCANSULOP){
+                    $statusMark = 1;
+                }
+
+                if($student->evaluationFormStatus != $statusMark){
                     $linkView = '<a title="Xem phiếu điểm" target="_blank" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>';
                 }else{
                     $linkView = '<a title="Chưa chấm" target="_blank" href="' . route('evaluation-form-show', $student->evaluationFormId) . '" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a>';
                 }
 
                 //nếu ng đang đăng nhập đã chấm thì hiện ra điểm
-                if(!empty($student->evaluationFormStatus)){
+//                if(!empty($student->evaluationFormStatus)){
+                if( $student->evaluationFormStatus != $statusMark ){
                     $currentTotal = '<button title="Điểm hiện tại" class="btn btn-outline-success"><i class="fa fa-check"></i>' . $student->totalScore . ' đ</button>';
                     $linkView = $linkView.' '.$currentTotal;
                 }
 
-                $result = DB::table('evaluation_forms')
+                $scoreByMarker = DB::table('evaluation_forms')
                     ->leftJoin('evaluation_results', 'evaluation_forms.id', '=', 'evaluation_results.evaluation_form_id')
                     ->leftJoin('evaluation_criterias', 'evaluation_criterias.id', '=', 'evaluation_results.evaluation_criteria_id')
                     ->where([
 //                        ['evaluation_forms.semester_id', $student->semesterId],
                         ['evaluation_forms.student_id', $student->studentId],
                         ['evaluation_results.marker_id', $user->users_id],
+                        ['evaluation_forms.semester_id', $student->semesterId],
                         ['evaluation_criterias.level', 1],
                     ])
                     ->select(
                         DB::raw('SUM(evaluation_results.marker_score) as score'),
                         'evaluation_forms.status'
                     )->first();
-                if ($result->score OR $result->status != 0) {
-                    $score = $result->score OR 0;
-                    // nếu điểm sinh viên = 0 => chưa chấm => hiện màu đỏ
-                        $iconMarked = '<button title="Điểm bạn chấm" class="btn btn-success"><i class="fa fa-check"></i>' . $score . ' đ</button>';
-//                    $linkView = $linkView . ' ' . $result->score;
-                    $linkView = $linkView . ' ' . $iconMarked;
+
+                if($user->Role->weight < ROLE_BANCHUNHIEMKHOA){
+                    if($scoreByMarker->status != $statusMark) {
+//                    $status = ($result->status) ? ($result->status) : $statusMark;
+                        if (!empty($scoreByMarker->score)) {
+                            $score = $scoreByMarker->score;
+                            // nếu điểm sinh viên = 0 => chưa chấm => hiện màu đỏ
+                            $iconMarked = '<button title="Điểm bạn chấm" class="btn btn-success"><i class="fa fa-check"></i>'. $score .' đ</button>';
+                            $linkView = $linkView . ' ' . $iconMarked;
+                        }
+                    }
                 }
                 return $linkView;
             })
@@ -262,7 +276,7 @@ class TranscriptController extends Controller
                     $class = $request->has('class_id');
                     $classValue = $request->get('class_id');
                     if (!empty($class) AND $classValue != 0) {
-                        $student->where('students.class_id','=', $classValue);
+                        $student->where('student_list_each_semesters.class_id','=', $classValue);
                     }
                 }
 
@@ -273,7 +287,6 @@ class TranscriptController extends Controller
                     $student->where('evaluation_forms.semester_id', '=', $semesterValue);
                 }
             });
-
 
         return $dataTables->make(true);
     }

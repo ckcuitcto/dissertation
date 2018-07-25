@@ -287,6 +287,14 @@
                 </li>
             @endcan
 
+            @can('backup-important')
+                <li><a class="app-menu__item" href="{{ route('backup-important') }}">
+                        <i class="app-menu__icon fa fa-beer" aria-hidden="true"></i><span
+                                class="app-menu__label">BACKUP</span>
+                    </a>
+                </li>
+            @endcan
+
 
         </ul>
     </aside>
