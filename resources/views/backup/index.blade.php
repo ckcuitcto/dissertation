@@ -5,8 +5,11 @@
 @endsection
 @section('css')
     {{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">--}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('css/datatables/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pagination-backup.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables/jquery.dataTables.min.css') }}">
     {{--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/b-1.2.4/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/cr-1.3.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.css"/>--}}
+
 @endsection
 @section('content')
     <main class="app-content">
@@ -31,19 +34,16 @@
                             <ul class="nav nav-tabs">
                                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#user">Tài
                                         khoản</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#eachSemester">Danh
-                                        sách sinh viên đánh giá mỗi học kì</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabFaculty">Danh
-                                        sách khoa</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabClasses">Danh
-                                        sách sinh lớp</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabSemester">Danh
-                                        sách sinh học kì</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#eachSemester">Danh sách sinh viên đánh giá mỗi học kì</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabFaculty">Danh sách khoa</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabClasses">Danh sách lớp</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabSemester">Danh sách học kì</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabAcademicTranscript"> Danh sách điểm của sinh viên</a></li>
                                 <li class="leds-test">
-                                    <button class="btn btn-info btn-show-notes" title="
+                                    <a href="#" data-toggle="tooltip" class="btn btn-info btn-show-notes" title="
 Lưu ý: Khi xuất file chỉ xuất những giá trị hiện đang hiển thị.
 Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiển thị mỗi trang"><i style="background:#ff0000;color:#ff0000;"
-                                                                          class="led led-sm on blink"></i></button>
+                                                                          class="led led-sm on blink"></i></a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
@@ -52,7 +52,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                                         <form class="row" role="form" id="search-backup-user-form" method="post">
                                             {!! csrf_field() !!}
                                             <div class="form-group col-md-2">
-                                                <label class="control-label"></label>
+                                                <label for="search_role_id" class="control-label"></label>
                                                 <select class="form-control search_role_id" name="search_role_id"
                                                         id="search_role_id">
                                                     @foreach($rolesForSelectSearch as $value)
@@ -144,14 +144,14 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                                             </tr>
                                             </thead>
                                             <tfoot>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
                                             </tfoot>
                                         </table>
                                     </div>
@@ -219,6 +219,62 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                                         </table>
                                     </div>
                                 </div>
+
+                                <div class="tab-pane" id="tabAcademicTranscript">
+                                    <div class="tile-body">
+                                        <form class="row" role="form" id="search-academic-transcript-form" method="post">
+                                            {!! csrf_field() !!}
+                                            <div class="form-group col-md-3">
+                                                <label for="semester_id" class="control-label"></label>
+                                                <select class="form-control semester_id" name="semester_id"
+                                                        id="semester_id">
+                                                    @foreach($semesters as $value)
+                                                        <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="faculty_id" class="control-label"></label>
+                                                <select class="form-control faculty_id" name="faculty_id"
+                                                        id="faculty_id">
+                                                    @foreach($faculties as $value)
+                                                        <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3 align-self-end">
+                                                <button class="btn btn-primary" type="submit"><i
+                                                            class="fa fa-fw fa-lg fa-search"></i>Tìm kiếm
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tile-body">
+                                        <table class="table table-hover table-bordered" id="academicTranscriptBackupTable">
+                                            <thead>
+                                            <tr>
+                                                <th>MSSV</th>
+                                                <th>Họ và tên</th>
+                                                <th>Lớp</th>
+                                                <th>I</th>
+                                                <th>II</th>
+                                                <th>III</th>
+                                                <th>IV</th>
+                                                <th>V</th>
+                                                <th>Tổng điểm</th>
+                                                <th>Xếp loại</th>
+                                                <th>Ghi chú</th>
+                                            </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -232,11 +288,13 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
 @section('sub-javascript')
     {{--<script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>--}}
     {{--    <script src="{{ asset('vendor/datatables/buttons.server-side.js')  }}"></script>--}}
-    <script src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/cr-1.3.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
+    {{--<script src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/cr-1.3.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>--}}
+        <script src="{{ asset('js/datatables.min.js') }}"></script>
     {{--    <script src="{{ asset('js/datatables-export.min.js') }}"></script>--}}
     {{--<script src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-colvis-1.2.4/b-flash-1.0.3/b-html5-1.2.4/cr-1.3.2/datatables.min.js"></script>--}}
 
     <script type="text/javascript">
+
         $('body').on('click', '.nav-item', function (e) {
             var tabs = $(this).children().attr('href');
             // $("div.tab-pane").removeClass('active');
@@ -291,12 +349,12 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10,
         });
-        $("div#userBackupTable_paginate").css('display', 'none');
+
         $('#search-backup-user-form').on('submit', function (e) {
             userBackupTable.draw();
             e.preventDefault();
@@ -352,7 +410,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10,
@@ -390,10 +448,10 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
-            "pageLength": 25
+            "pageLength": 10
         });
 
 
@@ -425,7 +483,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10
@@ -467,10 +525,101 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10
         });
+
+        var academicTranscriptBackupTable = $('#academicTranscriptBackupTable').DataTable({
+            "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, 'Tất cả']],
+            "dom": '<"top"Bifpl<"clear">>rt<"bottom"ip<"clear">>',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ],
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{{ route('ajax-get-backup-academic-transcript') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function (d) {
+                    d.faculty_id = $('#tabAcademicTranscript').find('select[name=faculty_id]').val();
+                    d.semester_id = $('#tabAcademicTranscript').find('select[name=semester_id]').val();
+                    d._token = "{{ csrf_token() }}";
+                },
+            },
+            "columns": [
+                {data: "users_id", name: "users.users_id"},
+                {data: "userName", name: "users.name"},
+                {data: "className", name: "classes.name"},
+                {data: "score_i", name: "academic_transcripts.score_i"},
+                {data: "score_ii", name: "academic_transcripts.score_ii"},
+                {data: "score_iii", name: "academic_transcripts.score_iii"},
+                {data: "score_iv", name: "academic_transcripts.score_iv"},
+                {data: "score_v", name: "academic_transcripts.score_v"},
+                {data: "totalScore", name: "academic_transcripts.totalScore"},
+                {data: "rank", name: "rank"},
+                {
+                    data: "note",
+                    name: "note",
+                    orderable: false,
+                    searchable: false
+                },
+            ],
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var input = document.createElement("input");
+                    $(input).appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val ? val : '', true, false).draw();
+                        });
+                });
+            },
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không có bản ghi nào!",
+                "info": "Hiển thị trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có bản ghi nào!!!",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
+            },
+            "pageLength": 10,
+        });
+        $('#search-academic-transcript-form').on('submit', function (e) {
+            academicTranscriptBackupTable.draw();
+            e.preventDefault();
+        });
+
+        // ẩn thanh phân trang ở top
+
+        $("div#userBackupTable_paginate").css('display', 'none');
+        $("div#userBackupTable_info").css('display', 'none');
+
+        $("div#eachSemesterBackupTable_paginate").css('display', 'none');
+        $("div#eachSemesterBackupTable_info").css('display', 'none');
+
+        $("div#facultyBackupTable_paginate").css('display', 'none');
+        $("div#facultyBackupTable_info").css('display', 'none');
+
+        $("div#classBackupTable_paginate").css('display', 'none');
+        $("div#classBackupTable_info").css('display', 'none');
+
+        $("div#semesterBackupTable_paginate").css('display', 'none');
+        $("div#semesterBackupTable_info").css('display', 'none');
+
+        $("div#academicTranscriptBackupTable_paginate").css('display', 'none');
+        $("div#academicTranscriptBackupTable_info").css('display', 'none');
+
+        // them form-control  cho select
+        $("div.dataTables_length").find("select").attr('class', 'form-control form-control-sm');
+
+        $("div.dt-buttons").find("a.dt-button").addClass('btn');
+
+        $("input[type=search]").addClass('form-control form-control-sm');
+
+
     </script>
 @endsection

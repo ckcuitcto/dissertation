@@ -44,4 +44,12 @@ class Student extends Model
     public function StudentListEachSemesterMonitor(){
         return $this->hasMany('App\Model\StudentListEachSemester','monitor_id','user_id');
     }
+
+    public function Disciplines(){
+        return $this->hasMany('App\Model\Discipline','user_id','user_id');
+    }
+
+    public function AcademicTranscripts(){
+        return $this->hasMany('App\Model\AcademicTranscripts','user_id','user_id');
+    }
 }

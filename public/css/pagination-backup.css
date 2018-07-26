@@ -1,0 +1,65 @@
+/*pagination backup*/
+/*.dataTables_paginate {*/
+/*display: inline-block;*/
+/*}*/
+
+/*.dataTables_paginate a {*/
+/*color: black;*/
+/*float: left;*/
+/*padding: 8px 16px;*/
+/*text-decoration: none;*/
+/*border: 1px solid #ddd;*/
+/*}*/
+
+/*.dataTables_paginate a.active {*/
+/*background-color: #4CAF50;*/
+/*color: white;*/
+/*border: 1px solid #4CAF50;*/
+/*}*/
+
+/*.dataTables_paginate a:hover:not(.active) {background-color: #ddd;}*/
+
+/*.dataTables_paginate a:first-child {*/
+/*border-top-left-radius: 5px;*/
+/*border-bottom-left-radius: 5px;*/
+/*}*/
+
+/*.dataTables_paginate a:last-child {*/
+/*border-top-right-radius: 5px;*/
+/*border-bottom-right-radius: 5px;*/
+/*}*/
+/*pagination backup*/
+
+.dt-buttons {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.custom-quanly-taikhoan .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    color: #FFF !important;
+    background: #009688 !important;
+    border-color: #009688 !important;
+    z-index: 1;
+}
+
+.custom-quanly-taikhoan .dataTables_wrapper .dataTables_paginate .paginate_button{
+    border: 1px solid #dee2e6 !important;
+    margin: 0 !important;
+    color: #009688 !important;
+}
+
+.ellipsis {
+    border: 1px solid #dee2e6 !important;
+    padding: 10px 1em !important;
+}
+.custom-quanly-taikhoan .dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+    color: #004a43 !important;
+    text-decoration: none !important;
+    background: #e9ecef !important;
+    border-color: #dee2e6 !important;
+}
+
+
+
+
+

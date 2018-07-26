@@ -193,11 +193,11 @@ class CommentController extends Controller
                     $linkReply = route('comment-reply',$comment->id);
                     if(empty($comment->reply)){
                         $title = "Phản hồi ý kiến";
-                        $iTag = "<i class='fa fa-lg fa-check' aria-hidden='true'> </i>";
+                        $iTag = "<i class='fa fa-lg fa-edit' aria-hidden='true'> </i>";
                         $class = "btn btn-primary comment-reply";
                     }else{
                         $title = "Đã phản hồi ý kiến";
-                        $iTag = "<i class='fa fa-lg fa-edit' aria-hidden='true'> </i>";
+                        $iTag = "<i class='fa fa-lg fa-check' aria-hidden='true'> </i>";
                         $class = "btn btn-success comment-reply";
                     }
                     $buttonReply = "<a title='$title' class='$class' style='color: white' data-comment-id='$comment->id' data-comment-reply-link='$linkReply' data-comment-show-link='$linkShow'> $iTag </a>";

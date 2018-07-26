@@ -29,13 +29,13 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $users = User::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','users.users_id')->select('users.*')->orderBy('student_list_each_semesters.id')->paginate(25);
-        $currentSemester = $this->getCurrentSemester();
-        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
-        return view('student.index', compact('users','currentSemester','semesters'));
-    }
+//    public function index()
+//    {
+//        $users = User::rightJoin('student_list_each_semesters','student_list_each_semesters.user_id','=','users.users_id')->select('users.*')->orderBy('student_list_each_semesters.id')->paginate(25);
+//        $currentSemester = $this->getCurrentSemester();
+//        $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
+//        return view('student.index', compact('users','currentSemester','semesters'));
+//    }
 
     /**
      * Show the form for creating a new resource.
@@ -347,6 +347,7 @@ class StudentController extends Controller
             $arrFileName = array();
 
             $arrSemester = [];
+            $arrClassByFileName = [];
             // lưu lại id các học kì nếu trong các file import có file ở các học kì khác nhau
             // key là tên file, value là id học kì
             $semesterId = null;
@@ -403,6 +404,9 @@ class StudentController extends Controller
                         if (empty($classes)) {
                             $arrError[] = "Lớp " . $className . " không tồn tại";
                         } else {
+
+                            // lưu lại tên lớp theo file name để lưu file theo tên lớp
+                            $arrClassByFileName[$fileName] = $className;
                             // lấy đưuọc lớp thì lấy ra lớp trưởng của lớp đó.
                             $monitor = DB::table('students')
                                 ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
@@ -505,25 +509,33 @@ class StudentController extends Controller
                     //nếu k có lỗi. di chuyển file qua thư mục mới.
                     for($i = 0 ; $i< count($arrFile); $i++){
                         $semesterIdByFileName = $arrSemester[$arrFileName[$i]];
+
+                        $fileExtension = ".".File::extension($arrFile[$i]->getClientOriginalName());;
+                        $classNameByFileName = $arrClassByFileName[$arrFileName[$i]].$fileExtension; // lưu tên file theo lớp để dễ quản lí hơn
+
                         //kiểm tra xem folder có tên = id học kì đa có chưa. chưa có thì tạo.
                         if (!file_exists(public_path().'/'.STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName)) {
                             mkdir(public_path().'/'.STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName, 0777, true);
                         }
 
                         //nếu file giống và học kì giông đã tồn tại thì xóa r tạo mới.
-                        if(file_exists(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName())){
-                            unlink(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName());
+//                        if(file_exists(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName())){
+//                            unlink(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName());
+//                        }
+                        if(file_exists(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$classNameByFileName)){
+                            unlink(STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$classNameByFileName);
                         }
 
                         // di chuyển và xóa file cũ
-                        if(File::move(STUDENT_PATH.$arrFileName[$i],STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName())) {
+                        if(File::move(STUDENT_PATH.$arrFileName[$i],STUDENT_LIST_EACH_SEMESTER_PATH.$semesterIdByFileName."/".$classNameByFileName)) {
                             if (file_exists(STUDENT_PATH . $arrFileName[$i])) {
                                 unlink(STUDENT_PATH . $arrFileName[$i]);
                             }
                         }
                         $arrFileImport[] = [
-                            'file_path' => $semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName(),
-                            'file_name' => $arrFile[$i]->getClientOriginalName(),
+//                            'file_path' => $semesterIdByFileName."/".$arrFile[$i]->getClientOriginalName(),
+                            'file_path' => $semesterIdByFileName."/".$classNameByFileName,
+                            'file_name' => $classNameByFileName,
                             'status' => 'Thành công',
                             'staff_id' => $userLogin->Staff->id,
                             'semester_id' => $semesterIdByFileName
@@ -548,7 +560,9 @@ class StudentController extends Controller
                         );
                     }
 //                    StudentListEachSemester::insert($arrUser);
-                    $this->addEvaluationFormAfterInportStudent($semesterIdByFileName);
+                    foreach($arrSemester as $semester){
+                        $this->addEvaluationFormAfterInportStudent($semester);
+                    }
                     return response()->json([
                         'status' => true,
                     ], 200);

@@ -19,7 +19,7 @@
                     <div class="jumbotron">
                         <h2 align="center">{{ $news->title}}</h2>              
                         <p style="color:tomato;text-transform:uppercase;white-space:pre">{{$news->Staff->user_id}}</p>
-                        <p>{{$news->Faculty->name}} &nbsp; <i class="fa fa-clock-o" aria-hidden="true"></i> {{$news->created_at}}</p>
+                        <p>{{ $news->Faculty->name OR "Tất cả khoa"}} &nbsp; <i class="fa fa-clock-o" aria-hidden="true"></i> {{$news->created_at}}</p>
                         <hr class="my-4">                        
                         <p>{!! $news->content !!}</p>
                         <p align="right">Trường đại học Công nghệ Sài Gòn</p>

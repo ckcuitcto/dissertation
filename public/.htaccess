@@ -4,6 +4,14 @@
     </IfModule>
 
     RewriteEngine On
+#    RewriteRule ^(.*)$ public/$1 [L]
+    #<FilesMatch "\.(?i:gif|jpe?g|png|ico|css|js|swf)$">
+
+      #<IfModule mod_headers.c>
+      #  Header set Cache-Control "max-age=172800, public, must-revalidate"
+      #</IfModule>
+
+    #</FilesMatch>
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -18,4 +26,10 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+#    RewriteCond %{HTTP_HOST}#%{HTTPS}s ^www\.([^#]+)#(?:off|on(s)) [NC]
+#    RewriteRule ^ http%2://%1%{REQUEST_URI} [R=301,L]
+
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
 </IfModule>

@@ -4,7 +4,7 @@ $('#rolesTable').DataTable({
         "zeroRecords": "Không có bản ghi nào!",
         "info": "Hiển thị trang _PAGE_ của _PAGES_",
         "infoEmpty": "Không có bản ghi nào!!!",
-        "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+        "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
         processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
     },
     "pageLength": 25
@@ -16,6 +16,7 @@ $('#myModal').on('hidden.bs.modal', function (e) {
     $("input[type=checkbox]").prop('checked', false);
     $('.text-red').html('');
     $('.form-group').find('span.messageErrors').remove();
+    $(".name").prop('disabled',false);
 });
 
 $('body').on('click', 'a.role-destroy', function (e) {
@@ -104,11 +105,11 @@ $('body').on('click', 'a.role-update', function (e) {
                         if(elementName === "permissions"){
                             $.each(value, function (permission, valuePermission) {
                                 $('.permission_' + valuePermission.id).val(valuePermission.id).prop('checked', true);
-
                             });
                         }else{
                             $('.' + elementName).val(value);
                         }
+                        $(".name").prop('disabled',true);
                     });
                 }
             }

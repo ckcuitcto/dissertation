@@ -1,5 +1,7 @@
 @extends('layouts.default')
 
+
+
 @section('content')
 
     <main class="app-content">
@@ -33,8 +35,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <button class="btn btn-outline-success" id="createFile" data-toggle="modal"
-                                        data-target="#addModal">
+                                <button class="btn btn-outline-success" id="createFile"
+                                        data-toggle="modal" data-target="#addModal">
                                     <i class="fa fa-plus" aria-hidden="true"></i>Thêm minh chứng
                                 </button>
                             </div>
@@ -74,22 +76,24 @@
                                 <div class="col-md-12">
                                     <div class="form-row">
                                         <label for="evaluation_criteria">Chọn tiêu chí </label>
-                                        <select class="form-control evaluation_criteria" name="evaluation_criteria"
-                                                id="evaluationCriteria">
-                                            <option value="0"> ---Chọn tiêu chí---</option>
-                                            @foreach($evaluationCriterias as $value)
-                                                <option value="{{$value->id}}">{{$value->content}}</option>
-                                            @endforeach
-                                        </select>
+                                        {{--<div class="custom-select">--}}
+                                            <select class=" form-control evaluation_criteria" name="evaluation_criteria" id="evaluationCriteria">
+                                                <option value="0"> ---Chọn tiêu chí---</option>
+                                                @foreach($evaluationCriterias as $value)
+                                                    <option value="{{$value->id}}">{{$value->content}}</option>
+                                                @endforeach
+                                            </select>
+                                        {{--</div>--}}
                                     </div>
                                     <div class="form-row">
                                         <label for="semester">Chọn học kì</label>
-                                        <select class="form-control semester" name="semester" id="semester">
-                                            <option value="0"> ---Chọn học kì---</option>
-                                            @foreach($semesters as $value)
-                                                <option value="{{$value->id}}">{{ "Học kì $value->term. Năm học $value->year_from - $value->year_to" }}</option>
-                                            @endforeach
-                                        </select>
+
+                                            <select class="form-control semester" name="semester" id="semester">
+                                                <option value="0"> ---Chọn học kì---</option>
+                                                @foreach($semesters as $value)
+                                                    <option value="{{$value->id}}">{{ "Học kì $value->term. Năm học $value->year_from - $value->year_to" }}</option>
+                                                @endforeach
+                                            </select>
                                     </div>
                                     <div class="form-row">
                                         <label for="fileUpload">Chọn file minh chứng</label>
@@ -169,6 +173,7 @@
 
 @section('sub-javascript')
     <script>
+        // đoạn code để chạy datatable
         var oTable = $('#proofsTable').DataTable({
             "processing": true,
             "serverSide": true,
@@ -193,11 +198,12 @@
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10
         });
+        // kết thúc đoạn code chạy datatable
 
         $('body').on('click', 'a#proof-view-file', function (e) {
             var thisproof = $(this);

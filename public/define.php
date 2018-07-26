@@ -62,9 +62,45 @@ define('STUDENT_PATH','upload/student_tmp/');
 define('STUDENT_PATH_STORE','upload/student/');
 define('FILE_TEMPLATE','upload/file_mau/');
 define('FILE_TONG_HOP_DANH_GIA_REN_LUYEN','bang_tong_hop_danh_gia_ren_luyen.xlsx');
+define('FILE_TONG_HOP_DANH_GIA_REN_LUYEN_XLS','bang_tong_hop_danh_gia_ren_luyen.xls');
+define('FILE_TONG_HOP_DANH_GIA_REN_LUYEN_LEVEL_1_XLS','bang_tong_hop_danh_gia_ren_luyen_level1.xls');
 define('STUDENT_LIST_EACH_SEMESTER_PATH','upload/student_list_each_semester/');
 
 define('EVALUATION_CRITERIAS_CHILD_PARENT_1',array(6,7,8));
 define('YTHUCTHAMGIAHOCTAP_ID',1);
 
 define('ARRAY_EVALUATION_CRITERIAS_VALIDATE',array(11,12,13,14,15,16,17,18,1,22,23,19,20,21,2,25,26,24,27,28,29,3,30,31,32,33,34,35,4,36,37,38,5));
+
+// điểm trừ mặc định
+define('SCORE_MINUS',10);
+
+// tiêu chí trừ mặc định
+define('EVALUATION_CRITERIA_MINUS',2);
+
+// định nghĩa 1 mảng. id các tiêu chí ứng với tên cột ở bảng bảng điểm
+//VD tiêu chí có Id = 2 sẽ tương ứng với cột score_ii
+define('ARRAY_EVALUATION_CRITERIA_VS_ACADEMIC_TRANSCRIPT', array(
+    '6' => 'score_ia',
+    '7' => 'score_ib',
+    '8' => 'score_ic',
+    '1' => 'score_i',
+    '2' => 'score_ii',
+    '3' => 'score_iii',
+    '4' => 'score_iv',
+    '5' => 'score_v',
+));
+
+define('ARRAY_ACADEMIC_TRANSCRIPT_TO_EVALUATION_CRITERIA', array(
+    'ia' =>     '6',
+    'ib' =>     '7',
+    'ic' =>     '8',
+    'ii' =>     '2',
+    'iii' =>    '3',
+    'iv' =>     '4',
+    'v' =>      '5'
+));
+
+define('PROOF_VALID', array(
+    '1' =>     'Hợp lệ',
+    '0' =>     'Không hợp lệ',
+));

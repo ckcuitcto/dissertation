@@ -370,7 +370,7 @@
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 25
@@ -449,6 +449,13 @@
         $('#modal-edit-user').on('hidden.bs.modal', function (e) {
             // hideAndShowFaculty('modal-edit-user');
             $('#modal-edit-user').find("input[type=text],input[type=number],input[type=year],input[type=hidden], select").val('');
+            $('.text-red').html('');
+            $('span.messageErrors').remove();
+        });
+
+        $('#modal-add-user').on('hidden.bs.modal', function (e) {
+            // hideAndShowFaculty('modal-edit-user');
+            $('#modal-add-user').find("input[type=text],input[type=number],input[type=year],input[type=hidden]").val('');
             $('.text-red').html('');
             $('span.messageErrors').remove();
         });

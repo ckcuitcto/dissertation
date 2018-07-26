@@ -243,10 +243,19 @@
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 25
+        });
+
+        $('#modal-edit-student').on('hidden.bs.modal', function (e) {
+            // hideAndShowFaculty('modal-edit-user');
+            $('#modal-edit-student').find("input[type=text],input[type=password],input[type=number],input[type=year],input[type=hidden]").val('');
+            // $('#modal-edit-student').find("#checkBoxChangePassword").attr('value','on').trigger('change');
+            // $('#modal-edit-student').find("div#changepassword").hide();
+            $('.text-red').html('');
+            $('span.messageErrors').remove();
         });
 
     </script>

@@ -18,9 +18,9 @@ $('#sampleTable').DataTable({
         "zeroRecords": "Không có bản ghi nào!",
         "info": "Hiển thị trang _PAGE_ của _PAGES_",
         "infoEmpty": "Không có bản ghi nào!!!",
-        "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)"
+        "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)"
     },
-    "pageLength": 25
+    "pageLength": 10
 });
 
 $.ajaxSetup({
@@ -78,3 +78,40 @@ var options = {
 // $(document).contextmenu(function () {
 //     return false;
 // });
+
+
+$('body').on('click', '#btn-change-password', function (e) {
+    var valueForm = $('form#change-password-form').serialize();
+    var url = $(this).attr('data-link');
+    $('.form-row').find('span.messageErrors').remove();
+    $.ajax({
+        type: "post",
+        url: url,
+        data: valueForm,
+        dataType: 'json',
+        success: function (result) {
+            if (result.status === false) {
+                //show error list fields
+                if (result.arrMessages !== undefined) {
+                    $.each(result.arrMessages, function (elementName, arrMessagesEveryElement) {
+                        $.each(arrMessagesEveryElement, function (messageType, messageValue) {
+                            $('form#change-password-form').find('.' + elementName).parents('.form-row ').append('<span class="messageErrors" style="color:red">' + messageValue + '</span>');
+                        });
+                    });
+                    if (result.arrMessages.message !== undefined) {
+                        $('form#change-password-form').find('.current-password').parents('.form-row ').append('<span class="messageErrors" style="color:red">' + result.arrMessages.message + '</span>');
+                    }
+                }
+            } else if (result.status === true) {
+                $.notify({
+                    title: "Đổi mật khẩu thành công",
+                    message: ":D",
+                    icon: 'fa fa-check'
+                }, {
+                    type: "success"
+                });
+                $('div#modalChangePassword').modal('hide');
+            }
+        }
+    });
+});

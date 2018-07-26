@@ -129,7 +129,7 @@ $('body').on('click', 'a.destroy-semester', function (e) {
                             oTable.draw();
                         })
                     } else {
-                        swal("Cancelled", "Không tìm thấy học kì !!! :)", "error");
+                        swal("Không thành công", data.message +" !!! :)", "error");
                     }
                 }
             });

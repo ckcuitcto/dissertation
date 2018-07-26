@@ -127,6 +127,26 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'backup',
                 'display_name' => 'Lưu lại dữ liệu',
                 'description' => 'Xuất file tất cả dữ liệu'
+            ],[
+                'name' => 'import-discipline',
+                'display_name' => 'Nhập file kỉ luật',
+                'description' => 'Nhập file gồm những sv bị kỉ luật để trừ điểm vào form, thao tác này sẽ ghi luôn điểm vào Bảng Điểm.'
+            ],[
+                'name' => 'view-academic-score',
+                'display_name' => 'Xem, xuất danh sách bảng điểm',
+                'description' => 'Xem,xuất danh sách bảng điểm của sinh viên'
+            ],[
+                'name' => 'view-list-file-import',
+                'display_name' => 'Xem danh sách file đã nhập',
+                'description' => 'Xem danh sách file đã nhập'
+            ],[
+                'name' => 'proofs-list-student',
+                'display_name' => 'Quản lí minh chứng SV',
+                'description' => 'Để Cố vấn, khoa, phòng CTSV có thể xem lại minh chứng của sinh viên và sửa trạng thái cho nhanh, k cần vào form'
+            ],[
+                'name' => 'import-student-list-each-semester',
+                'display_name' => 'Nhập danh sách sinh viên đánh giá mỗi học kỳ',
+                'description' => 'Quyền cho phòng CTSV để nhập ds sinh viên đánh giá mỗi học kì'
             ],
         ]);
     }

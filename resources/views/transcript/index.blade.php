@@ -18,7 +18,7 @@
                         <form class="row" role="form" id="search-form" method="post">
                             {!! csrf_field() !!}
                             <div class="form-group col-md-3">
-                                <label class="control-label">Học kì</label>
+                                <label for="semester_id" class="control-label">Học kì</label>
                                 <select class="form-control semester_id" name="semester_id" id="semester_id">
                                     @foreach($semesters as $value)
                                         <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
@@ -26,7 +26,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label">Khoa</label>
+                                <label for="faculty_id" class="control-label">Khoa</label>
                                 <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
                                     @foreach($faculties as $value)
                                         <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
@@ -34,7 +34,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label">Lớp</label>
+                                <label for="class_id" class="control-label">Lớp</label>
                                 <select class="form-control class_id" name="class_id" id="class_id">
                                 </select>
                             </div>
@@ -59,22 +59,31 @@
                             </tr>
                             </thead>
                             <tfoot>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tfoot>
                         </table>
                         {{-- </div> --}}
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-10">
                             <button class="btn btn-outline-success" id="createFile">
-                                <i class="fa fa-download" aria-hidden="true"></i>Lập bảng tổng hợp đánh giá
+                                <i class="fa fa-download" aria-hidden="true"></i>Lập bảng tổng hợp đánh giá chưa áp dụng danh sách kỷ luật
                             </button>
+
+                            {{-- quyền cho phép import. chỉ CTSV mới đc impỏt ds này--}}
+                            @can('import-student-list-each-semester')
+                            <button data-toggle="modal" data-target="#importModal" class="btn btn-outline-primary"
+                                             type="button"><i class="fa fa-pencil-square-o"
+                                                              aria-hidden="true"></i> Nhập danh sách sinh viên mới đánh giá mới
+                            </button>
+                            @endcan
+
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-2">
                                <span class="leds-test">
                                 <button class="btn btn-info btn-show-notes" title="
 Lưu ý: Khi xuất file chỉ xuất những giá trị hiện đang hiển thị.
@@ -94,6 +103,49 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
             <input type="hidden" name="semesterChoose" id="semesterChoose" value="{{$currentSemester->id}}">
             <input type="hidden" name="facultyChoose" id="facultyChoose">
         </form>
+        @can('import-student-list-each-semester')
+            <div class="modal fade" id="importModal" role="dialog">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chọn file excel muốn nhập danh sách</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="import-student-form">
+                            {!! csrf_field() !!}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-row">
+                                        <label for="fileImport">Chọn file</label>
+                                        <input type="file" multiple class="form-control fileImport" name="fileImport"
+                                               id="fileImport">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger show-error bs-component" style="display: none">
+                                    <ul class="list-group">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-link="{{ route('import-student-list-each-semester') }}" class="btn btn-primary"
+                                id="btn-import-student" name="btn-import-student" type="button">
+                            Thêm
+                        </button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endcan
     </main>
 
 @endsection
@@ -141,7 +193,7 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 "zeroRecords": "Không có bản ghi nào!",
                 "info": "Hiển thị trang _PAGE_ của _PAGES_",
                 "infoEmpty": "Không có bản ghi nào!!!",
-                "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
             },
             "pageLength": 10,
@@ -152,6 +204,23 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
             e.preventDefault();
         });
 
+
+        {{--$('select.semester_id').change(function () {--}}
+            {{--var semesterId = $(this).val();--}}
+            {{--var url = "{{ route('class-get-list-by-semester-and-userlogin-none') }}";--}}
+            {{--$.ajax({--}}
+                {{--type: "post",--}}
+                {{--url: url,--}}
+                {{--data: {id: semesterId},--}}
+                {{--dataType: 'json',--}}
+                {{--success: function (data) {--}}
+                    {{--$("select.class_id").empty();--}}
+                    {{--$.each(data.classes, function (key, value) {--}}
+                        {{--$("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');--}}
+                    {{--});--}}
+                {{--}--}}
+            {{--});--}}
+        {{--});--}}
 
         // $('#studentsTranscript tbody').on( 'click', 'tr', function () {
         //     console.log( oTable.row( this ).data() );

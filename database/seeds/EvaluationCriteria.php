@@ -53,21 +53,21 @@ class EvaluationCriteria extends Seeder
                 "content" => "a.	Ý thức học tập",
                 "mark_range_display" => null,
                 "detail" => null,
-                "mark_range_from" => null, "mark_range_to" => null, "parent_id" => 1, "proof" => null,
+                "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => 1, "proof" => null,
                 'level' => '2',
                 'step_html' => null
             ],[
                 "content" => "b.	Kết quả học tập ",
                 "mark_range_display" => null,
                 "detail" => null,
-                "mark_range_from" => null, "mark_range_to" => null, "parent_id" => 1, "proof" => null,
+                "mark_range_from" => 0, "mark_range_to" => 10, "parent_id" => 1, "proof" => null,
                 'level' => '2',
                 'step_html' => null
             ],[
                 "content" => "c.	Nghiên cứu khoa học, tham gia các hoạt động học thuật",
                 "mark_range_display" => null,
                 "detail" => null,
-                "mark_range_from" => null, "mark_range_to" => null, "parent_id" => 1, "proof" => null,
+                "mark_range_from" => 0, "mark_range_to" => 20, "parent_id" => 1, "proof" => null,
                 'level' => '2',
                 'step_html' => null
             ],[

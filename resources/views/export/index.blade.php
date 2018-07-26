@@ -24,15 +24,19 @@
                         <form class="row" role="form" id="search-form" method="post">
                             {!! csrf_field() !!}
                             <div class="form-group col-md-3">
-                                <label class="control-label">Học kì</label>
+                                <label for="semester_id" class="control-label">Học kì</label>
                                 <select class="form-control semester_id" name="semester_id" id="semester_id">
-                                    @foreach($semesters as $value)
-                                        <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
-                                    @endforeach
+                                    @if(empty($semesters))
+                                        @foreach ($semesters as $value)
+                                            <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
+                                        @endforeach
+                                    @else
+                                        <option> Không có học kì</option>
+                                    @endif
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label">Khoa</label>
+                                <label for="faculty_id" class="control-label">Khoa</label>
                                 <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
                                     @foreach($faculties as $value)
                                         <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
@@ -65,14 +69,18 @@
                                         <th></th>
                                     </tfoot>
                             </table>
-                            <input type="hidden" name="semesterChoose" id="semesterChoose" value="{{$currentSemester->id}}">
+                            <input type="hidden" name="semesterChoose" id="semesterChoose" value="{{$currentSemester->id OR ""}}">
+                            <input type="hidden" name="withDiscipline" value="no" id="withDiscipline">
                         </form>
                         <div class="row">
                             <div class="col-md-6">
-                                
                                 <button class="btn btn-info" id="btnExport" type="button" data-link="{{route('export-file')}}">
                                     <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                                    Xuất File
+                                    Xuất file đánh giá chưa áp dụng kỷ luật
+                                </button>
+                                <button class="btn btn-info" id="btnExportWithDiscipline" type="button" data-link="{{route('export-file')}}">
+                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                    Xuất file đánh giá đã áp dụng kỷ luật
                                 </button>
                             </div>
                         </div>
@@ -121,7 +129,7 @@
                     "zeroRecords": "Không có bản ghi nào!",
                     "info": "Hiển thị trang _PAGE_ của _PAGES_",
                     "infoEmpty": "Không có bản ghi nào!!!",
-                    "infoFiltered": "(Đã lọc từ _MAX_ total bản ghi)",
+                    "infoFiltered": "(Đã lọc từ tổng _MAX_ bản ghi)",
                     processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Tải dữ liệu...</span>'
                 },
                 "pageLength": 10,
