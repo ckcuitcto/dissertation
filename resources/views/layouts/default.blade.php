@@ -191,7 +191,7 @@
                     @endcan
                     @can('can-change-news')
                         <li>
-                            <a class="app-menu__item" href="{{ route('proof-list') }}">
+                            <a class="app-menu__item" href="{{ route('news') }}">
                                 <i class="app-menu__icon fa fa-newspaper-o" aria-hidden="true"></i><span
                                         class="app-menu__label">Quản lí tin tức</span>
                             </a>
