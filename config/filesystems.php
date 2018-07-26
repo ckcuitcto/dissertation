@@ -45,13 +45,21 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+//            'root' => storage_path('app'),
+            'root' => public_path()."/backupdb",
+        ],
+
+        'dropbox' => [
+            'driver' => 'dropbox',
+            'accessToken' => env('DROPBOX_ACCESS_TOKEN','UwuTeDA8hJAAAAAAAAAADSkb2FcHDyDMy3YqqF2IJWG_px7PIoM5NqdRrjRIhyI0'), // access token bên trên
+            'appSecret' => env('DROPBOX_APP_SECRET','tw1vkie6m4kyzj1'),  // secrest key
         ],
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+//            'root' => storage_path('app/public'),
+            'root' => public_path()."/backupdb",
+            'url' => env('APP_URL').'/public',
             'visibility' => 'public',
         ],
 

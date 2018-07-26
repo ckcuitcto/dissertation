@@ -90,9 +90,19 @@
                         type: 'GET',
                         cache: false,
                         data: {"id": id},
+                        beforeSend: function(){
+                            $("#ajax_loader").show();
+                        },
                         success: function (data) {
+                            $("#ajax_loader").hide();
                             if (data.status === true) {
                                 swal("Deleted! ", "Đã xóa học kì " + data.semester.term + " năm học " + data.semester.year_from + "-" + data.semester.year_to, "success");
+                                if(data.file_path !== undefined){
+                                    var a = document.createElement('a');
+                                    a.href = data.file_path;
+                                    a.download = data.file_name;
+                                    a.click();
+                                }
                                 $('.sa-confirm-button-container').click(function () {
                                     oTable.draw();
                                 })

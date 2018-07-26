@@ -24,15 +24,19 @@
                         <form class="row" role="form" id="search-form" method="post">
                             {!! csrf_field() !!}
                             <div class="form-group col-md-3">
-                                <label class="control-label">Học kì</label>
+                                <label for="semester_id" class="control-label">Học kì</label>
                                 <select class="form-control semester_id" name="semester_id" id="semester_id">
-                                    @foreach($semesters as $value)
-                                        <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
-                                    @endforeach
+                                    @if(empty($semesters))
+                                        @foreach ($semesters as $value)
+                                            <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
+                                        @endforeach
+                                    @else
+                                        <option> Không có học kì</option>
+                                    @endif
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label">Khoa</label>
+                                <label for="faculty_id" class="control-label">Khoa</label>
                                 <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
                                     @foreach($faculties as $value)
                                         <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
@@ -65,7 +69,7 @@
                                         <th></th>
                                     </tfoot>
                             </table>
-                            <input type="hidden" name="semesterChoose" id="semesterChoose" value="{{$currentSemester->id}}">
+                            <input type="hidden" name="semesterChoose" id="semesterChoose" value="{{$currentSemester->id OR ""}}">
                             <input type="hidden" name="withDiscipline" value="no" id="withDiscipline">
                         </form>
                         <div class="row">

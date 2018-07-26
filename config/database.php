@@ -40,6 +40,7 @@ return [
         ],
 
         'mysql' => [
+            'dump_command_path' => 'D:\server\wamp64\bin\mysql\mysql5.7.21\bin',
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
