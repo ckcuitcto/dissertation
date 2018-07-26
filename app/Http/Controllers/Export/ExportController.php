@@ -507,7 +507,8 @@ class ExportController extends Controller
 
             });
         })->store('xls', STUDENT_PATH, true);
-        $public_dir = dirname(dirname(public_path()));
+//        $public_dir = dirname(dirname(public_path()));
+        $public_dir = public_path();
         $headers = array(
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => "attachment; filename='Report.xls'",
@@ -745,7 +746,8 @@ class ExportController extends Controller
         }
 
         if (!empty($arrFileName)) {
-            $public_dir = dirname(dirname(public_path()));
+//            $public_dir = dirname(dirname(public_path()));
+            $public_dir = public_path();
             $zip = new ZipArchive();
             $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
             foreach ($arrFileName as $file) {
