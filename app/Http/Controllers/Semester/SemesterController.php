@@ -576,34 +576,34 @@ class SemesterController extends Controller
             $lastFileName = $lastFileName[count($lastFileName)-1];
 
             // lưu dữ liệu vào file excel
-//            $date = Carbon::now()->format('Ymd_His');
-//            $tables = DB::select("show tables");
-//            foreach ($tables as $row)
-//            {
-//                $target_tables[] = array_flatten((array)$row)[0];
-//            }
-//            $fileName = "dbdiemrenluyen_$date";
-//            Excel::create( $fileName , function ($excel) use ($target_tables) {
-//                foreach($target_tables as $table){
-//                    $arrayValInTable = DB::table("$table")->get();
-//                    $arrayInsert = [];
-//                    foreach ($arrayValInTable as $val) {
-//                        $arrayInsert[] = (array)$val;
-//                    }
-//                    $excel->sheet("$table", function ($sheet) use ($arrayInsert) {
-//                        $sheet->fromArray($arrayInsert);
-//                    });
-//                }
-//            })->store('xlsx', STUDENT_PATH, true);
-//            $semester->delete();
+            $date = Carbon::now()->format('Ymd_His');
+            $tables = DB::select("show tables");
+            foreach ($tables as $row)
+            {
+                $target_tables[] = array_flatten((array)$row)[0];
+            }
+            $fileName = "dbdiemrenluyen_$date";
+            Excel::create( $fileName , function ($excel) use ($target_tables) {
+                foreach($target_tables as $table){
+                    $arrayValInTable = DB::table("$table")->get();
+                    $arrayInsert = [];
+                    foreach ($arrayValInTable as $val) {
+                        $arrayInsert[] = (array)$val;
+                    }
+                    $excel->sheet("$table", function ($sheet) use ($arrayInsert) {
+                        $sheet->fromArray($arrayInsert);
+                    });
+                }
+            })->store('xlsx', STUDENT_PATH, true);
+            $semester->delete();
 
             return response()->json([
                 'semester' => $semester,
                 'status' => true,
                 'file_path' => url("/backupdb/$lastFile"),
                 'file_name' => $lastFileName,
-//                'file_path_excel' => url(STUDENT_PATH.$fileName),
-//                'file_name_excel' => $fileName."xlsx"
+                'file_path_excel' => url(STUDENT_PATH."$fileName.xlsx"),
+                'file_name_excel' => "$fileName.xlsx"
             ], 200);
         }
         return response()->json([
