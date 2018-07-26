@@ -103,6 +103,12 @@
                                     a.download = data.file_name;
                                     a.click();
                                 }
+                                if(data.file_path_excel !== undefined){
+                                    var b = document.createElement('a');
+                                    b.href = data.file_path_excel;
+                                    b.download = data.file_name_excel;
+                                    b.click();
+                                }
                                 $('.sa-confirm-button-container').click(function () {
                                     oTable.draw();
                                 })

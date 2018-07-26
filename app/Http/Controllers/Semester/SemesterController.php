@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Validator;
 use Yajra\DataTables\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SemesterController extends Controller
 {
@@ -564,21 +565,45 @@ class SemesterController extends Controller
     public function backupImportantHandle($id){
         $semester = Semester::find($id);
         if (!empty($semester)) {
+            // chạy backup
             \Artisan::call('backup:clean');
             \Artisan::call('backup:run',['--only-db'=>true]);
 
+            //lưu file
             $files = Storage::files('/http---diemrenluyenstu.cf-/');
             $lastFile = $files[ count($files) - 1 ];
             $lastFileName = explode('/',$lastFile);
             $lastFileName = $lastFileName[count($lastFileName)-1];
 
-            $semester->delete();
+            // lưu dữ liệu vào file excel
+//            $date = Carbon::now()->format('Ymd_His');
+//            $tables = DB::select("show tables");
+//            foreach ($tables as $row)
+//            {
+//                $target_tables[] = array_flatten((array)$row)[0];
+//            }
+//            $fileName = "dbdiemrenluyen_$date";
+//            Excel::create( $fileName , function ($excel) use ($target_tables) {
+//                foreach($target_tables as $table){
+//                    $arrayValInTable = DB::table("$table")->get();
+//                    $arrayInsert = [];
+//                    foreach ($arrayValInTable as $val) {
+//                        $arrayInsert[] = (array)$val;
+//                    }
+//                    $excel->sheet("$table", function ($sheet) use ($arrayInsert) {
+//                        $sheet->fromArray($arrayInsert);
+//                    });
+//                }
+//            })->store('xlsx', STUDENT_PATH, true);
+//            $semester->delete();
 
             return response()->json([
                 'semester' => $semester,
                 'status' => true,
                 'file_path' => url("/backupdb/$lastFile"),
-                'file_name' => $lastFileName
+                'file_name' => $lastFileName,
+//                'file_path_excel' => url(STUDENT_PATH.$fileName),
+//                'file_name_excel' => $fileName."xlsx"
             ], 200);
         }
         return response()->json([
