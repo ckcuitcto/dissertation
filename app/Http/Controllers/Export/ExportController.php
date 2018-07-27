@@ -775,15 +775,6 @@ class ExportController extends Controller
 
     public function backup()
     {
-        $facultisds = Faculty::all();
-
-        $i = 1;
-        $arrUser = array();
-        foreach ($facultisds as $key => $val){
-            if($i < 99999){
-
-            }
-        }
 
         $userLogin = $this->getUserLogin();
 

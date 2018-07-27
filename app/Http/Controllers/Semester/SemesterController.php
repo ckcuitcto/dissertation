@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Semester;
 
+use App\Model\Classes;
+use App\Model\Faculty;
 use App\Model\MarkTime;
 use App\Model\Role;
 use App\Model\Semester;
@@ -559,6 +561,67 @@ class SemesterController extends Controller
 
 
     public function backupImportant(){
+//        $facultisds = Faculty::limit(3)->get();
+//        $i = 1;
+//        $arrUser = array();
+//
+//        $arrClass = array();
+//        foreach ($facultisds as $key => $val){
+//            //add class
+//            $className = '';
+//
+//            if($val->id == 1){
+//                $className = "D14_TH";
+//                $staffId = 7;
+//            }elseif($val->id == 2){
+//                $className = "D14_QT";
+//                $staffId = 9;
+//            }else{
+//                $className = "D14_TP";
+//                $staffId = 13;
+//            }
+//            for($i = 10; $i < 25; $i ++){
+//                $arrClass[] = array(
+//                    'name' => $className.$i,
+//                    'faculty_id' => $val->id,
+//                    'staff_id' => $staffId
+//                );
+//            }
+//        }
+//        Classes::insert($arrClass);
+//
+//        $i = 0;
+//        foreach ($facultisds as $key => $val){
+//            //add class
+//            $classes = Classes::where('faculty_id',$val->id)->get();
+//            foreach($classes as $class){
+//                while($i < 99999) {
+//                    $userId = '';
+//                    if($i < 10){
+//                        $userId = "0000$i";
+//                    }elseif($i < 100){
+//                        $userId = "000$i";
+//                    }elseif($i < 1000){
+//                        $userId = "00$i";
+//                    }elseif($i < 10000){
+//                        $userId = "0$i";
+//                    }else{
+//                        $userId = $i;
+//                    }
+//
+//                    $arrUser[] = [
+//                        'users_id' => "DH$userId",
+//                        'name' => "Tên $userId",
+//                        'email' => "DH$userId@gmail.com",
+//                        'password' => bcrypt("DH$userId"),
+//                        'role_id' => 1,
+//                        'faculty_id' => $val->id
+//                    ];
+//                }
+//            }
+//        }
+//
+
         return view('backup.backup-important');
     }
 
