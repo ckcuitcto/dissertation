@@ -169,23 +169,25 @@
                             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                                 class="app-menu__icon fa fa-text-width"></i><span class="app-menu__label">Góp ý</span><i
                                 class="treeview-indicator fa fa-angle-right"></i></a>
-
-                                    <ul class="treeview-menu">
-                                        <li><a class="treeview-item" href="{{ route('comment-create') }}"><i
-                                                        class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp</a></li>
-                                    </ul>
-
                                 <ul class="treeview-menu">
-                                    <li><a class="treeview-item" href="{{ route('comment-list') }}"><i
-                                                    class="icon fa fa-circle-o"></i>
-                                            Danh sách ý kiến</a></li>
+                                    <li>
+                                        <a class="treeview-item" href="{{ route('comment-create') }}">
+                                            <i class="icon fa fa-circle-o"></i> Gửi ý kiến đóng góp
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="treeview-item" href="{{ route('comment-list') }}">
+                                            <i class="icon fa fa-circle-o"></i> Danh sách ý kiến
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif
                     @else
                         <li>
-                            <a class="treeview-item" href="{{ route('comment-list') }}">
-                                <i class="icon fa fa-comment"></i>Danh sách ý kiến
+                            <a class="app-menu__item" href="{{ route('comment-list') }}">
+                                <i class="app-menu__icon fa fa-comment" aria-hidden="true"></i><span
+                                        class="app-menu__label">Danh sách ý kiến</span>
                             </a>
                         </li>
                     @endcan
