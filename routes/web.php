@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/change-password', ['as' => 'change-password', 'uses' => 'User\UserController@changePassword']);
 
-    Route::group(['prefix' => 'khoa', 'middleware' => 'can:faculty-list'], function () {
+    Route::group(['prefix' => 'khoa', 'middleware' => 'can:faculty-change'], function () {
         Route::get('/', ['as' => 'faculty', 'uses' => 'Department\FacultyController@index'])->middleware('can:faculty-change');
         Route::get('/{id}', ['as' => 'faculty-detail', 'uses' => 'Department\FacultyController@show']);
 
@@ -56,7 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/get-list-by-faculty-none', ['as' => 'class-get-list-by-faculty-none', 'uses' => 'Department\ClassController@getListClassByFacultyAddAll']);
 
         // lấy ra danh sách lớp theo học kì theo người đang dăgd nhập
-//        Route::post('/get-list-by-semester-and-userlogin-none', ['as' => 'class-get-list-by-semester-and-userlogin-none', 'uses' => 'Department\ClassController@getListClassBySemesterAndUser']);
+        Route::post('/get-list-by-semester-and-userlogin-none', ['as' => 'class-get-list-by-semester-and-userlogin-none', 'uses' => 'Department\ClassController@getListClassBySemesterAndUser']);
 
         Route::post('/get-students-by-class', ['as' => 'ajax-get-students-by-class', 'uses' => 'Department\ClassController@ajaxGetStudentByClass']);
 

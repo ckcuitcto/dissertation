@@ -338,61 +338,110 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
             e.preventDefault();
         });
 
-        //lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export
-        $('select.faculty_id').change(function () {
-            var facultyId = $(this).val();
-            var url = "{{ route('class-get-list-by-faculty-none') }}";
-            $.ajax({
-                type: "post",
-                url: url,
-                data: {id: facultyId},
-                dataType: 'json',
-                success: function (data) {
-                    $("select.class_id").empty();
-                    $.each(data.classes, function (key, value) {
-                        $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        });
+        {{--//lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export--}}
+        {{--$('select.faculty_id').change(function () {--}}
+            {{--var facultyId = $(this).val();--}}
+            {{--var url = "{{ route('class-get-list-by-faculty-none') }}";--}}
+            {{--$.ajax({--}}
+                {{--type: "post",--}}
+                {{--url: url,--}}
+                {{--data: {id: facultyId},--}}
+                {{--dataType: 'json',--}}
+                {{--success: function (data) {--}}
+                    {{--$("select.class_id").empty();--}}
+                    {{--$.each(data.classes, function (key, value) {--}}
+                        {{--$("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');--}}
+                    {{--});--}}
+                {{--}--}}
+            {{--});--}}
+        {{--});--}}
 
-        getClass();
-        //lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export
-        //khi load trang sẽ gán giá trị của khoa vào
-        function getClass() {
-            var facultyId = $('select.faculty_id').val();
-            $("form#export-students").find("input#facultyChoose").val(facultyId);
-            var url = "{{ route('class-get-list-by-faculty-none') }}";
-            $.ajax({
-                type: "post",
-                url: url,
-                data: {id: facultyId},
-                dataType: 'json',
-                success: function (data) {
-                    $("select.class_id").empty();
-                    $.each(data.classes, function (key, value) {
-                        $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
+        {{--getClass();--}}
+        {{--//lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export--}}
+        {{--//khi load trang sẽ gán giá trị của khoa vào--}}
+        {{--function getClass() {--}}
+            {{--var facultyId = $('select.faculty_id').val();--}}
+            {{--$("form#export-students").find("input#facultyChoose").val(facultyId);--}}
+            {{--var url = "{{ route('class-get-list-by-faculty-none') }}";--}}
+            {{--$.ajax({--}}
+                {{--type: "post",--}}
+                {{--url: url,--}}
+                {{--data: {id: facultyId},--}}
+                {{--dataType: 'json',--}}
+                {{--success: function (data) {--}}
+                    {{--$("select.class_id").empty();--}}
+                    {{--$.each(data.classes, function (key, value) {--}}
+                        {{--$("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');--}}
+                    {{--});--}}
+                {{--}--}}
+            {{--});--}}
+        {{--}--}}
 
-        $('select.faculty_id').change(function () {
-            var facultyId = $(this).val();
-            var url = "{{ route('class-get-list-by-faculty-none') }}";
-            $.ajax({
-                type: "post",
-                url: url,
-                data: {id: facultyId},
-                dataType: 'json',
-                success: function (data) {
-                    $("select.class_id").empty();
-                    $.each(data.classes, function (key, value) {
-                        $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-                }
+        {{--$('select.faculty_id').change(function () {--}}
+            {{--var facultyId = $(this).val();--}}
+            {{--var url = "{{ route('class-get-list-by-faculty-none') }}";--}}
+            {{--$.ajax({--}}
+                {{--type: "post",--}}
+                {{--url: url,--}}
+                {{--data: {id: facultyId},--}}
+                {{--dataType: 'json',--}}
+                {{--success: function (data) {--}}
+                    {{--$("select.class_id").empty();--}}
+                    {{--$.each(data.classes, function (key, value) {--}}
+                        {{--$("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');--}}
+                    {{--});--}}
+                {{--}--}}
+            {{--});--}}
+        {{--});--}}
+        @if($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN)
+            $('select.semester_id').change(function () {
+                getClass();
             });
-        });
+            //lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export
+            $('select.faculty_id').change(function () {
+                getClass();
+            });
+
+            {{--getClass();--}}
+            {{--//lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export--}}
+            {{--//khi load trang sẽ gán giá trị của khoa vào--}}
+            function getClass() {
+                var semesterId = $("#semester_id").val();
+                var facultyId = $("#faculty_id").val();
+                var url = "{{ route('class-get-list-by-semester-and-userlogin-none') }}";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {id: semesterId,facultyId: facultyId},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("select.class_id").empty();
+                        $.each(data.classes, function (key, value) {
+                            $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            }
+            $('select.semester_id').trigger('change');
+        @else
+            $('select.semester_id').change(function () {
+                var semesterId = $(this).val();
+                var url = "{{ route('class-get-list-by-semester-and-userlogin-none') }}";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {id: semesterId},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("select.class_id").empty();
+                        $.each(data.classes, function (key, value) {
+                            $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            });
+            $('select.semester_id').trigger('change');
+        @endif
 
         $('body').on('submit', "form#search-form", function (e) {
             var form = $("form#search-form");
@@ -427,7 +476,33 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                 $("form#export-academic-transcript").find("input#strUsersId").val(strUsersId);
                 $("form#export-academic-transcript").find("input#strUserName").val(strUserName);
                 $("form#export-academic-transcript").find("input#strClassName").val(strClassName);
-                $("form#export-academic-transcript").submit();
+
+                var dataForm = $("form#export-academic-transcript").serialize();
+                var url = $("form#export-academic-transcript").attr('action');
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    cache: false,
+                    data: dataForm,
+                    beforeSend: function(){
+                        $("#ajax_loader").show();
+                    },
+                    success: function (data) {
+                        $("#ajax_loader").hide();
+                        if (data.status === true) {
+                            if(data.file_path !== undefined){
+                                var a = document.createElement('a');
+                                a.href = data.file_path;
+                                a.download = data.file_name;
+                                a.click();
+                            }
+                        } else {
+                            swal("Không thành công", data.message +" !!! :)", "error");
+                        }
+                    }
+                });
+
+                // $("form#export-academic-transcript").submit();
             }
         });
 

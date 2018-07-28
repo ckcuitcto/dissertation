@@ -213,7 +213,7 @@
                     </li>
                     @endcan
 
-                    @can('faculty-list')
+                    @can('faculty-change')
                     <li><a class="app-menu__item" href="{{ route('faculty') }}">
                             <i class="app-menu__icon fa fa-th-list" aria-hidden="true"></i><span
                                     class="app-menu__label">Quản lí Khoa, Lớp, Sinh viên </span>

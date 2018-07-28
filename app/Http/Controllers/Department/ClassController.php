@@ -202,36 +202,46 @@ class ClassController extends Controller
         ],200);
     }
 
-//    public function getListClassBySemesterAndUser(Request $request){
-//        $id = $request->id;
-//
-//        $userLogin = $this->getUserLogin();
-//        if($userLogin->Role->weight >=   ROLE_BANCHUNHIEMKHOA){
-//            $classes = Classes::where('faculty_id', $id)->select('id','name')->get()->toArray();
-//            $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
-//        }elseif($userLogin->Role->weight == ROLE_COVANHOCTAP){
-//            $classId = StudentListEachSemester::where('semester_id',$id)->where('staff_id',$userLogin->Staff->id)->select('class_id')->get()->toArray();
+    public function getListClassBySemesterAndUser(Request $request){
+        $id = $request->id;
+        $facultyId = $request->facultyId;
+        $userLogin = $this->getUserLogin();
+        if($userLogin->Role->weight >=   ROLE_BANCHUNHIEMKHOA){
+            $classId = StudentListEachSemester::where('semester_id',$id)->select('class_id')
+                ->get()->toArray();
+        }elseif($userLogin->Role->weight == ROLE_COVANHOCTAP){
+            $classId = StudentListEachSemester::where('semester_id',$id)->where('staff_id',$userLogin->Staff->id)->select('class_id')->get()->toArray();
 //            $arrId = array();
 //            foreach($classId as $val){
 //                $arrId[] = $val['class_id'];
 //            }
-////            $classes = Classes::where('faculty_id', $id)
-////                ->where('staff_id', $userLogin->Staff->id)
-////                ->select('id','name')->get()->toArray();
-//            $classes = Classes::whereIn('id', $arrId)
-////                ->where('staff_id', $userLogin->Staff->id)
-//                ->select('id','name')->get()->toArray();
+//            $classes = Classes::whereIn('id', $arrId)->select('id','name')->get()->toArray();
 //            $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
-//        }elseif($userLogin->Role->weight == ROLE_BANCANSULOP OR $userLogin->Role->weight == ROLE_SINHVIEN){
-//            $classes = Classes::where('faculty_id', $id)
-//                ->where('id', $userLogin->Student->class_id)
-//                ->select('id','name')->get()->toArray();
+        }elseif($userLogin->Role->weight == ROLE_BANCANSULOP){
+            $classId = StudentListEachSemester::where('semester_id',$id)->where('monitor_id',$userLogin->Student->user_id)->select('class_id')->get()->toArray();
+//            $arrId = array();
+//            foreach($classId as $val){
+//                $arrId[] = $val['class_id'];
+//            }
+//            $classes = Classes::whereIn('id', $arrId)->select('id','name')->get()->toArray();
 //            $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
-//        }
-//        return response()->json([
-//            'classes' => $classes
-//        ],200);
-//    }
+        }
+
+        $arrId = array();
+        foreach($classId as $val){
+            $arrId[] = $val['class_id'];
+        }
+        if(empty($facultyId)){
+            $classes = Classes::whereIn('id', $arrId)->select('id','name')->get()->toArray();
+        }else{
+            $classes = Classes::whereIn('id', $arrId)->where('faculty_id', $facultyId)->select('id','name')->get()->toArray();
+        }
+        $classes = array_prepend($classes,array('id' => 0,'name' => 'Tất cả lớp'));
+
+        return response()->json([
+            'classes' => $classes
+        ],200);
+    }
 
     public function ajaxGetStudentByClass(Request $request){
 

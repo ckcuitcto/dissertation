@@ -37,7 +37,7 @@ class TranscriptController extends Controller
         }else{
             $faculties = Faculty::where('id',$userLogin->Faculty->id)->get()->toArray();
         }
-        return view('transcript.index',compact('faculties','semesters','currentSemester'));
+        return view('transcript.index',compact('faculties','semesters','currentSemester','userLogin'));
     }
 
     /**
@@ -269,15 +269,19 @@ class TranscriptController extends Controller
             ->filter(function ($student) use ($request) {
                 $faculty = $request->has('faculty_id');
                 $facultyValue = $request->get('faculty_id');
-
                 if (!empty($faculty) AND $facultyValue != 0) {
                     $student->where('users.faculty_id', '=', $facultyValue);
+//                    $class = $request->has('class_id');
+//                    $classValue = $request->get('class_id');
+//                    if (!empty($class) AND $classValue != 0) {
+//                        $student->where('student_list_each_semesters.class_id','=', $classValue);
+//                    }
+                }
 
-                    $class = $request->has('class_id');
-                    $classValue = $request->get('class_id');
-                    if (!empty($class) AND $classValue != 0) {
-                        $student->where('student_list_each_semesters.class_id','=', $classValue);
-                    }
+                $class = $request->has('class_id');
+                $classValue = $request->get('class_id');
+                if (!empty($class) AND $classValue != 0) {
+                    $student->where('student_list_each_semesters.class_id','=', $classValue);
                 }
 
                 $semester = $request->has('semester_id');
@@ -344,15 +348,20 @@ class TranscriptController extends Controller
             ->filter(function ($student) use ($request) {
                 $faculty = $request->has('faculty_id');
                 $facultyValue = $request->get('faculty_id');
-
                 if (!empty($faculty) AND $facultyValue != 0) {
                     $student->where('users.faculty_id', '=', $facultyValue);
 
-                    $class = $request->has('class_id');
-                    $classValue = $request->get('class_id');
-                    if (!empty($class) AND $classValue != 0) {
-                        $student->where('students.class_id','=', $classValue);
-                    }
+//                    $class = $request->has('class_id');
+//                    $classValue = $request->get('class_id');
+//                    if (!empty($class) AND $classValue != 0) {
+//                        $student->where('students.class_id','=', $classValue);
+//                    }
+                }
+
+                $class = $request->has('class_id');
+                $classValue = $request->get('class_id');
+                if (!empty($class) AND $classValue != 0) {
+                    $student->where('academic_transcripts.class_id','=', $classValue);
                 }
 
                 $semester = $request->has('semester_id');

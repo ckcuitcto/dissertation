@@ -30,14 +30,16 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <label for="faculty_id" class="control-label">Khoa</label>
-                                    <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
-                                        @foreach($faculties as $value)
-                                            <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                @if($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN)
+                                    <div class="form-group col-md-3">
+                                        <label for="faculty_id" class="control-label">Khoa</label>
+                                        <select class="form-control faculty_id" name="faculty_id" id="faculty_id">
+                                            @foreach($faculties as $value)
+                                                <option value="{{ $value['id'] }}">{{ $value['name']}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
                                 <div class="form-group col-md-3">
                                     <label for="class_id" class="control-label">Lớp</label>
                                     <select class="form-control class_id" name="class_id" id="class_id">
@@ -407,34 +409,27 @@
             });
         });
 
+        @if($userLogin->Role->weight >= ROLE_PHONGCONGTACSINHVIEN)
+        $('select.semester_id').change(function () {
+            getClass();
+        });
+        //lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export
         $('select.faculty_id').change(function () {
-            var facultyId = $(this).val();
-            var url = "{{ route('class-get-list-by-faculty-none') }}";
-            $.ajax({
-                type: "post",
-                url: url,
-                data: {id: facultyId},
-                dataType: 'json',
-                success: function (data) {
-                    $("select.class_id").empty();
-                    $.each(data.classes, function (key, value) {
-                        $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-                }
-            });
+            getClass();
         });
 
-        getClass();
-        //lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export
-        //khi load trang sẽ gán giá trị của khoa vào
+        {{--getClass();--}}
+        {{--//lúc đầu chỉ là lấy lớp theo khoa. giờ bổ sung thêm lấy id của khoa cho thẻ input ẩn để export--}}
+        {{--//khi load trang sẽ gán giá trị của khoa vào--}}
         function getClass() {
-            var facultyId = $('select.faculty_id').val();
-            $("form#export-students").find("input#facultyChoose").val(facultyId);
-            var url = "{{ route('class-get-list-by-faculty-none') }}";
+            var semesterId = $("#semester_id").val();
+            var facultyId = $("#faculty_id").val();
+            alert(semesterId + "-" + facultyId);
+            var url = "{{ route('class-get-list-by-semester-and-userlogin-none') }}";
             $.ajax({
                 type: "post",
                 url: url,
-                data: {id: facultyId},
+                data: {id: semesterId,facultyId: facultyId},
                 dataType: 'json',
                 success: function (data) {
                     $("select.class_id").empty();
@@ -444,6 +439,27 @@
                 }
             });
         }
+            $('select.semester_id').trigger('change');
+        @else
+            $('select.semester_id').change(function () {
+                var semesterId = $(this).val();
+                var url = "{{ route('class-get-list-by-semester-and-userlogin-none') }}";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {id: semesterId},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("select.class_id").empty();
+                        $.each(data.classes, function (key, value) {
+                            $("select.class_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            });
+            $('select.semester_id').trigger('change');
+        @endif
+
     </script>
     {{--<script src="{{ asset('js/web/proof/index.js') }}"></script>--}}
 @endsection

@@ -379,7 +379,7 @@ class ExportController extends Controller
 
                 $arrScoreTmp = array();
                 foreach ($arrScore as $value) {
-                    $arrScoreTmp[] = $value->marker_score;
+                    $arrScoreTmp[] = ($value->marker_score > 0) ? $value->marker_score : 0 ;
                 }
                 $arrScoreTmp[] = $totalScore;
                 $arrScoreTmp[] = $this->checkRank1($totalScore);
@@ -397,11 +397,18 @@ class ExportController extends Controller
         }
 
         $semester = Semester::find($semesterId);
-        if($facultyId == 0){
-            $facultyName = " Tất cả khoa";
+
+        $userLogin = $this->getUserLogin();
+        if($userLogin->Role->weight < ROLE_PHONGCONGTACSINHVIEN){
+            $facultyName = $userLogin->Faculty->name;
         }else{
-            $facultyName = Faculty::find($facultyId)->name;
+            if($facultyId == 0){
+                $facultyName = " Tất cả khoa";
+            }else{
+                $facultyName = Faculty::find($facultyId)->name;
+            }
         }
+
         //mở file và sửa file, sau đó lưu thanh file mới
         $arrColumns = array('A','B','C','D','E','F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O');
         ob_end_clean();
@@ -1309,7 +1316,7 @@ class ExportController extends Controller
                     $sheet->cell('F9', function ($cell) use ($semester){
                         $cell->setValue("Học kỳ: $semester->term");
                     });
-                    $sheet->cell('I9', function ($cell) use ($semester){
+                    $sheet->cell('G9', function ($cell) use ($semester){
                         $cell->setValue("Năm học: $semester->year_from - $semester->year_to ");
                     });
                 }
@@ -1357,21 +1364,31 @@ class ExportController extends Controller
         })->store('xls', STUDENT_PATH, true);
         // chuyển lên host thì dugnf cái trên. local thì dùng dưới
 //        $public_dir = dirname(dirname(public_path()));
-        $public_dir = public_path();
-        $headers = array(
-            'Content-Type' => 'application/force-download',
-            'Content-Disposition' => "attachment; filename='Report.xls'",
-            'Content-Transfer-Encoding' => "binary",
-            'Accept-Ranges' => "bytes",
-        );
-        $fileToPath = $public_dir . '/' . STUDENT_PATH . FILE_TONG_HOP_DANH_GIA_REN_LUYEN_LEVEL_1_XLS;
-        if (file_exists($fileToPath)) {
+//        $public_dir = public_path();
+//        $headers = array(
+//            'Content-Type' => 'application/force-download',
+//            'Content-Disposition' => "attachment; filename='Report.xls'",
+//            'Content-Transfer-Encoding' => "binary",
+//            'Accept-Ranges' => "bytes",
+//        );
+//        $fileToPath = $public_dir . '/' . STUDENT_PATH . FILE_TONG_HOP_DANH_GIA_REN_LUYEN_LEVEL_1_XLS;
+        $fileToPath = url(STUDENT_PATH.FILE_TONG_HOP_DANH_GIA_REN_LUYEN_LEVEL_1_XLS);
+//        if (file_exists($fileToPath)) {
+            return response()->json([
+                'semester' => $semester,
+                'status' => true,
+                'file_path' => $fileToPath,
+                'file_name' => FILE_TONG_HOP_DANH_GIA_REN_LUYEN_LEVEL_1_XLS,
+            ], 200);
+
 //            return response()->download($fileToPath, FILE_TONG_HOP_DANH_GIA_REN_LUYEN, $headers)->deleteFileAfterSend(true);
 //            return response()->download($fileToPath)->deleteFileAfterSend(true);
-            return response()->file($fileToPath,$headers);
-        } else {
-            return redirect()->back();
-        }
+//            return response()->file($fileToPath,$headers); // dung dc
+//        } else {
+//            return response()->json([
+//                'status' => false
+//            ], 200);
+//        }
     }
 
     private function getNoteByAcademicTranscript($options){

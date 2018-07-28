@@ -26,7 +26,7 @@
                             <div class="form-group col-md-3">
                                 <label for="semester_id" class="control-label">Học kì</label>
                                 <select class="form-control semester_id" name="semester_id" id="semester_id">
-                                    @if(empty($semesters))
+                                    @if(!empty($semesters))
                                         @foreach ($semesters as $value)
                                             <option {{ ($value['id'] == $currentSemester->id )? "selected" : "" }} value="{{ $value['id'] }}">{{ $value['value']}}</option>
                                         @endforeach
