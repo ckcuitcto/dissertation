@@ -153,6 +153,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'academic-transcript', 'uses' => 'Transcript\TranscriptController@academicTranscript'])->middleware('can:view-academic-score');
         Route::post('/get-academic-transcript', ['as' => 'ajax-academic-transcript', 'uses' => 'Transcript\TranscriptController@ajaxGetAcademicTranscript'])->middleware('can:view-academic-score');
         Route::post('/xuat-bang-diem-sinh-vien', ['as' => 'export-academic-transcript', 'uses' => 'Export\ExportController@exportAcademicTranscriptLevel1'])->middleware('can:view-academic-score');
+
+        // xuất ra bảng điểm của sinh viên toàn khóa học
+        Route::post('/xuat-bang-diem-sinh-vien-toan-khoa-hoc', ['as' => 'export-academic-transcript-all-course', 'uses' => 'Export\ExportController@exportAcademicTranscriptLevelAllCourse'])->middleware('can:view-academic-score');
     });
 
     Route::group(['prefix' => 'phieu-danh-gia'], function () {

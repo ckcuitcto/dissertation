@@ -86,6 +86,9 @@
                             <button class="btn btn-outline-success" id="createFile">
                                 <i class="fa fa-download" aria-hidden="true"></i>Lập bảng tổng hợp đánh giá đã áp dụng danh sách kỷ luật
                             </button>
+                            <button class="btn btn-outline-success" id="createFileResultAllCourse">
+                                <i class="fa fa-download" aria-hidden="true"></i>Lập bảng kết quả đánh giá rèn luyện sinh viên toàn khóa học
+                            </button>
 
                         </div>
                         <div class="col-md-2">
@@ -102,11 +105,19 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
         </div>
         <form id="export-academic-transcript" action="{{route('export-academic-transcript')}}" method="post">
             {!! csrf_field() !!}
-            <input type="hidden" name="strUsersId" id="strUsersId">
-            <input type="hidden" name="strUserName" id="strUserName">
-            <input type="hidden" name="strClassName" id="strClassName">
-            <input type="hidden" name="semesterChoose" id="semesterChoose" value="{{$currentSemester->id}}">
-            <input type="hidden" name="facultyChoose" id="facultyChoose">
+            <input type="hidden" name="strUsersId" class="strUsersId">
+            <input type="hidden" name="strUserName" class="strUserName">
+            <input type="hidden" name="strClassName" class="strClassName">
+            <input type="hidden" name="semesterChoose" class="semesterChoose" value="{{$currentSemester->id}}">
+            <input type="hidden" name="facultyChoose" class="facultyChoose">
+        </form>
+        <form id="export-academic-transcript-all-course" action="{{route('export-academic-transcript-all-course')}}" method="post">
+            {!! csrf_field() !!}
+            <input type="hidden" name="strUsersId" class="strUsersId">
+            <input type="hidden" name="strUserName" class="strUserName">
+            <input type="hidden" name="strClassName" class="strClassName">
+            <input type="hidden" name="semesterChoose" class="semesterChoose" value="{{$currentSemester->id}}">
+            <input type="hidden" name="facultyChoose" class="facultyChoose">
         </form>
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
@@ -172,55 +183,6 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
                                         </div>
                                     </div>
                                 @endforeach
-
-                                {{--<div class="col-md-1">--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="score_ib" class="control-label">I.b</label>--}}
-                                        {{--<div class="input-group">--}}
-                                            {{--<input type="number" class="form-control score_ib" id="score_ib" name="score_ib">--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                                {{--<div class="col-md-1">--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="score_ic" class="control-label">I.c</label>--}}
-                                        {{--<div class="input-group">--}}
-                                            {{--<input type="number" class="form-control score_ic" id="score_ic" name="score_ic">--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                                {{--<div class="col-md-2">--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="score_ii" class="control-label">II</label>--}}
-                                        {{--<div class="input-group">--}}
-                                            {{--<input type="number" class="form-control score_ii" id="score_ii" name="score_ii">--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                                {{--<div class="col-md-2">--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="score_iii" class="control-label">III</label>--}}
-                                        {{--<div class="input-group">--}}
-                                            {{--<input type="number" class="form-control score_iii" id="score_iii" name="score_iii">--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                                {{--<div class="col-md-2">--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="score_iv" class="control-label">IV</label>--}}
-                                        {{--<div class="input-group">--}}
-                                            {{--<input type="number" class="form-control score_iv" id="score_iv" name="score_iv">--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                                {{--<div class="col-md-2">--}}
-                                    {{--<div class="form-row">--}}
-                                        {{--<label for="score_v" class="control-label">V</label>--}}
-                                        {{--<div class="input-group">--}}
-                                            {{--<input type="number" class="form-control score_v" id="score_v" name="score_v">--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
                             </div>
                         </form>
                         <div class="modal-footer">
@@ -450,62 +412,114 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
             // $("form#export-academic-transcript").find("input#facultyChoose").val(facultyId);
         });
 
-        $('body').on('click', "button#createFile", function (e) {
-
-            var strUsersId = new Array();
-            var strUserName = new Array();
-            var strClassName = new Array();
-            oTable.rows().every( function () {
-                var userId = this.data().users_id;
-                var userName = this.data().userName;
-                var className = this.data().className;
-
-                strUsersId.push(userId);
-                strUserName.push(userName);
-                strClassName.push(className);
-            });
-            if(strUsersId.length === 0 || strUserName.length === 0 || strClassName.length === 0){
-                $.notify({
-                    title: "Lưu ý: ",
-                    message: "Danh sách rỗng",
-                    icon: 'fa fa-exclamation-triangle'
-                },{
-                    type: "danger"
-                });
-            }else{
-                $("form#export-academic-transcript").find("input#strUsersId").val(strUsersId);
-                $("form#export-academic-transcript").find("input#strUserName").val(strUserName);
-                $("form#export-academic-transcript").find("input#strClassName").val(strClassName);
-
-                var dataForm = $("form#export-academic-transcript").serialize();
-                var url = $("form#export-academic-transcript").attr('action');
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    cache: false,
-                    data: dataForm,
-                    beforeSend: function(){
-                        $("#ajax_loader").show();
-                    },
-                    success: function (data) {
-                        $("#ajax_loader").hide();
-                        if (data.status === true) {
-                            if(data.file_path !== undefined){
-                                var a = document.createElement('a');
-                                a.href = data.file_path;
-                                a.download = data.file_name;
-                                a.click();
-                            }
-                        } else {
-                            swal("Không thành công", data.message +" !!! :)", "error");
-                        }
-                    }
-                });
-
-                // $("form#export-academic-transcript").submit();
-            }
-        });
-
+        // $('body').on('click', "button#createFile", function (e) {
+        //
+        //     var strUsersId = new Array();
+        //     var strUserName = new Array();
+        //     var strClassName = new Array();
+        //     oTable.rows().every( function () {
+        //         var userId = this.data().users_id;
+        //         var userName = this.data().userName;
+        //         var className = this.data().className;
+        //
+        //         strUsersId.push(userId);
+        //         strUserName.push(userName);
+        //         strClassName.push(className);
+        //     });
+        //     if(strUsersId.length === 0 || strUserName.length === 0 || strClassName.length === 0){
+        //         $.notify({
+        //             title: "Lưu ý: ",
+        //             message: "Danh sách rỗng",
+        //             icon: 'fa fa-exclamation-triangle'
+        //         },{
+        //             type: "danger"
+        //         });
+        //     }else{
+        //         $("form#export-academic-transcript").find("input#strUsersId").val(strUsersId);
+        //         $("form#export-academic-transcript").find("input#strUserName").val(strUserName);
+        //         $("form#export-academic-transcript").find("input#strClassName").val(strClassName);
+        //
+        //         var dataForm = $("form#export-academic-transcript").serialize();
+        //         var url = $("form#export-academic-transcript").attr('action');
+        //         $.ajax({
+        //             url: url,
+        //             type: 'POST',
+        //             cache: false,
+        //             data: dataForm,
+        //             beforeSend: function(){
+        //                 $("#ajax_loader").show();
+        //             },
+        //             success: function (data) {
+        //                 $("#ajax_loader").hide();
+        //                 if (data.status === true) {
+        //                     if(data.file_path !== undefined){
+        //                         var a = document.createElement('a');
+        //                         a.href = data.file_path;
+        //                         a.download = data.file_name;
+        //                         a.click();
+        //                     }
+        //                 } else {
+        //                     swal("Không thành công", data.message +" !!! :)", "error");
+        //                 }
+        //             }
+        //         });
+        //     }
+        // });
+        //
+        //
+        // $('body').on('click', "button#createFileResultAllCourse", function (e) {
+        //
+        //     var strUsersId = new Array();
+        //     var strUserName = new Array();
+        //     var strClassName = new Array();
+        //     oTable.rows().every( function () {
+        //         var userId = this.data().users_id;
+        //         var userName = this.data().userName;
+        //         var className = this.data().className;
+        //
+        //         strUsersId.push(userId);
+        //         strUserName.push(userName);
+        //         strClassName.push(className);
+        //     });
+        //     if(strUsersId.length === 0 || strUserName.length === 0 || strClassName.length === 0){
+        //         $.notify({
+        //             title: "Lưu ý: ",
+        //             message: "Danh sách rỗng",
+        //             icon: 'fa fa-exclamation-triangle'
+        //         },{
+        //             type: "danger"
+        //         });
+        //     }else{
+        //         $("form#export-academic-transcript-all-course").find("input#strUsersId").val(strUsersId);
+        //         $("form#export-academic-transcript-all-course").find("input#strUserName").val(strUserName);
+        //         $("form#export-academic-transcript-all-course").find("input#strClassName").val(strClassName);
+        //
+        //         var dataForm = $("form#export-academic-transcript-all-course").serialize();
+        //         var url = $("form#export-academic-transcript-all-course").attr('action');
+        //         $.ajax({
+        //             url: url,
+        //             type: 'POST',
+        //             cache: false,
+        //             data: dataForm,
+        //             beforeSend: function(){
+        //                 $("#ajax_loader").show();
+        //             },
+        //             success: function (data) {
+        //                 $("#ajax_loader").hide();
+        //                 if (data.status === true) {
+        //                     if(data.file_path !== undefined){
+        //                         var a = document.createElement('a');
+        //                         a.href = data.file_path;
+        //                         a.download = data.file_name;
+        //                         a.click();
+        //                     }
+        //                 } else {
+        //                     swal("Không thành công", data.message +" !!! :)", "error");
+        //                 }
+        //             }
+        //         });
+        //     }
+        // });
         // phần này dùng cho select ở form input
 
         $('body').on('change', "select.add_faculty_id", function (e) {
@@ -544,57 +558,59 @@ Muốn xuất tất cả giá trị. Chọn 'Tất cả' ở số lượng hiể
         });
         $("select.add_faculty_id").trigger('change');
 
-        $('body').on('click', 'a.update-academic-transcript', function (e) {
-            var urlEdit = $(this).attr('data-edit-link');
-            var urlUpdate = $(this).attr('data-update-link');
-            var id = $(this).attr('data-semester-id');
-            $('.form-row').find('span.messageErrors').remove();
-            $.ajax({
-                type: "get",
-                url: urlEdit,
-                data: {id: id},
-                dataType: 'json',
-                success: function (result) {
-                    if (result.status === true) {
-                        if (result.academicTranscript !== undefined) {
-                            var add_class_id;
-                            var add_faculty_id;
-                            var add_semester_id;
-                            var add_student_id;
-                            $.each(result.academicTranscript, function (elementName, value) {
-                                if (elementName === 'add_class_id') {
-                                    $("select#add_class_id").empty().append('<option value="' + value + '">' + result.academicTranscript.add_class_name + '</option>').attr('readonly',true);
-                                } else if (elementName === 'add_faculty_id') {
-                                    // $("select#add_faculty_id").empty().append('<option value="' + value + '">' + result.academicTranscript.add_faculty_name + '</option>').attr('readonly',true);
-                                    $("select#add_faculty_id").val(value).attr('disabled',true);
-                                } else if (elementName === 'add_semester_id') {
-                                    $("#add_semester_id").val(value);
-                                } else if (elementName === 'add_student_id') {
-                                    $("select#add_student_id").empty().append('<option value="' + value + '">' + result.academicTranscript.add_student_name + '</option>').attr('readonly',true);
-                                } else if (elementName === 'note') {
-                                    $("textarea#"+elementName).html(value);
-                                } else {
-                                    $('.' + elementName).val(value);
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-            $('#myModal').find(".modal-title").text('Sửa điểm');
-            $('#myModal').find(".modal-footer > button[name=academic-transcript-store]").html('Sửa');
-            $('#myModal').find(".modal-footer > button[name=academic-transcript-store]").attr('data-link', urlUpdate);
-            $('#myModal').modal('show');
-        });
+        // $('body').on('click', 'a.update-academic-transcript', function (e) {
+        //     var urlEdit = $(this).attr('data-edit-link');
+        //     var urlUpdate = $(this).attr('data-update-link');
+        //     var id = $(this).attr('data-semester-id');
+        //     $('.form-row').find('span.messageErrors').remove();
+        //     $.ajax({
+        //         type: "get",
+        //         url: urlEdit,
+        //         data: {id: id},
+        //         dataType: 'json',
+        //         success: function (result) {
+        //             if (result.status === true) {
+        //                 if (result.academicTranscript !== undefined) {
+        //                     var add_class_id;
+        //                     var add_faculty_id;
+        //                     var add_semester_id;
+        //                     var add_student_id;
+        //                     $.each(result.academicTranscript, function (elementName, value) {
+        //                         if (elementName === 'add_class_id') {
+        //                             $("select#add_class_id").empty().append('<option value="' + value + '">' + result.academicTranscript.add_class_name + '</option>').attr('readonly',true);
+        //                         } else if (elementName === 'add_faculty_id') {
+        //                             // $("select#add_faculty_id").empty().append('<option value="' + value + '">' + result.academicTranscript.add_faculty_name + '</option>').attr('readonly',true);
+        //                             $("select#add_faculty_id").val(value).attr('disabled',true);
+        //                         } else if (elementName === 'add_semester_id') {
+        //                             $("#add_semester_id").val(value);
+        //                         } else if (elementName === 'add_student_id') {
+        //                             $("select#add_student_id").empty().append('<option value="' + value + '">' + result.academicTranscript.add_student_name + '</option>').attr('readonly',true);
+        //                         } else if (elementName === 'note') {
+        //                             $("textarea#"+elementName).html(value);
+        //                         } else {
+        //                             $('.' + elementName).val(value);
+        //                         }
+        //                     });
+        //                 }
+        //             }
+        //         }
+        //     });
+        //     $('#myModal').find(".modal-title").text('Sửa điểm');
+        //     $('#myModal').find(".modal-footer > button[name=academic-transcript-store]").html('Sửa');
+        //     $('#myModal').find(".modal-footer > button[name=academic-transcript-store]").attr('data-link', urlUpdate);
+        //     $('#myModal').modal('show');
+        // });
 
-        $('#myModal').on('hidden.bs.modal', function (e) {
-            $("select.add_faculty_id").trigger('change');
-            $('#myModal').find("input[type=text],input[type=number], select").attr('readonly', false).attr('disabled', false);
-            $('#myModal').find("input[type=text],input[type=number], textarea").val('');
-            $('.text-red').html('');
-            $('span.messageErrors').remove();
-            $('#myModal').find(".modal-title").text('Thêm mới điểm cho sinh viên');
-            $('#myModal').find(".modal-footer > button[name=academic-transcript-store]").html('Thêm');
-        });
+        // $('#myModal').on('hidden.bs.modal', function (e) {
+        //     $("select.add_faculty_id").trigger('change');
+        //     $('#myModal').find("input[type=text],input[type=number], select").attr('readonly', false).attr('disabled', false);
+        //     $('#myModal').find("input[type=text],input[type=number], textarea").val('');
+        //     $('.text-red').html('');
+        //     $('span.messageErrors').remove();
+        //     $('#myModal').find(".modal-title").text('Thêm mới điểm cho sinh viên');
+        //     $('#myModal').find(".modal-footer > button[name=academic-transcript-store]").html('Thêm');
+        // });
     </script>
+        <script src="{{ asset('js/web/transcript/academic-transcript.js') }}"></script>
+
 @endsection

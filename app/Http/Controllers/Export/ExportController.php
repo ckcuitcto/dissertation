@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 use ZipArchive;
 use Yajra\DataTables\DataTables;
 
@@ -1407,5 +1408,178 @@ class ExportController extends Controller
             }
         }
         return false;
+    }
+
+
+    public function exportAcademicTranscriptLevelAllCourse(Request $request)
+    {
+        $strUserId = $request->strUsersId;
+        $strUserName = $request->strUserName;
+        $strClassName = $request->strClassName;
+        $semesterId = $request->semesterChoose;
+        $facultyId = $request->facultyChoose;
+
+        $arrUserId = explode(',', $strUserId);
+
+        $arrFileName = array();
+
+        $academicTranscript = DB::table('academic_transcripts')
+            ->leftJoin('classes', 'classes.id', '=', 'academic_transcripts.class_id')
+            ->leftJoin('students', 'students.user_id', '=', 'academic_transcripts.user_id')
+            ->leftJoin('users', 'users.users_id', '=', 'students.user_id')
+            ->leftJoin('faculties', 'faculties.id', '=', 'users.faculty_id')
+            ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
+            ->leftJoin('semesters', 'semesters.id', '=', 'academic_transcripts.semester_id')
+            ->whereIn('users.users_id', $arrUserId)
+            ->select(
+                'academic_transcripts.id as academicTranscriptId',
+                'users.users_id',
+                'users.name as userName',
+                'roles.display_name',
+                'classes.name as className',
+                'faculties.name as facultyName',
+                'students.academic_year_from',
+                'students.academic_year_to',
+                DB::raw("CONCAT(students.academic_year_from,'-',students.academic_year_to) as academic"),
+                'students.id',
+                'users.status',
+                'students.id as studentId',
+                'users.faculty_id',
+                'students.class_id',
+                'roles.id as role_id',
+                'semesters.year_from',
+                'semesters.year_to',
+                'semesters.term',
+                'academic_transcripts.semester_id as semesterId',
+                'academic_transcripts.score_ia',
+                'academic_transcripts.score_ib',
+                'academic_transcripts.score_ic',
+                'academic_transcripts.score_i',
+                'academic_transcripts.score_ii',
+                'academic_transcripts.score_iii',
+                'academic_transcripts.score_iv',
+                'academic_transcripts.score_v',
+                DB::raw("
+                    academic_transcripts.score_i +
+                    academic_transcripts.score_ii +
+                    academic_transcripts.score_iii +
+                    academic_transcripts.score_iv +
+                    academic_transcripts.score_v
+                    as totalScore")
+            )->orderBy('semesters.year_from')->get();
+
+        foreach ($arrUserId as $key => $ursId) {
+            //mở file và sửa file, sau đó lưu thahf file mới
+//            $student = User::find($ursId);
+            $arrColumn = array('C','E','G','I');
+            $studentAcademicTranscript = $academicTranscript->where('users_id',$ursId)->toArray();
+            Excel::load(FILE_TEMPLATE . "bang_danh_gia_ren_luyen_sv_toan_khoa.xlsx", function ($reader) use ($ursId,$arrColumn,$studentAcademicTranscript,$academicTranscript) {
+                $sheet = $reader->getSheet(0);
+
+//                $first_value = reset($studentAcademicTranscript); // First Element's Value
+                $first_key = key($studentAcademicTranscript); // First Element's Key
+
+                $sheet->setCellValue("B9", $studentAcademicTranscript[$first_key]->userName);
+                $sheet->setCellValue("B10", $studentAcademicTranscript[$first_key]->facultyName);
+
+                $type = str_limit($studentAcademicTranscript[$first_key]->users_id,2);
+                if($type == 'DH'){
+                    $typeStudent = "Đại học chính quy";
+                }else{
+                    $typeStudent = "Cao đẳng chính quy";
+                }
+                $sheet->setCellValue("B11", $typeStudent);
+
+                $sheet->setCellValue("I9", $studentAcademicTranscript[$first_key]->users_id);
+                $sheet->setCellValue("I10", $studentAcademicTranscript[$first_key]->className);
+                $sheet->setCellValue("I11", $studentAcademicTranscript[$first_key]->academic);
+
+                $average = 0;
+                $countYear = 0;
+
+                $arrNamHoc = array(); // mảng lưu lại năm học theo thứ tự
+                foreach($studentAcademicTranscript as $score){
+                    $arrNamHoc[$score->year_from.$score->year_to] = array(
+                        'year_from' => $score->year_from,
+                        'year_to' => $score->year_to,
+                    );
+                }
+
+                $arrNamHoc = array_values($arrNamHoc);
+                $countNamhoc = count($arrNamHoc);
+                for ($j = 0; $j < $countNamhoc; $j++) {
+
+                    $yearFrom = $arrNamHoc[$j]['year_from'];
+                    $yearTo = $arrNamHoc[$j]['year_to'];
+                    $sheet->setCellValue($arrColumn[$j] . "14", "NĂM HỌC $yearFrom - $yearTo");
+
+                    $scoreTerm1 = $academicTranscript->where('users_id', $ursId)
+                        ->where('year_from', $arrNamHoc[$j]['year_from'])
+                        ->where('year_to', $arrNamHoc[$j]['year_to'])
+                        ->where('term', 1)->toArray();
+                    $scoreTerm1 = reset($scoreTerm1);
+                    if (!empty($scoreTerm1->totalScore)) {
+                        $sheet->setCellValue($arrColumn[$j] . "15", $scoreTerm1->totalScore);
+                        $countYear++;
+                        $average += $scoreTerm1->totalScore;
+                    }
+
+                    $scoreTerm2 = $academicTranscript->where('users_id', $ursId)
+                        ->where('year_from', $arrNamHoc[$j]['year_from'])
+                        ->where('year_to', $arrNamHoc[$j]['year_to'])
+                        ->where('term', 2)->toArray();
+                    $scoreTerm2 = reset($scoreTerm2);
+                    if (!empty($scoreTerm2->totalScore)) {
+                        $sheet->setCellValue($arrColumn[$j] . "16", $scoreTerm2->totalScore);
+                        $countYear++;
+                        $average += $scoreTerm2->totalScore;
+                    }
+                }
+
+                if($average > 0) {
+                    $score = round($average / $countYear);
+                    $sheet->setCellValue("E18", $score); // điểm trung bình
+                    $sheet->setCellValue("E19", $this->checkRank1($score)); // xếp loại
+                } else {
+                    $sheet->setCellValue("E18", 0); // điểm trung bình
+                    $sheet->setCellValue("E19", $this->checkRank1(0)); // xếp loại
+                }
+                $sheet->setCellValue("G21", $this->getCurrentDate()); // xếp loại
+
+            })->setFilename($ursId)->store('xlsx', STUDENT_PATH, true);
+            $arrFileName[] = $ursId.".xlsx";
+        }
+
+        if (!empty($arrFileName)) {
+            $public_dir = public_path();
+            $zip = new ZipArchive();
+            $fileZipName = "danh_sach" . Carbon::now()->format('dmY') . ".zip";
+            foreach ($arrFileName as $file) {
+                if ($zip->open($public_dir . '/' . STUDENT_PATH . $fileZipName, ZipArchive::CREATE) === TRUE) {
+                    $zip->addFile(STUDENT_PATH . $file, $file);
+                }
+            }
+            $zip->close();
+
+            $fileToPath = $public_dir . '/' . STUDENT_PATH . $fileZipName;
+            if (file_exists($fileToPath)) {
+                foreach ($arrFileName as $file) {
+                    unlink($public_dir . '/' . STUDENT_PATH . $file);
+                }
+                $filePath = url(STUDENT_PATH.$fileZipName);
+                return response()->json([
+                    'status' => true,
+                    'file_path' => $filePath,
+                    'file_name' => $fileZipName
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Có lỗi đã xảy ra trong quá trình tạo file '
+                ], 200);
+            }
+        } else {
+            return redirect()->back();
+        }
     }
 }

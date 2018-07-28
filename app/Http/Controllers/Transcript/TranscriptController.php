@@ -307,7 +307,7 @@ class TranscriptController extends Controller
         $currentSemester = $this->getCurrentSemester();
         $semesters = Semester::select('id',DB::raw("CONCAT('Học kì: ',term,'*** Năm học: ',year_from,' - ',year_to) as value"))->get()->toArray();
         $semestersNoAll = $semesters;
-        $semesters = array_prepend($semesters,array('id' => 0,'value' => 'Tất cả học kì'));
+//        $semesters = array_prepend($semesters,array('id' => 0,'value' => 'Tất cả học kì'));
 
         if($userLogin->Role->weight == ROLE_PHONGCONGTACSINHVIEN OR $userLogin->Role->weight == ROLE_ADMIN){
             $faculties = Faculty::all()->toArray();
