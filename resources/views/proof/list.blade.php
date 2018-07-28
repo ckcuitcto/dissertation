@@ -424,7 +424,6 @@
         function getClass() {
             var semesterId = $("#semester_id").val();
             var facultyId = $("#faculty_id").val();
-            alert(semesterId + "-" + facultyId);
             var url = "{{ route('class-get-list-by-semester-and-userlogin-none') }}";
             $.ajax({
                 type: "post",
