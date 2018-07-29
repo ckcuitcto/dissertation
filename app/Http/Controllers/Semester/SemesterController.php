@@ -670,14 +670,25 @@ class SemesterController extends Controller
             \Artisan::call('backup:clean');
             \Artisan::call('backup:run',['--only-db'=>true]);
 
-            //lưu file
-            $files = Storage::files('/http---diemrenluyenstu.cf-/');
+//            \Artisan::call('db:dump');
+
+            $path = "http---diemrenluyenstu.cf/";
+            $files = Storage::files("/".$path);
+
             if(!empty($files)) {
                 $lastFile = $files[count($files) - 1];
 
                 $lastFileName = explode('/', $lastFile);
                 $lastFileName = $lastFileName[count($lastFileName) - 1];
             }
+
+//            $filesDump = Storage::files('/http---diemrenluyenstu.cf-/dump/');
+//            if(!empty($filesDump)) {
+//                $lastFileDump = $filesDump[count($filesDump) - 1];
+//
+//                $lastFileNameDump = explode('/', $lastFileDump);
+//                $lastFileNameDump = $lastFileNameDump[count($lastFileNameDump) - 1];
+//            }
 
             // lưu dữ liệu vào file excel
             $date = Carbon::now()->format('Ymd_His');
@@ -699,13 +710,15 @@ class SemesterController extends Controller
                     });
                 }
             })->store('xlsx', STUDENT_PATH, true);
-            $semester->delete();
+//            $semester->delete();
 
             return response()->json([
                 'semester' => $semester,
                 'status' => true,
                 'file_path' => url("/backupdb/$lastFile"),
                 'file_name' => $lastFileName,
+//                'file_path_dump' => url("/backupdb/dump/$lastFileDump"),
+//                'file_name_dump' => $lastFileNameDump,
                 'file_path_excel' => url(STUDENT_PATH."$fileName.xlsx"),
                 'file_name_excel' => "$fileName.xlsx"
             ], 200);
